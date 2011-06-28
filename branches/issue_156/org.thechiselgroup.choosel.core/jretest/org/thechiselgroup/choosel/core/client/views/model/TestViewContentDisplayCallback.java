@@ -23,12 +23,21 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 // TODO extract resource item manager?
 public class TestViewContentDisplayCallback implements
         ViewContentDisplayCallback, ViewItemContainer {
 
     private Map<String, ViewItem> viewItemsByGroupId = CollectionFactory
             .createStringMap();
+
+    @Override
+    public HandlerRegistration addHandler(
+            ViewItemContainerChangeEventHandler handler) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     public void addViewItem(ViewItem viewItem) {
         viewItemsByGroupId.put(viewItem.getViewItemID(), viewItem);

@@ -43,6 +43,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -88,6 +89,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private DefaultViewItemResolutionErrorModel errorModel = new DefaultViewItemResolutionErrorModel();
 
+    private transient HandlerManager handlerManager;
+
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
@@ -112,6 +115,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
         this.logger = logger;
         this.configurationUIModel = configurationUIModel;
 
+        this.handlerManager = new HandlerManager(this);
+
         // XXX why do we initialize when there are no resources yet?
         // we definitely need a state that flag slots as invalid / unresolved
         configurationUIModel.initSlots(slotMappingConfiguration.getSlots());
@@ -133,8 +138,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
     public HandlerRegistration addHandler(
             ViewItemContainerChangeEventHandler handler) {
 
-        // TODO implement
-        return null;
+        assert handler != null;
+        return handlerManager.addHandler(ViewItemContainerChangeEvent.TYPE,
+                handler);
     }
 
     @Override
@@ -191,6 +197,13 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;
+    }
+
+    private void fireViewItemContainerChangeEvent(ViewItemContainerDelta delta) {
+        assert delta != null;
+
+        // TODO check that delta does contain actual changes (method on delta)
+        handlerManager.fireEvent(new ViewItemContainerChangeEvent(this, delta));
     }
 
     @Override
@@ -375,6 +388,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 updateErrorModel();
                 updateVisualMappings();
                 updateViewContentDisplay(delta);
+                fireViewItemContainerChangeEvent(delta);
             }
         });
     }
