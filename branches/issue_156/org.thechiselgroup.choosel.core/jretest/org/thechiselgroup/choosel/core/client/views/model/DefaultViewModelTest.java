@@ -18,38 +18,41 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItems;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItemsAsList;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureUpdatedViewItems;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.*;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
+import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.*;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveIfContainsAllResources;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveResource;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResource;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 
 public class DefaultViewModelTest {
+
+    private static final String RESOURCE_PROPERTY_1 = "property1";
+
+    private static final String RESOURCE_TYPE_2 = "type2";
+
+    private static final String RESOURCE_TYPE_1 = "type1";
 
     private Slot slot;
 
@@ -77,7 +80,8 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void createResourceItemsWhenResourcesAreAdded() {
+    public void createViewItemsWhenResourcesAreAdded() {
+
         helper.getContainedResources().addAll(createResources(TYPE_1, 1));
         helper.getContainedResources().add(createResource(TYPE_2, 2));
 
@@ -96,7 +100,7 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void deselectResourceItemWhenResourceRemovedFromSelection() {
+    public void deselectViewItemWhenResourceRemovedFromSelection() {
         ResourceSet resources = createResources(1);
 
         helper.getContainedResources().addAll(resources);
@@ -113,11 +117,11 @@ public class DefaultViewModelTest {
     @Test
     public void grouping() {
         Resource r1 = new Resource("test:1");
-        r1.putValue("property1", "value1-1");
+        r1.putValue(RESOURCE_PROPERTY_1, "value1-1");
         r1.putValue("property2", "value2");
 
         Resource r2 = new Resource("test:2");
-        r2.putValue("property1", "value1-2");
+        r2.putValue(RESOURCE_PROPERTY_1, "value1-2");
         r2.putValue("property2", "value2");
 
         helper.getContainedResources().addAll(toResourceSet(r1, r2));
@@ -173,7 +177,7 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void highlightedResourceSetOnCreatedResourceItems() {
+    public void highlightedResourceSetOnCreatedViewItems() {
         ResourceSet resources = createResources(TYPE_1, 1, 3, 4);
 
         helper.getHighlightedResources().addAll(resources);
@@ -186,7 +190,7 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void highlightedResourcesGetAddedToResourceItemOnlyOnceWhenSeveralResourcesFromItemAddedToHoverModel() {
+    public void highlightedResourcesGetAddedToViewItemOnlyOnceWhenSeveralResourcesFromItemAddedToHoverModel() {
         ResourceSet resources = createResources(1, 2);
 
         helper.getContainedResources().addAll(resources);
@@ -200,7 +204,7 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void highlightedResourcesGetAddedToResourceItemWhenHoverModelContainsAdditionalResources() {
+    public void highlightedResourcesGetAddedToViewItemWhenHoverModelContainsAdditionalResources() {
         Resource resource2 = createResource(2);
         Resource resource1 = createResource(1);
         ResourceSet viewResources = toResourceSet(resource2);
@@ -217,7 +221,7 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void highlightedResourcesGetAddedToResourceItemWhenResourcesAddedToHoverModel() {
+    public void highlightedResourcesGetAddedToViewItemWhenResourcesAddedToHoverModel() {
         ResourceSet resources = createResources(1);
 
         helper.getContainedResources().addAll(resources);
@@ -252,6 +256,76 @@ public class DefaultViewModelTest {
     }
 
     @Test
+    public void invalidViewItemDoesNotGetAddedToAddedDelta() {
+        Resource resource = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 1);
+        ResourceSet resources = createResources();
+        resources.add(resource);
+        resources
+                .add(TestResourceSetFactory.createResource(RESOURCE_TYPE_2, 1));
+        underTest.setResolver(slot, createResolverCanResolveResource(resource));
+
+        helper.getContainedResources().addAll(resources);
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
+                .getViewContentDisplay());
+
+        assertEquals(1, addedViewItems.size());
+        assertThat(addedViewItems, containsEqualResource(resource));
+    }
+
+    @Test
+    public void invalidViewItemDoesNotGetAddedToRemoveDelta() {
+        Resource resource1 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 1);
+        Resource resource2 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_2, 2);
+        ResourceSet resources = createResources();
+        resources.add(resource1);
+        resources.add(resource2);
+        underTest
+                .setResolver(slot, createResolverCanResolveResource(resource1));
+
+        helper.getContainedResources().addAll(resources);
+
+        /*
+         * at this point, the view item with resource 2 is invalid as per
+         * invalidViewItemDoesNotGetAddedToAddedDelta test
+         */
+
+        helper.getContainedResources().removeAll(resources);
+
+        LightweightCollection<ViewItem> removedViewItems = captureRemovedViewItems(helper
+                .getViewContentDisplay());
+
+        assertEquals(1, removedViewItems.size());
+        assertThat(removedViewItems, containsEqualResource(resource1));
+    }
+
+    @Ignore("not implemented")
+    @Test
+    public void otherViewItemChangesFromInvalidToValidGetsAddedToRemovedDelta() {
+
+    }
+
+    @Ignore("not implemented")
+    @Test
+    public void otherViewItemChangesFromValidtoInvalidGetsAddedToAddedDelta() {
+
+    }
+
+    @Ignore("not implemented")
+    @Test
+    public void otherViewItemInvalidBeforeAndAfterGetsIgnored() {
+
+    }
+
+    @Ignore("not implemented")
+    @Test
+    public void otherViewItemValidBeforeAndAfterGetsIgnored() {
+
+    }
+
+    @Test
     public void selectViewItemWhenResourceAddedToSelection() {
         helper.getContainedResources().add(createResource(1));
         List<ViewItem> viewItems = captureAddedViewItemsAsList(helper
@@ -272,6 +346,7 @@ public class DefaultViewModelTest {
         helper = new DefaultViewModelTestHelper();
         helper.setSlots(slot);
         underTest = helper.createTestViewModel();
+        underTest.setResolver(slot, new FixedValueResolver("a", DataType.TEXT));
     }
 
     // TODO check highlighted resources in resource item
@@ -340,6 +415,54 @@ public class DefaultViewModelTest {
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Test
+    public void updatedViewItemChangingFromInvalidToValidGetsAddedToAddedDelta() {
+
+        Resource resource1 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 1);
+        Resource resource2 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 2);
+
+        ResourceSet resources = createResources();
+        resources.add(resource1);
+        resources.add(resource2);
+
+        underTest.setResolver(slot,
+                createResolverCanResolveIfContainsAllResources(resources));
+
+        helper.getContainedResources().add(resource1);
+
+        /* should not add it here should have 0 items captured */
+
+        helper.getContainedResources().add(resource2);
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+        verify(helper.getViewContentDisplay(), times(4)).update(
+                captor.capture(), emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                any(LightweightCollection.class));
+
+        LightweightCollection<ViewItem> addedViewItems = captor.getAllValues()
+                .get(3);
+
+        assertEquals(1, addedViewItems.size());
+        assertThat(addedViewItems, containsEqualResources(resources));
+    }
+
+    @Ignore("not implemented")
+    @Test
+    public void updatedViewItemChangingFromValidToInvalidGetsAddedToRemovedDelta() {
+
+    }
+
+    @Ignore("not implemented")
+    @Test
+    public void updatedViewItemInvalidBeforeAndAfterDoesNotGetsIgnored() {
+
     }
 
     @Test
@@ -493,4 +616,5 @@ public class DefaultViewModelTest {
         assertThat(viewItem.getResources(Subset.SELECTED),
                 containsExactly(resources));
     }
+
 }

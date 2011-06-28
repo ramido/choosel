@@ -28,22 +28,23 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 public final class ViewItemValueResolverTestUtils {
 
-    private ViewItemValueResolverTestUtils() {
-    }
-
-    public static ViewItemValueResolver mockViewItemValueResolver() {
-        ViewItemValueResolver resolver = mock(ViewItemValueResolver.class);
-        when(resolver.getTargetSlots()).thenReturn(
-                LightweightCollections.<Slot> emptyCollection());
-        return resolver;
-    }
-
-    public static ViewItemValueResolver mockAlwaysApplicableResolver() {
+    public static ViewItemValueResolver createResolverCanResolveIfContainsAllResources(
+            final ResourceSet resources) {
         ViewItemValueResolver resolver = mockViewItemValueResolver();
         when(
                 resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
+                        any(ViewItemValueResolverContext.class))).thenAnswer(
+                new Answer<Boolean>() {
+                    @Override
+                    public Boolean answer(InvocationOnMock invocation)
+                            throws Throwable {
+                        ViewItem viewItem = (ViewItem) invocation
+                                .getArguments()[0];
+                        ResourceSet set = viewItem.getResources();
+                        return set.containsAll(resources);
+
+                    };
+                });
         return resolver;
     }
 
@@ -60,11 +61,52 @@ public final class ViewItemValueResolverTestUtils {
                         ViewItem viewItem = (ViewItem) invocation
                                 .getArguments()[0];
                         ResourceSet set = viewItem.getResources();
-    
+
                         return set.size() == 1 && set.contains(resource);
                     };
                 });
         return resolver;
+    }
+
+    public static ViewItemValueResolver createResolverCanResolveResourceWithProperty(
+            final String property) {
+        ViewItemValueResolver resolver = mockViewItemValueResolver();
+        when(
+                resolver.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenAnswer(
+                new Answer<Boolean>() {
+                    @Override
+                    public Boolean answer(InvocationOnMock invocation)
+                            throws Throwable {
+                        ViewItem viewItem = (ViewItem) invocation
+                                .getArguments()[0];
+                        ResourceSet set = viewItem.getResources();
+
+                        return set.size() == 1
+                                && set.getFirstResource().containsProperty(
+                                        property);
+                    };
+                });
+        return resolver;
+    }
+
+    public static ViewItemValueResolver mockAlwaysApplicableResolver() {
+        ViewItemValueResolver resolver = mockViewItemValueResolver();
+        when(
+                resolver.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
+        return resolver;
+    }
+
+    public static ViewItemValueResolver mockViewItemValueResolver() {
+        ViewItemValueResolver resolver = mock(ViewItemValueResolver.class);
+        when(resolver.getTargetSlots()).thenReturn(
+                LightweightCollections.<Slot> emptyCollection());
+        return resolver;
+    }
+
+    private ViewItemValueResolverTestUtils() {
     }
 
 }

@@ -58,6 +58,10 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultViewModel implements ViewModel, Disposable,
         ViewContentDisplayCallback {
 
+    private enum DeltaType {
+        ADDED, REMOVED, UPDATED, OTHER
+    }
+
     /**
      * Maps group ids (representing the resource sets that are calculated by the
      * resource grouping, also used as view item ids) to the
@@ -134,6 +138,23 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 handler);
     }
 
+    private LightweightList<ViewItem> calculateOtherViewItems(
+            ViewItemContainerDelta delta) {
+
+        LightweightList<ViewItem> others = CollectionFactory
+                .createLightweightList();
+
+        for (ViewItem viewItem : getViewItems()) {
+            if (!delta.getAddedViewItems().contains(viewItem)
+                    && !delta.getRemovedViewItems().contains(viewItem)
+                    && !delta.getUpdatedViewItems().contains(viewItem)) {
+                others.add(viewItem);
+            }
+        }
+
+        return others;
+    }
+
     @Override
     public boolean containsViewItem(String groupId) {
         return viewItemsByGroupId.containsKey(groupId);
@@ -188,6 +209,53 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;
+    };
+
+    protected ViewItemContainerDelta editDeltaForErrors(
+            ViewItemContainerDelta delta,
+            DefaultViewItemResolutionErrorModel oldErrorModel) {
+
+        LightweightList<ViewItem> addedViewItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ViewItem> removedViewItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ViewItem> updatedViewItems = CollectionFactory
+                .createLightweightList();
+
+        LightweightList<ViewItem> otherViewItems = calculateOtherViewItems(delta);
+
+        // check if added view items should be added or ignored
+        for (ViewItem added : delta.getAddedViewItems()) {
+            if (shouldAdd(added, DeltaType.ADDED, oldErrorModel)) {
+                addedViewItems.add(added);
+            }
+        }
+        // check if removed resources need to be removed or ignored
+        for (ViewItem removed : delta.getRemovedViewItems()) {
+            if (shouldRemove(removed, DeltaType.REMOVED, oldErrorModel)) {
+                removedViewItems.add(removed);
+            }
+        }
+
+        for (ViewItem updated : delta.getUpdatedViewItems()) {
+            if (shouldUpdate(updated, DeltaType.UPDATED, oldErrorModel)) {
+                updatedViewItems.add(updated);
+            } else if (shouldAdd(updated, DeltaType.UPDATED, oldErrorModel)) {
+                addedViewItems.add(updated);
+            } else if (shouldRemove(updated, DeltaType.UPDATED, oldErrorModel)) {
+                removedViewItems.add(updated);
+            }
+        }
+
+        for (ViewItem other : otherViewItems) {
+            if (shouldAdd(other, DeltaType.OTHER, oldErrorModel)) {
+                addedViewItems.add(other);
+            } else if (shouldRemove(other, DeltaType.OTHER, oldErrorModel)) {
+                removedViewItems.add(other);
+            }
+        }
+        return new ViewItemContainerDelta(addedViewItems, removedViewItems,
+                updatedViewItems);
     }
 
     private void fireViewItemContainerChangeEvent(ViewItemContainerDelta delta) {
@@ -371,14 +439,19 @@ public class DefaultViewModel implements ViewModel, Disposable,
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
+
                 /*
                  * the visual mappings need to be updated first because the view
                  * items rely on them when the values are resolved
                  */
                 ViewItemContainerDelta delta = updateViewItemsOnModelChange(e);
+                DefaultViewItemResolutionErrorModel oldErrorModel = errorModel
+                        .clone();
                 updateErrorModel();
+                ViewItemContainerDelta contentDelta = editDeltaForErrors(delta,
+                        oldErrorModel);
                 // updateVisualMappings();
-                updateViewContentDisplay(delta);
+                updateViewContentDisplay(contentDelta);
                 fireViewItemContainerChangeEvent(delta);
             }
         });
@@ -543,6 +616,32 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // view items(remove,add)
     }
 
+    // TODO document this stuff
+    private boolean shouldAdd(ViewItem viewItem, DeltaType deltaType,
+            DefaultViewItemResolutionErrorModel oldErrorModel) {
+
+        return !errorModel.hasErrors(viewItem)
+                && (DeltaType.ADDED.equals(deltaType) || (oldErrorModel
+                        .hasErrors(viewItem) && !DeltaType.REMOVED
+                        .equals(deltaType)));
+    }
+
+    // TODO document this stuff
+    private boolean shouldRemove(ViewItem viewItem, DeltaType deltaType,
+            DefaultViewItemResolutionErrorModel oldErrorModel) {
+        return (!oldErrorModel.hasErrors(viewItem) && (DeltaType.REMOVED
+                .equals(deltaType) || (!DeltaType.ADDED.equals(deltaType) && errorModel
+                .hasErrors(viewItem))));
+    }
+
+    // TODO document this stuff
+    private boolean shouldUpdate(ViewItem viewItem, DeltaType deltaType,
+            DefaultViewItemResolutionErrorModel oldErrorModel) {
+        return DeltaType.UPDATED.equals(deltaType)
+                && !errorModel.hasErrors(viewItem)
+                && !oldErrorModel.hasErrors(viewItem);
+    }
+
     private void updateErrorModel() {
         Slot[] slots = getSlots();
         for (Slot slot : slots) {
@@ -637,6 +736,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
             LightweightCollection<Slot> changedSlots) {
 
         try {
+
+            // TODO assert that neither added nor updated ViewItems, nor other
+            // currently contained ViewItems have errors in errorModel
             contentDisplay.update(addedViewItems, updatedViewItems,
                     removedViewItems, changedSlots);
         } catch (Exception ex) {
@@ -644,6 +746,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
     }
 
+    // TODO adding the ViewItems to the viewItemsByGroupID should not be done in
+    // this method
     private void updateViewContentDisplay(ViewItemContainerDelta delta) {
         // TODO switch to delta in view content display interface
         updateViewContentDisplay(delta.getAddedViewItems(),
