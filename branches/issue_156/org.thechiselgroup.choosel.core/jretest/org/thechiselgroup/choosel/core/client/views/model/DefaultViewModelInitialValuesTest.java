@@ -16,6 +16,10 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -23,9 +27,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
 // TODO migrate to change default slot mapping initializer
 public class DefaultViewModelInitialValuesTest {
@@ -76,6 +88,7 @@ public class DefaultViewModelInitialValuesTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        // TODO use correct factories...
         SlotMappingUIModel.TESTING = true;
 
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
@@ -83,10 +96,57 @@ public class DefaultViewModelInitialValuesTest {
 
         helper = new DefaultViewModelTestHelper();
         helper.setSlots(textSlot, numberSlot);
-        helper.setUseDefaultFactories(false);
 
         underTest = helper.createTestViewModel();
 
+        ViewItemValueResolverFactoryProvider resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
+        final LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
+                .createLightweightList();
+
+        when(resolverProvider.getFactoryById(any(String.class))).thenAnswer(
+                new Answer<ViewItemValueResolverFactory>() {
+                    @Override
+                    public ViewItemValueResolverFactory answer(
+                            InvocationOnMock invocation) throws Throwable {
+
+                        ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
+                        when(
+                                resolverFactory.canCreateApplicableResolver(
+                                        any(Slot.class),
+                                        any(LightweightList.class)))
+                                .thenReturn(true);
+                        when(resolverFactory.getId()).thenReturn(
+                                (String) invocation.getArguments()[0]);
+
+                        resolverFactories.add(resolverFactory);
+
+                        return resolverFactory;
+                    }
+                });
+
+        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
+        initializer
+                .putDefaultDataTypeValues(DataType.NUMBER,
+                        new ManagedViewItemValueResolverDecorator("Fixed-0",
+                                new FixedValueResolver(new Double(0),
+                                        DataType.NUMBER)));
+        {
+
+            ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
+            when(
+                    resolverFactory.canCreateApplicableResolver(
+                            any(Slot.class), any(LightweightList.class)))
+                    .thenReturn(true);
+            when(resolverFactory.getId()).thenReturn("Fixed-0");
+
+            resolverFactories.add(resolverFactory);
+        }
+
+        when(resolverProvider.getResolverFactories()).thenReturn(
+                resolverFactories);
+
+        new SlotMappingConfigurationUIModel(resolverProvider, initializer,
+                underTest);
     }
 
     @After

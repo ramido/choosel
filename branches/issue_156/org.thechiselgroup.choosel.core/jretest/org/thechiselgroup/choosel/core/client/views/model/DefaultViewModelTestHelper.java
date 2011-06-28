@@ -16,7 +16,11 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 
 import java.util.ArrayList;
@@ -24,8 +28,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.mockito.ArgumentCaptor;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
@@ -39,8 +41,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.collections.NullIterator;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
@@ -127,8 +127,6 @@ public final class DefaultViewModelTestHelper {
 
     private ViewItemValueResolverFactoryProvider resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
 
-    private SlotMappingInitializer initializer;
-
     private LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
             .createLightweightList();
 
@@ -154,8 +152,6 @@ public final class DefaultViewModelTestHelper {
 
         SlotMappingConfiguration slotMappingConfiguration = spy(new SlotMappingConfiguration(
                 slots));
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, initializer, slotMappingConfiguration);
 
         // TODO we want to make the categorizer more flexible
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -168,7 +164,7 @@ public final class DefaultViewModelTestHelper {
         return spy(new DefaultViewModel(viewContentDisplay,
                 slotMappingConfiguration, selectedResources,
                 highlightedResources, mock(ViewItemBehavior.class),
-                resourceGrouping, mock(Logger.class), configurationUIModel));
+                resourceGrouping, mock(Logger.class)));
     }
 
     public ResourceSet getContainedResources() {
@@ -177,6 +173,10 @@ public final class DefaultViewModelTestHelper {
 
     public ResourceSet getHighlightedResources() {
         return highlightedResources;
+    }
+
+    public LightweightList<ViewItemValueResolverFactory> getResolverFactories() {
+        return resolverFactories;
     }
 
     public ViewItemValueResolverFactoryProvider getResolverProvider() {
@@ -199,10 +199,6 @@ public final class DefaultViewModelTestHelper {
         this.highlightedResources = mock(ResourceSet.class);
     }
 
-    public void mockInitializer() {
-        this.initializer = mock(SlotMappingInitializer.class);
-    }
-
     public void mockSelectedResources() {
         this.selectedResources = mock(ResourceSet.class);
     }
@@ -223,67 +219,4 @@ public final class DefaultViewModelTestHelper {
         this.slots = slots;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setUseDefaultFactories(boolean useDefaultFactories) {
-        when(resolverProvider.getFactoryById(any(String.class))).thenAnswer(
-                new Answer<ViewItemValueResolverFactory>() {
-                    @Override
-                    public ViewItemValueResolverFactory answer(
-                            InvocationOnMock invocation) throws Throwable {
-
-                        ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-                        when(
-                                resolverFactory.canCreateApplicableResolver(
-                                        any(Slot.class),
-                                        any(LightweightList.class)))
-                                .thenReturn(true);
-                        when(resolverFactory.getId()).thenReturn(
-                                (String) invocation.getArguments()[0]);
-
-                        resolverFactories.add(resolverFactory);
-
-                        return resolverFactory;
-                    }
-                });
-
-        // XXX needs corresponding factories
-        // TODO change once relevant tests are migrated
-
-        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
-        initializer
-                .putDefaultDataTypeValues(DataType.NUMBER,
-                        new ManagedViewItemValueResolverDecorator("Fixed-0",
-                                new FixedValueResolver(new Double(0),
-                                        DataType.NUMBER)));
-        {
-
-            ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-            when(
-                    resolverFactory.canCreateApplicableResolver(
-                            any(Slot.class), any(LightweightList.class)))
-                    .thenReturn(true);
-            when(resolverFactory.getId()).thenReturn("Fixed-0");
-
-            resolverFactories.add(resolverFactory);
-        }
-        if (useDefaultFactories) {
-            initializer.putDefaultDataTypeValues(DataType.TEXT,
-                    new ManagedViewItemValueResolverDecorator(
-                            "Fixed-EmptyString", new FixedValueResolver("",
-                                    DataType.TEXT)));
-            {
-
-                ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-                when(
-                        resolverFactory.canCreateApplicableResolver(
-                                any(Slot.class), any(LightweightList.class)))
-                        .thenReturn(true);
-                when(resolverFactory.getId()).thenReturn("Fixed-EmptyString");
-
-                resolverFactories.add(resolverFactory);
-            }
-        }
-
-        this.initializer = initializer;
-    }
 }

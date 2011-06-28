@@ -37,7 +37,6 @@ import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewMode
 
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -49,7 +48,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 
 public class DefaultViewModelTest {
 
@@ -269,20 +267,11 @@ public class DefaultViewModelTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        SlotMappingUIModel.TESTING = true;
-
         slot = new Slot("1", "Description", DataType.TEXT);
 
         helper = new DefaultViewModelTestHelper();
         helper.setSlots(slot);
-        helper.setUseDefaultFactories(true);
-
         underTest = helper.createTestViewModel();
-    }
-
-    @After
-    public void tearDown() {
-        SlotMappingUIModel.TESTING = false;
     }
 
     // TODO check highlighted resources in resource item

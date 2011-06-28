@@ -21,7 +21,6 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -53,7 +52,6 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
 
 public class DefaultViewPersistenceTest {
@@ -209,8 +207,6 @@ public class DefaultViewPersistenceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        SlotMappingUIModel.TESTING = true;
-
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
@@ -225,8 +221,6 @@ public class DefaultViewPersistenceTest {
             helper.setSlots(textSlot, numberSlot);
             helper.setContainedResources(resourceModel.getResources());
             helper.setSelectedResources(selectionModel.getSelection());
-            helper.setUseDefaultFactories(true);
-
             originalViewModel = helper.createTestViewModel();
             originalView = createView(originalViewModel, resourceModel,
                     selectionModel);
@@ -242,17 +236,10 @@ public class DefaultViewPersistenceTest {
             helper.setSlots(textSlot, numberSlot);
             helper.setContainedResources(resourceModel.getResources());
             helper.setSelectedResources(selectionModel.getSelection());
-            helper.setUseDefaultFactories(true);
-
             restoredViewModel = helper.createTestViewModel();
             restoredView = createView(restoredViewModel, resourceModel,
                     selectionModel);
         }
-    }
-
-    @After
-    public void tearDown() {
-        SlotMappingUIModel.TESTING = false;
     }
 
     protected void testRestoreCalculationOverGroup(double expectedResult,

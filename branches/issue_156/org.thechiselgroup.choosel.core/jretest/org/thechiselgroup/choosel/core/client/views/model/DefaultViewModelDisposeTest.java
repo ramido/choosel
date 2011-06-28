@@ -74,8 +74,6 @@ public class DefaultViewModelDisposeTest {
         helper.mockContainedResources();
         helper.mockHighlightedResources();
         helper.mockSelectedResources();
-        helper.setUseDefaultFactories(true);
-
         stubHandlerRegistration(helper.getContainedResources(),
                 containedResourcesHandlerRegistration);
         stubHandlerRegistration(helper.getSelectedResources(),

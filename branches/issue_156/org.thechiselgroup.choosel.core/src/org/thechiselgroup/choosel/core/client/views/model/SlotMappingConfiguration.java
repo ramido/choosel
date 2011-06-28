@@ -134,7 +134,7 @@ public class SlotMappingConfiguration implements
 
         slotsToResolvers.put(slot, resolver);
 
-        handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
+        handlerManager.fireEvent(new SlotMappingChangedEvent(slot, resolver));
 
         // fire events for delegating resolvers that reference this slot
         for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
@@ -142,7 +142,7 @@ public class SlotMappingConfiguration implements
             for (Slot targetSlot : entry.getValue().getTargetSlots()) {
                 if (targetSlot.equals(slot)) {
                     handlerManager.fireEvent(new SlotMappingChangedEvent(entry
-                            .getKey()));
+                            .getKey(), resolver));
                 }
             }
         }

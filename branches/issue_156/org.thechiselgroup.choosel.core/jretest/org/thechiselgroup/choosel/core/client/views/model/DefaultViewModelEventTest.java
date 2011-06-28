@@ -21,7 +21,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,7 +28,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -99,18 +97,9 @@ public class DefaultViewModelEventTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        SlotMappingUIModel.TESTING = true;
-
         helper = new DefaultViewModelTestHelper();
         helper.createSlots();
-        helper.setUseDefaultFactories(true);
-
         underTest = helper.createTestViewModel();
-    }
-
-    @After
-    public void tearDown() {
-        SlotMappingUIModel.TESTING = false;
     }
 
 }

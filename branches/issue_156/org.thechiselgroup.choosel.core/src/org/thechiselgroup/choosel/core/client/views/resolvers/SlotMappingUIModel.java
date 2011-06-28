@@ -182,7 +182,8 @@ public class SlotMappingUIModel {
 
         this.currentResolver = resolver;
 
-        eventBus.fireEvent(new SlotMappingChangedEvent(slot));
+        // TODO should we really fire this here??
+        eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));
     }
 
     /**

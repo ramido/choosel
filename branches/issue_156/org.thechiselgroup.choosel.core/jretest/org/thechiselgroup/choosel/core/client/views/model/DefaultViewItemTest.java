@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 public class DefaultViewItemTest {
 
@@ -349,8 +350,8 @@ public class DefaultViewItemTest {
                 .thenReturn(2d, 3d);
 
         underTest.getValue(numberSlot);
-        handler.onSlotMappingChanged(new SlotMappingChangedEvent(
-                numberSlot));
+        handler.onSlotMappingChanged(new SlotMappingChangedEvent(numberSlot,
+                mock(ViewItemValueResolver.class)));
         assertEquals(3d, underTest.getValue(numberSlot));
     }
 

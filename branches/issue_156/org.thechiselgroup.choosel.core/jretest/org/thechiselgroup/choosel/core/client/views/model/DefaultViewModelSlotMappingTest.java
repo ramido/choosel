@@ -22,7 +22,6 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -38,7 +37,6 @@ import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 
 public class DefaultViewModelSlotMappingTest {
 
@@ -85,15 +83,11 @@ public class DefaultViewModelSlotMappingTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        SlotMappingUIModel.TESTING = true;
-
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
         helper = new DefaultViewModelTestHelper();
         helper.setSlots(textSlot, numberSlot);
-        helper.setUseDefaultFactories(true);
-
         underTest = helper.createTestViewModel();
 
         Resource r1 = new Resource("test:1");
@@ -116,11 +110,6 @@ public class DefaultViewModelSlotMappingTest {
     @Test
     public void sumCalculationOverGroup() {
         testCalculationOverGroup(12d, new SumCalculation());
-    }
-
-    @After
-    public void tearDown() {
-        SlotMappingUIModel.TESTING = false;
     }
 
     private void testCalculationOverGroup(double expectedResult,

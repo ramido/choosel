@@ -36,20 +36,38 @@ public class SlotMappingConfigurationUIModel {
 
     private SlotMappingInitializer slotMappingInitializer;
 
-    private ViewItemValueResolverContext context;
+    private ViewModel viewModel;
 
     public SlotMappingConfigurationUIModel(
             ViewItemValueResolverFactoryProvider resolverProvider,
-            SlotMappingInitializer slotMappingInitializer,
-            ViewItemValueResolverContext context) {
+            SlotMappingInitializer slotMappingInitializer, ViewModel viewModel) {
 
         assert resolverProvider != null;
         assert slotMappingInitializer != null;
-        assert context != null;
+        assert viewModel != null;
 
-        this.context = context;
         this.resolverProvider = resolverProvider;
         this.slotMappingInitializer = slotMappingInitializer;
+        this.viewModel = viewModel;
+
+        // XXX why do we initialize when there are no resources yet?
+        // we definitely need a state that flag slots as invalid / unresolved
+        initSlots(viewModel.getSlots());
+
+        viewModel.addHandler(new SlotMappingChangedHandler() {
+            @Override
+            public void onSlotMappingChanged(SlotMappingChangedEvent e) {
+                setResolver(e.getSlot(),
+                        (ManagedViewItemValueResolver) e.getCurrentResolver());
+            }
+        });
+        viewModel.addHandler(new ViewItemContainerChangeEventHandler() {
+            @Override
+            public void onViewItemContainerChanged(
+                    ViewItemContainerChangeEvent event) {
+                updateVisualMappings();
+            }
+        });
     }
 
     public LightweightList<Slot> getSlotsWithInvalidResolvers() {
@@ -65,10 +83,10 @@ public class SlotMappingConfigurationUIModel {
         return invalidSlots;
     }
 
-    public void initSlots(Slot[] slots) {
+    private void initSlots(Slot[] slots) {
         for (Slot slot : slots) {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
-                    resolverProvider, context));
+                    resolverProvider, viewModel));
         }
     }
 
@@ -86,8 +104,14 @@ public class SlotMappingConfigurationUIModel {
         }
     }
 
-    public void updateVisualMappings(DefaultViewModel defaultViewModel,
-            LightweightCollection<ViewItem> viewItems, ResourceSet viewResources) {
+    private void updateVisualMappings() {
+        ResourceSet viewResources = viewModel.getResourceGrouping()
+                .getResourceSet();
+        updateVisualMappings(viewModel.getViewItems(), viewResources);
+    }
+
+    public void updateVisualMappings(LightweightCollection<ViewItem> viewItems,
+            ResourceSet viewResources) {
 
         // check to see if the configuration is still valid
         updateUIModels(viewItems);
@@ -98,7 +122,7 @@ public class SlotMappingConfigurationUIModel {
             Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
             for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
                     .getResolvers(viewResources, slotsAsArray).entrySet()) {
-                defaultViewModel.setResolver(entry.getKey(), entry.getValue());
+                viewModel.setResolver(entry.getKey(), entry.getValue());
             }
         }
     }

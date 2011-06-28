@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.TextPropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -65,9 +66,12 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
         switch (dataType) {
         case TEXT:
-            return new TextPropertyResolver(firstProperty);
+            return new ManagedViewItemValueResolverDecorator("a",
+                    new TextPropertyResolver(firstProperty));
         case NUMBER:
-            return new CalculationResolver(firstProperty, new SumCalculation());
+            return new ManagedViewItemValueResolverDecorator(
+                    "a",
+                    new CalculationResolver(firstProperty, new SumCalculation()));
         }
 
         return new FirstResourcePropertyResolver(firstProperty, dataType);

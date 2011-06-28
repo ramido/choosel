@@ -40,7 +40,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -85,8 +84,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private final Logger logger;
 
-    final SlotMappingConfigurationUIModel configurationUIModel;
-
     private DefaultViewItemResolutionErrorModel errorModel = new DefaultViewItemResolutionErrorModel();
 
     private transient HandlerManager handlerManager;
@@ -95,8 +92,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
             ViewItemBehavior viewItemBehavior,
-            ResourceGrouping resourceGrouping, Logger logger,
-            SlotMappingConfigurationUIModel configurationUIModel) {
+            ResourceGrouping resourceGrouping, Logger logger) {
 
         assert slotMappingConfiguration != null;
         assert contentDisplay != null;
@@ -113,13 +109,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
         this.viewItemBehavior = viewItemBehavior;
         this.resourceGrouping = resourceGrouping;
         this.logger = logger;
-        this.configurationUIModel = configurationUIModel;
 
         this.handlerManager = new HandlerManager(this);
-
-        // XXX why do we initialize when there are no resources yet?
-        // we definitely need a state that flag slots as invalid / unresolved
-        configurationUIModel.initSlots(slotMappingConfiguration.getSlots());
 
         init(selectedResources);
         initSelectionModelEventHandlers();
@@ -386,7 +377,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
                  */
                 ViewItemContainerDelta delta = updateViewItemsOnModelChange(e);
                 updateErrorModel();
-                updateVisualMappings();
+                // updateVisualMappings();
                 updateViewContentDisplay(delta);
                 fireViewItemContainerChangeEvent(delta);
             }
@@ -539,10 +530,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        if (resolver instanceof ManagedViewItemValueResolver) {
-            configurationUIModel.setResolver(slot,
-                    (ManagedViewItemValueResolver) resolver);
-        }
         slotMappingConfiguration.setResolver(slot, resolver);
 
         /* This may have caused/fixed errors in model */
@@ -684,9 +671,4 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 updatedViewItems);
     }
 
-    private void updateVisualMappings() {
-        ResourceSet viewResources = getResourceGrouping().getResourceSet();
-        configurationUIModel.updateVisualMappings(this, getViewItems(),
-                viewResources);
-    }
 }

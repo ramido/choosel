@@ -22,7 +22,6 @@ import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueRe
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithSingleResourceMatcher.containsEqualResource;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -30,7 +29,6 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 /**
@@ -146,15 +144,7 @@ public class DefaultViewModelErrorTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        SlotMappingUIModel.TESTING = true;
-
         helper = new DefaultViewModelTestHelper();
-        helper.mockInitializer();
-
-        /*
-         * We give these resources different types because the testHelper's
-         * categorizer groups by type
-         */
         resource1 = TestResourceSetFactory.createResource("type1", 1);
         resource2 = TestResourceSetFactory.createResource("type2", 2);
     }
@@ -183,11 +173,6 @@ public class DefaultViewModelErrorTest {
         underTest.setResolver(slots[0], mockAlwaysApplicableResolver());
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[1]));
-    }
-
-    @After
-    public void tearDown() {
-        SlotMappingUIModel.TESTING = false;
     }
 
 }
