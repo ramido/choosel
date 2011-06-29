@@ -18,13 +18,14 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -67,8 +68,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * We distinguish the following cases:
  * <ul>
  * <li>delta=added, current_state=valid ==&gt; add
- * {@link DefaultViewModelTest#updateCalledWith2ViewItemsWhenAddingMixedResourceSet}
- * </li>
+ * {@link #addingTwoViewItemsInTwoStepsTriggersTwoUpdateCalls()}</li>
  * <li>delta=added, current_state=errors ==&gt; ignore
  * {@link #addedViewItemsWithErrorsGetIgnored()}</li>
  * <li>delta=removed, old_state=valid ==&gt; remove
@@ -129,6 +129,38 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
         assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
                 containsEqualResources(validResource));
+    }
+
+    @Test
+    public void addingTwoViewItemsInOneStepCallsUpdateOnce() {
+        ResourceSet resources1 = createResources(TYPE_1, 1);
+        ResourceSet resources2 = createResources(TYPE_2, 2);
+
+        helper.addToContainedResources(toResourceSet(resources1, resources2));
+
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(argThat(containsViewItemsForResourceSets(resources1,
+                        resources2)),
+                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(Slot.class));
+    }
+
+    @Test
+    public void addingTwoViewItemsInTwoStepsCallsUpdateTwice() {
+        ResourceSet resources1 = createResources(TYPE_1, 1);
+        ResourceSet resources2 = createResources(TYPE_2, 2);
+
+        helper.addToContainedResources(resources1);
+        helper.addToContainedResources(resources2);
+
+        List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(
+                helper.getViewContentDisplay(), 2);
+
+        assertThat(allValues.get(0),
+                containsViewItemsForResourceSets(resources1));
+        assertThat(allValues.get(1),
+                containsViewItemsForResourceSets(resources2));
     }
 
     /**
@@ -233,21 +265,6 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         verify(helper.getViewContentDisplay(), times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
                 eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWith2ViewItemsWhenAddingMixedResourceSet() {
-        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
-        ResourceSet resources2 = createResources(TYPE_2, 4, 2);
-        ResourceSet resources = toResourceSet(resources1, resources2);
-
-        helper.getContainedResources().addAll(resources);
-
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                resourceItemsForResourceSets(resources1, resources2),
-                emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
     }

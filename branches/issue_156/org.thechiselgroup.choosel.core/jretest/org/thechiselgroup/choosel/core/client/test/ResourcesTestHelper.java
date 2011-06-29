@@ -32,7 +32,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.Assert;
+import org.junit.internal.matchers.TypeSafeMatcher;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.invocation.InvocationOnMock;
@@ -176,39 +178,6 @@ public final class ResourcesTestHelper {
         return eqViewItems(LightweightCollections.toCollection(viewItems));
     }
 
-    public static LightweightCollection<ViewItem> resourceItemsForResourceSets(
-            final ResourceSet... resourceSets) {
-
-        return argThat(new ArgumentMatcher<LightweightCollection<ViewItem>>() {
-            @Override
-            public boolean matches(Object o) {
-                LightweightCollection<ViewItem> set = (LightweightCollection<ViewItem>) o;
-
-                if (set.size() != resourceSets.length) {
-                    return false;
-                }
-
-                for (ResourceSet resourceSet : resourceSets) {
-                    boolean found = false;
-                    for (ViewItem item : set) {
-                        ResourceSet itemSet = item.getResources();
-
-                        if (itemSet.size() == resourceSet.size()
-                                && itemSet.containsAll(resourceSet)) {
-                            found = true;
-                        }
-                    }
-
-                    if (!found) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        });
-    }
-
     public static void verifyOnResourcesAdded(
             ResourceSet expectedAddedResources,
             ResourceSetChangedEventHandler handler) {
@@ -241,6 +210,44 @@ public final class ResourcesTestHelper {
         assertContentEquals(expectedResources, event.getRemovedResources()
                 .toList());
         assertEquals(true, event.getAddedResources().isEmpty());
+    }
+
+    public static Matcher<LightweightCollection<ViewItem>> containsViewItemsForResourceSets(
+            final ResourceSet... resourceSets) {
+
+        return new TypeSafeMatcher<LightweightCollection<ViewItem>>() {
+            @Override
+            public void describeTo(Description description) {
+                for (ResourceSet resourceSet : resourceSets) {
+                    description.appendValue(resourceSet);
+                }
+            }
+
+            @Override
+            public boolean matchesSafely(LightweightCollection<ViewItem> set) {
+                if (set.size() != resourceSets.length) {
+                    return false;
+                }
+
+                for (ResourceSet resourceSet : resourceSets) {
+                    boolean found = false;
+                    for (ViewItem item : set) {
+                        ResourceSet itemSet = item.getResources();
+
+                        if (itemSet.size() == resourceSet.size()
+                                && itemSet.containsAll(resourceSet)) {
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        };
     }
 
     private ResourcesTestHelper() {
