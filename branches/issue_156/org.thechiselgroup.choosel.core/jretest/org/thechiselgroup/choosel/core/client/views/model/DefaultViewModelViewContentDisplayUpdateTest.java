@@ -117,15 +117,11 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     @Test
     public void addedViewItemsWithErrorsGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 1);
-        Resource[] resources = { validResource };
 
-        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
-                .toResourceSet(resources));
-        Resource[] resources1 = { validResource,
-                createResource(RESOURCE_TYPE_2, 1) };
+        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
 
-        helper.addToContainedResources(TestResourceSetFactory
-                .toResourceSet(resources1));
+        helper.addToContainedResources(toResourceSet(validResource,
+                createResource(RESOURCE_TYPE_2, 1)));
 
         assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
                 containsEqualResources(validResource));
@@ -170,15 +166,12 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void removedViewItemsWithErrorsGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 1);
         Resource errorResource = createResource(RESOURCE_TYPE_2, 1);
-        Resource[] resources = { validResource };
 
         setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
-                .toResourceSet(resources));
-        Resource[] resources1 = { validResource, errorResource };
+                .toResourceSet(validResource));
 
-        helper.addToContainedResources(TestResourceSetFactory
-                .toResourceSet(resources1));
-        Resource[] resources2 = { validResource, errorResource };
+        helper.addToContainedResources(TestResourceSetFactory.toResourceSet(
+                validResource, errorResource));
 
         /*
          * at this point, the view item with errorResource is invalid as per
@@ -186,7 +179,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
          */
 
         helper.getContainedResources().removeAll(
-                TestResourceSetFactory.toResourceSet(resources2));
+                TestResourceSetFactory.toResourceSet(validResource,
+                        errorResource));
 
         assertThat(captureRemovedViewItems(helper.getViewContentDisplay()),
                 containsEqualResources(validResource));
@@ -276,10 +270,9 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void updatedViewItemsChangingFromErrorsToValidGetAdded() {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
-        Resource[] resources = { resource1, resource2 };
 
-        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
-                .toResourceSet(resources));
+        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
+                resource1, resource2));
 
         helper.addToContainedResources(resource1);
 
@@ -298,14 +291,11 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void updatedViewItemsChangingFromValidToErrorsGetRemoved() {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
-        Resource[] resources = { resource1, resource2 };
 
-        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
-                .toResourceSet(resources));
-        Resource[] resources1 = { resource1, resource2 };
+        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
+                resource1, resource2));
 
-        helper.addToContainedResources(TestResourceSetFactory
-                .toResourceSet(resources1));
+        helper.addToContainedResources(toResourceSet(resource1, resource2));
 
         /* should now have 1 valid view item */
 
@@ -341,10 +331,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     @Test
     public void updatedViewItemsWithErrorsNowAndBeforeGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 3);
-        Resource[] resources = { validResource };
 
-        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
-                .toResourceSet(resources));
+        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
 
         // adds error view item and correct view item
         helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
