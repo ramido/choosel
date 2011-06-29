@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.OngoingStubbing;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
@@ -41,10 +42,7 @@ public final class ViewItemValueResolverTestUtils {
 
     public static ViewItemValueResolver mockResolverThatCanAlwaysResolve() {
         ViewItemValueResolver resolver = mockResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
+        whenCanResolve(resolver).thenReturn(true);
         return resolver;
     }
 
@@ -52,21 +50,16 @@ public final class ViewItemValueResolverTestUtils {
             final ResourceSet resources) {
 
         ViewItemValueResolver resolver = mockResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
-                        return set.size() == resources.size()
-                                && set.containsAll(resources);
+        whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
+                ResourceSet set = viewItem.getResources();
+                return set.size() == resources.size()
+                        && set.containsAll(resources);
 
-                    };
-                });
+            };
+        });
         return resolver;
     }
 
@@ -74,23 +67,23 @@ public final class ViewItemValueResolverTestUtils {
             final String property) {
 
         ViewItemValueResolver resolver = mockResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
+        whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
+                ResourceSet set = viewItem.getResources();
 
-                        return set.size() == 1
-                                && set.getFirstElement().containsProperty(
-                                        property);
-                    };
-                });
+                return set.size() == 1
+                        && set.getFirstElement().containsProperty(property);
+            };
+        });
         return resolver;
+    }
+
+    private static OngoingStubbing<Boolean> whenCanResolve(
+            ViewItemValueResolver resolver) {
+        return when(resolver.canResolve(any(ViewItem.class),
+                any(ViewItemValueResolverContext.class)));
     }
 
     private ViewItemValueResolverTestUtils() {
