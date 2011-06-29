@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -223,7 +224,7 @@ public class SlotMappingIntegrationTest {
         viewItems = model.getViewItems();
         assertTrue(viewItems.size() == 0);
 
-        Resource resource2 = TestResourceSetFactory.createResource(2);
+        Resource resource2 = createResource(2);
         resource2.putValue(property1, 1);
 
         resourceGrouping.getResourceSet().add(resource2);
@@ -270,7 +271,7 @@ public class SlotMappingIntegrationTest {
                 resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource1 = TestResourceSetFactory.createResource(1);
+        Resource resource1 = createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, 2);
 
