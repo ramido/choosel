@@ -80,10 +80,7 @@ public final class DefaultViewModelTestHelper {
     public Slot[] createSlots(DataType... dataTypes) {
         assert dataTypes != null;
 
-        Slot[] slots = new Slot[dataTypes.length];
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = new Slot("slot" + i, "Slot " + i, dataTypes[i]);
-        }
+        Slot[] slots = ViewItemValueResolverTestUtils.createSlots(dataTypes);
 
         setSlots(slots);
 

@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
@@ -32,6 +33,14 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * @author Lars Grammel
  */
 public final class ViewItemValueResolverTestUtils {
+
+    public static Slot[] createSlots(DataType... dataTypes) {
+        Slot[] slots = new Slot[dataTypes.length];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = new Slot("slot" + i, "Slot " + i, dataTypes[i]);
+        }
+        return slots;
+    }
 
     public static ViewItemValueResolver mockResolver() {
         ViewItemValueResolver resolver = mock(ViewItemValueResolver.class);
