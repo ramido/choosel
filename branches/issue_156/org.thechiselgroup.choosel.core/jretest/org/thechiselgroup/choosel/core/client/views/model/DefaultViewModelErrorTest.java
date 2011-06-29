@@ -18,9 +18,10 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
 import org.junit.Before;
@@ -59,11 +60,9 @@ public class DefaultViewModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        underTest.setResolver(slots[0],
-                ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve());
+        underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
 
-        getResourceSetFromUnderTest().add(
-                TestResourceSetFactory.createResource(1));
+        getResourceSetFromUnderTest().add(createResource(1));
 
         assertThat(underTest.hasErrors(), is(false));
     }
@@ -76,9 +75,8 @@ public class DefaultViewModelErrorTest {
     public void resolverCannotResolveSomeViewItemsFixedByChangingResolverReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
-        Resource[] resources = { resource1 };
 
-        setResolver(slots, resources);
+        setResolver(slots, resource1);
         addResourcesToUndertest();
 
         /*
@@ -94,9 +92,8 @@ public class DefaultViewModelErrorTest {
     public void resolverCannotResolveSomeViewItemsFixedByChangingViewItemsReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
-        Resource[] resources = { resource1 };
 
-        setResolver(slots, resources);
+        setResolver(slots, resource1);
         addResourcesToUndertest();
 
         /*
@@ -111,9 +108,8 @@ public class DefaultViewModelErrorTest {
     public void resolverCannotResolveSomeViewItemsThrowsErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
-        Resource[] resources1 = { resource1 };
 
-        setResolver(slots, resources1);
+        setResolver(slots, resource1);
 
         addResourcesToUndertest();
 
@@ -126,7 +122,7 @@ public class DefaultViewModelErrorTest {
                 containsEqualResources(resource2));
     }
 
-    private void setResolver(Slot[] slots, Resource[] resources) {
+    private void setResolver(Slot[] slots, Resource... resources) {
         ViewItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(toResourceSet(resources));
         underTest.setResolver(slots[0], resolver);
     }
@@ -153,8 +149,8 @@ public class DefaultViewModelErrorTest {
         MockitoAnnotations.initMocks(this);
 
         helper = new DefaultViewModelTestHelper();
-        resource1 = TestResourceSetFactory.createResource("type1", 1);
-        resource2 = TestResourceSetFactory.createResource("type2", 2);
+        resource1 = createResource("type1", 1);
+        resource2 = createResource("type2", 2);
     }
 
     @Test
@@ -162,8 +158,7 @@ public class DefaultViewModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        getResourceSetFromUnderTest().add(
-                TestResourceSetFactory.createResource(1));
+        getResourceSetFromUnderTest().add(createResource(1));
 
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[0]));
@@ -175,8 +170,7 @@ public class DefaultViewModelErrorTest {
 
         underTest = helper.createTestViewModel();
 
-        getResourceSetFromUnderTest().add(
-                TestResourceSetFactory.createResource(1));
+        getResourceSetFromUnderTest().add(createResource(1));
 
         underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
         assertThat(underTest.hasErrors(), is(true));
