@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
@@ -28,6 +28,7 @@ public class ViewItemWithResourcesMatcher extends
 
     public static ViewItemWithResourcesMatcher containsEqualResources(
             Resource... resources) {
+
         return new ViewItemWithResourcesMatcher(toResourceSet(resources));
     }
 

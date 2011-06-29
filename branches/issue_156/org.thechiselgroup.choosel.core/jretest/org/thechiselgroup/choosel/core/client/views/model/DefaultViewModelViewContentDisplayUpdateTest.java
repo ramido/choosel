@@ -19,11 +19,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItems;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureRemovedViewItems;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureUpdatedViewItems;
@@ -41,6 +47,7 @@ import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
@@ -110,11 +117,15 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     @Test
     public void addedViewItemsWithErrorsGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 1);
+        Resource[] resources = { validResource };
 
-        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
+        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
+                .toResourceSet(resources));
+        Resource[] resources1 = { validResource,
+                createResource(RESOURCE_TYPE_2, 1) };
 
-        helper.addToContainedResources(toResourceSet(validResource,
-                createResource(RESOURCE_TYPE_2, 1)));
+        helper.addToContainedResources(TestResourceSetFactory
+                .toResourceSet(resources1));
 
         assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
                 containsEqualResources(validResource));
@@ -127,11 +138,15 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void removedViewItemsWithErrorsGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 1);
         Resource errorResource = createResource(RESOURCE_TYPE_2, 1);
+        Resource[] resources = { validResource };
 
-        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
+        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
+                .toResourceSet(resources));
+        Resource[] resources1 = { validResource, errorResource };
 
-        helper.addToContainedResources(toResourceSet(validResource,
-                errorResource));
+        helper.addToContainedResources(TestResourceSetFactory
+                .toResourceSet(resources1));
+        Resource[] resources2 = { validResource, errorResource };
 
         /*
          * at this point, the view item with errorResource is invalid as per
@@ -139,7 +154,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
          */
 
         helper.getContainedResources().removeAll(
-                toResourceSet(validResource, errorResource));
+                TestResourceSetFactory.toResourceSet(resources2));
 
         assertThat(captureRemovedViewItems(helper.getViewContentDisplay()),
                 containsEqualResources(validResource));
@@ -169,6 +184,74 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                 DataType.NUMBER));
     }
 
+    // TODO check highlighted resources in resource item
+    @Test
+    public void updateCalledWhenHighlightingChanges() {
+        ResourceSet resources = createResources(1);
+
+        helper.getContainedResources().addAll(resources);
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
+                .getViewContentDisplay());
+
+        helper.getHighlightedResources().addAll(resources);
+
+        verify(helper.getViewContentDisplay(), times(1)).update(
+                emptyLightweightCollection(ViewItem.class),
+                eqViewItems(addedViewItems),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
+    }
+
+    @Test
+    public void updateCalledWhenResourcesRemoved() {
+        ResourceSet resources1 = createResources(TYPE_1, 1);
+        ResourceSet resources2 = createResources(TYPE_2, 2);
+        ResourceSet resources = toResourceSet(resources1, resources2);
+
+        helper.getContainedResources().addAll(resources);
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
+                .getViewContentDisplay());
+
+        helper.getContainedResources().removeAll(resources);
+        verify(helper.getViewContentDisplay(), times(1)).update(
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                eqViewItems(addedViewItems),
+                emptyLightweightCollection(Slot.class));
+    }
+
+    @Test
+    public void updateCalledWhenSelectionChanges() {
+        ResourceSet resources = createResources(1);
+
+        helper.getContainedResources().addAll(resources);
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
+                .getViewContentDisplay());
+
+        helper.getSelectedResources().add(createResource(1));
+
+        verify(helper.getViewContentDisplay(), times(1)).update(
+                emptyLightweightCollection(ViewItem.class),
+                eqViewItems(addedViewItems),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
+    }
+
+    @Test
+    public void updateCalledWith2ViewItemsWhenAddingMixedResourceSet() {
+        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
+        ResourceSet resources2 = createResources(TYPE_2, 4, 2);
+        ResourceSet resources = toResourceSet(resources1, resources2);
+
+        helper.getContainedResources().addAll(resources);
+
+        verify(helper.getViewContentDisplay(), times(1)).update(
+                resourceItemsForResourceSets(resources1, resources2),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
+    }
+
     /**
      * delta=updated, old_state=errors, current_state=valid ==&gt; add
      */
@@ -176,9 +259,10 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void updatedViewItemsChangingFromErrorsToValidGetAdded() {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        Resource[] resources = { resource1, resource2 };
 
-        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
-                resource1, resource2));
+        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
+                .toResourceSet(resources));
 
         helper.addToContainedResources(resource1);
 
@@ -197,11 +281,14 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void updatedViewItemsChangingFromValidToErrorsGetRemoved() {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        Resource[] resources = { resource1, resource2 };
 
-        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
-                resource1, resource2));
+        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
+                .toResourceSet(resources));
+        Resource[] resources1 = { resource1, resource2 };
 
-        helper.addToContainedResources(toResourceSet(resource1, resource2));
+        helper.addToContainedResources(TestResourceSetFactory
+                .toResourceSet(resources1));
 
         /* should now have 1 valid view item */
 
@@ -237,8 +324,10 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     @Test
     public void updatedViewItemsWithErrorsNowAndBeforeGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 3);
+        Resource[] resources = { validResource };
 
-        setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
+        setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
+                .toResourceSet(resources));
 
         // adds error view item and correct view item
         helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
@@ -254,6 +343,19 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                 any(LightweightCollection.class),
                 emptyLightweightCollection(Slot.class));
 
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void updateNeverCalledOnHoverModelChangeThatDoesNotAffectViewResources() {
+        helper.getContainedResources().add(createResource(2));
+        helper.getHighlightedResources().add(createResource(1));
+
+        verify(helper.getViewContentDisplay(), never()).update(
+                emptyLightweightCollection(ViewItem.class),
+                any(LightweightCollection.class),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
     }
 
     /**

@@ -18,13 +18,9 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
@@ -276,87 +272,6 @@ public class DefaultViewModelTest {
         helper.setSlots(slot);
         underTest = helper.createTestViewModel();
         underTest.setResolver(slot, new FixedValueResolver("a", DataType.TEXT));
-    }
-
-    // TODO check highlighted resources in resource item
-    @Test
-    public void updateCalledWhenHighlightingChanges() {
-        ResourceSet resources = createResources(1);
-
-        helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
-                .getViewContentDisplay());
-
-        helper.getHighlightedResources().addAll(resources);
-
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWhenResourcesRemoved() {
-        ResourceSet resources1 = createResources(TYPE_1, 1);
-        ResourceSet resources2 = createResources(TYPE_2, 2);
-        ResourceSet resources = toResourceSet(resources1, resources2);
-
-        helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
-                .getViewContentDisplay());
-
-        helper.getContainedResources().removeAll(resources);
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
-                eqViewItems(addedViewItems),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWhenSelectionChanges() {
-        ResourceSet resources = createResources(1);
-
-        helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
-                .getViewContentDisplay());
-
-        helper.getSelectedResources().add(createResource(1));
-
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWith2ViewItemsWhenAddingMixedResourceSet() {
-        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
-        ResourceSet resources2 = createResources(TYPE_2, 4, 2);
-        ResourceSet resources = toResourceSet(resources1, resources2);
-
-        helper.getContainedResources().addAll(resources);
-
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                resourceItemsForResourceSets(resources1, resources2),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void updateNeverCalledOnHoverModelChangeThatDoesNotAffectViewResources() {
-        helper.getContainedResources().add(createResource(2));
-        helper.getHighlightedResources().add(createResource(1));
-
-        verify(helper.getViewContentDisplay(), never()).update(
-                emptyLightweightCollection(ViewItem.class),
-                any(LightweightCollection.class),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
     }
 
     /**

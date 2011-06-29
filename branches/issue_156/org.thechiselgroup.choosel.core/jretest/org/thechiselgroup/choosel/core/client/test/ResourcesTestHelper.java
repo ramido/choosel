@@ -37,7 +37,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
@@ -208,14 +207,6 @@ public final class ResourcesTestHelper {
                 return true;
             }
         });
-    }
-
-    public static ResourceSet toResourceSet(Resource... resources) {
-        DefaultResourceSet resourceSet = new DefaultResourceSet();
-        for (Resource resource : resources) {
-            resourceSet.add(resource);
-        }
-        return resourceSet;
     }
 
     public static void verifyOnResourcesAdded(
