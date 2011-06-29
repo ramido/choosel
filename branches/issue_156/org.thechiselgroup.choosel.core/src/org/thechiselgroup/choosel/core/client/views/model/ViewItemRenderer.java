@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
+// TODO pull up slots into this?
 public interface ViewItemRenderer {
 
     /**

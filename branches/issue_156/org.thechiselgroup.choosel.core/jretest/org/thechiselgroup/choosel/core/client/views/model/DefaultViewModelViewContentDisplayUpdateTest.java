@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
@@ -29,9 +31,13 @@ import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueRe
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -57,17 +63,17 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * {@link DefaultViewModelTest#updateCalledWith2ViewItemsWhenAddingMixedResourceSet}
  * </li>
  * <li>delta=added, current_state=errors ==&gt; ignore
- * {@link #addedWithErrorsGetsIgnored()}</li>
+ * {@link #addedViewItemsWithErrorsGetIgnored()}</li>
  * <li>delta=removed, old_state=valid ==&gt; remove
  * {@link DefaultViewModelTest#updateCalledWhenResourcesRemoved}</li>
  * <li>delta=removed, old_state=errors ==&gt; ignore
- * {@link #removedWithErrorsGetsIgnored()}</li>
+ * {@link #removedViewItemsWithErrorsGetIgnored()}</li>
  * <li>delta=updated, old_state=valid, current_state=valid ==&gt; update
- * {@link #updatedValidNowAndBeforeGetsUpdated()}</li>
+ * {@link #updatedViewItemsThatAreValidNowAndBeforeGetUpdated()}</li>
  * <li>delta=updated, old_state=valid, current_state=errors ==&gt; remove
- * {@link #updatedChangingFromValidToErrorsGetsRemoved()}</li>
+ * {@link #updatedViewItemsChangingFromValidToErrorsGetRemoved()}</li>
  * <li>delta=updated, old_state=errors, current_state=valid ==&gt; add
- * {@link #updatedChangingFromErrorsToValidGetsAdded()}</li>
+ * {@link #updatedViewItemsChangingFromErrorsToValidGetAdded()}</li>
  * <li>delta=updated, old_state=errors, current_state=errors ==&gt; ignore
  * {@link #updatedWithErrorsNowAndBeforeGetsIgnore()}</li>
  * </ul>
@@ -81,11 +87,13 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 // TODO extract AbstractDefaultViewModelTest superclass
 public class DefaultViewModelViewContentDisplayUpdateTest {
 
-    private Slot slot;
+    private Slot textSlot;
 
     private DefaultViewModel underTest;
 
     private DefaultViewModelTestHelper helper;
+
+    private Slot numberSlot;
 
     private static final String RESOURCE_TYPE_2 = "type2";
 
@@ -100,12 +108,12 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * </p>
      */
     @Test
-    public void addedWithErrorsGetsIgnored() {
+    public void addedViewItemsWithErrorsGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
 
-        helper.addAllToContainerResources(toResourceSet(validResource,
+        helper.addToContainedResources(toResourceSet(validResource,
                 createResource(RESOURCE_TYPE_2, 1)));
 
         assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
@@ -116,13 +124,13 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * delta=removed, old_state=errors ==&gt; ignore
      */
     @Test
-    public void removedWithErrorsGetsIgnored() {
+    public void removedViewItemsWithErrorsGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 1);
         Resource errorResource = createResource(RESOURCE_TYPE_2, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
 
-        helper.addAllToContainerResources(toResourceSet(validResource,
+        helper.addToContainedResources(toResourceSet(validResource,
                 errorResource));
 
         /*
@@ -141,26 +149,31 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
             ResourceSet resourceSet) {
 
         ViewItemValueResolver resolver = createResolverThatCanResolveIfContainsResourcesExactly(resourceSet);
-        underTest.setResolver(slot, resolver);
+        underTest.setResolver(textSlot, resolver);
     }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        slot = new Slot("1", "Description", DataType.TEXT);
+        textSlot = new Slot("1", "Description", DataType.TEXT);
+        numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
         helper = new DefaultViewModelTestHelper();
-        helper.setSlots(slot);
+        helper.setSlots(textSlot, numberSlot);
         underTest = helper.createTestViewModel();
-        underTest.setResolver(slot, new FixedValueResolver("a", DataType.TEXT));
+
+        underTest.setResolver(textSlot, new FixedValueResolver("a",
+                DataType.TEXT));
+        underTest.setResolver(numberSlot, new FixedValueResolver(1d,
+                DataType.NUMBER));
     }
 
     /**
      * delta=updated, old_state=errors, current_state=valid ==&gt; add
      */
     @Test
-    public void updatedChangingFromErrorsToValidGetsAdded() {
+    public void updatedViewItemsChangingFromErrorsToValidGetAdded() {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
 
@@ -181,14 +194,14 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * delta=updated, old_state=valid, current_state=errors ==&gt; remove
      */
     @Test
-    public void updatedChangingFromValidToErrorsGetsRemoved() {
+    public void updatedViewItemsChangingFromValidToErrorsGetRemoved() {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
                 resource1, resource2));
 
-        helper.addAllToContainerResources(toResourceSet(resource1, resource2));
+        helper.addToContainedResources(toResourceSet(resource1, resource2));
 
         /* should now have 1 valid view item */
 
@@ -199,11 +212,30 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     }
 
     /**
+     * delta=updated, old_state=valid, current_state=valid ==&gt; updated
+     */
+    @Test
+    public void updatedViewItemsThatAreValidNowAndBeforeGetUpdated() {
+        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
+        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+
+        underTest.setResolver(textSlot, mockAlwaysApplicableResolver());
+
+        helper.addToContainedResources(resource1);
+
+        // update call
+        helper.addToContainedResources(resource2);
+
+        assertThat(captureUpdatedViewItems(helper.getViewContentDisplay()),
+                containsEqualResources(resource1, resource2));
+    }
+
+    /**
      * delta=updated, old_state=errors, current_state=errors ==&gt; ignore
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void updatedErrorsNowAndBeforeGetsIgnored() {
+    public void updatedViewItemsWithErrorsNowAndBeforeGetIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 3);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
@@ -225,21 +257,40 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     }
 
     /**
-     * delta=updated, old_state=valid, current_state=valid ==&gt; updated
+     * Shows the bug that happens when the default view gets notified of the
+     * slot update before the {@link ViewItem}s are cleaned (by getting
+     * notification of the slot update). The view items need to get the
+     * notification first to clean their caching.
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
-    public void updatedValidNowAndBeforeGetsUpdated() {
-        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
-        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+    public void viewContentUpdateAfterChangedSlotMapping() {
+        helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
 
-        underTest.setResolver(slot, mockAlwaysApplicableResolver());
+        List<ViewItem> viewItems = underTest.getViewItems().toList();
+        assertEquals(1, viewItems.size());
+        final ViewItem viewItem = viewItems.get(0);
+        viewItem.getValue(numberSlot); // caches values
 
-        helper.addToContainedResources(resource1);
+        /*
+         * We assert the value here, because this is what happens during the
+         * update call. If we would check the value on the view item later, the
+         * bug would not show up (it is important that the viewItem returns the
+         * new values when the content display is updated.
+         */
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                assertEquals(5d, viewItem.getValue(numberSlot));
+                return null;
+            }
+        }).when(helper.getViewContentDisplay()).update(
+                any(LightweightCollection.class),
+                any(LightweightCollection.class),
+                any(LightweightCollection.class),
+                any(LightweightCollection.class));
 
-        // update call
-        helper.addToContainedResources(resource2);
-
-        assertThat(captureUpdatedViewItems(helper.getViewContentDisplay()),
-                containsEqualResources(resource1, resource2));
+        underTest.setResolver(numberSlot, new FixedValueResolver(5d,
+                DataType.NUMBER));
     }
 }

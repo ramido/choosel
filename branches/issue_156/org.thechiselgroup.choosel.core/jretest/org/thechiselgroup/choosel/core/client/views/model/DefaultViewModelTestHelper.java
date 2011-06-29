@@ -156,12 +156,12 @@ public final class DefaultViewModelTestHelper {
     private LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
             .createLightweightList();
 
-    public boolean addAllToContainerResources(ResourceSet resources) {
-        return getContainedResources().addAll(resources);
+    public boolean addToContainedResources(Resource resource) {
+        return getContainedResources().add(resource);
     }
 
-    public boolean addToContainedResources(Resource resource1) {
-        return getContainedResources().add(resource1);
+    public boolean addToContainedResources(ResourceSet resources) {
+        return getContainedResources().addAll(resources);
     }
 
     public Slot[] createSlots(DataType... dataTypes) {

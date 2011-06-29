@@ -16,8 +16,6 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
@@ -25,12 +23,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
@@ -124,40 +119,4 @@ public class DefaultViewModelSlotMappingTest {
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));
     }
 
-    /**
-     * Shows the bug that happens when the default view gets notified of the
-     * slot update before the ResourceItems are cleaned (by getting notification
-     * of the slot update). The resource items need to get the notification
-     * first to clean their caching.
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Test
-    public void viewContentUpdateAfterChangedSlotMapping() {
-        underTest.setResolver(numberSlot, new CalculationResolver("property1",
-                new SumCalculation()));
-
-        List<ViewItem> resourceItems = underTest.getViewItems().toList();
-        assertEquals(1, resourceItems.size());
-        final ViewItem resourceItem = resourceItems.get(0);
-        resourceItem.getValue(numberSlot);
-
-        /*
-         * XXX contentDisplay must not be inlined in when part, otherwise
-         * Mockito will throw UnfinishedStubbingException.
-         */
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) {
-                assertEquals(8d, resourceItem.getValue(numberSlot));
-                return null;
-            }
-        }).when(helper.getViewContentDisplay()).update(
-                any(LightweightCollection.class),
-                any(LightweightCollection.class),
-                any(LightweightCollection.class),
-                any(LightweightCollection.class));
-
-        underTest.setResolver(numberSlot, new CalculationResolver("property1",
-                new MaxCalculation()));
-    }
 }
