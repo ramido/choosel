@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -175,25 +174,6 @@ public class DefaultViewItemResolutionErrorModel implements
         assertInvariantIntegrity();
         assert !errorsByViewItemId.containsKey(viewItem.getViewItemID());
         assert !hasErrors(viewItem);
-    }
-
-    @Override
-    public DefaultViewItemResolutionErrorModel clone() {
-        DefaultViewItemResolutionErrorModel clone = new DefaultViewItemResolutionErrorModel();
-        clone.errorsBySlotId = new HashMap<String, ArrayListToLightweightListAdapter<ViewItem>>(
-                this.errorsBySlotId);
-        clone.errorsByViewItemId = new HashMap<String, ArrayListToLightweightListAdapter<Slot>>(
-                this.errorsByViewItemId);
-        clone.slotsWithErrors = new ArrayListToLightweightListAdapter<Slot>();
-        clone.slotsWithErrors.addAll(this.slotsWithErrors);
-        clone.viewItemsWithErrors = new ArrayListToLightweightListAdapter<ViewItem>();
-        clone.viewItemsWithErrors.addAll(this.viewItemsWithErrors);
-
-        clone.assertErrorSlotsIntegrity();
-        clone.assertInvariantIntegrity();
-        clone.assertViewItemsIntegrity();
-
-        return clone;
     }
 
     @Override

@@ -54,6 +54,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * </p>
  * 
  * @author Lars Grammel
+ * @author Patrick Gorman
  */
 public class DefaultViewModel implements ViewModel, Disposable,
         ViewContentDisplayCallback {
@@ -134,9 +135,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 handler);
     }
 
-    private ViewItemContainerDelta calculateDeltaThatConsidersErrorModel(
+    private ViewItemContainerDelta calculateDeltaThatConsidersErrors(
             ViewItemContainerDelta delta,
-            DefaultViewItemResolutionErrorModel oldErrorModel) {
+            LightweightCollection<ViewItem> viewItemsThatHadErrors) {
 
         LightweightList<ViewItem> addedViewItems = CollectionFactory
                 .createLightweightList();
@@ -147,14 +148,18 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         // check if added view items should be added or ignored
         for (ViewItem added : delta.getAddedViewItems()) {
-            if (!errorModel.hasErrors(added)) {
+            boolean hasErrorsNow = errorModel.hasErrors(added);
+
+            if (!hasErrorsNow) {
                 addedViewItems.add(added);
             }
         }
 
         // check if removed resources should to be removed or ignored
         for (ViewItem removed : delta.getRemovedViewItems()) {
-            if (!oldErrorModel.hasErrors(removed)) {
+            boolean hadErrorsBefore = viewItemsThatHadErrors.contains(removed);
+
+            if (!hadErrorsBefore) {
                 removedViewItems.add(removed);
             }
         }
@@ -163,7 +168,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // ignored
         for (ViewItem updated : delta.getUpdatedViewItems()) {
             boolean hasErrorsNow = errorModel.hasErrors(updated);
-            boolean hadErrorsBefore = oldErrorModel.hasErrors(updated);
+            boolean hadErrorsBefore = viewItemsThatHadErrors.contains(updated);
 
             if (!hasErrorsNow && !hadErrorsBefore) {
                 updatedViewItems.add(updated);
@@ -409,26 +414,12 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 }));
     }
 
-    // TODO add the logic here
     private void initResourceGrouping() {
         resourceGrouping.addHandler(new ResourceGroupingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
-
-                /*
-                 * the visual mappings need to be updated first because the view
-                 * items rely on them when the values are resolved
-                 */
-                ViewItemContainerDelta delta = updateViewItemsOnModelChange(e);
-                DefaultViewItemResolutionErrorModel oldErrorModel = errorModel
-                        .clone();
-                updateErrorModel();
-                ViewItemContainerDelta contentDelta = calculateDeltaThatConsidersErrorModel(
-                        delta, oldErrorModel);
-                // updateVisualMappings();
-                updateViewContentDisplay(contentDelta);
-                fireViewItemContainerChangeEvent(delta);
+                processResourceGroupingUpdate(e);
             }
         });
     }
@@ -516,6 +507,21 @@ public class DefaultViewModel implements ViewModel, Disposable,
             removedViewItems.add(removeViewItem(change.getGroupID()));
         }
         return removedViewItems;
+    }
+
+    private void processResourceGroupingUpdate(
+            ResourceGroupingChangedEvent event) {
+        assert event != null;
+
+        ViewItemContainerDelta delta = updateViewItemsOnModelChange(event);
+        // create a copy of the view items with errors
+        LightweightCollection<ViewItem> viewItemsThatHadErrors = LightweightCollections
+                .toCollection(errorModel.getViewItemsWithErrors());
+        updateErrorModel();
+        ViewItemContainerDelta deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
+                delta, viewItemsThatHadErrors);
+        updateViewContentDisplay(deltaThatConsidersErrors);
+        fireViewItemContainerChangeEvent(delta);
     }
 
     private LightweightCollection<ViewItem> processUpdates(
