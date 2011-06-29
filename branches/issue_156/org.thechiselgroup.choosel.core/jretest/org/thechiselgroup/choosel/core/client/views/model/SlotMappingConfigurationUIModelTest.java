@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createSlots;
 
 import org.hamcrest.Description;
@@ -50,6 +51,8 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 // handler.onSlotMappingChanged(new SlotMappingChangedEvent(slots[0],
 // mockResolverThatCanAlwaysResolve()));
+
+// TODO change the state of ViewModel and see that underTest changes too
 public class SlotMappingConfigurationUIModelTest {
 
     private static final String RESOLVER_ID_1 = "resolver-id-1";
@@ -57,7 +60,7 @@ public class SlotMappingConfigurationUIModelTest {
     private static final String RESOLVER_ID_2 = "resolver-id-2";
 
     public static Matcher<LightweightCollection<SlotMappingUIModel>> uiModelsContainSlots(
-            final Slot[] slots) {
+            final Slot... slots) {
 
         return new TypeSafeMatcher<LightweightCollection<SlotMappingUIModel>>() {
             @Override
@@ -131,7 +134,6 @@ public class SlotMappingConfigurationUIModelTest {
         LightweightCollection<SlotMappingUIModel> uiModels = underTest
                 .getSlotMappingUIModels();
 
-        assertEquals(2, uiModels.size());
         assertThat(uiModels, uiModelsContainSlots(slots));
     }
 
@@ -144,8 +146,7 @@ public class SlotMappingConfigurationUIModelTest {
         LightweightList<SlotMappingUIModel> uiModels = underTest
                 .getSlotMappingUIModels();
 
-        assertEquals(1, uiModels.size());
-        assertEquals(slots[0], uiModels.get(0).getSlot());
+        assertThat(uiModels, uiModelsContainSlots(slots));
     }
 
     @Test
@@ -160,8 +161,8 @@ public class SlotMappingConfigurationUIModelTest {
         underTest = new SlotMappingConfigurationUIModel(resolverProvider,
                 slotMappingInitializer, viewModel, errorModel);
 
-        assertEquals(1, underTest.getSlotsWithInvalidResolvers().size());
-        assertEquals(slots[0], underTest.getSlotsWithInvalidResolvers().get(0));
+        assertThat(underTest.getSlotsWithInvalidResolvers(),
+                containsExactly(slots[0]));
     }
 
     @Test
@@ -207,8 +208,8 @@ public class SlotMappingConfigurationUIModelTest {
         underTest = new SlotMappingConfigurationUIModel(resolverProvider,
                 slotMappingInitializer, viewModel, errorModel);
 
-        assertEquals(1, underTest.getSlotMappingUIModels().size());
-        assertEquals(slots[0], underTest.getSlotsWithInvalidResolvers().get(0));
+        assertThat(underTest.getSlotsWithInvalidResolvers(),
+                containsExactly(slots[0]));
     }
 
     @Before
