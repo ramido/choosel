@@ -75,6 +75,7 @@ public class SlotMappingUIModel {
 
     private Map<String, ViewItemValueResolverFactory> allowableResolverFactories;
 
+    // this is equal to context.getResolver(slot) - remove?
     private ManagedViewItemValueResolver currentResolver;
 
     private ViewItemValueResolverFactoryProvider provider;
@@ -170,9 +171,16 @@ public class SlotMappingUIModel {
      * @throws InvalidResolverException
      *             If the resolver is null or is not allowable
      */
-    public void setCurrentResolver(ManagedViewItemValueResolver resolver) {
-        if (!isAllowableResolver(resolver)) {
-            throw new InvalidResolverException(resolver.getResolverId());
+    public void setCurrentResolver(ViewItemValueResolver resolver) {
+        if (!(resolver instanceof ManagedViewItemValueResolver)) {
+            // I am wrong... do something, e.g. exception
+            return;
+        }
+
+        ManagedViewItemValueResolver managedResolver = (ManagedViewItemValueResolver) resolver;
+
+        if (!isAllowableResolver(managedResolver)) {
+            throw new InvalidResolverException(managedResolver.getResolverId());
         }
 
         // XXX event handler should get removed from previous resolver
@@ -181,7 +189,7 @@ public class SlotMappingUIModel {
             return;
         }
 
-        this.currentResolver = resolver;
+        this.currentResolver = managedResolver;
 
         // TODO should we really fire this here??
         eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));

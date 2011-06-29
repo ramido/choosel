@@ -21,6 +21,7 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
  * 
  * @author Lars Grammel
  */
+// TODO rename
 public interface ManagedViewItemValueResolver extends ViewItemValueResolver {
 
     String getResolverId();
