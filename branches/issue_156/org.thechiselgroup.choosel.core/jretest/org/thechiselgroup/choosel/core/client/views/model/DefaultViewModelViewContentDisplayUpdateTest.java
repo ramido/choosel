@@ -41,9 +41,13 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 /**
  * <p>
- * Tests that the {@link DefaultViewModel} filters the
- * {@link ViewItemContainerDelta} that is passed into the
- * {@link ViewContentDisplay} by the content of the
+ * Tests that the {@link DefaultViewModel} calls
+ * {@link ViewItemRenderer#update(LightweightCollection, LightweightCollection, LightweightCollection, LightweightCollection)}
+ * correctly.
+ * </p>
+ * <p>
+ * As part of this, we test that it filters the {@link ViewItemContainerDelta}
+ * that is passed into the {@link ViewContentDisplay} by the content of the
  * {@link DefaultViewItemResolutionErrorModel}.
  * </p>
  * <p>
@@ -75,7 +79,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * @author Patrick Gorman
  */
 // TODO extract AbstractDefaultViewModelTest superclass
-public class DefaultViewModelDeltaByErrorFilteringTest {
+public class DefaultViewModelViewContentDisplayUpdateTest {
 
     private Slot slot;
 
