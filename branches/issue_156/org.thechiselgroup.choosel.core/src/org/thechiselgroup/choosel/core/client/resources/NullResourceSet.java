@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.resources;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.thechiselgroup.choosel.core.client.label.LabelChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.NullHandlerRegistration;
@@ -102,6 +103,11 @@ public final class NullResourceSet implements ResourceSet {
     @Override
     public Resource getByUri(String uri) {
         return null;
+    }
+
+    @Override
+    public Resource getFirstElement() throws NoSuchElementException {
+        throw new NoSuchElementException();
     }
 
     @Override

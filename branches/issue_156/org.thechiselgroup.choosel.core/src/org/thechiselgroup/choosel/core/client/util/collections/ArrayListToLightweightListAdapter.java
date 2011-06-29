@@ -18,7 +18,9 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+// TODO expose interface with set/remove in a transparent way (e.g. in factory)
 // TODO rename to ArrayListBasedLightweightList
 public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> {
 
@@ -55,6 +57,15 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     @Override
     public T get(int i) {
         return delegate.get(i);
+    }
+
+    @Override
+    public T getFirstElement() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        return get(0);
     }
 
     public int indexOf(Object o) {

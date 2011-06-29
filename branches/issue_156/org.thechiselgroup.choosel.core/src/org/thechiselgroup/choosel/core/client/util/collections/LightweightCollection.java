@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.util.collections;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Generic lightweight collection. LightweightCollection provides a read-only
@@ -25,7 +26,6 @@ import java.util.List;
  * 
  * @author Lars Grammel
  */
-// TODO add getFirstElement();
 public interface LightweightCollection<T> extends Iterable<T> {
 
     /**
@@ -34,6 +34,14 @@ public interface LightweightCollection<T> extends Iterable<T> {
      * of collection.
      */
     boolean contains(T t);
+
+    /**
+     * @return First item from the collection
+     * 
+     * @throws NoSuchElementException
+     *             Thrown if the collection is empty.
+     */
+    T getFirstElement() throws NoSuchElementException;
 
     /**
      * @return {@code true} if there are no elements in this collection, and

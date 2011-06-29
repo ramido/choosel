@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
+import java.util.NoSuchElementException;
+
 import org.thechiselgroup.choosel.core.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.core.client.label.HasLabel;
 import org.thechiselgroup.choosel.core.client.label.LabelChangedEventHandler;
@@ -181,9 +183,18 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     @Override
+    public Resource getFirstElement() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        // TODO optimize implementation
+        return iterator().next();
+    }
+
+    @Override
     public Resource getFirstResource() {
-        assert !isEmpty();
-        return toList().get(0);
+        return getFirstElement();
     }
 
     /**

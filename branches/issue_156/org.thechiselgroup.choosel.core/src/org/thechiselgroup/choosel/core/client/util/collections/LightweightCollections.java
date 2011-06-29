@@ -28,6 +28,14 @@ public final class LightweightCollections {
     public static <T> LightweightCollection<T> toCollection(
             Iterable<? extends T> iterable) {
 
+        return toList(iterable);
+    }
+
+    public static <T> LightweightCollection<T> toCollection(T... values) {
+        return toList(values);
+    }
+
+    public static <T> LightweightList<T> toList(Iterable<? extends T> iterable) {
         LightweightList<T> result = CollectionFactory.createLightweightList();
         for (T t : iterable) {
             result.add(t);
@@ -35,7 +43,7 @@ public final class LightweightCollections {
         return result;
     }
 
-    public static <T> LightweightCollection<T> toCollection(T... values) {
+    public static <T> LightweightList<T> toList(T... values) {
         LightweightList<T> result = CollectionFactory.createLightweightList();
         for (T t : values) {
             result.add(t);

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.thechiselgroup.choosel.core.client.label.LabelChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -100,6 +101,11 @@ public class DelegatingResourceSet implements ResourceSet {
 
     public ResourceSet getDelegate() {
         return delegate;
+    }
+
+    @Override
+    public Resource getFirstElement() throws NoSuchElementException {
+        return delegate.getFirstElement();
     }
 
     @Override
