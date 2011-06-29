@@ -264,7 +264,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
-    public void viewContentUpdateAfterChangedSlotMapping() {
+    public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdate() {
         helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
 
         List<ViewItem> viewItems = underTest.getViewItems().toList();
