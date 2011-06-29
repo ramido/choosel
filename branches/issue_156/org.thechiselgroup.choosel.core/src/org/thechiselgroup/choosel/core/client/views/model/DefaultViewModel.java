@@ -58,10 +58,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultViewModel implements ViewModel, Disposable,
         ViewContentDisplayCallback {
 
-    private enum DeltaType {
-        ADDED, REMOVED, UPDATED, OTHER
-    }
-
     /**
      * Maps group ids (representing the resource sets that are calculated by the
      * resource grouping, also used as view item ids) to the
@@ -151,14 +147,14 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         // check if added view items should be added or ignored
         for (ViewItem added : delta.getAddedViewItems()) {
-            if (shouldAdd(added, DeltaType.ADDED, oldErrorModel)) {
+            if (!errorModel.hasErrors(added)) {
                 addedViewItems.add(added);
             }
         }
 
         // check if removed resources should to be removed or ignored
         for (ViewItem removed : delta.getRemovedViewItems()) {
-            if (shouldRemove(removed, DeltaType.REMOVED, oldErrorModel)) {
+            if (!oldErrorModel.hasErrors(removed)) {
                 removedViewItems.add(removed);
             }
         }
@@ -166,12 +162,19 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // check if updated resources should to be added, removed, updated, or
         // ignored
         for (ViewItem updated : delta.getUpdatedViewItems()) {
-            if (shouldUpdate(updated, DeltaType.UPDATED, oldErrorModel)) {
+            if (!errorModel.hasErrors(updated)
+                    && !oldErrorModel.hasErrors(updated)) {
                 updatedViewItems.add(updated);
-            } else if (shouldAdd(updated, DeltaType.UPDATED, oldErrorModel)) {
-                addedViewItems.add(updated);
-            } else if (shouldRemove(updated, DeltaType.UPDATED, oldErrorModel)) {
-                removedViewItems.add(updated);
+            } else {
+                if (!errorModel.hasErrors(updated)
+                        && oldErrorModel.hasErrors(updated)) {
+                    addedViewItems.add(updated);
+                } else {
+                    if (!oldErrorModel.hasErrors(updated)
+                            && errorModel.hasErrors(updated)) {
+                        removedViewItems.add(updated);
+                    }
+                }
             }
         }
 
@@ -569,32 +572,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // TODO Auto-generated method stub
         // XXX test --> remove handler, add handler, change grouping, update
         // view items(remove,add)
-    }
-
-    // TODO document this stuff
-    private boolean shouldAdd(ViewItem viewItem, DeltaType deltaType,
-            DefaultViewItemResolutionErrorModel oldErrorModel) {
-
-        return !errorModel.hasErrors(viewItem)
-                && (DeltaType.ADDED.equals(deltaType) || (oldErrorModel
-                        .hasErrors(viewItem) && !DeltaType.REMOVED
-                        .equals(deltaType)));
-    }
-
-    // TODO document this stuff
-    private boolean shouldRemove(ViewItem viewItem, DeltaType deltaType,
-            DefaultViewItemResolutionErrorModel oldErrorModel) {
-        return (!oldErrorModel.hasErrors(viewItem) && (DeltaType.REMOVED
-                .equals(deltaType) || (!DeltaType.ADDED.equals(deltaType) && errorModel
-                .hasErrors(viewItem))));
-    }
-
-    // TODO document this stuff
-    private boolean shouldUpdate(ViewItem viewItem, DeltaType deltaType,
-            DefaultViewItemResolutionErrorModel oldErrorModel) {
-        return DeltaType.UPDATED.equals(deltaType)
-                && !errorModel.hasErrors(viewItem)
-                && !oldErrorModel.hasErrors(viewItem);
     }
 
     private void updateErrorModel() {
