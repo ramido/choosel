@@ -55,9 +55,9 @@ public final class ViewItemValueResolverTestUtils {
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
                 ResourceSet set = viewItem.getResources();
+
                 return set.size() == resources.size()
                         && set.containsAll(resources);
-
             };
         });
         return resolver;
@@ -82,6 +82,7 @@ public final class ViewItemValueResolverTestUtils {
 
     private static OngoingStubbing<Boolean> whenCanResolve(
             ViewItemValueResolver resolver) {
+
         return when(resolver.canResolve(any(ViewItem.class),
                 any(ViewItemValueResolverContext.class)));
     }
