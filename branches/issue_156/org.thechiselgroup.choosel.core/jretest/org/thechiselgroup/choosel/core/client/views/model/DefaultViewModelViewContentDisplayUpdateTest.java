@@ -23,6 +23,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
@@ -31,17 +32,16 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItems;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureRemovedViewItems;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureUpdatedViewItems;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverThatCanResolveIfContainsResourcesExactly;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -50,6 +50,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -94,6 +95,20 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 // TODO extract AbstractDefaultViewModelTest superclass
 public class DefaultViewModelViewContentDisplayUpdateTest {
 
+    /**
+     * Convert input to {@code LightWeightCollection<ViewItem>}
+     */
+    @SuppressWarnings("rawtypes")
+    private static List<LightweightCollection<ViewItem>> cast(
+            List<LightweightCollection> allValues) {
+
+        List<LightweightCollection<ViewItem>> result = new ArrayList<LightweightCollection<ViewItem>>();
+        for (LightweightCollection<ViewItem> lightweightCollection : allValues) {
+            result.add(lightweightCollection);
+        }
+        return result;
+    }
+
     private Slot textSlot;
 
     private DefaultViewModel underTest;
@@ -123,7 +138,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(toResourceSet(validResource,
                 createResource(RESOURCE_TYPE_2, 1)));
 
-        assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
+        assertThat(captureAddedViewItems(),
                 containsEqualResources(validResource));
     }
 
@@ -150,13 +165,83 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(resources1);
         helper.addToContainedResources(resources2);
 
-        List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(
-                helper.getViewContentDisplay(), 2);
+        List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(2);
 
         assertThat(allValues.get(0),
                 containsViewItemsForResourceSets(resources1));
         assertThat(allValues.get(1),
                 containsViewItemsForResourceSets(resources2));
+    }
+
+    private LightweightCollection<ViewItem> captureAddedViewItems() {
+        return captureAddedViewItems(1).get(0);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private List<LightweightCollection<ViewItem>> captureAddedViewItems(
+            int wantedNumberOfInvocation) {
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+        verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocation))
+                .update(captor.capture(),
+                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(Slot.class));
+
+        return cast(captor.getAllValues());
+    }
+
+    private LightweightCollection<ViewItem> captureRemovedViewItems() {
+        return captureRemovedViewItems(1).get(0);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private List<LightweightCollection<ViewItem>> captureRemovedViewItems(
+            int wantedNumberOfInvocation) {
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+        verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocation))
+                .update(emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(ViewItem.class),
+                        captor.capture(),
+                        emptyLightweightCollection(Slot.class));
+
+        return cast(captor.getAllValues());
+    }
+
+    private LightweightCollection<ViewItem> captureUpdatedViewItems() {
+        return captureUpdatedViewItems(1).get(0);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private List<LightweightCollection<ViewItem>> captureUpdatedViewItems(
+            int wantedNumberOfInvocation) {
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+        verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocation))
+                .update(emptyLightweightCollection(ViewItem.class),
+                        captor.capture(),
+                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(Slot.class));
+
+        return cast(captor.getAllValues());
+    }
+
+    @Test
+    public void highlightingChangeOnSeveralResourcesTriggersSingleUpdate() {
+        ResourceSet resources = createResources(1, 2);
+
+        helper.getContainedResources().addAll(resources);
+        helper.getHighlightedResources().addAll(resources);
+
+        LightweightCollection<ViewItem> viewItems = captureUpdatedViewItems();
+
+        assertThat(
+                viewItems.getFirstElement().getResources(Subset.HIGHLIGHTED),
+                containsExactly(resources));
     }
 
     /**
@@ -182,7 +267,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                 TestResourceSetFactory.toResourceSet(validResource,
                         errorResource));
 
-        assertThat(captureRemovedViewItems(helper.getViewContentDisplay()),
+        assertThat(captureRemovedViewItems(),
                 containsEqualResources(validResource));
     }
 
@@ -216,8 +301,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         ResourceSet resources = createResources(1);
 
         helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
-                .getViewContentDisplay());
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
 
         helper.getHighlightedResources().addAll(resources);
 
@@ -235,8 +319,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         ResourceSet resources = toResourceSet(resources1, resources2);
 
         helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
-                .getViewContentDisplay());
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
 
         helper.getContainedResources().removeAll(resources);
         verify(helper.getViewContentDisplay(), times(1)).update(
@@ -251,8 +334,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         ResourceSet resources = createResources(1);
 
         helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(helper
-                .getViewContentDisplay());
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
 
         helper.getSelectedResources().add(createResource(1));
 
@@ -280,7 +362,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
         helper.addToContainedResources(resource2);
 
-        assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
+        assertThat(captureAddedViewItems(),
                 containsEqualResources(resource1, resource2));
     }
 
@@ -301,8 +383,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
         helper.getContainedResources().remove(resource2);
 
-        assertThat(captureRemovedViewItems(helper.getViewContentDisplay()),
-                containsEqualResources(resource1));
+        assertThat(captureRemovedViewItems(), containsEqualResources(resource1));
     }
 
     /**
@@ -320,7 +401,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         // update call
         helper.addToContainedResources(resource2);
 
-        assertThat(captureUpdatedViewItems(helper.getViewContentDisplay()),
+        assertThat(captureUpdatedViewItems(),
                 containsEqualResources(resource1, resource2));
     }
 
@@ -342,7 +423,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
         // neither adding nor updating view item should have triggered calls to
         // update
-        verify(helper.getViewContentDisplay(), times(0)).update(
+        verify(helper.getViewContentDisplay(), never()).update(
                 any(LightweightCollection.class),
                 any(LightweightCollection.class),
                 any(LightweightCollection.class),
@@ -352,7 +433,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void updateNeverCalledOnHoverModelChangeThatDoesNotAffectViewResources() {
+    public void updateNeverCalledOnHighlightingChangeThatDoesNotAffectViewResources() {
         helper.getContainedResources().add(createResource(2));
         helper.getHighlightedResources().add(createResource(1));
 
@@ -374,9 +455,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdate() {
         helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
 
-        List<ViewItem> viewItems = underTest.getViewItems().toList();
-        assertEquals(1, viewItems.size());
-        final ViewItem viewItem = viewItems.get(0);
+        final ViewItem viewItem = underTest.getViewItems().getFirstElement();
         viewItem.getValue(numberSlot); // caches values
 
         /*
