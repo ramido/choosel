@@ -56,6 +56,10 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author Lars Grammel
  * @author Patrick Gorman
  */
+/*
+ * TODO introduce ViewItemContainer decorator that is filtered to the valid view
+ * items from the error model
+ */
 public class DefaultViewModel implements ViewModel, Disposable,
         ViewContentDisplayCallback {
 

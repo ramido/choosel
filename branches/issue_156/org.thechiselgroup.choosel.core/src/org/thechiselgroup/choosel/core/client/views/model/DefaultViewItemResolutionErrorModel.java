@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.thechiselgroup.choosel.core.client.util.AdditionalJavaAssertions.assertMapDoesNotContainEmptyLists;
+
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.util.collections.ArrayListToLightweightListAdapter;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -24,6 +25,9 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 
 /**
+ * <p>
+ * Default implementation of {@link ViewItemResolutionErrorModel}.
+ * </p>
  * <p>
  * IMPLEMENTATION NOTE: This class assumes that the {@link Slot}s that are
  * passed in have unique slot ids. If two different slots have the same slot id,
@@ -34,17 +38,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
  */
 public class DefaultViewItemResolutionErrorModel implements
         ViewItemResolutionErrorModel, Cloneable {
-
-    // TODO think about extractign this
-    private static <T> void assertDoesNotContainEmptyLists(
-            Map<String, ArrayListToLightweightListAdapter<T>> map) {
-
-        for (Entry<String, ArrayListToLightweightListAdapter<T>> entry : map
-                .entrySet()) {
-            assert !entry.getValue().isEmpty() : "empty list at key "
-                    + entry.getKey();
-        }
-    }
 
     /**
      * Contains ids of all slots that have errors as keys, and the
@@ -121,8 +114,8 @@ public class DefaultViewItemResolutionErrorModel implements
      * </ul>
      */
     private void assertInvariantIntegrity() {
-        assertDoesNotContainEmptyLists(errorsBySlotId);
-        assertDoesNotContainEmptyLists(errorsByViewItemId);
+        assertMapDoesNotContainEmptyLists(errorsBySlotId);
+        assertMapDoesNotContainEmptyLists(errorsByViewItemId);
         assertErrorSlotsIntegrity();
         assertViewItemsIntegrity();
     }
