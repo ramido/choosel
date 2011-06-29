@@ -81,6 +81,7 @@ public class SlotMappingUIModel {
 
     private HandlerManager eventBus;
 
+    // TODO remove, should always pass them in
     // initialize current view items to an empty list
     private LightweightCollection<ViewItem> currentViewItems;
 
@@ -191,6 +192,7 @@ public class SlotMappingUIModel {
      * the view. It will create a resolver based on the view items in the last
      * update of the uiModel
      */
+    // TODO pass in the ViewItems, because we know them
     public void setCurrentResolverByFactoryID(String resolverID) {
         if (!allowableResolverFactories.containsKey(resolverID)) {
             throw new InvalidResolverException(resolverID);

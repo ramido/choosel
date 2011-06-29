@@ -40,7 +40,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private final HasResourceCategorizer resourceGrouping;
 
-    private final SlotMappingConfiguration resolver;
+    private final SlotMappingConfiguration slotMappingConfiguration;
 
     private ConfigurationPanel visualMappingPanel;
 
@@ -53,11 +53,11 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
     public DefaultVisualMappingsControl(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration resolver,
+            SlotMappingConfiguration slotMappingConfiguration,
             HasResourceCategorizer resourceGrouping) {
 
         this.contentDisplay = contentDisplay;
-        this.resolver = resolver;
+        this.slotMappingConfiguration = slotMappingConfiguration;
         this.resourceGrouping = resourceGrouping;
     }
 
@@ -115,7 +115,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
 
-        for (Slot slot : resolver.getSlots()) {
+        for (Slot slot : slotMappingConfiguration.getSlots()) {
             // TODO get all factories from the provider, and for any allowable
             // one, add that bad boy in.
 
@@ -124,10 +124,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
             switch (slot.getDataType()) {
             case TEXT:
-                addSlotControl(new TextSlotControl(slot, resolver));
+                addSlotControl(new TextSlotControl(slot, slotMappingConfiguration));
                 break;
             case NUMBER:
-                addSlotControl(new NumberSlotControl(slot, resolver));
+                addSlotControl(new NumberSlotControl(slot, slotMappingConfiguration));
                 break;
             }
         }
