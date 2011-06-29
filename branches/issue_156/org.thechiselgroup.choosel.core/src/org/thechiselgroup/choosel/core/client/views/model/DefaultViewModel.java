@@ -162,19 +162,15 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // check if updated resources should to be added, removed, updated, or
         // ignored
         for (ViewItem updated : delta.getUpdatedViewItems()) {
-            if (!errorModel.hasErrors(updated)
-                    && !oldErrorModel.hasErrors(updated)) {
+            boolean hasErrorsNow = errorModel.hasErrors(updated);
+            boolean hadErrorsBefore = oldErrorModel.hasErrors(updated);
+
+            if (!hasErrorsNow && !hadErrorsBefore) {
                 updatedViewItems.add(updated);
-            } else {
-                if (!errorModel.hasErrors(updated)
-                        && oldErrorModel.hasErrors(updated)) {
-                    addedViewItems.add(updated);
-                } else {
-                    if (!oldErrorModel.hasErrors(updated)
-                            && errorModel.hasErrors(updated)) {
-                        removedViewItems.add(updated);
-                    }
-                }
+            } else if (!hasErrorsNow && hadErrorsBefore) {
+                addedViewItems.add(updated);
+            } else if (!hadErrorsBefore && hasErrorsNow) {
+                removedViewItems.add(updated);
             }
         }
 
