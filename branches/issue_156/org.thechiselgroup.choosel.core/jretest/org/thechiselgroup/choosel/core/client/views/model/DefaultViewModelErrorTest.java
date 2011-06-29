@@ -18,7 +18,8 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveResource;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverThatCanResolveIfContainsResourcesExactly;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResource;
 
@@ -76,8 +77,10 @@ public class DefaultViewModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        underTest.setResolver(slots[0],
-                createResolverCanResolveResource(resource1));
+        underTest
+                .setResolver(
+                        slots[0],
+                        createResolverThatCanResolveIfContainsResourcesExactly(toResourceSet(resource1)));
         addResourcesToUndertest();
 
         /*
@@ -95,8 +98,10 @@ public class DefaultViewModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        underTest.setResolver(slots[0],
-                createResolverCanResolveResource(resource1));
+        underTest
+                .setResolver(
+                        slots[0],
+                        createResolverThatCanResolveIfContainsResourcesExactly(toResourceSet(resource1)));
         addResourcesToUndertest();
 
         /*
@@ -112,8 +117,10 @@ public class DefaultViewModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        underTest.setResolver(slots[0],
-                createResolverCanResolveResource(resource1));
+        underTest
+                .setResolver(
+                        slots[0],
+                        createResolverThatCanResolveIfContainsResourcesExactly(toResourceSet(resource1)));
 
         addResourcesToUndertest();
 

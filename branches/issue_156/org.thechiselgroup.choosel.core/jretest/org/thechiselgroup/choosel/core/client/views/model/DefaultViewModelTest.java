@@ -81,8 +81,7 @@ public class DefaultViewModelTest {
 
     @Test
     public void createViewItemsWhenResourcesAreAdded() {
-
-        helper.getContainedResources().addAll(createResources(TYPE_1, 1));
+        helper.addAllToContainerResources(createResources(TYPE_1, 1));
         helper.getContainedResources().add(createResource(TYPE_2, 2));
 
         List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(

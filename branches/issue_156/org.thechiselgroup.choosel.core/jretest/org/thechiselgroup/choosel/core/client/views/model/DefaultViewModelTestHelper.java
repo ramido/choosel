@@ -16,7 +16,11 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 
 import java.util.ArrayList;
@@ -145,6 +149,14 @@ public final class DefaultViewModelTestHelper {
 
     private LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
             .createLightweightList();
+
+    public boolean addAllToContainerResources(ResourceSet resources) {
+        return getContainedResources().addAll(resources);
+    }
+
+    public boolean addToContainedResources(Resource resource1) {
+        return getContainedResources().add(resource1);
+    }
 
     public Slot[] createSlots(DataType... dataTypes) {
         assert dataTypes != null;

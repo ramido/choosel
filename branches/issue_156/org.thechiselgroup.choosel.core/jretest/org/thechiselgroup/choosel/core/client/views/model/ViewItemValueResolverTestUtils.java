@@ -21,53 +21,11 @@ import static org.mockito.Mockito.when;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 public final class ViewItemValueResolverTestUtils {
-
-    public static ViewItemValueResolver createResolverCanResolveIfContainsExactlyAllResources(
-            final ResourceSet resources) {
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
-                        return set.size() == resources.size()
-                                && set.containsAll(resources);
-
-                    };
-                });
-        return resolver;
-    }
-
-    public static ViewItemValueResolver createResolverCanResolveResource(
-            final Resource resource) {
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
-
-                        return set.size() == 1 && set.contains(resource);
-                    };
-                });
-        return resolver;
-    }
 
     public static ViewItemValueResolver createResolverCanResolveResourceWithProperty(
             final String property) {
@@ -86,6 +44,28 @@ public final class ViewItemValueResolverTestUtils {
                         return set.size() == 1
                                 && set.getFirstResource().containsProperty(
                                         property);
+                    };
+                });
+        return resolver;
+    }
+
+    public static ViewItemValueResolver createResolverThatCanResolveIfContainsResourcesExactly(
+            final ResourceSet resources) {
+
+        ViewItemValueResolver resolver = mockViewItemValueResolver();
+        when(
+                resolver.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenAnswer(
+                new Answer<Boolean>() {
+                    @Override
+                    public Boolean answer(InvocationOnMock invocation)
+                            throws Throwable {
+                        ViewItem viewItem = (ViewItem) invocation
+                                .getArguments()[0];
+                        ResourceSet set = viewItem.getResources();
+                        return set.size() == resources.size()
+                                && set.containsAll(resources);
+
                     };
                 });
         return resolver;

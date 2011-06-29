@@ -12,6 +12,7 @@ public class ViewItemWithResourcesMatcher extends
 
     public static ViewItemWithResourcesMatcher containsEqualResource(
             final Resource resource) {
+
         ResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
         return new ViewItemWithResourcesMatcher(resources);

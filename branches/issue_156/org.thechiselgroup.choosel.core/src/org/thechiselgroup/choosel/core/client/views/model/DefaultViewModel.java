@@ -735,10 +735,12 @@ public class DefaultViewModel implements ViewModel, Disposable,
             LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
-        try {
+        if (addedViewItems.isEmpty() && updatedViewItems.isEmpty()
+                && removedViewItems.isEmpty() && changedSlots.isEmpty()) {
+            return;
+        }
 
-            // TODO assert that neither added nor updated ViewItems, nor other
-            // currently contained ViewItems have errors in errorModel
+        try {
             contentDisplay.update(addedViewItems, updatedViewItems,
                     removedViewItems, changedSlots);
         } catch (Exception ex) {
