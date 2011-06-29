@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemResolutionErrorModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -75,12 +76,11 @@ public class SlotMappingUIModel {
 
     private Map<String, ViewItemValueResolverFactory> allowableResolverFactories;
 
-    // this is equal to context.getResolver(slot) - remove?
-    private ManagedViewItemValueResolver currentResolver;
-
     private ViewItemValueResolverFactoryProvider provider;
 
     private HandlerManager eventBus;
+
+    private final ViewItemResolutionErrorModel errorModel;
 
     // TODO remove, should always pass them in
     // initialize current view items to an empty list
@@ -88,17 +88,21 @@ public class SlotMappingUIModel {
 
     private ViewItemValueResolverContext context;
 
+    // TODO this does not take into account the current context
     public SlotMappingUIModel(Slot slot,
             ViewItemValueResolverFactoryProvider provider,
-            ViewItemValueResolverContext context) {
+            ViewItemValueResolverContext context,
+            ViewItemResolutionErrorModel errorModel) {
 
         assert slot != null;
         assert provider != null;
         assert context != null;
+        assert errorModel != null;
 
         this.slot = slot;
         this.provider = provider;
         this.context = context;
+        this.errorModel = errorModel;
 
         this.eventBus = new HandlerManager(this);
         this.allowableResolverFactories = CollectionFactory.createStringMap();
@@ -114,11 +118,15 @@ public class SlotMappingUIModel {
         eventBus.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
+    public boolean errorsInModel() {
+        return errorModel.hasErrors(slot);
+    }
+
     /**
      * @return The current @link{ViewItemValueResolver}
      */
     public ManagedViewItemValueResolver getCurrentResolver() {
-        return currentResolver;
+        return (ManagedViewItemValueResolver) context.getResolver(slot);
     }
 
     public Collection<ViewItemValueResolverFactory> getResolverFactories() {
@@ -132,15 +140,26 @@ public class SlotMappingUIModel {
     /**
      * @return whether or not the current resolver is allowable
      */
+    // TODO this should be a one liner
     public boolean hasCurrentResolver() {
-        return currentResolver != null && isAllowableResolver(currentResolver);
+        return !errorsInModel() && context.getResolver(slot) != null
+                && isAllowableResolver((context.getResolver(slot)));
     }
 
     // XXX should use error model, at least in parts.
-    public boolean isAllowableResolver(ManagedViewItemValueResolver resolver) {
+    /**
+     * Returns whether or not the context's current resolver is both Managed,
+     * and whether it is in the Allowable Factories
+     */
+    public boolean isAllowableResolver(ViewItemValueResolver resolver) {
         assert resolver != null;
+        if (!(resolver instanceof ManagedViewItemValueResolver)) {
+            // Not a managed Resolver
+            return false;
+        }
 
-        assert resolver.getResolverId() != null;
+        ManagedViewItemValueResolver managedResolver = (ManagedViewItemValueResolver) resolver;
+        assert managedResolver.getResolverId() != null;
 
         /*
          * XXX hack for test cases, remove once slot mapping UI model is
@@ -150,12 +169,16 @@ public class SlotMappingUIModel {
             return true;
         }
 
-        if (!allowableResolverFactories.containsKey(resolver.getResolverId())) {
+        if (!allowableResolverFactories.containsKey(managedResolver
+                .getResolverId())) {
+            // Not an allowable resolver
             return false;
         }
 
+        // TODO this is already check elsewhere
         for (ViewItem viewItem : currentViewItems) {
             if (!resolver.canResolve(viewItem, context)) {
+                // resolver can not resolve viewItems
                 return false;
             }
         }
@@ -184,12 +207,6 @@ public class SlotMappingUIModel {
         }
 
         // XXX event handler should get removed from previous resolver
-
-        if (resolver.equals(currentResolver)) {
-            return;
-        }
-
-        this.currentResolver = managedResolver;
 
         // TODO should we really fire this here??
         eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));

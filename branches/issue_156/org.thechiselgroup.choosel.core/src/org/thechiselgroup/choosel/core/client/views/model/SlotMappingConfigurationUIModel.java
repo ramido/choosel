@@ -38,17 +38,22 @@ public class SlotMappingConfigurationUIModel {
 
     private ViewModel viewModel;
 
+    private final ViewItemResolutionErrorModel errorModel;
+
     public SlotMappingConfigurationUIModel(
             ViewItemValueResolverFactoryProvider resolverProvider,
-            SlotMappingInitializer slotMappingInitializer, ViewModel viewModel) {
+            SlotMappingInitializer slotMappingInitializer, ViewModel viewModel,
+            ViewItemResolutionErrorModel errorModel) {
 
         assert resolverProvider != null;
         assert slotMappingInitializer != null;
         assert viewModel != null;
+        assert errorModel != null;
 
         this.resolverProvider = resolverProvider;
         this.slotMappingInitializer = slotMappingInitializer;
         this.viewModel = viewModel;
+        this.errorModel = errorModel;
 
         // XXX why do we initialize when there are no resources yet?
         // we definitely need a state that flag slots as invalid / unresolved
@@ -75,6 +80,13 @@ public class SlotMappingConfigurationUIModel {
         return slotsToSlotMappings.get(slot).getCurrentResolver();
     }
 
+    public LightweightList<SlotMappingUIModel> getSlotMappingUIModels() {
+        LightweightList<SlotMappingUIModel> uiModels = CollectionFactory
+                .createLightweightList();
+        uiModels.addAll(slotsToSlotMappings.values());
+        return uiModels;
+    }
+
     public LightweightList<Slot> getSlotsWithInvalidResolvers() {
         LightweightList<Slot> invalidSlots = CollectionFactory
                 .createLightweightList();
@@ -91,7 +103,7 @@ public class SlotMappingConfigurationUIModel {
     private void initSlots(Slot[] slots) {
         for (Slot slot : slots) {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
-                    resolverProvider, viewModel));
+                    resolverProvider, viewModel, errorModel));
         }
     }
 

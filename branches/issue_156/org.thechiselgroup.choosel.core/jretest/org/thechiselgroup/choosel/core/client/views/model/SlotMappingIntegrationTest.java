@@ -311,7 +311,7 @@ public class SlotMappingIntegrationTest {
                 new DefaultResourceSet(), new DefaultResourceSet(),
                 viewItemBehavior, resourceGrouping, logger);
         new SlotMappingConfigurationUIModel(resolverProvider,
-                slotMappingInitializer, model);
+                slotMappingInitializer, model, model);
         return model;
     }
 
@@ -797,7 +797,7 @@ public class SlotMappingIntegrationTest {
                 new DefaultResourceSet(), new DefaultResourceSet(),
                 viewItemBehavior, resourceGrouping, logger);
         new SlotMappingConfigurationUIModel(resolverProvider,
-                slotMappingInitializer, model);
+                slotMappingInitializer, model, model);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         resourceGrouping.getResourceSet().add(
