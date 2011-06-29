@@ -24,8 +24,9 @@ import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.to
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItems;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureRemovedViewItems;
+import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureUpdatedViewItems;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverThatCanResolveIfContainsResourcesExactly;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResource;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
 import org.junit.Before;
@@ -57,7 +58,8 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * {@link DefaultViewModelTest#updateCalledWhenResourcesRemoved}</li>
  * <li>delta=removed, old_state=errors ==&gt; ignore
  * {@link #removedWithErrorsGetsIgnored()}</li>
- * <li>delta=updated, old_state=valid, current_state=valid ==&gt; update</li>
+ * <li>delta=updated, old_state=valid, current_state=valid ==&gt; update
+ * {@link #updatedValidNowAndBeforeGetsUpdated()}</li>
  * <li>delta=updated, old_state=valid, current_state=errors ==&gt; remove
  * {@link #updatedChangingFromValidToErrorsGetsRemoved()}</li>
  * <li>delta=updated, old_state=errors, current_state=valid ==&gt; add
@@ -103,7 +105,7 @@ public class DefaultViewModelDeltaByErrorFilteringTest {
                 createResource(RESOURCE_TYPE_2, 1)));
 
         assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
-                containsEqualResource(validResource));
+                containsEqualResources(validResource));
     }
 
     /**
@@ -128,7 +130,7 @@ public class DefaultViewModelDeltaByErrorFilteringTest {
                 toResourceSet(validResource, errorResource));
 
         assertThat(captureRemovedViewItems(helper.getViewContentDisplay()),
-                containsEqualResource(validResource));
+                containsEqualResources(validResource));
     }
 
     private void setCanResolverIfContainsResourceExactlyResolver(
@@ -168,7 +170,7 @@ public class DefaultViewModelDeltaByErrorFilteringTest {
         helper.addToContainedResources(resource2);
 
         assertThat(captureAddedViewItems(helper.getViewContentDisplay()),
-                containsEqualResources(toResourceSet(resource1, resource2)));
+                containsEqualResources(resource1, resource2));
     }
 
     /**
@@ -189,7 +191,7 @@ public class DefaultViewModelDeltaByErrorFilteringTest {
         helper.getContainedResources().remove(resource2);
 
         assertThat(captureRemovedViewItems(helper.getViewContentDisplay()),
-                containsEqualResource(resource1));
+                containsEqualResources(resource1));
     }
 
     /**
@@ -197,7 +199,7 @@ public class DefaultViewModelDeltaByErrorFilteringTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void updatedWithErrorsNowAndBeforeGetsIgnore() {
+    public void updatedErrorsNowAndBeforeGetsIgnored() {
         Resource validResource = createResource(RESOURCE_TYPE_1, 3);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
@@ -216,5 +218,24 @@ public class DefaultViewModelDeltaByErrorFilteringTest {
                 any(LightweightCollection.class),
                 emptyLightweightCollection(Slot.class));
 
+    }
+
+    /**
+     * delta=updated, old_state=valid, current_state=valid ==&gt; updated
+     */
+    @Test
+    public void updatedValidNowAndBeforeGetsUpdated() {
+        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
+        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+
+        underTest.setResolver(slot, mockAlwaysApplicableResolver());
+
+        helper.addToContainedResources(resource1);
+
+        // update call
+        helper.addToContainedResources(resource2);
+
+        assertThat(captureUpdatedViewItems(helper.getViewContentDisplay()),
+                containsEqualResources(resource1, resource2));
     }
 }

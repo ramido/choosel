@@ -21,7 +21,7 @@ import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatche
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverThatCanResolveIfContainsResourcesExactly;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResource;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -130,7 +130,7 @@ public class DefaultViewModelErrorTest {
         ResourceSet resources = new DefaultResourceSet();
         resources.add(resource2);
         assertThat(underTest.getViewItemsWithErrors(),
-                containsEqualResource(resource2));
+                containsEqualResources(resource2));
     }
 
     @Test

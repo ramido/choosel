@@ -556,32 +556,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
             DefaultViewItem viewItem = viewItemsByGroupId.get(change
                     .getGroupID());
 
-            // intersect added with highlighting set - TODO extract
-            LightweightList<Resource> highlightedAdded = highlightedResources
-                    .getIntersection(change.getAddedResources());
-            LightweightList<Resource> highlightedRemoved = highlightedResources
-                    .getIntersection(change.getRemovedResources());
+            updateViewItemHighlightingSet(viewItem, change);
+            updateViewItemSelectionSet(change, viewItem);
 
-            boolean add = false;
-
-            if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
-                viewItem.updateHighlightedResources(highlightedAdded,
-                        highlightedRemoved);
-                add = true;
-            }
-
-            LightweightList<Resource> selectedAdded = selectedResources
-                    .getIntersection(change.getAddedResources());
-            LightweightList<Resource> selectedRemoved = selectedResources
-                    .getIntersection(change.getRemovedResources());
-            if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
-                viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
-                add = true;
-            }
-
-            if (add) {
-                updatedViewItems.add(viewItem);
-            }
+            updatedViewItems.add(viewItem);
         }
 
         return updatedViewItems;
@@ -755,6 +733,33 @@ public class DefaultViewModel implements ViewModel, Disposable,
         updateViewContentDisplay(delta.getAddedViewItems(),
                 delta.getUpdatedViewItems(), delta.getRemovedViewItems(),
                 LightweightCollections.<Slot> emptyCollection());
+    }
+
+    private void updateViewItemHighlightingSet(DefaultViewItem viewItem,
+            CategorizableResourceGroupingChange change) {
+
+        LightweightList<Resource> highlightedAdded = highlightedResources
+                .getIntersection(change.getAddedResources());
+        LightweightList<Resource> highlightedRemoved = highlightedResources
+                .getIntersection(change.getRemovedResources());
+
+        if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
+            viewItem.updateHighlightedResources(highlightedAdded,
+                    highlightedRemoved);
+        }
+    }
+
+    private void updateViewItemSelectionSet(
+            CategorizableResourceGroupingChange change, DefaultViewItem viewItem) {
+
+        LightweightList<Resource> selectedAdded = selectedResources
+                .getIntersection(change.getAddedResources());
+        LightweightList<Resource> selectedRemoved = selectedResources
+                .getIntersection(change.getRemovedResources());
+
+        if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
+            viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
+        }
     }
 
     private ViewItemContainerDelta updateViewItemsOnModelChange(

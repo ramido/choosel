@@ -95,18 +95,24 @@ public final class DefaultViewModelTestHelper {
         return cast(captor.getAllValues());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static LightweightCollection<ViewItem> captureUpdatedViewItems(
             ViewContentDisplay contentDisplay) {
 
+        return captureUpdatedViewItems(contentDisplay, 1).get(0);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static List<LightweightCollection<ViewItem>> captureUpdatedViewItems(
+            ViewContentDisplay contentDisplay, int wantedNumberOfInvocation) {
+
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
-        verify(contentDisplay, times(1)).update(
+        verify(contentDisplay, times(wantedNumberOfInvocation)).update(
                 emptyLightweightCollection(ViewItem.class), captor.capture(),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
 
-        return captor.getValue();
+        return cast(captor.getAllValues());
     }
 
     /**
