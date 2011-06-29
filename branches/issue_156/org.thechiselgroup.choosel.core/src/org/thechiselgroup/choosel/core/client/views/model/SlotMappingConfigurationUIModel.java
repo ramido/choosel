@@ -70,6 +70,12 @@ public class SlotMappingConfigurationUIModel {
         });
     }
 
+    public ManagedViewItemValueResolver getCurrentResolver(Slot slot) {
+        assert slotsToSlotMappings.containsKey(slot);
+
+        return slotsToSlotMappings.get(slot).getCurrentResolver();
+    }
+
     public LightweightList<Slot> getSlotsWithInvalidResolvers() {
         LightweightList<Slot> invalidSlots = CollectionFactory
                 .createLightweightList();
