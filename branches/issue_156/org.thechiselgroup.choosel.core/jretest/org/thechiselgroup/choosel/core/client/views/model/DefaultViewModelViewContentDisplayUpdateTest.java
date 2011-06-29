@@ -32,8 +32,8 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverThatCanResolveIfContainsResourcesExactly;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
 import java.util.ArrayList;
@@ -274,7 +274,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     private void setCanResolverIfContainsResourceExactlyResolver(
             ResourceSet resourceSet) {
 
-        ViewItemValueResolver resolver = createResolverThatCanResolveIfContainsResourcesExactly(resourceSet);
+        ViewItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(resourceSet);
         underTest.setResolver(textSlot, resolver);
     }
 
@@ -394,7 +394,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
         Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
 
-        underTest.setResolver(textSlot, mockAlwaysApplicableResolver());
+        underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
 
         helper.addToContainedResources(resource1);
 
