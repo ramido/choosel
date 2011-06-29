@@ -138,21 +138,45 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 handler);
     }
 
-    private LightweightList<ViewItem> calculateOtherViewItems(
-            ViewItemContainerDelta delta) {
+    private ViewItemContainerDelta calculateDeltaThatConsidersErrorModel(
+            ViewItemContainerDelta delta,
+            DefaultViewItemResolutionErrorModel oldErrorModel) {
 
-        LightweightList<ViewItem> others = CollectionFactory
+        LightweightList<ViewItem> addedViewItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ViewItem> removedViewItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ViewItem> updatedViewItems = CollectionFactory
                 .createLightweightList();
 
-        for (ViewItem viewItem : getViewItems()) {
-            if (!delta.getAddedViewItems().contains(viewItem)
-                    && !delta.getRemovedViewItems().contains(viewItem)
-                    && !delta.getUpdatedViewItems().contains(viewItem)) {
-                others.add(viewItem);
+        // check if added view items should be added or ignored
+        for (ViewItem added : delta.getAddedViewItems()) {
+            if (shouldAdd(added, DeltaType.ADDED, oldErrorModel)) {
+                addedViewItems.add(added);
             }
         }
 
-        return others;
+        // check if removed resources should to be removed or ignored
+        for (ViewItem removed : delta.getRemovedViewItems()) {
+            if (shouldRemove(removed, DeltaType.REMOVED, oldErrorModel)) {
+                removedViewItems.add(removed);
+            }
+        }
+
+        // check if updated resources should to be added, removed, updated, or
+        // ignored
+        for (ViewItem updated : delta.getUpdatedViewItems()) {
+            if (shouldUpdate(updated, DeltaType.UPDATED, oldErrorModel)) {
+                updatedViewItems.add(updated);
+            } else if (shouldAdd(updated, DeltaType.UPDATED, oldErrorModel)) {
+                addedViewItems.add(updated);
+            } else if (shouldRemove(updated, DeltaType.UPDATED, oldErrorModel)) {
+                removedViewItems.add(updated);
+            }
+        }
+
+        return new ViewItemContainerDelta(addedViewItems, removedViewItems,
+                updatedViewItems);
     }
 
     @Override
@@ -182,7 +206,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         viewItemsByGroupId.put(groupID, viewItem);
 
         return viewItem;
-    }
+    };
 
     @Override
     public void dispose() {
@@ -209,53 +233,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;
-    };
-
-    protected ViewItemContainerDelta editDeltaForErrors(
-            ViewItemContainerDelta delta,
-            DefaultViewItemResolutionErrorModel oldErrorModel) {
-
-        LightweightList<ViewItem> addedViewItems = CollectionFactory
-                .createLightweightList();
-        LightweightList<ViewItem> removedViewItems = CollectionFactory
-                .createLightweightList();
-        LightweightList<ViewItem> updatedViewItems = CollectionFactory
-                .createLightweightList();
-
-        LightweightList<ViewItem> otherViewItems = calculateOtherViewItems(delta);
-
-        // check if added view items should be added or ignored
-        for (ViewItem added : delta.getAddedViewItems()) {
-            if (shouldAdd(added, DeltaType.ADDED, oldErrorModel)) {
-                addedViewItems.add(added);
-            }
-        }
-        // check if removed resources need to be removed or ignored
-        for (ViewItem removed : delta.getRemovedViewItems()) {
-            if (shouldRemove(removed, DeltaType.REMOVED, oldErrorModel)) {
-                removedViewItems.add(removed);
-            }
-        }
-
-        for (ViewItem updated : delta.getUpdatedViewItems()) {
-            if (shouldUpdate(updated, DeltaType.UPDATED, oldErrorModel)) {
-                updatedViewItems.add(updated);
-            } else if (shouldAdd(updated, DeltaType.UPDATED, oldErrorModel)) {
-                addedViewItems.add(updated);
-            } else if (shouldRemove(updated, DeltaType.UPDATED, oldErrorModel)) {
-                removedViewItems.add(updated);
-            }
-        }
-
-        for (ViewItem other : otherViewItems) {
-            if (shouldAdd(other, DeltaType.OTHER, oldErrorModel)) {
-                addedViewItems.add(other);
-            } else if (shouldRemove(other, DeltaType.OTHER, oldErrorModel)) {
-                removedViewItems.add(other);
-            }
-        }
-        return new ViewItemContainerDelta(addedViewItems, removedViewItems,
-                updatedViewItems);
     }
 
     private void fireViewItemContainerChangeEvent(ViewItemContainerDelta delta) {
@@ -448,8 +425,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 DefaultViewItemResolutionErrorModel oldErrorModel = errorModel
                         .clone();
                 updateErrorModel();
-                ViewItemContainerDelta contentDelta = editDeltaForErrors(delta,
-                        oldErrorModel);
+                ViewItemContainerDelta contentDelta = calculateDeltaThatConsidersErrorModel(
+                        delta, oldErrorModel);
                 // updateVisualMappings();
                 updateViewContentDisplay(contentDelta);
                 fireViewItemContainerChangeEvent(delta);
