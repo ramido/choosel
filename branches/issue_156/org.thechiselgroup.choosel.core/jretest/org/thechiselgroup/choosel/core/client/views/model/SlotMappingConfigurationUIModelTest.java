@@ -118,6 +118,17 @@ public class SlotMappingConfigurationUIModelTest {
 
     private DefaultViewItemResolutionErrorModel errorModel;
 
+    @Mock
+    private ViewItemValueResolverFactory factory2;
+
+    private SlotMappingChangedEvent captureSlotMappingChangedEvent(
+            SlotMappingChangedHandler handler) {
+        ArgumentCaptor<SlotMappingChangedEvent> captor = ArgumentCaptor
+                .forClass(SlotMappingChangedEvent.class);
+        verify(handler, times(1)).onSlotMappingChanged(captor.capture());
+        return captor.getValue();
+    }
+
     private SlotMappingChangedHandler captureSlotMappingChangedHandler() {
         ArgumentCaptor<SlotMappingChangedHandler> captor = ArgumentCaptor
                 .forClass(SlotMappingChangedHandler.class);
@@ -177,12 +188,20 @@ public class SlotMappingConfigurationUIModelTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void mockResolversAndFactories() {
-        when(factory1.getId()).thenReturn(RESOLVER_ID_1);
+    public void mockFactory(ViewItemValueResolverFactory factory, String id,
+            ManagedViewItemValueResolver resolver) {
+        when(factory.getId()).thenReturn(id);
         when(
-                factory1.canCreateApplicableResolver(any(Slot.class),
+                factory.canCreateApplicableResolver(any(Slot.class),
                         any(LightweightList.class))).thenReturn(true);
-        when(factory1.create(any(LightweightList.class))).thenReturn(resolver1);
+
+        when(factory.create(any(LightweightList.class))).thenReturn(resolver);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void mockResolversAndFactories() {
+        mockFactory(factory1, RESOLVER_ID_1, resolver1);
+        mockFactory(factory2, RESOLVER_ID_2, resolver2);
         when(resolver1.getResolverId()).thenReturn(RESOLVER_ID_1);
         when(resolver2.getResolverId()).thenReturn(RESOLVER_ID_2);
     }
@@ -216,15 +235,23 @@ public class SlotMappingConfigurationUIModelTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        LightweightList<ViewItemValueResolverFactory> factories = CollectionFactory
-                .createLightweightList();
-
         mockResolversAndFactories();
-        factories.add(factory1);
 
-        when(resolverProvider.getResolverFactories()).thenReturn(factories);
+        setUpResolverProvider(factory1);
 
         errorModel = new DefaultViewItemResolutionErrorModel();
+    }
+
+    public void setUpResolverProvider(ViewItemValueResolverFactory... factories) {
+
+        LightweightList<ViewItemValueResolverFactory> factoryList = CollectionFactory
+                .createLightweightList();
+
+        for (ViewItemValueResolverFactory factory : factories) {
+            factoryList.add(factory);
+        }
+
+        when(resolverProvider.getResolverFactories()).thenReturn(factoryList);
     }
 
     private void setUpSlots(DataType... dataTypes) {
@@ -232,4 +259,57 @@ public class SlotMappingConfigurationUIModelTest {
         when(viewModel.getSlots()).thenReturn(slots);
     }
 
+    @Test
+    public void viewModelFiredSlotMappingChangedEventFiresEventOnUnderTest() {
+        setUpSlots(DataType.TEXT);
+
+        when(viewModel.getResolver(slots[0])).thenReturn(resolver1);
+        setUpResolverProvider(factory1, factory2);
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                slotMappingInitializer, viewModel, errorModel);
+
+        SlotMappingUIModel uiModel = underTest.getSlotMappingUIModel(slots[0]);
+        SlotMappingChangedHandler uiModelHandler = mock(SlotMappingChangedHandler.class);
+        uiModel.addSlotMappingEventHandler(uiModelHandler);
+
+        SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
+        SlotMappingChangedEvent event = new SlotMappingChangedEvent(slots[0],
+                resolver2);
+        handler.onSlotMappingChanged(event);
+
+        SlotMappingChangedEvent resultingEvent = captureSlotMappingChangedEvent(uiModelHandler);
+        assertEquals(resultingEvent.getCurrentResolver(), resolver2);
+        assertEquals(resultingEvent.getSlot(), slots[0]);
+    }
+
+    @Test
+    public void viewModelResolverChangesAreReflectedInUIModelThroughContext() {
+        setUpSlots(DataType.TEXT);
+
+        when(viewModel.getResolver(slots[0])).thenReturn(resolver1);
+
+        setUpResolverProvider(factory1, factory2);
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                slotMappingInitializer, viewModel, errorModel);
+
+        when(viewModel.getResolver(slots[0])).thenReturn(resolver2);
+        assertEquals(resolver2, underTest.getCurrentResolver(slots[0]));
+        assertThat(underTest.getSlotsWithInvalidResolvers(),
+                containsExactly(CollectionFactory
+                        .<Slot> createLightweightList()));
+    }
+
+    @Test
+    public void viewModelResolverChangesToInvalidStateReflectedInUIModel() {
+        setUpSlots(DataType.TEXT);
+
+        when(viewModel.getResolver(slots[0])).thenReturn(resolver1);
+
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                slotMappingInitializer, viewModel, errorModel);
+
+        when(viewModel.getResolver(slots[0])).thenReturn(resolver2);
+        assertThat(underTest.getSlotsWithInvalidResolvers(),
+                containsExactly(slots));
+    }
 }

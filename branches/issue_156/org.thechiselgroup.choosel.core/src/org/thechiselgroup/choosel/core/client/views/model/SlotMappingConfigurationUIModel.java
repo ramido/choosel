@@ -62,7 +62,7 @@ public class SlotMappingConfigurationUIModel {
         viewModel.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
-                setResolver(e.getSlot(), e.getCurrentResolver());
+                handleResolverChange(e.getSlot(), e.getCurrentResolver());
             }
         });
         viewModel.addHandler(new ViewItemContainerChangeEventHandler() {
@@ -80,6 +80,10 @@ public class SlotMappingConfigurationUIModel {
         return slotsToSlotMappings.get(slot).getCurrentResolver();
     }
 
+    public SlotMappingUIModel getSlotMappingUIModel(Slot slot) {
+        return slotsToSlotMappings.get(slot);
+    }
+
     public LightweightList<SlotMappingUIModel> getSlotMappingUIModels() {
         LightweightList<SlotMappingUIModel> uiModels = CollectionFactory
                 .createLightweightList();
@@ -93,11 +97,17 @@ public class SlotMappingConfigurationUIModel {
         for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
                 .entrySet()) {
 
-            if (!entry.getValue().hasCurrentResolver()) {
+            if (!entry.getValue().currentResolverIsValid(
+                    viewModel.getViewItems())) {
                 invalidSlots.add(entry.getKey());
             }
         }
         return invalidSlots;
+    }
+
+    public void handleResolverChange(Slot slot, ViewItemValueResolver resolver) {
+        slotsToSlotMappings.get(slot).currentResolverWasSet(resolver,
+                viewModel.getViewItems());
     }
 
     private void initSlots(Slot[] slots) {
@@ -105,10 +115,6 @@ public class SlotMappingConfigurationUIModel {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
                     resolverProvider, viewModel, errorModel));
         }
-    }
-
-    public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        slotsToSlotMappings.get(slot).setCurrentResolver(resolver);
     }
 
     /**

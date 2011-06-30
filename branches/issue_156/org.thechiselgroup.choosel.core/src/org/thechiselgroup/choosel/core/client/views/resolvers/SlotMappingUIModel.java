@@ -82,10 +82,6 @@ public class SlotMappingUIModel {
 
     private final ViewItemResolutionErrorModel errorModel;
 
-    // TODO remove, should always pass them in
-    // initialize current view items to an empty list
-    private LightweightCollection<ViewItem> currentViewItems;
-
     private ViewItemValueResolverContext context;
 
     // TODO this does not take into account the current context
@@ -107,8 +103,6 @@ public class SlotMappingUIModel {
         this.eventBus = new HandlerManager(this);
         this.allowableResolverFactories = CollectionFactory.createStringMap();
 
-        currentViewItems = CollectionFactory.createLightweightList();
-
         updateAllowableFactories(CollectionFactory
                 .<ViewItem> createLightweightList());
     }
@@ -116,6 +110,49 @@ public class SlotMappingUIModel {
     public void addSlotMappingEventHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         eventBus.addHandler(SlotMappingChangedEvent.TYPE, handler);
+    }
+
+    /**
+     * @return whether or not the current resolver is allowable
+     */
+    // TODO this should be a one liner
+    public boolean currentResolverIsValid(
+            LightweightCollection<ViewItem> currentViewItems) {
+        return !errorsInModel()
+                && context.getResolver(slot) != null
+                && isAllowableResolver(context.getResolver(slot),
+                        currentViewItems);
+    }
+
+    /**
+     * Checks to see if the current resolver factory is changed, and if it has,
+     * fires a {@link SlotMappingChangedEvent} to all registered
+     * {@link SlotMappingChangedHandler}s.
+     * 
+     * @throws InvalidResolverException
+     *             If the resolver is null or is not allowable.
+     * 
+     *             TODO This method does not set the resolver, nor should it, it
+     *             is just going to show the context's resolver
+     */
+    public void currentResolverWasSet(ViewItemValueResolver resolver,
+            LightweightCollection<ViewItem> viewItems) {
+        if (!(resolver instanceof ManagedViewItemValueResolver)) {
+            // I am wrong... do something, e.g. exception
+            throw new InvalidResolverException(
+                    "resolver that was set was not managed");
+        }
+
+        ManagedViewItemValueResolver managedResolver = (ManagedViewItemValueResolver) resolver;
+
+        if (!isAllowableResolver(managedResolver, viewItems)) {
+            throw new InvalidResolverException(managedResolver.getResolverId());
+        }
+
+        // XXX event handler should get removed from previous resolver
+
+        // TODO should we really fire this here??
+        eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));
     }
 
     public boolean errorsInModel() {
@@ -138,20 +175,11 @@ public class SlotMappingUIModel {
     }
 
     /**
-     * @return whether or not the current resolver is allowable
-     */
-    // TODO this should be a one liner
-    public boolean hasCurrentResolver() {
-        return !errorsInModel() && context.getResolver(slot) != null
-                && isAllowableResolver((context.getResolver(slot)));
-    }
-
-    // XXX should use error model, at least in parts.
-    /**
      * Returns whether or not the context's current resolver is both Managed,
      * and whether it is in the Allowable Factories
      */
-    public boolean isAllowableResolver(ViewItemValueResolver resolver) {
+    public boolean isAllowableResolver(ViewItemValueResolver resolver,
+            LightweightCollection<ViewItem> currentViewItems) {
         assert resolver != null;
         if (!(resolver instanceof ManagedViewItemValueResolver)) {
             // Not a managed Resolver
@@ -176,55 +204,16 @@ public class SlotMappingUIModel {
         }
 
         // TODO this is already check elsewhere
-        for (ViewItem viewItem : currentViewItems) {
-            if (!resolver.canResolve(viewItem, context)) {
-                // resolver can not resolve viewItems
-                return false;
+        if (currentViewItems != null) {
+            for (ViewItem viewItem : currentViewItems) {
+                if (!resolver.canResolve(viewItem, context)) {
+                    // resolver can not resolve viewItems
+                    return false;
+                }
             }
         }
 
         return true;
-    }
-
-    /**
-     * Checks to see if the current resolver factory is changed, and if it has,
-     * fires a {@link SlotMappingChangedEvent} to all registered
-     * {@link SlotMappingChangedHandler}s.
-     * 
-     * @throws InvalidResolverException
-     *             If the resolver is null or is not allowable
-     */
-    public void setCurrentResolver(ViewItemValueResolver resolver) {
-        if (!(resolver instanceof ManagedViewItemValueResolver)) {
-            // I am wrong... do something, e.g. exception
-            return;
-        }
-
-        ManagedViewItemValueResolver managedResolver = (ManagedViewItemValueResolver) resolver;
-
-        if (!isAllowableResolver(managedResolver)) {
-            throw new InvalidResolverException(managedResolver.getResolverId());
-        }
-
-        // XXX event handler should get removed from previous resolver
-
-        // TODO should we really fire this here??
-        eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));
-    }
-
-    /**
-     * This method should be called when you do not know which ViewItems are in
-     * the view. It will create a resolver based on the view items in the last
-     * update of the uiModel
-     */
-    // TODO pass in the ViewItems, because we know them
-    public void setCurrentResolverByFactoryID(String resolverID) {
-        if (!allowableResolverFactories.containsKey(resolverID)) {
-            throw new InvalidResolverException(resolverID);
-        }
-        ManagedViewItemValueResolver resolver = (allowableResolverFactories
-                .get(resolverID)).create(currentViewItems);
-        setCurrentResolver(resolver);
     }
 
     /**
@@ -241,8 +230,6 @@ public class SlotMappingUIModel {
             LightweightCollection<ViewItem> viewItems) {
 
         assert viewItems != null;
-        currentViewItems = viewItems;
-
         allowableResolverFactories.clear();
 
         // if (currentResolver != null

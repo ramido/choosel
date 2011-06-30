@@ -71,7 +71,7 @@ public class SlotMappingUI extends FlowPanel {
                     .equals(factory.getId())) {
                 // the set the current resolver to one created by the
                 // factory
-                uiModel.setCurrentResolverByFactoryID(factory.getId());
+                // uiModel.setCurrentResolverByFactoryID(factory.getId());
             }
         }
     };
