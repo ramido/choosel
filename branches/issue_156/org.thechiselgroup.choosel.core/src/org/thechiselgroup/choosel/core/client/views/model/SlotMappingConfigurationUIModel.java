@@ -156,10 +156,19 @@ public class SlotMappingConfigurationUIModel {
             Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
             for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
                     .getResolvers(viewResources, slotsAsArray).entrySet()) {
-                viewModel.setResolver(entry.getKey(), entry.getValue());
+
+                Slot slot = entry.getKey();
+                ViewItemValueResolver resolver = entry.getValue();
+
+                if (getSlotMappingUIModel(slot).isAllowableResolver(resolver,
+                        viewItems)) {
+                    viewModel.setResolver(slot, resolver);
+                } else {
+                    // Oh god, even the initializer was wrong
+                    // TODO throw an exception or something
+                }
             }
         }
         // TODO assert that all of the slots now have valid resolvers
     }
-
 }

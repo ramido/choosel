@@ -217,7 +217,15 @@ public class SlotMappingConfigurationUIModelTest {
         mockFactory(factory1, RESOLVER_ID_1, resolver1);
         mockFactory(factory2, RESOLVER_ID_2, resolver2);
         when(resolver1.getResolverId()).thenReturn(RESOLVER_ID_1);
+        when(
+                resolver1.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
         when(resolver2.getResolverId()).thenReturn(RESOLVER_ID_2);
+        when(
+                resolver2.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
     }
 
     @Test
