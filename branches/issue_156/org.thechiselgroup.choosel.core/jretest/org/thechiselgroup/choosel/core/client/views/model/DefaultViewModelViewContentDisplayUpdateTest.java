@@ -52,7 +52,9 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -230,6 +232,30 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                         emptyLightweightCollection(Slot.class));
 
         return cast(captor.getAllValues());
+    }
+
+    /**
+     * We store the value on update, because this is what happens during the
+     * update call. If we would check the value on the view item later, e.g.
+     * using verify, the bug would not show up (it is important that the
+     * viewItem returns the new values when the content display is updated.
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private double[] captureViewItemNumberSlotValueOnUpdate(
+            final ViewItem viewItem) {
+        final double[] result = new double[1];
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                result[0] = viewItem.getValue(numberSlot);
+                return null;
+            }
+        }).when(helper.getViewContentDisplay()).update(
+                any(LightweightCollection.class),
+                any(LightweightCollection.class),
+                any(LightweightCollection.class),
+                any(LightweightCollection.class));
+        return result;
     }
 
     @Test
@@ -460,39 +486,52 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     }
 
     /**
-     * Shows the bug that happens when the default view gets notified of the
-     * slot update before the {@link ViewItem}s are cleaned (by getting
-     * notification of the slot update). The view items need to get the
-     * notification first to clean their caching.
+     * Shows the bug that happens when the {@link ViewContentDisplay} is updated
+     * before the {@link ViewItem} cache is cleaned on a {@link ResourceSet}
+     * change.
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
-    public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdate() {
+    public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterResourceSetChange() {
+        String propertyName = "property";
+
+        underTest.setResolver(numberSlot, new CalculationResolver(propertyName,
+                new SumCalculation()));
+
+        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
+        resource1.putValue(propertyName, 1d);
+        helper.addToContainedResources(resource1);
+
+        final ViewItem viewItem = underTest.getViewItems().getFirstElement();
+        viewItem.getValue(numberSlot); // caches values
+
+        // needs to be done before adding
+        final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
+
+        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        resource2.putValue(propertyName, 2d);
+        helper.addToContainedResources(resource2);
+
+        assertEquals(1d + 2d, result[0], 0.000001d);
+    }
+
+    /**
+     * Shows the bug that happens when the {@link ViewContentDisplay} is updated
+     * before the {@link ViewItem} cache is cleaned on a {@link Slot} change.
+     */
+    @Test
+    public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterSlotChange() {
         helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
 
         final ViewItem viewItem = underTest.getViewItems().getFirstElement();
         viewItem.getValue(numberSlot); // caches values
 
-        /*
-         * We assert the value here, because this is what happens during the
-         * update call. If we would check the value on the view item later, the
-         * bug would not show up (it is important that the viewItem returns the
-         * new values when the content display is updated.
-         */
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) {
-                assertEquals(5d, viewItem.getValue(numberSlot));
-                return null;
-            }
-        }).when(helper.getViewContentDisplay()).update(
-                any(LightweightCollection.class),
-                any(LightweightCollection.class),
-                any(LightweightCollection.class),
-                any(LightweightCollection.class));
+        // needs to be done before changing slot
+        final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
 
         underTest.setResolver(numberSlot, new FixedValueResolver(5d,
                 DataType.NUMBER));
+
+        assertEquals(5d, result[0], 0.000001d);
     }
 
     @Ignore("reactivate when fixing update on slot value change behavior")
