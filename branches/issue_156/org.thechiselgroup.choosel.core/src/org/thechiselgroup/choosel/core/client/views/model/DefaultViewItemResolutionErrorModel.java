@@ -129,6 +129,17 @@ public class DefaultViewItemResolutionErrorModel implements
         }
     }
 
+    public void clearErrors(LightweightCollection<ViewItem> viewItems) {
+        assert viewItems != null;
+        assertInvariantIntegrity();
+
+        for (ViewItem viewItem : viewItems) {
+            clearErrors(viewItem);
+        }
+
+        assertInvariantIntegrity();
+    }
+
     public void clearErrors(Slot slot) {
         assert slot != null;
         assertInvariantIntegrity();
@@ -266,6 +277,20 @@ public class DefaultViewItemResolutionErrorModel implements
 
         addErrorViewItemToSlot(slot, viewItem);
         addErrorSlotToViewItem(viewItem, slot);
+
+        assertInvariantIntegrity();
+    }
+
+    public void reportErrors(Slot slot,
+            LightweightCollection<ViewItem> viewItems) {
+
+        assert slot != null;
+        assert viewItems != null;
+        assertInvariantIntegrity();
+
+        for (ViewItem viewItem : viewItems) {
+            reportError(slot, viewItem);
+        }
 
         assertInvariantIntegrity();
     }

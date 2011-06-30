@@ -521,7 +521,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // create a copy of the view items with errors
         LightweightCollection<ViewItem> viewItemsThatHadErrors = LightweightCollections
                 .toCollection(errorModel.getViewItemsWithErrors());
-        updateErrorModel();
+        updateErrorModel(delta);
         ViewItemContainerDelta deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
                 delta, viewItemsThatHadErrors);
         updateViewContentDisplay(deltaThatConsidersErrors,
@@ -569,9 +569,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         slotMappingConfiguration.setResolver(slot, resolver);
-
-        /* This may have caused/fixed errors in model */
-        updateErrorModel();
+        updateErrorModel(slot);
     }
 
     @Override
@@ -581,32 +579,54 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // view items(remove,add)
     }
 
-    private void updateErrorModel() {
-        /*
-         * TODO performance optimization: if view items are added / changed,
-         * only those should be checked. If slots changed, only those should be
-         * checked.
-         */
-        Slot[] slots = getSlots();
-        for (Slot slot : slots) {
-            // TODO we may want to optimize this in the future
-            /* remove all errors for this slot and then recalculate them */
-            errorModel.clearErrors(slot);
+    private void updateErrorModel(LightweightCollection<ViewItem> viewItems) {
+        assert viewItems != null;
 
-            if (!slotMappingConfiguration.isConfigured(slot)) {
-                LightweightCollection<ViewItem> viewItems = getViewItems();
-                for (ViewItem viewItem : viewItems) {
-                    errorModel.reportError(slot, viewItem);
-                }
-            } else {
-                for (ViewItem viewItem : getViewItems()) {
-                    if (!slotMappingConfiguration.getResolver(slot).canResolve(
-                            viewItem, this)) {
-                        errorModel.reportError(slot, viewItem);
-                    }
-                }
+        errorModel.clearErrors(viewItems);
+        for (Slot slot : getSlots()) {
+            updateErrorModel(slot, viewItems);
+        }
+    }
+
+    private void updateErrorModel(Slot changedSlot) {
+        assert changedSlot != null;
+
+        errorModel.clearErrors(changedSlot);
+        updateErrorModel(changedSlot, getViewItems());
+    }
+
+    private void updateErrorModel(Slot slot,
+            LightweightCollection<ViewItem> viewItems) {
+
+        if (!slotMappingConfiguration.isConfigured(slot)) {
+            /*
+             * TODO potential optimization: have all invalid state for slot in
+             * error model (would return errors for all view items)
+             */
+            errorModel.reportErrors(slot, viewItems);
+            return;
+        }
+
+        ViewItemValueResolver resolver = slotMappingConfiguration
+                .getResolver(slot);
+
+        for (ViewItem viewItem : viewItems) {
+            if (!resolver.canResolve(viewItem, this)) {
+                /*
+                 * TODO potential optimization: only change error model if state
+                 * for view item has changed (delta update).
+                 */
+                errorModel.reportError(slot, viewItem);
             }
         }
+    }
+
+    private void updateErrorModel(ViewItemContainerDelta delta) {
+        assert delta != null;
+
+        updateErrorModel(delta.getAddedViewItems());
+        updateErrorModel(delta.getUpdatedViewItems());
+        errorModel.clearErrors(delta.getRemovedViewItems());
     }
 
     private void updateHighlighting(
