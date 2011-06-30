@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
@@ -120,6 +119,31 @@ public class SlotMappingConfigurationUIModel {
         }
     }
 
+    private void resetMappingsFromInitializer(
+            LightweightList<Slot> invalidSlots,
+            LightweightCollection<ViewItem> viewItems) {
+
+        assert !invalidSlots.isEmpty();
+
+        Slot[] slotsAsArray = invalidSlots
+                .toArray(new Slot[invalidSlots.size()]);
+        for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
+                .getResolvers(viewModel.getResourceGrouping().getResourceSet(),
+                        slotsAsArray).entrySet()) {
+
+            Slot slot = entry.getKey();
+            ViewItemValueResolver resolver = entry.getValue();
+
+            if (getSlotMappingUIModel(slot).isAllowableResolver(resolver,
+                    viewItems)) {
+                viewModel.setResolver(slot, resolver);
+            } else {
+                // Oh god, even the initializer was wrong
+                // TODO throw an exception or something
+            }
+        }
+    }
+
     // TODO shouldn't this be pushed to the SlotMappingUIModel
     public void setCurrentResolver(Slot slot,
             ManagedViewItemValueResolver resolver) {
@@ -137,14 +161,11 @@ public class SlotMappingConfigurationUIModel {
     }
 
     private void updateVisualMappings() {
-        ResourceSet viewResources = viewModel.getResourceGrouping()
-                .getResourceSet();
-        updateVisualMappings(viewModel.getViewItems(), viewResources);
+        updateVisualMappings(viewModel.getViewItems());
     }
 
     // TODO handle view items with errors in here
-    public void updateVisualMappings(LightweightCollection<ViewItem> viewItems,
-            ResourceSet viewResources) {
+    private void updateVisualMappings(LightweightCollection<ViewItem> viewItems) {
 
         // check to see if the configuration is still valid
         updateUIModels(viewItems);
@@ -153,21 +174,7 @@ public class SlotMappingConfigurationUIModel {
         LightweightList<Slot> slots = getSlotsWithInvalidResolvers();
 
         if (!slots.isEmpty()) {
-            Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
-            for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
-                    .getResolvers(viewResources, slotsAsArray).entrySet()) {
-
-                Slot slot = entry.getKey();
-                ViewItemValueResolver resolver = entry.getValue();
-
-                if (getSlotMappingUIModel(slot).isAllowableResolver(resolver,
-                        viewItems)) {
-                    viewModel.setResolver(slot, resolver);
-                } else {
-                    // Oh god, even the initializer was wrong
-                    // TODO throw an exception or something
-                }
-            }
+            resetMappingsFromInitializer(slots, viewItems);
         }
         // TODO assert that all of the slots now have valid resolvers
     }
