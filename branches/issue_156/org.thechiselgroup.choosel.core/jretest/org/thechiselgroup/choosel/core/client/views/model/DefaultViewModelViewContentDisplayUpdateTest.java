@@ -121,10 +121,6 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
     private Slot numberSlot;
 
-    private static final String RESOURCE_TYPE_2 = "type2";
-
-    private static final String RESOURCE_TYPE_1 = "type1";
-
     /**
      * <p>
      * delta=added, current_state=errors ==&gt; ignore
@@ -135,12 +131,12 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @Test
     public void addedViewItemsWithErrorsGetIgnored() {
-        Resource validResource = createResource(RESOURCE_TYPE_1, 1);
+        Resource validResource = createResource(TYPE_1, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
 
         helper.addToContainedResources(toResourceSet(validResource,
-                createResource(RESOURCE_TYPE_2, 1)));
+                createResource(TYPE_2, 1)));
 
         assertThat(captureAddedViewItems(),
                 containsEqualResources(validResource));
@@ -277,8 +273,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @Test
     public void removedViewItemsWithErrorsGetIgnored() {
-        Resource validResource = createResource(RESOURCE_TYPE_1, 1);
-        Resource errorResource = createResource(RESOURCE_TYPE_2, 1);
+        Resource validResource = createResource(TYPE_1, 1);
+        Resource errorResource = createResource(TYPE_2, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(TestResourceSetFactory
                 .toResourceSet(validResource));
@@ -378,8 +374,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @Test
     public void updatedViewItemsChangingFromErrorsToValidGetAdded() {
-        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
-        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        Resource resource1 = createResource(TYPE_1, 1);
+        Resource resource2 = createResource(TYPE_1, 2);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
                 resource1, resource2));
@@ -399,8 +395,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @Test
     public void updatedViewItemsChangingFromValidToErrorsGetRemoved() {
-        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
-        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        Resource resource1 = createResource(TYPE_1, 1);
+        Resource resource2 = createResource(TYPE_1, 2);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(
                 resource1, resource2));
@@ -419,8 +415,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @Test
     public void updatedViewItemsThatAreValidNowAndBeforeGetUpdated() {
-        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
-        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        Resource resource1 = createResource(TYPE_1, 1);
+        Resource resource2 = createResource(TYPE_1, 2);
 
         underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
 
@@ -439,15 +435,15 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     @SuppressWarnings("unchecked")
     @Test
     public void updatedViewItemsWithErrorsNowAndBeforeGetIgnored() {
-        Resource validResource = createResource(RESOURCE_TYPE_1, 3);
+        Resource validResource = createResource(TYPE_1, 3);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
 
         // adds error view item and correct view item
-        helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
+        helper.addToContainedResources(createResource(TYPE_1, 1));
 
         // updates error view item
-        helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 2));
+        helper.addToContainedResources(createResource(TYPE_1, 2));
 
         // neither adding nor updating view item should have triggered calls to
         // update
@@ -497,7 +493,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         underTest.setResolver(numberSlot, new CalculationResolver(propertyName,
                 new SumCalculation()));
 
-        Resource resource1 = createResource(RESOURCE_TYPE_1, 1);
+        Resource resource1 = createResource(TYPE_1, 1);
         resource1.putValue(propertyName, 1d);
         helper.addToContainedResources(resource1);
 
@@ -507,7 +503,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         // needs to be done before adding
         final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
 
-        Resource resource2 = createResource(RESOURCE_TYPE_1, 2);
+        Resource resource2 = createResource(TYPE_1, 2);
         resource2.putValue(propertyName, 2d);
         helper.addToContainedResources(resource2);
 
@@ -520,7 +516,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @Test
     public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterSlotChange() {
-        helper.addToContainedResources(createResource(RESOURCE_TYPE_1, 1));
+        helper.addToContainedResources(createResource(TYPE_1, 1));
 
         final ViewItem viewItem = underTest.getViewItems().getFirstElement();
         viewItem.getValue(numberSlot); // caches values
