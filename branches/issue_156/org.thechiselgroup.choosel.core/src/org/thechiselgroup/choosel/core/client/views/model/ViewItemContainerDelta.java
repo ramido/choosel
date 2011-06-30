@@ -33,8 +33,8 @@ public class ViewItemContainerDelta {
 
     public ViewItemContainerDelta(
             LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems) {
+            LightweightCollection<ViewItem> updatedViewItems,
+            LightweightCollection<ViewItem> removedViewItems) {
 
         assert addedViewItems != null;
         assert removedViewItems != null;
@@ -55,6 +55,11 @@ public class ViewItemContainerDelta {
 
     public LightweightCollection<ViewItem> getUpdatedViewItems() {
         return updatedViewItems;
+    }
+
+    public boolean isEmpty() {
+        return addedViewItems.isEmpty() && updatedViewItems.isEmpty()
+                && removedViewItems.isEmpty();
     }
 
 }

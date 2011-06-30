@@ -183,8 +183,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
             }
         }
 
-        return new ViewItemContainerDelta(addedViewItems, removedViewItems,
-                updatedViewItems);
+        return new ViewItemContainerDelta(addedViewItems, updatedViewItems,
+                removedViewItems);
     }
 
     @Override
@@ -444,10 +444,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
         slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
-                updateViewContentDisplay(
+                updateViewContentDisplay(new ViewItemContainerDelta(
                         LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.<ViewItem> emptyCollection(),
-                        LightweightCollections.<ViewItem> emptyCollection(),
+                        LightweightCollections.<ViewItem> emptyCollection()),
                         LightweightCollections.toCollection(e.getSlot()));
             }
         });
@@ -524,7 +524,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
         updateErrorModel();
         ViewItemContainerDelta deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
                 delta, viewItemsThatHadErrors);
-        updateViewContentDisplay(deltaThatConsidersErrors);
+        updateViewContentDisplay(deltaThatConsidersErrors,
+                LightweightCollections.<Slot> emptyCollection());
         fireViewItemContainerChangeEvent(delta);
     }
 
@@ -581,6 +582,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     private void updateErrorModel() {
+        /*
+         * TODO performance optimization: if view items are added / changed,
+         * only those should be checked. If slots changed, only those should be
+         * checked.
+         */
         Slot[] slots = getSlots();
         for (Slot slot : slots) {
             // TODO we may want to optimize this in the future
@@ -627,9 +633,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
 
         updateViewContentDisplay(
-                LightweightCollections.<ViewItem> emptyCollection(),
-                affectedViewItems,
-                LightweightCollections.<ViewItem> emptyCollection(),
+                new ViewItemContainerDelta(
+                        LightweightCollections.<ViewItem> emptyCollection(),
+                        affectedViewItems,
+                        LightweightCollections.<ViewItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -658,41 +665,31 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
 
         updateViewContentDisplay(
-                LightweightCollections.<ViewItem> emptyCollection(),
-                affectedViewItems,
-                LightweightCollections.<ViewItem> emptyCollection(),
+                new ViewItemContainerDelta(
+                        LightweightCollections.<ViewItem> emptyCollection(),
+                        affectedViewItems,
+                        LightweightCollections.<ViewItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
     /**
      * NOTE: Exceptions are logged and not thrown to ensure robustness.
      */
-    private void updateViewContentDisplay(
-            LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    private void updateViewContentDisplay(ViewItemContainerDelta delta,
             LightweightCollection<Slot> changedSlots) {
 
-        if (addedViewItems.isEmpty() && updatedViewItems.isEmpty()
-                && removedViewItems.isEmpty() && changedSlots.isEmpty()) {
+        if (delta.isEmpty() && changedSlots.isEmpty()) {
             return;
         }
 
         try {
-            contentDisplay.update(addedViewItems, updatedViewItems,
-                    removedViewItems, changedSlots);
+            // TODO switch to delta in view content display interface
+            contentDisplay.update(delta.getAddedViewItems(),
+                    delta.getUpdatedViewItems(), delta.getRemovedViewItems(),
+                    changedSlots);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "ViewContentDisplay.update failed", ex);
         }
-    }
-
-    // TODO adding the ViewItems to the viewItemsByGroupID should not be done in
-    // this method
-    private void updateViewContentDisplay(ViewItemContainerDelta delta) {
-        // TODO switch to delta in view content display interface
-        updateViewContentDisplay(delta.getAddedViewItems(),
-                delta.getUpdatedViewItems(), delta.getRemovedViewItems(),
-                LightweightCollections.<Slot> emptyCollection());
     }
 
     private void updateViewItemHighlightingSet(DefaultViewItem viewItem,
@@ -723,23 +720,23 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     private ViewItemContainerDelta updateViewItemsOnModelChange(
-            ResourceGroupingChangedEvent e) {
+            ResourceGroupingChangedEvent event) {
 
-        assert e != null;
+        assert event != null;
 
         /*
          * IMPORTANT: remove old items before adding new once (there might be
          * conflicts, i.e. groups with the same id)
          */
-        LightweightCollection<ViewItem> removedViewItems = processRemoveChanges(e
+        LightweightCollection<ViewItem> removedViewItems = processRemoveChanges(event
                 .getChanges(Delta.GROUP_REMOVED));
-        LightweightCollection<ViewItem> addedViewItems = processAddChanges(e
+        LightweightCollection<ViewItem> addedViewItems = processAddChanges(event
                 .getChanges(Delta.GROUP_CREATED));
-        LightweightCollection<ViewItem> updatedViewItems = processUpdates(e
+        LightweightCollection<ViewItem> updatedViewItems = processUpdates(event
                 .getChanges(Delta.GROUP_CHANGED));
 
-        return new ViewItemContainerDelta(addedViewItems, removedViewItems,
-                updatedViewItems);
+        return new ViewItemContainerDelta(addedViewItems, updatedViewItems,
+                removedViewItems);
     }
 
 }

@@ -24,17 +24,18 @@ import java.util.Set;
 
 import org.mockito.Matchers;
 
+// TODO reconcile matchers, renamings
 public final class Matchers2 {
+
+    public static <T> Set<T> emptySet(Class<T> clazz) {
+        return eq(Collections.<T> emptySet());
+    }
 
     public static <T> T isNotNull(Class<T> clazz) {
         return clazz.cast(and(any(clazz), Matchers.isNotNull()));
     }
 
     private Matchers2() {
-    }
-
-    public static <T> Set<T> emptySet(Class<T> clazz) {
-        return eq(Collections.<T> emptySet());
     }
 
 }
