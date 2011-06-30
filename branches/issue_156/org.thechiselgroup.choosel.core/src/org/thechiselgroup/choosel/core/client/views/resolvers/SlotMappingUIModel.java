@@ -116,7 +116,7 @@ public class SlotMappingUIModel {
      * @return whether or not the current resolver is allowable
      */
     // TODO this should be a one liner
-    public boolean currentResolverIsValid(
+    public boolean inValidState(
             LightweightCollection<ViewItem> currentViewItems) {
         return !errorsInModel()
                 && context.getResolver(slot) != null
@@ -129,29 +129,27 @@ public class SlotMappingUIModel {
      * fires a {@link SlotMappingChangedEvent} to all registered
      * {@link SlotMappingChangedHandler}s.
      * 
-     * @throws InvalidResolverException
-     *             If the resolver is null or is not allowable.
-     * 
-     *             TODO This method does not set the resolver, nor should it, it
-     *             is just going to show the context's resolver
      */
+    // TODO rethink what I want to do in this situation, I don't need to set an
+    // error state because I just check the current resolver's error state,
+    // should I even be watching these events
     public void currentResolverWasSet(ViewItemValueResolver resolver,
             LightweightCollection<ViewItem> viewItems) {
-        if (!(resolver instanceof ManagedViewItemValueResolver)) {
+        if (!(resolverIsManaged(resolver))) {
             // I am wrong... do something, e.g. exception
-            throw new InvalidResolverException(
-                    "resolver that was set was not managed");
+            return;
         }
 
         ManagedViewItemValueResolver managedResolver = (ManagedViewItemValueResolver) resolver;
 
         if (!isAllowableResolver(managedResolver, viewItems)) {
-            throw new InvalidResolverException(managedResolver.getResolverId());
+            return;
         }
 
         // XXX event handler should get removed from previous resolver
 
-        // TODO should we really fire this here??
+        // TODO I may want to fire this event even though there is an error in
+        // the stuff
         eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));
     }
 
@@ -181,7 +179,7 @@ public class SlotMappingUIModel {
     public boolean isAllowableResolver(ViewItemValueResolver resolver,
             LightweightCollection<ViewItem> currentViewItems) {
         assert resolver != null;
-        if (!(resolver instanceof ManagedViewItemValueResolver)) {
+        if (!(resolverIsManaged(resolver))) {
             // Not a managed Resolver
             return false;
         }
@@ -214,6 +212,10 @@ public class SlotMappingUIModel {
         }
 
         return true;
+    }
+
+    public boolean resolverIsManaged(ViewItemValueResolver resolver) {
+        return resolver instanceof ManagedViewItemValueResolver;
     }
 
     /**

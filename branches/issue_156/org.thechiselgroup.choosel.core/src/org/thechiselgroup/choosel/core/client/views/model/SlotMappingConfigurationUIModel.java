@@ -97,7 +97,7 @@ public class SlotMappingConfigurationUIModel {
         for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
                 .entrySet()) {
 
-            if (!entry.getValue().currentResolverIsValid(
+            if (!entry.getValue().inValidState(
                     viewModel.getViewItems())) {
                 invalidSlots.add(entry.getKey());
             }

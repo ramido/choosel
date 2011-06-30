@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 
 import java.util.HashMap;
@@ -332,8 +332,8 @@ public class SlotMappingIntegrationTest {
      * error should be thrown to show that the data cannot be shown.
      * </p>
      */
-    @Test(expected = InvalidResolverException.class)
-    public void errorThrownWhenResolversCannotResolveOneOfTwoSlots()
+    @Test
+    public void errorStateSetWhenResolversCannotResolveOneOfTwoSlots()
             throws Throwable {
         Slot[] requiredSlots = helper.createSlots(DataType.NUMBER,
                 DataType.TEXT);
@@ -368,19 +368,21 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        createViewModel(slotMappingConfiguration, resourceGrouping);
+        DefaultViewModel viewModel = createViewModel(slotMappingConfiguration,
+                resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
         resource.putValue(property1, 1);
         // unresolvable by either resolvers
         resource.putValue(property2, "a");
+        resourceGrouping.getResourceSet().add(resource);
 
-        try {
-            resourceGrouping.getResourceSet().add(resource);
-        } catch (UmbrellaException e) {
-            checkForInvalidResolverException(e);
-        }
+        assertTrue(viewModel.hasErrors());
+        assertThat(viewModel.getSlotsWithErrors(),
+                containsExactly(requiredSlots[1]));
+        // assertThat()
+
     }
 
     /**
@@ -400,10 +402,7 @@ public class SlotMappingIntegrationTest {
      * </p>
      * 
      */
-    // TODO on defaultViewModel construct, I am getting the Invalid Resolver
-    // Exception
-    @Test(expected = InvalidResolverException.class)
-    public void errorThrownWhenResolvingOneUnresolvableResource()
+    public void errorStateSetWhenResolvingOneUnresolvableResource()
             throws Throwable {
 
         Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
@@ -431,16 +430,17 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        createViewModel(slotMappingConfiguration, resourceGrouping);
+        DefaultViewModel viewModel = createViewModel(slotMappingConfiguration,
+                resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
 
-        try {
-            resourceGrouping.getResourceSet().add(resource);
-        } catch (UmbrellaException e) {
-            checkForInvalidResolverException(e);
-        }
+        resourceGrouping.getResourceSet().add(resource);
+
+        assertTrue(viewModel.hasErrors());
+        assertThat(viewModel.getSlotsWithErrors(),
+                containsExactly(requiredSlots[0]));
     }
 
     /**

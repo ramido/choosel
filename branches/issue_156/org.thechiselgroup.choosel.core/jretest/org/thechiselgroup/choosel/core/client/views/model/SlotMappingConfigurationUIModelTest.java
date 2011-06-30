@@ -198,7 +198,6 @@ public class SlotMappingConfigurationUIModelTest {
         when(factory.create(any(LightweightList.class))).thenReturn(resolver);
     }
 
-    @SuppressWarnings("unchecked")
     private void mockResolversAndFactories() {
         mockFactory(factory1, RESOLVER_ID_1, resolver1);
         mockFactory(factory2, RESOLVER_ID_2, resolver2);
