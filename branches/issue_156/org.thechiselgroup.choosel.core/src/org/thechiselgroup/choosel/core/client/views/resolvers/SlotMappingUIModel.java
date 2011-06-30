@@ -113,18 +113,6 @@ public class SlotMappingUIModel {
     }
 
     /**
-     * @return whether or not the current resolver is allowable
-     */
-    // TODO this should be a one liner
-    public boolean inValidState(
-            LightweightCollection<ViewItem> currentViewItems) {
-        return !errorsInModel()
-                && context.getResolver(slot) != null
-                && isAllowableResolver(context.getResolver(slot),
-                        currentViewItems);
-    }
-
-    /**
      * Checks to see if the current resolver factory is changed, and if it has,
      * fires a {@link SlotMappingChangedEvent} to all registered
      * {@link SlotMappingChangedHandler}s.
@@ -136,13 +124,14 @@ public class SlotMappingUIModel {
     public void currentResolverWasSet(ViewItemValueResolver resolver,
             LightweightCollection<ViewItem> viewItems) {
         if (!(resolverIsManaged(resolver))) {
-            // I am wrong... do something, e.g. exception
+            // I am not managed, and am in error
             return;
         }
 
         ManagedViewItemValueResolver managedResolver = (ManagedViewItemValueResolver) resolver;
 
         if (!isAllowableResolver(managedResolver, viewItems)) {
+            // I am not allowable, and am in error
             return;
         }
 
@@ -170,6 +159,17 @@ public class SlotMappingUIModel {
 
     public Slot getSlot() {
         return slot;
+    }
+
+    /**
+     * @return whether or not the current resolver is allowable
+     */
+    // TODO this should be a one liner
+    public boolean inValidState(LightweightCollection<ViewItem> currentViewItems) {
+        return !errorsInModel()
+                && context.getResolver(slot) != null
+                && isAllowableResolver(context.getResolver(slot),
+                        currentViewItems);
     }
 
     /**

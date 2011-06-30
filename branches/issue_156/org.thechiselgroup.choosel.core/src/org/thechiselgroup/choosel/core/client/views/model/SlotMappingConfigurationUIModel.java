@@ -91,14 +91,17 @@ public class SlotMappingConfigurationUIModel {
         return uiModels;
     }
 
+    public Slot[] getSlots() {
+        return viewModel.getSlots();
+    }
+
     public LightweightList<Slot> getSlotsWithInvalidResolvers() {
         LightweightList<Slot> invalidSlots = CollectionFactory
                 .createLightweightList();
         for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
                 .entrySet()) {
 
-            if (!entry.getValue().inValidState(
-                    viewModel.getViewItems())) {
+            if (!entry.getValue().inValidState(viewModel.getViewItems())) {
                 invalidSlots.add(entry.getKey());
             }
         }
@@ -115,6 +118,12 @@ public class SlotMappingConfigurationUIModel {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
                     resolverProvider, viewModel, errorModel));
         }
+    }
+
+    // TODO shouldn't this be pushed to the SlotMappingUIModel
+    public void setCurrentResolver(Slot slot,
+            ManagedViewItemValueResolver resolver) {
+        viewModel.setResolver(slot, resolver);
     }
 
     /**
@@ -134,25 +143,23 @@ public class SlotMappingConfigurationUIModel {
     }
 
     // TODO handle view items with errors in here
-    // TODO only validViewItems will be displayed, and therefore will have ui's,
-    // maybe i should only pass in valid ones
     public void updateVisualMappings(LightweightCollection<ViewItem> viewItems,
             ResourceSet viewResources) {
 
         // check to see if the configuration is still valid
         updateUIModels(viewItems);
 
+        // reset the invalid slots
         LightweightList<Slot> slots = getSlotsWithInvalidResolvers();
 
         if (!slots.isEmpty()) {
             Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
-            // TODO, I'm not sure that I want to reintialize, error states now
-            // exist
             for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
                     .getResolvers(viewResources, slotsAsArray).entrySet()) {
                 viewModel.setResolver(entry.getKey(), entry.getValue());
             }
         }
+        // TODO assert that all of the slots now have valid resolvers
     }
 
 }

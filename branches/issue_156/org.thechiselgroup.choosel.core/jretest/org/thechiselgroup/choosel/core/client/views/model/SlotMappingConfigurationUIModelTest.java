@@ -22,6 +22,9 @@ import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createSlots;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -31,10 +34,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
+import org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
@@ -136,6 +144,13 @@ public class SlotMappingConfigurationUIModelTest {
         return captor.getValue();
     }
 
+    private ViewItemContainerChangeEventHandler captureViewItemContainerChangeEventHandler() {
+        ArgumentCaptor<ViewItemContainerChangeEventHandler> captor = ArgumentCaptor
+                .forClass(ViewItemContainerChangeEventHandler.class);
+        verify(viewModel, times(1)).addHandler(captor.capture());
+        return captor.getValue();
+    }
+
     @Test
     public void configurationUIModelContainsUIModelForEachSlotInViewModel() {
         setUpSlots(DataType.TEXT, DataType.NUMBER);
@@ -228,6 +243,107 @@ public class SlotMappingConfigurationUIModelTest {
 
         assertThat(underTest.getSlotsWithInvalidResolvers(),
                 containsExactly(slots[0]));
+    }
+
+    @Test
+    public void resolversInitializedWhenAddedViewItemsMakeCurrentResolverInvalid() {
+        setUpSlots(DataType.TEXT);
+
+        DefaultResourceSet resources = new DefaultResourceSet();
+        Resource resource1 = mock(Resource.class);
+        when(resource1.getUri()).thenReturn("resource_uri");
+        resources.add(resource1);
+
+        // set up the resolver that will fail eventually
+        ManagedViewItemValueResolver managedResolver = new ManagedViewItemValueResolverDecorator(
+                "resolver_id_3",
+                ViewItemValueResolverTestUtils
+                        .mockResolverThatCanResolveExactResourceSet(resources));
+
+        // set up the intializer to return resolver 1
+        Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        initialSlotMapping.put(slots[0], resolver1);
+        SlotMappingInitializer initializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        LightweightList<ViewItem> viewItems = CollectionFactory
+                .createLightweightList();
+        viewItems.add(ResourcesTestHelper.createViewItem("a", resources));
+        when(viewModel.getViewItems()).thenReturn(viewItems);
+
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                initializer, viewModel, errorModel);
+
+        // set the current resolver to the one that will fail when resources are
+        // added
+        underTest.setCurrentResolver(slots[0], managedResolver);
+        ViewItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
+
+        ResourceGrouping grouping = mock(ResourceGrouping.class);
+        when(viewModel.getResourceGrouping()).thenReturn(grouping);
+
+        // fake the event of adding those resources
+        handler.onViewItemContainerChanged(null);
+        // now underTest will tell the viewModel to switch back to resolver1 as
+        // per the initializer
+        verify(viewModel, times(1)).setResolver(slots[0], resolver1);
+    }
+
+    @Test
+    public void resolversInitializedWhenViewItemsAdded() {
+        setUpSlots(DataType.TEXT);
+
+        Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        initialSlotMapping.put(slots[0], resolver1);
+        SlotMappingInitializer initializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                initializer, viewModel, errorModel);
+
+        ViewItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
+
+        ResourceGrouping grouping = mock(ResourceGrouping.class);
+        when(viewModel.getViewItems()).thenReturn(
+                CollectionFactory.<ViewItem> createLightweightList());
+        when(viewModel.getResourceGrouping()).thenReturn(grouping);
+
+        // TODO right now underTest does not care what the event is, but it may
+        // in the future, feel free to implement the event in this test in the
+        // future
+        handler.onViewItemContainerChanged(null);
+
+        // verify that we set the viewModel
+        verify(viewModel, times(1)).setResolver(slots[0], resolver1);
+    }
+
+    @Test
+    public void resolversNotSetBeforeViewItemsAdded() {
+        setUpSlots(DataType.TEXT);
+
+        Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        initialSlotMapping.put(slots[0], resolver1);
+        SlotMappingInitializer initializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                initializer, viewModel, errorModel);
+
+        assertThat(underTest.getSlotsWithInvalidResolvers(),
+                containsExactly(slots[0]));
+    }
+
+    @Test
+    public void setResolverOnconfigurationUIModelUpdatesViewModel() {
+        setUpSlots(DataType.TEXT);
+
+        when(viewModel.getResolver(slots[0])).thenReturn(resolver1);
+
+        underTest = new SlotMappingConfigurationUIModel(resolverProvider,
+                slotMappingInitializer, viewModel, errorModel);
+
+        underTest.setCurrentResolver(slots[0], resolver2);
+        verify(viewModel, times(1)).setResolver(slots[0], resolver2);
     }
 
     @Before
