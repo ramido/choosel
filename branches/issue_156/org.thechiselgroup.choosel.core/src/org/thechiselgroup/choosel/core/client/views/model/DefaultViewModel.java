@@ -443,12 +443,25 @@ public class DefaultViewModel implements ViewModel, Disposable,
     protected void initSlotMappingChangeHandler() {
         slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
             @Override
-            public void onSlotMappingChanged(SlotMappingChangedEvent e) {
+            public void onSlotMappingChanged(SlotMappingChangedEvent event) {
+                // TODO process to get the right delta...
+                // --> stuff might get added because its fixed by the slot
+                // mapping change
+
+                /*
+                 * XXX this might be a problem - we need priorities to make sure
+                 * this is called before other things (error model needs to be
+                 * updated), but after view item cache is cleared. ==> default
+                 * view items should not listen for slot changes, their cache
+                 * should be cleared from here, and this handler should have
+                 * high priority.
+                 */
+                updateErrorModel(event.getSlot());
                 updateViewContentDisplay(new ViewItemContainerDelta(
                         LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.<ViewItem> emptyCollection()),
-                        LightweightCollections.toCollection(e.getSlot()));
+                        LightweightCollections.toCollection(event.getSlot()));
             }
         });
     }
@@ -569,7 +582,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         slotMappingConfiguration.setResolver(slot, resolver);
-        updateErrorModel(slot);
     }
 
     @Override

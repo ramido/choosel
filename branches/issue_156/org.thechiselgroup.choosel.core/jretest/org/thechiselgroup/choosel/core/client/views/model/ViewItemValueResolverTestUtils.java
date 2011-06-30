@@ -55,6 +55,12 @@ public final class ViewItemValueResolverTestUtils {
         return resolver;
     }
 
+    public static ViewItemValueResolver mockResolverThatCanNeverResolve() {
+        ViewItemValueResolver resolver = mockResolver();
+        whenCanResolve(resolver).thenReturn(false);
+        return resolver;
+    }
+
     public static ViewItemValueResolver mockResolverThatCanResolveExactResourceSet(
             final ResourceSet resources) {
 

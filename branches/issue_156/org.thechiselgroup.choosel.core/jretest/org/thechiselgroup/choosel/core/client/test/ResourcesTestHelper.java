@@ -58,6 +58,44 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
+    public static Matcher<LightweightCollection<ViewItem>> containsViewItemsForResourceSets(
+            final ResourceSet... resourceSets) {
+
+        return new TypeSafeMatcher<LightweightCollection<ViewItem>>() {
+            @Override
+            public void describeTo(Description description) {
+                for (ResourceSet resourceSet : resourceSets) {
+                    description.appendValue(resourceSet);
+                }
+            }
+
+            @Override
+            public boolean matchesSafely(LightweightCollection<ViewItem> set) {
+                if (set.size() != resourceSets.length) {
+                    return false;
+                }
+
+                for (ResourceSet resourceSet : resourceSets) {
+                    boolean found = false;
+                    for (ViewItem item : set) {
+                        ResourceSet itemSet = item.getResources();
+
+                        if (itemSet.size() == resourceSet.size()
+                                && itemSet.containsAll(resourceSet)) {
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        };
+    }
+
     public static ViewItem createViewItem(int id) {
         return createViewItem("" + id, createResources(id));
     }
@@ -114,6 +152,7 @@ public final class ResourcesTestHelper {
         return resourceItems;
     }
 
+    // TODO extract hamcrest matcher, inline argThat
     public static <T> LightweightCollection<T> emptyLightweightCollection(
             final Class<T> clazz) {
 
@@ -138,6 +177,7 @@ public final class ResourcesTestHelper {
         });
     }
 
+    // TODO extract hamcrest matcher, inline argThat
     public static LightweightCollection<Resource> eqResources(
             final LightweightCollection<Resource> resources) {
 
@@ -155,6 +195,7 @@ public final class ResourcesTestHelper {
         });
     }
 
+    // TODO extract hamcrest matcher, inline argThat
     public static LightweightCollection<ViewItem> eqViewItems(
             final LightweightCollection<ViewItem> viewItems) {
 
@@ -210,44 +251,6 @@ public final class ResourcesTestHelper {
         assertContentEquals(expectedResources, event.getRemovedResources()
                 .toList());
         assertEquals(true, event.getAddedResources().isEmpty());
-    }
-
-    public static Matcher<LightweightCollection<ViewItem>> containsViewItemsForResourceSets(
-            final ResourceSet... resourceSets) {
-
-        return new TypeSafeMatcher<LightweightCollection<ViewItem>>() {
-            @Override
-            public void describeTo(Description description) {
-                for (ResourceSet resourceSet : resourceSets) {
-                    description.appendValue(resourceSet);
-                }
-            }
-
-            @Override
-            public boolean matchesSafely(LightweightCollection<ViewItem> set) {
-                if (set.size() != resourceSets.length) {
-                    return false;
-                }
-
-                for (ResourceSet resourceSet : resourceSets) {
-                    boolean found = false;
-                    for (ViewItem item : set) {
-                        ResourceSet itemSet = item.getResources();
-
-                        if (itemSet.size() == resourceSet.size()
-                                && itemSet.containsAll(resourceSet)) {
-                            found = true;
-                        }
-                    }
-
-                    if (!found) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        };
     }
 
     private ResourcesTestHelper() {

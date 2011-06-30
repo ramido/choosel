@@ -41,8 +41,7 @@ public final class HamcrestResourceMatchers {
         return new TypeSafeMatcher<Iterable<T>>() {
             @Override
             public void describeTo(Description description) {
-                description.appendText(" does not contain the same content as "
-                        + expected.toString());
+                description.appendValue(expected);
             }
 
             @Override
@@ -75,7 +74,7 @@ public final class HamcrestResourceMatchers {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText(" does not exactly contain { "
+                description.appendText("{ "
                         + StringUtils.toString(",", expectedUris) + " }");
             }
 
@@ -101,7 +100,7 @@ public final class HamcrestResourceMatchers {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText(" does not match exactly { "
+                description.appendText("{ "
                         + StringUtils.toString(",", expected) + " }");
             }
 

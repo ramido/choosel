@@ -32,14 +32,16 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanNeverResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
@@ -431,12 +433,25 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void updateNeverCalledOnHighlightingChangeThatDoesNotAffectViewResources() {
         helper.getContainedResources().add(createResource(2));
         helper.getHighlightedResources().add(createResource(1));
 
+        verifyNoViewItemsUpdated();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void verifyNoViewItemsAdded() {
+        verify(helper.getViewContentDisplay(), never()).update(
+                any(LightweightCollection.class),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void verifyNoViewItemsUpdated() {
         verify(helper.getViewContentDisplay(), never()).update(
                 emptyLightweightCollection(ViewItem.class),
                 any(LightweightCollection.class),
@@ -479,4 +494,36 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         underTest.setResolver(numberSlot, new FixedValueResolver(5d,
                 DataType.NUMBER));
     }
+
+    @Ignore("reactivate when fixing update on slot value change behavior")
+    @Test
+    public void viewItemsThatBecomeInvalidAfterResolverChangeGetRemoved() {
+        underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
+        helper.addToContainedResources(createResource(1));
+
+        underTest.setResolver(textSlot, mockResolverThatCanNeverResolve());
+
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(ViewItem.class),
+                        argThat(containsViewItemsForResourceSets(createResources(1))),
+                        (LightweightCollection<Slot>) argThat(containsExactly(textSlot)));
+    }
+
+    @Ignore("reactivate when fixing update on slot value change behavior")
+    @Test
+    public void viewItemsThatBecomeValidAfterResolverChangeGetAdded() {
+        underTest.setResolver(textSlot, mockResolverThatCanNeverResolve());
+        helper.addToContainedResources(createResource(1));
+        verifyNoViewItemsAdded();
+
+        underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
+
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(argThat(containsViewItemsForResourceSets(createResources(1))),
+                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(ViewItem.class),
+                        (LightweightCollection<Slot>) argThat(containsExactly(textSlot)));
+    }
+
 }
