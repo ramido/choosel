@@ -104,8 +104,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
         highlightedResources = new DefaultResourceSet();
         selectedResources = new DefaultResourceSet();
 
-        initCacheCleaning(resources, slotMappingConfiguration);
-
+        resources.addEventHandler(new CacheUpdateOnResourceSetChange());
         resources.addEventHandler(new ResourceSetChangedEventHandler() {
             @Override
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
@@ -241,11 +240,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
     @Override
     public String getViewItemID() {
         return viewItemID;
-    }
-
-    public void initCacheCleaning(ResourceSet resources,
-            SlotMappingConfiguration slotMappingConfiguration) {
-        resources.addEventHandler(new CacheUpdateOnResourceSetChange());
     }
 
     @Override
