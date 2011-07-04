@@ -41,7 +41,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
-import org.thechiselgroup.choosel.core.shared.util.ForTest;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -99,20 +98,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
             ViewItemBehavior viewItemBehavior,
             ResourceGrouping resourceGrouping, Logger logger) {
 
-        this(contentDisplay, new SlotMappingConfiguration(
-                contentDisplay.getSlots()), selectedResources,
-                highlightedResources, viewItemBehavior, resourceGrouping,
-                logger);
-    }
-
-    @ForTest
-    public DefaultViewModel(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration slotMappingConfiguration,
-            ResourceSet selectedResources, ResourceSet highlightedResources,
-            ViewItemBehavior viewItemBehavior,
-            ResourceGrouping resourceGrouping, Logger logger) {
-
-        assert slotMappingConfiguration != null;
         assert contentDisplay != null;
         assert selectedResources != null;
         assert highlightedResources != null;
@@ -120,7 +105,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
         assert resourceGrouping != null;
         assert logger != null;
 
-        this.slotMappingConfiguration = slotMappingConfiguration;
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
         this.highlightedResources = highlightedResources;
@@ -128,6 +112,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
         this.resourceGrouping = resourceGrouping;
         this.logger = logger;
 
+        this.slotMappingConfiguration = new SlotMappingConfiguration(
+                contentDisplay.getSlots());
         this.handlerManager = new HandlerManager(this);
 
         init(selectedResources);

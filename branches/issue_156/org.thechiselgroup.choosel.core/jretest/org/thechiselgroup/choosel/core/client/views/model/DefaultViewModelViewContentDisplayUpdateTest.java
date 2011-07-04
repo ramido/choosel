@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
@@ -532,7 +531,6 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         assertEquals(1d + 2d, result[0], 0.000001d);
     }
 
-    @Ignore("reactivate when fixing update on slot value change behavior")
     @Test
     public void viewItemsThatBecomeInvalidAfterResolverChangeGetRemoved() {
         underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
@@ -547,7 +545,6 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                         (LightweightCollection<Slot>) argThat(containsExactly(textSlot)));
     }
 
-    @Ignore("reactivate when fixing update on slot value change behavior")
     @Test
     public void viewItemsThatBecomeValidAfterResolverChangeGetAdded() {
         underTest.setResolver(textSlot, mockResolverThatCanNeverResolve());
