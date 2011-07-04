@@ -121,7 +121,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
         initResourceGrouping();
         initHighlightingModel();
         initContentDisplay();
-        initSlotMappingChangeHandler();
     }
 
     @Override
@@ -439,39 +438,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 }));
     }
 
-    protected void initSlotMappingChangeHandler() {
-        slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
-            @Override
-            public void onSlotMappingChanged(SlotMappingChangedEvent event) {
-                Slot slot = event.getSlot();
-                // TODO process to get the right delta...
-                // --> stuff might get added because its fixed by the slot
-                // mapping change
-
-                /*
-                 * XXX this might be a problem - we need priorities to make sure
-                 * this is called before other things (error model needs to be
-                 * updated), but after view item cache is cleared. ==> default
-                 * view items should not listen for slot changes, their cache
-                 * should be cleared from here, and this handler should have
-                 * high priority.
-                 */
-                updateErrorModel(slot);
-
-                // TODO extract
-                for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
-                    viewItem.clearValueCache(slot);
-                }
-
-                updateViewContentDisplay(new ViewItemContainerDelta(
-                        LightweightCollections.<ViewItem> emptyCollection(),
-                        LightweightCollections.<ViewItem> emptyCollection(),
-                        LightweightCollections.<ViewItem> emptyCollection()),
-                        LightweightCollections.toCollection(slot));
-            }
-        });
-    }
-
     @Override
     public boolean isConfigured(Slot slot) {
         return slotMappingConfiguration.isConfigured(slot);
@@ -585,9 +551,39 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItem;
     }
 
+    /*
+     * IMPLEMENTATION NOTE: We updated the error model and view content display
+     * directly after the resolver has been set, because this keeps the
+     * algorithm simpler (compared to an event based approach, which would
+     * require prioritizing event handlers etc.)
+     */
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         slotMappingConfiguration.setResolver(slot, resolver);
+
+        // TODO process to get the right delta...
+        // --> stuff might get added because its fixed by the slot
+        // mapping change
+
+        /*
+         * XXX this might be a problem - we need priorities to make sure this is
+         * called before other things (error model needs to be updated), but
+         * after view item cache is cleared. ==> default view items should not
+         * listen for slot changes, their cache should be cleared from here, and
+         * this handler should have high priority.
+         */
+        updateErrorModel(slot);
+
+        // TODO extract
+        for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
+            viewItem.clearValueCache(slot);
+        }
+
+        updateViewContentDisplay(new ViewItemContainerDelta(
+                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<ViewItem> emptyCollection()),
+                LightweightCollections.toCollection(slot));
     }
 
     @Override
