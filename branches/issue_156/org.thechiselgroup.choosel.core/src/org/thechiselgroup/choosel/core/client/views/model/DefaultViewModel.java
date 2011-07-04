@@ -41,6 +41,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+import org.thechiselgroup.choosel.core.shared.util.ForTest;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -93,6 +94,18 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private transient HandlerManager handlerManager;
 
+    public DefaultViewModel(ViewContentDisplay contentDisplay,
+            ResourceSet selectedResources, ResourceSet highlightedResources,
+            ViewItemBehavior viewItemBehavior,
+            ResourceGrouping resourceGrouping, Logger logger) {
+
+        this(contentDisplay, new SlotMappingConfiguration(
+                contentDisplay.getSlots()), selectedResources,
+                highlightedResources, viewItemBehavior, resourceGrouping,
+                logger);
+    }
+
+    @ForTest
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,

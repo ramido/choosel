@@ -94,9 +94,6 @@ public final class DefaultViewModelTestHelper {
         when(viewContentDisplay.getSlots()).thenReturn(slots);
         when(viewContentDisplay.isReady()).thenReturn(true);
 
-        SlotMappingConfiguration slotMappingConfiguration = spy(new SlotMappingConfiguration(
-                slots));
-
         // TODO we want to make the categorizer more flexible
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
@@ -105,8 +102,7 @@ public final class DefaultViewModelTestHelper {
 
         resourceGrouping.setResourceSet(containedResources);
 
-        return spy(new DefaultViewModel(viewContentDisplay,
-                slotMappingConfiguration, selectedResources,
+        return spy(new DefaultViewModel(viewContentDisplay, selectedResources,
                 highlightedResources, mock(ViewItemBehavior.class),
                 resourceGrouping, mock(Logger.class)));
     }

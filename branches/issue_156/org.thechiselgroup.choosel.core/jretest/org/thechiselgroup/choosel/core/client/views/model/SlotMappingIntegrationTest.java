@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -114,15 +116,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
-                requiredSlots);
-
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
@@ -133,7 +131,7 @@ public class SlotMappingIntegrationTest {
         ViewItemValueResolver resolver2 = new ManagedViewItemValueResolverDecorator(
                 resolverId1, new FirstResourcePropertyResolver(property2,
                         DataType.NUMBER));
-        slotMappingConfiguration.setResolver(requiredSlots[0], resolver2);
+        model.setResolver(requiredSlots[0], resolver2);
 
         LightweightCollection<ViewItem> viewItems = model.getViewItems();
 
@@ -196,8 +194,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource1 = TestResourceSetFactory.createResource(1);
@@ -260,15 +257,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
-                requiredSlots);
-
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource1 = createResource(1);
@@ -278,7 +271,7 @@ public class SlotMappingIntegrationTest {
         resourceGrouping.getResourceSet().add(resource1);
 
         /* Should have 1 View Item with Value 1 */
-        slotMappingConfiguration.setResolver(requiredSlots[0],
+        model.setResolver(requiredSlots[0],
                 new ManagedViewItemValueResolverDecorator(resolverId2,
                         new FirstResourcePropertyResolver(property2,
                                 DataType.NUMBER)));
@@ -302,14 +295,12 @@ public class SlotMappingIntegrationTest {
         }
     }
 
-    private DefaultViewModel createViewModel(
-            SlotMappingConfiguration slotMappingConfiguration,
-            ResourceGrouping resourceGrouping) {
+    private DefaultViewModel createViewModel(ResourceGrouping resourceGrouping) {
 
         DefaultViewModel model = new DefaultViewModel(
-                helper.getViewContentDisplay(), slotMappingConfiguration,
-                new DefaultResourceSet(), new DefaultResourceSet(),
-                viewItemBehavior, resourceGrouping, logger);
+                helper.getViewContentDisplay(), new DefaultResourceSet(),
+                new DefaultResourceSet(), viewItemBehavior, resourceGrouping,
+                logger);
         new SlotMappingConfigurationUIModel(resolverProvider,
                 slotMappingInitializer, model, model);
         return model;
@@ -368,8 +359,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel viewModel = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel viewModel = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
@@ -430,8 +420,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel viewModel = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel viewModel = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
@@ -498,8 +487,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         slotMappingConfiguration.setResolver(requiredSlots[0], resolver);
 
@@ -549,8 +537,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource1 = TestResourceSetFactory.createResource(1);
@@ -595,8 +582,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource1 = TestResourceSetFactory.createResource(1);
@@ -655,8 +641,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
@@ -725,8 +710,7 @@ public class SlotMappingIntegrationTest {
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(slotMappingConfiguration,
-                resourceGrouping);
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource1 = TestResourceSetFactory.createResource(1);
@@ -784,18 +768,14 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        /* create the slotMappingConfiguration */
-        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
-                requiredSlots);
-
         /*
          * create the ViewModel, as well as initialize the
          * slotMappingConfiguration
          */
         DefaultViewModel model = new DefaultViewModel(
-                helper.getViewContentDisplay(), slotMappingConfiguration,
-                new DefaultResourceSet(), new DefaultResourceSet(),
-                viewItemBehavior, resourceGrouping, logger);
+                helper.getViewContentDisplay(), new DefaultResourceSet(),
+                new DefaultResourceSet(), viewItemBehavior, resourceGrouping,
+                logger);
         new SlotMappingConfigurationUIModel(resolverProvider,
                 slotMappingInitializer, model, model);
 
