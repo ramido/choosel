@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,6 +26,7 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanNeverResolve;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 
 import org.junit.Before;
@@ -45,7 +47,6 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  */
 // TODO extract AbstractDefaultViewModelTest superclass
 // TODO handler
-// TODO contains
 // TODO getById
 // TODO get... by resources
 public class DefaultViewModelViewContentDisplayCallbackTest {
@@ -59,12 +60,35 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
     private ViewContentDisplayCallback callback;
 
     @Test
-    public void getViewItemsExcludesViewItemsThatCannotBeResolved() {
+    public void containsViewItemsReturnsFalseForViewItemsWithErrors() {
+        ResourceSet resources = createResources(TYPE_1, 1);
+
+        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
+        helper.addToContainedResources(resources);
+
+        assertThat(
+                callback.containsViewItem(underTest.getViewItems()
+                        .getFirstElement().getViewItemID()), is(false));
+    }
+
+    @Test
+    public void containsViewItemsReturnsTrueForViewItemsWithoutErrors() {
+        ResourceSet resources = createResources(TYPE_1, 1);
+
+        underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
+        helper.addToContainedResources(resources);
+
+        assertThat(
+                callback.containsViewItem(underTest.getViewItems()
+                        .getFirstElement().getViewItemID()), is(true));
+    }
+
+    @Test
+    public void getViewItemsExcludesViewItemsWithErrors() {
         ResourceSet resources1 = createResources(TYPE_1, 1);
         ResourceSet resources2 = createResources(TYPE_2, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(resources1);
-
         helper.addToContainedResources(toResourceSet(resources1, resources2));
 
         assertThat(callback.getViewItems(),
@@ -73,10 +97,9 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
 
     @Test
     public void getViewItemsReturnsAddedViewItem() {
-        underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
-
         ResourceSet resources = createResources(TYPE_1, 1);
 
+        underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(resources);
 
         assertThat(callback.getViewItems(),

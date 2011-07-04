@@ -409,7 +409,8 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
             @Override
             public boolean containsViewItem(String viewItemId) {
-                return DefaultViewModel.this.containsViewItem(viewItemId);
+                return DefaultViewModel.this.containsViewItem(viewItemId)
+                        && !hasErrors(viewItemsByGroupId.get(viewItemId));
             }
 
             @Override
