@@ -60,8 +60,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * TODO introduce ViewItemContainer decorator that is filtered to the valid view
  * items from the error model
  */
-public class DefaultViewModel implements ViewModel, Disposable,
-        ViewContentDisplayCallback {
+public class DefaultViewModel implements ViewModel, Disposable {
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -302,15 +301,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
-    public String getSlotResolverDescription(Slot slot) {
-        if (!slotMappingConfiguration.isConfigured(slot)) {
-            return "N/A";
-        }
-
-        return slotMappingConfiguration.getResolver(slot).toString();
-    }
-
-    @Override
     public Slot[] getSlots() {
         return slotMappingConfiguration.getSlots();
     }
@@ -409,7 +399,50 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     private void initContentDisplay() {
-        contentDisplay.init(this);
+        contentDisplay.init(new ViewContentDisplayCallback() {
+            @Override
+            public HandlerRegistration addHandler(
+                    ViewItemContainerChangeEventHandler handler) {
+
+                return null;
+            }
+
+            @Override
+            public boolean containsViewItem(String viewItemId) {
+                return DefaultViewModel.this.containsViewItem(viewItemId);
+            }
+
+            @Override
+            public ViewItemValueResolver getResolver(Slot slot) {
+                return DefaultViewModel.this.getResolver(slot);
+            }
+
+            @Override
+            public String getSlotResolverDescription(Slot slot) {
+                if (!slotMappingConfiguration.isConfigured(slot)) {
+                    return "N/A";
+                }
+
+                return slotMappingConfiguration.getResolver(slot).toString();
+            }
+
+            @Override
+            public ViewItem getViewItem(String viewItemId) {
+                return DefaultViewModel.this.getViewItem(viewItemId);
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems() {
+                return getValidViewItems();
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems(
+                    Iterable<Resource> resources) {
+
+                return DefaultViewModel.this.getViewItems(resources);
+            }
+        });
     }
 
     /**

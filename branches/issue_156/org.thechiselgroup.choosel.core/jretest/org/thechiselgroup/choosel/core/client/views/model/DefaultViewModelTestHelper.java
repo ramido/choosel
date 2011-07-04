@@ -127,6 +127,10 @@ public final class DefaultViewModelTestHelper {
         return selectedResources;
     }
 
+    public Slot[] getSlots() {
+        return slots;
+    }
+
     public ViewContentDisplay getViewContentDisplay() {
         return viewContentDisplay;
     }

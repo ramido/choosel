@@ -74,17 +74,20 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * <li>delta=added, current_state=valid ==&gt; add
  * {@link #addingTwoViewItemsInTwoStepsTriggersTwoUpdateCalls()}</li>
  * <li>delta=added, current_state=errors ==&gt; ignore
- * {@link #addedViewItemsWithErrorsGetIgnored()}</li>
+ * {@link #addedViewItemsWithErrorsGetIgnoredWhenResourcesChange()}</li>
  * <li>delta=removed, old_state=valid ==&gt; remove
  * {@link DefaultViewModelTest#updateCalledWhenResourcesRemoved}</li>
  * <li>delta=removed, old_state=errors ==&gt; ignore
- * {@link #removedViewItemsWithErrorsGetIgnored()}</li>
+ * {@link #removedViewItemsWithErrorsGetIgnoredWhenResourcesChange()}</li>
  * <li>delta=updated, old_state=valid, current_state=valid ==&gt; update
- * {@link #updatedViewItemsThatAreValidNowAndBeforeGetUpdated()}</li>
+ * {@link #updatedViewItemsThatAreValidNowAndBeforeGetUpdatedWhenResourcesChange()}
+ * </li>
  * <li>delta=updated, old_state=valid, current_state=errors ==&gt; remove
- * {@link #updatedViewItemsChangingFromValidToErrorsGetRemoved()}</li>
+ * {@link #updatedViewItemsChangingFromValidToErrorsGetRemovedWhenResourcesChange()}
+ * </li>
  * <li>delta=updated, old_state=errors, current_state=valid ==&gt; add
- * {@link #updatedViewItemsChangingFromErrorsToValidGetAdded()}</li>
+ * {@link #updatedViewItemsChangingFromErrorsToValidGetAddedWhenResourcesChange()}
+ * </li>
  * <li>delta=updated, old_state=errors, current_state=errors ==&gt; ignore
  * {@link #updatedWithErrorsNowAndBeforeGetsIgnore()}</li>
  * </ul>
@@ -112,13 +115,11 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         return result;
     }
 
-    private Slot textSlot;
-
     private DefaultViewModel underTest;
 
     private DefaultViewModelTestHelper helper;
 
-    private Slot numberSlot;
+    private Slot slot;
 
     /**
      * <p>
@@ -129,7 +130,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * </p>
      */
     @Test
-    public void addedViewItemsWithErrorsGetIgnored() {
+    public void addedViewItemsWithErrorsGetIgnoredWhenResourcesChange() {
         Resource validResource = createResource(TYPE_1, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
@@ -242,7 +243,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) {
-                result[0] = viewItem.getValue(numberSlot);
+                result[0] = viewItem.getValue(slot);
                 return null;
             }
         }).when(helper.getViewContentDisplay()).update(
@@ -267,11 +268,26 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                 containsExactly(resources));
     }
 
+    @Test
+    public void numberSlot() {
+        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
+        helper.addToContainedResources(createResource(1));
+        verifyNoViewItemsAdded();
+
+        underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
+
+        verify(helper.getViewContentDisplay(), times(1)).update(
+                argThat(containsViewItemsForResourceSets(createResources(1))),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                (LightweightCollection<Slot>) argThat(containsExactly(slot)));
+    }
+
     /**
      * delta=removed, old_state=errors ==&gt; ignore
      */
     @Test
-    public void removedViewItemsWithErrorsGetIgnored() {
+    public void removedViewItemsWithErrorsGetIgnoredWhenResourcesChange() {
         Resource validResource = createResource(TYPE_1, 1);
         Resource errorResource = createResource(TYPE_2, 1);
 
@@ -298,24 +314,19 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
             ResourceSet resourceSet) {
 
         ViewItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(resourceSet);
-        underTest.setResolver(textSlot, resolver);
+        underTest.setResolver(slot, resolver);
     }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        textSlot = new Slot("1", "Description", DataType.TEXT);
-        numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
-
         helper = new DefaultViewModelTestHelper();
-        helper.setSlots(textSlot, numberSlot);
+        slot = helper.createSlots(DataType.NUMBER)[0];
         underTest = helper.createTestViewModel();
 
-        underTest.setResolver(textSlot, new FixedValueResolver("a",
-                DataType.TEXT));
-        underTest.setResolver(numberSlot, new FixedValueResolver(1d,
-                DataType.NUMBER));
+        underTest
+                .setResolver(slot, new FixedValueResolver(1d, DataType.NUMBER));
     }
 
     // TODO check highlighted resources in resource item
@@ -372,7 +383,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * delta=updated, old_state=errors, current_state=valid ==&gt; add
      */
     @Test
-    public void updatedViewItemsChangingFromErrorsToValidGetAdded() {
+    public void updatedViewItemsChangingFromErrorsToValidGetAddedWhenResourcesChange() {
         Resource resource1 = createResource(TYPE_1, 1);
         Resource resource2 = createResource(TYPE_1, 2);
 
@@ -393,7 +404,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * delta=updated, old_state=valid, current_state=errors ==&gt; remove
      */
     @Test
-    public void updatedViewItemsChangingFromValidToErrorsGetRemoved() {
+    public void updatedViewItemsChangingFromValidToErrorsGetRemovedWhenResourcesChange() {
         Resource resource1 = createResource(TYPE_1, 1);
         Resource resource2 = createResource(TYPE_1, 2);
 
@@ -413,11 +424,11 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * delta=updated, old_state=valid, current_state=valid ==&gt; updated
      */
     @Test
-    public void updatedViewItemsThatAreValidNowAndBeforeGetUpdated() {
+    public void updatedViewItemsThatAreValidNowAndBeforeGetUpdatedWhenResourcesChange() {
         Resource resource1 = createResource(TYPE_1, 1);
         Resource resource2 = createResource(TYPE_1, 2);
 
-        underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
+        underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
 
         helper.addToContainedResources(resource1);
 
@@ -433,7 +444,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void updatedViewItemsWithErrorsNowAndBeforeGetIgnored() {
+    public void updatedViewItemsWithErrorsNowAndBeforeGetIgnoredWhenResourcesChange() {
         Resource validResource = createResource(TYPE_1, 3);
 
         setCanResolverIfContainsResourceExactlyResolver(toResourceSet(validResource));
@@ -491,13 +502,13 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(createResource(TYPE_1, 1));
 
         final ViewItem viewItem = underTest.getViewItems().getFirstElement();
-        viewItem.getValue(numberSlot); // caches values
+        viewItem.getValue(slot); // caches values
 
         // needs to be done before changing slot
         final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
 
-        underTest.setResolver(numberSlot, new FixedValueResolver(5d,
-                DataType.NUMBER));
+        underTest
+                .setResolver(slot, new FixedValueResolver(5d, DataType.NUMBER));
 
         assertEquals(5d, result[0], 0.000001d);
     }
@@ -511,7 +522,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterResourceSetChange() {
         String propertyName = "property";
 
-        underTest.setResolver(numberSlot, new CalculationResolver(propertyName,
+        underTest.setResolver(slot, new CalculationResolver(propertyName,
                 new SumCalculation()));
 
         Resource resource1 = createResource(TYPE_1, 1);
@@ -519,7 +530,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(resource1);
 
         final ViewItem viewItem = underTest.getViewItems().getFirstElement();
-        viewItem.getValue(numberSlot); // caches values
+        viewItem.getValue(slot); // caches values
 
         // needs to be done before adding
         final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
@@ -532,32 +543,17 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     }
 
     @Test
-    public void viewItemsThatBecomeInvalidAfterResolverChangeGetRemoved() {
-        underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
+    public void viewItemsThatBecomeInvalidAfterSlotResolverChangeGetRemoved() {
+        underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(createResource(1));
 
-        underTest.setResolver(textSlot, mockResolverThatCanNeverResolve());
+        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
 
-        verify(helper.getViewContentDisplay(), times(1))
-                .update(emptyLightweightCollection(ViewItem.class),
-                        emptyLightweightCollection(ViewItem.class),
-                        argThat(containsViewItemsForResourceSets(createResources(1))),
-                        (LightweightCollection<Slot>) argThat(containsExactly(textSlot)));
-    }
-
-    @Test
-    public void viewItemsThatBecomeValidAfterResolverChangeGetAdded() {
-        underTest.setResolver(textSlot, mockResolverThatCanNeverResolve());
-        helper.addToContainedResources(createResource(1));
-        verifyNoViewItemsAdded();
-
-        underTest.setResolver(textSlot, mockResolverThatCanAlwaysResolve());
-
-        verify(helper.getViewContentDisplay(), times(1))
-                .update(argThat(containsViewItemsForResourceSets(createResources(1))),
-                        emptyLightweightCollection(ViewItem.class),
-                        emptyLightweightCollection(ViewItem.class),
-                        (LightweightCollection<Slot>) argThat(containsExactly(textSlot)));
+        verify(helper.getViewContentDisplay(), times(1)).update(
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                argThat(containsViewItemsForResourceSets(createResources(1))),
+                (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 
 }
