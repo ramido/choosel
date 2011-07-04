@@ -185,6 +185,12 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 removedViewItems);
     }
 
+    private void clearViewItemValueCache(Slot slot) {
+        for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
+            viewItem.clearValueCache(slot);
+        }
+    };
+
     @Override
     public boolean containsViewItem(String groupId) {
         return viewItemsByGroupId.containsKey(groupId);
@@ -212,7 +218,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         viewItemsByGroupId.put(groupID, viewItem);
 
         return viewItem;
-    };
+    }
 
     @Override
     public void dispose() {
@@ -322,6 +328,18 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public LightweightCollection<Slot> getUnconfiguredSlots() {
         return slotMappingConfiguration.getUnconfiguredSlots();
+    }
+
+    // TODO cache
+    private LightweightCollection<ViewItem> getValidViewItems() {
+        LightweightList<ViewItem> viewItemsThatWereValid = CollectionFactory
+                .createLightweightList();
+        for (ViewItem viewItem : getViewItems()) {
+            if (!hasErrors(viewItem)) {
+                viewItemsThatWereValid.add(viewItem);
+            }
+        }
+        return viewItemsThatWereValid;
     }
 
     @Override
@@ -500,12 +518,13 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private void processResourceGroupingUpdate(
             ResourceGroupingChangedEvent event) {
+
         assert event != null;
 
         ViewItemContainerDelta delta = updateViewItemsOnModelChange(event);
         // create a copy of the view items with errors
         LightweightCollection<ViewItem> viewItemsThatHadErrors = LightweightCollections
-                .toCollection(errorModel.getViewItemsWithErrors());
+                .copy(errorModel.getViewItemsWithErrors());
         updateErrorModel(delta);
         ViewItemContainerDelta deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
                 delta, viewItemsThatHadErrors);
@@ -559,31 +578,36 @@ public class DefaultViewModel implements ViewModel, Disposable,
      */
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
+        assert slot != null;
+        assert resolver != null;
+
+        // keep information (currently valid / invalid stuff)
+        LightweightCollection<ViewItem> viewItemsThatHadErrors = LightweightCollections
+                .copy(getViewItemsWithErrors());
+        LightweightCollection<ViewItem> viewItemsThatWereValid = LightweightCollections
+                .copy(getValidViewItems());
+
+        clearViewItemValueCache(slot);
+
+        // actually change the slot mapping
         slotMappingConfiguration.setResolver(slot, resolver);
 
-        // TODO process to get the right delta...
-        // --> stuff might get added because its fixed by the slot
-        // mapping change
-
-        /*
-         * XXX this might be a problem - we need priorities to make sure this is
-         * called before other things (error model needs to be updated), but
-         * after view item cache is cleared. ==> default view items should not
-         * listen for slot changes, their cache should be cleared from here, and
-         * this handler should have high priority.
-         */
         updateErrorModel(slot);
 
-        // TODO extract
-        for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
-            viewItem.clearValueCache(slot);
-        }
+        // CASE 1: stuff gets removed
+        // valid --> invalid (for view items)
+        LightweightCollection<ViewItem> viewItemsToAdd = LightweightCollections
+                .getRelativeComplement(viewItemsThatHadErrors,
+                        getViewItemsWithErrors());
+        // CASE 2: stuff gets added
+        // invalid --> valid (for view items)
+        LightweightCollection<ViewItem> viewItemsToRemove = LightweightCollections
+                .getRelativeComplement(viewItemsThatWereValid,
+                        getValidViewItems());
 
-        updateViewContentDisplay(new ViewItemContainerDelta(
+        updateViewContentDisplay(new ViewItemContainerDelta(viewItemsToAdd,
                 LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.<ViewItem> emptyCollection()),
-                LightweightCollections.toCollection(slot));
+                viewItemsToRemove), LightweightCollections.toCollection(slot));
     }
 
     @Override

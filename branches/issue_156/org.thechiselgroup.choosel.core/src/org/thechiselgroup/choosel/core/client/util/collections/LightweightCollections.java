@@ -17,6 +17,12 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 
 public final class LightweightCollections {
 
+    public static <T> LightweightCollection<T> copy(
+            Iterable<? extends T> iterable) {
+
+        return toList(iterable);
+    }
+
     public static <T> LightweightCollection<T> emptyCollection() {
         return NullLightweightCollection.nullLightweightCollection();
     }
@@ -26,18 +32,18 @@ public final class LightweightCollections {
     }
 
     public static <T> LightweightCollection<T> toCollection(
-            Iterable<? extends T> iterable) {
+            Iterable<? extends T> values) {
 
-        return toList(iterable);
+        return toList(values);
     }
 
     public static <T> LightweightCollection<T> toCollection(T... values) {
         return toList(values);
     }
 
-    public static <T> LightweightList<T> toList(Iterable<? extends T> iterable) {
+    public static <T> LightweightList<T> toList(Iterable<? extends T> values) {
         LightweightList<T> result = CollectionFactory.createLightweightList();
-        for (T t : iterable) {
+        for (T t : values) {
             result.add(t);
         }
         return result;
@@ -52,6 +58,35 @@ public final class LightweightCollections {
     }
 
     private LightweightCollections() {
+    }
+
+    /**
+     * Calculates the elements in {@code originalElements} that are not
+     * contained in {@code elementsToRemove}.
+     * 
+     * @return {@code originalElements \ elementsToRemove} ({@code A \ B}, also
+     *         known as {@code A - B}). This method does not modify any
+     *         parameter.
+     * 
+     * @see <a
+     *      href="http://en.wikipedia.org/wiki/Complement_(set_theory)">Wikipedia
+     *      Complement (set theory)</a>
+     */
+    public static <T> LightweightCollection<T> getRelativeComplement(
+            LightweightCollection<T> originalElements,
+            LightweightCollection<T> elementsToRemove) {
+    
+        assert originalElements != null;
+        assert elementsToRemove != null;
+    
+        LightweightList<T> relativeComplement = CollectionFactory
+                .createLightweightList();
+        for (T element : originalElements) {
+            if (!elementsToRemove.contains(element)) {
+                relativeComplement.add(element);
+            }
+        }
+        return relativeComplement;
     }
 
 }
