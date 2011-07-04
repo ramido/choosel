@@ -54,22 +54,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
         }
     }
 
-    private final class CacheUpdateOnSlotChange implements
-            SlotMappingChangedHandler, PrioritizedEventHandler {
-
-        @Override
-        public EventHandlerPriority getPriority() {
-            return EventHandlerPriority.FIRST;
-        }
-
-        @Override
-        public void onSlotMappingChanged(SlotMappingChangedEvent e) {
-            String slotId = e.getSlot().getId();
-
-            cache.remove(slotId);
-        }
-    }
-
     private String viewItemID;
 
     // TODO update & paint on changes in resources!!!
@@ -96,6 +80,8 @@ public class DefaultViewItem implements Disposable, ViewItem {
     /**
      * PERFORMANCE: Cache for the resolved slot values of ALL subset. Maps the
      * slot id to the value.
+     * 
+     * @see #clearValueCache(Slot)
      */
     private Map<String, Object> cache = CollectionFactory.createStringMap();
 
@@ -130,6 +116,23 @@ public class DefaultViewItem implements Disposable, ViewItem {
                 selectedResources.removeAll(removedResources);
             }
         });
+    }
+
+    /**
+     * <p>
+     * Clears the value cached for {@code slot}.
+     * </p>
+     * <p>
+     * We have chosen to provide an explicit clear method that is called by
+     * {@link DefaultViewModel} instead of listening for slot mapping changes,
+     * because there are several constraints on the execution order (e.g. the
+     * cache needs to be cleared before the view is re-rendered) and those
+     * constraints are easier to develop, test and understand when they are
+     * specified in a straight-forward algorithm.
+     * </p>
+     */
+    public void clearValueCache(Slot slot) {
+        cache.remove(slot.getId());
     }
 
     @Override
@@ -243,7 +246,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
     public void initCacheCleaning(ResourceSet resources,
             SlotMappingConfiguration slotMappingConfiguration) {
         resources.addEventHandler(new CacheUpdateOnResourceSetChange());
-        slotMappingConfiguration.addHandler(new CacheUpdateOnSlotChange());
     }
 
     @Override

@@ -444,6 +444,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent event) {
+                Slot slot = event.getSlot();
                 // TODO process to get the right delta...
                 // --> stuff might get added because its fixed by the slot
                 // mapping change
@@ -456,12 +457,18 @@ public class DefaultViewModel implements ViewModel, Disposable,
                  * should be cleared from here, and this handler should have
                  * high priority.
                  */
-                updateErrorModel(event.getSlot());
+                updateErrorModel(slot);
+
+                // TODO extract
+                for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
+                    viewItem.clearValueCache(slot);
+                }
+
                 updateViewContentDisplay(new ViewItemContainerDelta(
                         LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.<ViewItem> emptyCollection()),
-                        LightweightCollections.toCollection(event.getSlot()));
+                        LightweightCollections.toCollection(slot));
             }
         });
     }

@@ -483,6 +483,28 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
     /**
      * Shows the bug that happens when the {@link ViewContentDisplay} is updated
+     * before the {@link ViewItem} cache is cleaned on a {@link Slot} change.
+     * The {@link DefaultViewModel} needs to call
+     * {@link DefaultViewItem#clearValueCache(Slot)}.
+     */
+    @Test
+    public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterClearingSlotCache() {
+        helper.addToContainedResources(createResource(TYPE_1, 1));
+
+        final ViewItem viewItem = underTest.getViewItems().getFirstElement();
+        viewItem.getValue(numberSlot); // caches values
+
+        // needs to be done before changing slot
+        final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
+
+        underTest.setResolver(numberSlot, new FixedValueResolver(5d,
+                DataType.NUMBER));
+
+        assertEquals(5d, result[0], 0.000001d);
+    }
+
+    /**
+     * Shows the bug that happens when the {@link ViewContentDisplay} is updated
      * before the {@link ViewItem} cache is cleaned on a {@link ResourceSet}
      * change.
      */
@@ -508,26 +530,6 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(resource2);
 
         assertEquals(1d + 2d, result[0], 0.000001d);
-    }
-
-    /**
-     * Shows the bug that happens when the {@link ViewContentDisplay} is updated
-     * before the {@link ViewItem} cache is cleaned on a {@link Slot} change.
-     */
-    @Test
-    public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterSlotChange() {
-        helper.addToContainedResources(createResource(TYPE_1, 1));
-
-        final ViewItem viewItem = underTest.getViewItems().getFirstElement();
-        viewItem.getValue(numberSlot); // caches values
-
-        // needs to be done before changing slot
-        final double[] result = captureViewItemNumberSlotValueOnUpdate(viewItem);
-
-        underTest.setResolver(numberSlot, new FixedValueResolver(5d,
-                DataType.NUMBER));
-
-        assertEquals(5d, result[0], 0.000001d);
     }
 
     @Ignore("reactivate when fixing update on slot value change behavior")
