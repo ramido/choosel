@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.core.client.views.ViewPart;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
@@ -36,12 +37,17 @@ public class ChooselWorkbenchViewWindowContentProducer extends
     @Inject
     private ShareConfigurationFactory shareConfigurationFactory;
 
+    @Inject
+    private ViewItemValueResolverFactoryProvider factoryProvider;
+
     @Override
     protected SlotMappingInitializer createSlotMappingInitializer(
             String contentType) {
 
         DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer();
 
+        // TODO these resolvers should be registered in the provider for them to
+        // be used
         initializer.putDefaultDataTypeValues(DataType.NUMBER,
                 new FixedValueResolver(new Double(0), "Fixed-0",
                         DataType.NUMBER));
