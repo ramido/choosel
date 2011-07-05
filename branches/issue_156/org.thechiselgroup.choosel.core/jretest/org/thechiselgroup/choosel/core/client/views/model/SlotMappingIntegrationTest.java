@@ -15,9 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -47,10 +45,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePrope
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueViewItemResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel.InvalidResolverException;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
-
-import com.google.gwt.event.shared.UmbrellaException;
 
 // TODO think about test name schema - unit, module, system, integration test etc
 public class SlotMappingIntegrationTest {
@@ -163,12 +158,17 @@ public class SlotMappingIntegrationTest {
      * should resolve both to 2.
      * </p>
      */
+    // XXX this is no longer the required functionality. Because we made the
+    // decision to only reset unconfigured slots, and not invalid ones, and
+    // since that slot has in fact been configured.
+    @Ignore("No longer specified funcionality")
     @Test
     public void changeToUnresolvableDataChangesToResolverSpecifiedByInitializer() {
         Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
+        // TODO factories should be mocked, they arent even the same type hah
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
                         DataType.NUMBER, resolverId1));
@@ -187,9 +187,6 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
-                requiredSlots);
-
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
@@ -205,7 +202,7 @@ public class SlotMappingIntegrationTest {
 
         /* Should have 1 View Item with Value 1 */
         model.setResolver(requiredSlots[0],
-                new ManagedViewItemValueResolverDecorator(resolverId1,
+                new ManagedViewItemValueResolverDecorator(resolverId2,
                         new FirstResourcePropertyResolver(property2,
                                 DataType.NUMBER)));
 
@@ -281,18 +278,6 @@ public class SlotMappingIntegrationTest {
         assertTrue(viewItems.size() == 1);
         ViewItem item = viewItems.iterator().next();
         assertEquals(2, item.getValue(requiredSlots[0]));
-    }
-
-    // (o")9 I have to iterate through all of the umbrella exception to see
-    // if I can find an InvalidReoslverException to throw
-    private void checkForInvalidResolverException(UmbrellaException e)
-            throws Throwable {
-        Throwable t = e;
-        while ((t = t.getCause()) != null) {
-            if (t instanceof InvalidResolverException) {
-                throw t;
-            }
-        }
     }
 
     private DefaultViewModel createViewModel(ResourceGrouping resourceGrouping) {
@@ -772,12 +757,8 @@ public class SlotMappingIntegrationTest {
          * create the ViewModel, as well as initialize the
          * slotMappingConfiguration
          */
-        DefaultViewModel model = new DefaultViewModel(
-                helper.getViewContentDisplay(), new DefaultResourceSet(),
-                new DefaultResourceSet(), viewItemBehavior, resourceGrouping,
-                logger);
-        new SlotMappingConfigurationUIModel(resolverProvider,
-                slotMappingInitializer, model, model);
+
+        DefaultViewModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         resourceGrouping.getResourceSet().add(
@@ -800,6 +781,45 @@ public class SlotMappingIntegrationTest {
         ResourceByUriMultiCategorizer uriCategorizer = new ResourceByUriMultiCategorizer();
         resourceGrouping = new ResourceGrouping(uriCategorizer,
                 new DefaultResourceSetFactory());
+    }
+
+    @Test
+    public void unconfiguredSlotsGetConfugredAutomaticallyWhenResourcesAdded() {
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId1));
+
+        /* define initialization mapping */
+        final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        ViewItemValueResolver resolver = new ManagedViewItemValueResolverDecorator(
+                resolverId1, new FirstResourcePropertyResolver(property1,
+                        DataType.NUMBER));
+        initialSlotMapping.put(requiredSlots[0], resolver);
+
+        slotMappingInitializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
+                multiCategorizer, new DefaultResourceSetFactory());
+
+        DefaultViewModel model = createViewModel(resourceGrouping);
+        resourceGrouping.setResourceSet(new DefaultResourceSet());
+
+        Resource resource = TestResourceSetFactory.createResource(1);
+        resource.putValue(property1, 1);
+        resourceGrouping.getResourceSet().add(resource);
+
+        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+
+        assertEquals(1, viewItems.size());
+        Iterator<ViewItem> iterator = viewItems.iterator();
+        ViewItem first = iterator.next();
+        assertEquals(first.getValue(requiredSlots[0]), 1);
     }
 
 }

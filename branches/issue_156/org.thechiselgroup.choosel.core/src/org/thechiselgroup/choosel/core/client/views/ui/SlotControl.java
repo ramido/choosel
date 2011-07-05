@@ -15,10 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.ui;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 public abstract class SlotControl implements WidgetAdaptable {
 
@@ -32,6 +32,6 @@ public abstract class SlotControl implements WidgetAdaptable {
         return slot;
     }
 
-    public abstract void updateOptions(List<String> properties);
+    public abstract void updateOptions(LightweightCollection<ViewItem> viewItems);
 
 }

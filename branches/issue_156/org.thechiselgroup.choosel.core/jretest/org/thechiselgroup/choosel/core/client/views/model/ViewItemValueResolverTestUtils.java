@@ -25,6 +25,7 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 /**
@@ -40,6 +41,14 @@ public final class ViewItemValueResolverTestUtils {
             slots[i] = new Slot("slot" + i, "Slot " + i, dataTypes[i]);
         }
         return slots;
+    }
+
+    public static ManagedViewItemValueResolver mockManagedResolver(String id) {
+        ManagedViewItemValueResolver resolver = mock(ManagedViewItemValueResolver.class);
+        when(resolver.getTargetSlots()).thenReturn(
+                LightweightCollections.<Slot> emptyCollection());
+        when(resolver.getResolverId()).thenReturn(id);
+        return resolver;
     }
 
     public static ViewItemValueResolver mockResolver() {

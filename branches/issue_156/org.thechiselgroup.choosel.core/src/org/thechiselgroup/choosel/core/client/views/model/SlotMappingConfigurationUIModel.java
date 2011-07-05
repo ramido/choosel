@@ -54,9 +54,8 @@ public class SlotMappingConfigurationUIModel {
         this.viewModel = viewModel;
         this.errorModel = errorModel;
 
-        // XXX why do we initialize when there are no resources yet?
-        // we definitely need a state that flag slots as invalid / unresolved
-        initSlots(viewModel.getSlots());
+        // this does not set up a mapping
+        initSlotModels(viewModel.getSlots());
 
         viewModel.addHandler(new SlotMappingChangedHandler() {
             @Override
@@ -112,7 +111,7 @@ public class SlotMappingConfigurationUIModel {
                 viewModel.getViewItems());
     }
 
-    private void initSlots(Slot[] slots) {
+    private void initSlotModels(Slot[] slots) {
         for (Slot slot : slots) {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
                     resolverProvider, viewModel, errorModel));
@@ -120,13 +119,16 @@ public class SlotMappingConfigurationUIModel {
     }
 
     private void resetMappingsFromInitializer(
-            LightweightList<Slot> invalidSlots,
+            LightweightCollection<Slot> unconfiguredSlots,
             LightweightCollection<ViewItem> viewItems) {
 
-        assert !invalidSlots.isEmpty();
+        assert !unconfiguredSlots.isEmpty();
 
-        Slot[] slotsAsArray = invalidSlots
-                .toArray(new Slot[invalidSlots.size()]);
+        // TODO this is not a good way to convert to an array, find a better way
+        // to do this
+        Slot[] slotsAsArray = unconfiguredSlots.toList().toArray(
+                new Slot[unconfiguredSlots.size()]);
+
         for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
                 .getResolvers(viewModel.getResourceGrouping().getResourceSet(),
                         slotsAsArray).entrySet()) {
@@ -147,7 +149,7 @@ public class SlotMappingConfigurationUIModel {
     // TODO shouldn't this be pushed to the SlotMappingUIModel
     public void setCurrentResolver(Slot slot,
             ManagedViewItemValueResolver resolver) {
-        viewModel.setResolver(slot, resolver);
+        slotsToSlotMappings.get(slot).setResolver(resolver);
     }
 
     /**
@@ -170,8 +172,8 @@ public class SlotMappingConfigurationUIModel {
         // check to see if the configuration is still valid
         updateUIModels(viewItems);
 
-        // reset the invalid slots
-        LightweightList<Slot> slots = getSlotsWithInvalidResolvers();
+        // reset the unconfigured slots
+        LightweightCollection<Slot> slots = viewModel.getUnconfiguredSlots();
 
         if (!slots.isEmpty()) {
             resetMappingsFromInitializer(slots, viewItems);

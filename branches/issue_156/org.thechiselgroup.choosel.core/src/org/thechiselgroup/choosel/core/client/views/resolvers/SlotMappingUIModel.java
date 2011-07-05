@@ -24,9 +24,9 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedHandler;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationInterface;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemResolutionErrorModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -82,22 +82,22 @@ public class SlotMappingUIModel {
 
     private final ViewItemResolutionErrorModel errorModel;
 
-    private ViewItemValueResolverContext context;
+    private SlotMappingConfigurationInterface configuration;
 
     // TODO this does not take into account the current context
     public SlotMappingUIModel(Slot slot,
             ViewItemValueResolverFactoryProvider provider,
-            ViewItemValueResolverContext context,
+            SlotMappingConfigurationInterface configuration,
             ViewItemResolutionErrorModel errorModel) {
 
         assert slot != null;
         assert provider != null;
-        assert context != null;
+        assert configuration != null;
         assert errorModel != null;
 
         this.slot = slot;
         this.provider = provider;
-        this.context = context;
+        this.configuration = configuration;
         this.errorModel = errorModel;
 
         this.eventBus = new HandlerManager(this);
@@ -146,15 +146,19 @@ public class SlotMappingUIModel {
         return errorModel.hasErrors(slot);
     }
 
+    public Collection<ViewItemValueResolverFactory> getAllowableResolverFactories() {
+        return allowableResolverFactories.values();
+    }
+
+    public ViewItemValueResolverFactory getCurrentFactory() {
+        return provider.getFactoryById(getCurrentResolver().getResolverId());
+    }
+
     /**
      * @return The current @link{ViewItemValueResolver}
      */
     public ManagedViewItemValueResolver getCurrentResolver() {
-        return (ManagedViewItemValueResolver) context.getResolver(slot);
-    }
-
-    public Collection<ViewItemValueResolverFactory> getResolverFactories() {
-        return allowableResolverFactories.values();
+        return (ManagedViewItemValueResolver) configuration.getResolver(slot);
     }
 
     public Slot getSlot() {
@@ -167,8 +171,8 @@ public class SlotMappingUIModel {
     // TODO this should be a one liner
     public boolean inValidState(LightweightCollection<ViewItem> currentViewItems) {
         return !errorsInModel()
-                && context.getResolver(slot) != null
-                && isAllowableResolver(context.getResolver(slot),
+                && configuration.getResolver(slot) != null
+                && isAllowableResolver(configuration.getResolver(slot),
                         currentViewItems);
     }
 
@@ -204,7 +208,7 @@ public class SlotMappingUIModel {
         // TODO this is already check elsewhere
         if (currentViewItems != null) {
             for (ViewItem viewItem : currentViewItems) {
-                if (!resolver.canResolve(viewItem, context)) {
+                if (!resolver.canResolve(viewItem, configuration)) {
                     // resolver can not resolve viewItems
                     return false;
                 }
@@ -216,6 +220,10 @@ public class SlotMappingUIModel {
 
     public boolean resolverIsManaged(ViewItemValueResolver resolver) {
         return resolver instanceof ManagedViewItemValueResolver;
+    }
+
+    public void setResolver(ManagedViewItemValueResolver resolver) {
+        configuration.setResolver(slot, resolver);
     }
 
     /**

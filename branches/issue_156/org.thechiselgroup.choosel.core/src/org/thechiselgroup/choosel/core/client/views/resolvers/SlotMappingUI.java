@@ -97,7 +97,7 @@ public class SlotMappingUI extends FlowPanel {
         // make sure the change handler knows when this listbox is changed
         resolverFactorySelector.setChangeHandler(factoryChangeHandler);
         ArrayList<ViewItemValueResolverFactory> factories = new ArrayList<ViewItemValueResolverFactory>();
-        factories.addAll(uiModel.getResolverFactories());
+        factories.addAll(uiModel.getAllowableResolverFactories());
         resolverFactorySelector.setValues(factories);
 
         // add in the two widgets

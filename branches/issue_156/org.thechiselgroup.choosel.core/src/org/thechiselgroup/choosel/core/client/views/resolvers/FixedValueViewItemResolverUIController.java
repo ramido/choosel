@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -36,7 +36,7 @@ public class FixedValueViewItemResolverUIController implements
      * update the resolver
      */
     @Override
-    public void update(LightweightList<ViewItem> viewItems) {
+    public void update(LightweightCollection<ViewItem> viewItems) {
         return;
     }
 
