@@ -34,7 +34,6 @@ import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationUIModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
@@ -59,23 +58,19 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private final ViewItemValueResolverUIControllerFactoryProvider uiProvider;
 
-    private ViewItemValueResolverFactoryProvider resolverFactoryProvider;
-
     public DefaultVisualMappingsControl(
             SlotMappingConfigurationUIModel slotMappingConfigurationUIModel,
             HasResourceCategorizer resourceGrouping,
-            ViewItemValueResolverFactoryProvider resolverFactoryProvider,
             ViewItemValueResolverUIControllerFactoryProvider uiProvider) {
 
         assert slotMappingConfigurationUIModel != null;
         assert resourceGrouping != null;
         assert uiProvider != null;
-        assert resolverFactoryProvider != null;
 
         this.slotMappingConfigurationUIModel = slotMappingConfigurationUIModel;
+
         this.resourceGrouping = resourceGrouping;
         this.uiProvider = uiProvider;
-        this.resolverFactoryProvider = resolverFactoryProvider;
     }
 
     private void addSlotControl(Slot slot, SlotControl slotControl) {
@@ -133,38 +128,21 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     // widget
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
-
-        // LightweightList<Slot> invalidSlots = slotMappingConfigurationUIModel
-        // .getSlotsWithInvalidResolvers();
-        //
-        // for (Slot slot : slotMappingConfigurationUIModel.getSlots()) {
-        //
-        // if (invalidSlots.contains(slot)) {
-        // // TODO do something here
-        // }
-        //
-        // ManagedViewItemValueResolver currentResolver =
-        // slotMappingConfigurationUIModel
-        // .getCurrentResolver(slot);
-        //
-        // if (currentResolver == null) {
-        // continue;
-        // }
-        //
-        // ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
-        // .getFactoryById(currentResolver.getResolverId());
-        //
-        // ViewItemValueResolverUIController resolverUI = uiFactory
-        // .create(currentResolver);
-        //
-        // // TODO input and error validation
-        // addSlotControl(slot, resolverUI);
-        // }
     }
 
+    // TODO this really needs to take into account the current ViewItems in the
+    // view. What if we change the slot mapping, and what we create is dependant
+    // on the new view items or something
     @Override
     public void updateConfigurationForChangedSlotMapping(Slot slot,
             ManagedViewItemValueResolver currentResolver) {
+
+        assert currentResolver.equals(slotMappingConfigurationUIModel
+                .getCurrentResolver(slot));
+
+        if (slotMappingConfigurationUIModel.slotHasInvalidResolver(slot)) {
+            // TODO how should I handle errors here???
+        }
 
         ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
                 .getFactoryById(currentResolver.getResolverId());
@@ -174,8 +152,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         ViewItemValueResolverUIController resolverUI = uiFactory
                 .create(currentResolver);
 
-        SlotControl slotControl = new DefaultSlotControl(resolverUI,
-                slotMappingConfigurationUIModel.getSlotMappingUIModel(slot));
+        SlotControl slotControl = new DefaultSlotControl(slot,
+                slotMappingConfigurationUIModel, resolverUI);
 
         addSlotControl(slot, slotControl);
     }

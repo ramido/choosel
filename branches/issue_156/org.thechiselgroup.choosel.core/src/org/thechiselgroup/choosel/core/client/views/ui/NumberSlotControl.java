@@ -21,6 +21,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
@@ -30,6 +31,7 @@ import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolverFactory;
@@ -42,6 +44,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+@Deprecated
 public class NumberSlotControl extends SlotControl {
 
     public class CalculationResolverFactory implements ViewItemResolverFactory {
@@ -131,6 +134,11 @@ public class NumberSlotControl extends SlotControl {
     }
 
     @Override
+    public void updateOptions(LightweightCollection<ViewItem> viewItems) {
+        // TODO Auto-generated method stub
+
+    }
+
     public void updateOptions(List<String> properties) {
         propertySelector.setValues(properties);
 

@@ -64,6 +64,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         // dynamic resolution
         String firstProperty = properties.get(0);
 
+        // TODO these should be retrieved by the provider
         switch (dataType) {
         case TEXT:
             return new ManagedViewItemValueResolverDecorator("a",

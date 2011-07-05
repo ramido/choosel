@@ -99,11 +99,15 @@ public class SlotMappingConfigurationUIModel {
         for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
                 .entrySet()) {
 
-            if (!entry.getValue().inValidState(viewModel.getViewItems())) {
+            if (!slotHasInvalidResolver(entry.getKey())) {
                 invalidSlots.add(entry.getKey());
             }
         }
         return invalidSlots;
+    }
+
+    public LightweightCollection<ViewItem> getViewItems() {
+        return viewModel.getViewItems();
     }
 
     public void handleResolverChange(Slot slot, ViewItemValueResolver resolver) {
@@ -150,6 +154,12 @@ public class SlotMappingConfigurationUIModel {
     public void setCurrentResolver(Slot slot,
             ManagedViewItemValueResolver resolver) {
         slotsToSlotMappings.get(slot).setResolver(resolver);
+    }
+
+    public boolean slotHasInvalidResolver(Slot slot) {
+        assert slotsToSlotMappings.containsKey(slot);
+        return slotsToSlotMappings.get(slot).inValidState(
+                viewModel.getViewItems());
     }
 
     /**

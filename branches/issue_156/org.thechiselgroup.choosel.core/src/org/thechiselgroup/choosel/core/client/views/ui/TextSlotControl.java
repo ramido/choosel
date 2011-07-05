@@ -19,9 +19,11 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.TextPropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -29,6 +31,10 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * XXX This whole class is deprecated, and should no longer be used
+ */
+@Deprecated
 public class TextSlotControl extends SlotControl {
 
     private ListBoxControl<String> propertySelector;
@@ -61,6 +67,11 @@ public class TextSlotControl extends SlotControl {
     }
 
     @Override
+    public void updateOptions(LightweightCollection<ViewItem> viewItems) {
+        // TODO Auto-generated method stub
+
+    }
+
     public void updateOptions(List<String> properties) {
         propertySelector.setValues(properties);
 
