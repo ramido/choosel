@@ -19,8 +19,8 @@ public class FirstResourcePropertyResolverUIController extends
         PropertyListBoxResolverUIController {
 
     public FirstResourcePropertyResolverUIController(
-            ViewItemValueResolver resolver) {
-        super(resolver);
+            FirstResourcePropertyResolverFactory resolverFactory,
+            SlotMappingUIModel uiModel) {
+        super(resolverFactory, uiModel);
     }
-
 }

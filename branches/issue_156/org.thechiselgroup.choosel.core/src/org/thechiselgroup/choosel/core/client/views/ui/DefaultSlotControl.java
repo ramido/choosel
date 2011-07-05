@@ -61,11 +61,11 @@ public class DefaultSlotControl extends SlotControl {
     // TODO add special UI stuff for resolvers that are in error
     @Override
     public Widget asWidget() {
+        updateFactorySelector();
+
         VerticalPanel panel = new VerticalPanel();
 
         Label slotNameLabel = new Label(getSlot().getName() + " is ");
-
-        updateFactorySelector();
 
         panel.add(slotNameLabel);
         panel.add(resolverFactorySelector.asWidget());
@@ -109,5 +109,4 @@ public class DefaultSlotControl extends SlotControl {
         updateFactorySelector();
         uiController.update(viewItems);
     }
-
 }

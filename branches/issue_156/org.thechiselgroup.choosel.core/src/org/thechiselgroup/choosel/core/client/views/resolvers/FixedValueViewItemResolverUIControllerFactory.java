@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-
 public class FixedValueViewItemResolverUIControllerFactory implements
         ViewItemValueResolverUIControllerFactory {
 
@@ -27,7 +26,7 @@ public class FixedValueViewItemResolverUIControllerFactory implements
 
     @Override
     public ViewItemValueResolverUIController create(
-            ViewItemValueResolver resolver) {
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
         return new FixedValueViewItemResolverUIController();
     }
 

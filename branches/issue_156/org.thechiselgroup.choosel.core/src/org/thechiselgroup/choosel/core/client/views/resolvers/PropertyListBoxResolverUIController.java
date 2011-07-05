@@ -32,7 +32,9 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class PropertyListBoxResolverUIController implements
         ViewItemValueResolverUIController {
 
-    private final PropertyDependantViewItemValueResolver resolver;
+    private final PropertyDependantViewItemValueResolverFactory resolverFactory;
+
+    private SlotMappingUIModel uiModel;
 
     private List<String> properties;
 
@@ -42,22 +44,26 @@ public abstract class PropertyListBoxResolverUIController implements
      * This change handler will automatically synchronize the resolvers changes
      * with the property that is selected in the UI
      */
-    private ChangeHandler changeHandler = new ChangeHandler() {
+    private ChangeHandler propertySelectChangeHandler = new ChangeHandler() {
+
+        // this change represents that the resolver has changed without the
+        // factory changing
         @Override
         public void onChange(ChangeEvent event) {
             String selectedProperty = selector.getSelectedValue();
-            if (!selectedProperty.equals(resolver.getProperty())) {
-                // XXX deactivated in issue 156 refactoring
-                // resolver.setProperty(selectedProperty);
-            }
+            uiModel.setResolver(resolverFactory.create(selectedProperty));
         }
     };
 
-    public PropertyListBoxResolverUIController(ViewItemValueResolver resolver) {
-        this.resolver = (PropertyDependantViewItemValueResolver) resolver;
+    public PropertyListBoxResolverUIController(
+            PropertyDependantViewItemValueResolverFactory resolverFactory,
+            SlotMappingUIModel uiModel) {
+
+        this.uiModel = uiModel;
+        this.resolverFactory = resolverFactory;
         selector = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
-        selector.setChangeHandler(changeHandler);
+        selector.setChangeHandler(propertySelectChangeHandler);
     }
 
     /**
@@ -65,21 +71,28 @@ public abstract class PropertyListBoxResolverUIController implements
      */
     @Override
     public Widget asWidget() {
+
         // if properties is not set, then this UI does not make sense
         // the resolver should be unapplicable, and this should never get called
+        PropertyDependantViewItemValueResolver resolver = getCurrentResolverFromUIModel();
         assert properties.contains(resolver.getProperty());
 
-        // TODO, need to add a change handles to this selector
         selector.setValues(properties);
         selector.setSelectedValue(resolver.getProperty());
         return selector.asWidget();
     }
 
+    private PropertyDependantViewItemValueResolver getCurrentResolverFromUIModel() {
+        ManagedViewItemValueResolver currentResolver = uiModel
+                .getCurrentResolver();
+
+        assert currentResolver instanceof PropertyDependantViewItemValueResolver;
+        return (PropertyDependantViewItemValueResolver) currentResolver;
+    }
+
     /**
      * This method will return the properties that it would be ok to select from
      * the view items. All of the resources must contain that same property
-     * 
-     * 
      */
     private List<String> getSharedPropertiesFromViewItems(
             LightweightCollection<ViewItem> viewItems) {
@@ -103,7 +116,7 @@ public abstract class PropertyListBoxResolverUIController implements
      * this method will set the properties of both this UI Controller and the
      * properties of the Selector Widget
      */
-    public void setProperties(List<String> properties) {
+    private void setProperties(List<String> properties) {
         assert properties != null;
         this.properties = properties;
         this.selector.setValues(properties);
@@ -118,11 +131,10 @@ public abstract class PropertyListBoxResolverUIController implements
     public void update(LightweightCollection<ViewItem> viewItems) {
         setProperties(getSharedPropertiesFromViewItems(viewItems));
 
-        // the new view items can not be resolver by the current resolver, and
+        // the new view items can not be resolved by the current resolver, and
         // the property field should be set to something that is valid
-        if (!properties.contains(resolver.getProperty())) {
-            // XXX deactivated in issue 156 refactoring
-            // resolver.setProperty(properties.get(0));
+        if (!properties.contains(getCurrentResolverFromUIModel().getProperty())) {
+            uiModel.setResolver(resolverFactory.create(properties.get(0)));
             selector.setSelectedValue(properties.get(0));
         }
     }

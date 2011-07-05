@@ -34,6 +34,7 @@ import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationUIModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
@@ -48,6 +49,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private final SlotMappingConfigurationUIModel slotMappingConfigurationUIModel;
 
+    private final ViewItemValueResolverFactoryProvider resolverFactoryProvider;
+
     private ConfigurationPanel visualMappingPanel;
 
     private ListBoxControl<String> groupingBox;
@@ -61,16 +64,19 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     public DefaultVisualMappingsControl(
             SlotMappingConfigurationUIModel slotMappingConfigurationUIModel,
             HasResourceCategorizer resourceGrouping,
-            ViewItemValueResolverUIControllerFactoryProvider uiProvider) {
+            ViewItemValueResolverUIControllerFactoryProvider uiProvider,
+            ViewItemValueResolverFactoryProvider resolverFactoryProvider) {
 
         assert slotMappingConfigurationUIModel != null;
         assert resourceGrouping != null;
         assert uiProvider != null;
+        assert resolverFactoryProvider != null;
 
         this.slotMappingConfigurationUIModel = slotMappingConfigurationUIModel;
 
         this.resourceGrouping = resourceGrouping;
         this.uiProvider = uiProvider;
+        this.resolverFactoryProvider = resolverFactoryProvider;
     }
 
     private void addSlotControl(Slot slot, SlotControl slotControl) {
@@ -149,8 +155,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
         assert uiFactory != null;
 
-        ViewItemValueResolverUIController resolverUI = uiFactory
-                .create(currentResolver);
+        ViewItemValueResolverUIController resolverUI = uiFactory.create(
+                resolverFactoryProvider.getFactoryById(currentResolver
+                        .getResolverId()), slotMappingConfigurationUIModel
+                        .getSlotMappingUIModel(slot));
 
         SlotControl slotControl = new DefaultSlotControl(slot,
                 slotMappingConfigurationUIModel, resolverUI);

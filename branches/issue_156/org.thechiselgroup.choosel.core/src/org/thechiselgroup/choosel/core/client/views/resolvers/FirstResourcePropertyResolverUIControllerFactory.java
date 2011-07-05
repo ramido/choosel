@@ -27,8 +27,12 @@ public class FirstResourcePropertyResolverUIControllerFactory implements
 
     @Override
     public ViewItemValueResolverUIController create(
-            ViewItemValueResolver resolver) {
-        return new FirstResourcePropertyResolverUIController(resolver);
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
+
+        assert factory instanceof FirstResourcePropertyResolverFactory;
+
+        return new FirstResourcePropertyResolverUIController(
+                (FirstResourcePropertyResolverFactory) factory, uiModel);
     }
 
     @Override

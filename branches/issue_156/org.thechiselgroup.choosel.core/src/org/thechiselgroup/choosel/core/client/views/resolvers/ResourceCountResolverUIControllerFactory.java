@@ -22,7 +22,7 @@ public class ResourceCountResolverUIControllerFactory implements
 
     @Override
     public ViewItemValueResolverUIController create(
-            ViewItemValueResolver resolver) {
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
         return new ResourceCountResolverUIController();
     }
 

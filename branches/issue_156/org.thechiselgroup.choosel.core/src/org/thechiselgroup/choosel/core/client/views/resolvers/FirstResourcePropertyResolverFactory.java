@@ -15,17 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
-public class FirstResourcePropertyResolverFactory implements
-        ViewItemValueResolverFactory {
+public class FirstResourcePropertyResolverFactory extends
+        PropertyDependantViewItemValueResolverFactory {
 
     private final DataType dataType;
 
@@ -59,8 +57,15 @@ public class FirstResourcePropertyResolverFactory implements
             LightweightCollection<ViewItem> viewItems) {
         List<String> properties = getSharedProperties(viewItems);
         assert !properties.isEmpty();
+
+        return create(properties.get(0));
+
+    }
+
+    @Override
+    public ManagedViewItemValueResolver create(String property) {
         return new ManagedViewItemValueResolverDecorator(resolverID,
-                new FirstResourcePropertyResolver(properties.get(0), dataType));
+                new FirstResourcePropertyResolver(property, dataType));
     }
 
     @Override
@@ -72,28 +77,6 @@ public class FirstResourcePropertyResolverFactory implements
     @Override
     public String getLabel() {
         return "Property Selector";
-    }
-
-    private List<String> getSharedProperties(
-            LightweightCollection<ViewItem> viewItems) {
-
-        List<String> properties = new ArrayList<String>();
-        // intialize properties to be the ones in the first resource
-        if (viewItems.isEmpty()) {
-            return properties;
-        }
-
-        Resource firstResource = viewItems.iterator().next().getResources()
-                .iterator().next();
-        properties.addAll(firstResource.getProperties().keySet());
-
-        // only keep properties that are shared by all of the resource
-        for (ViewItem viewItem : viewItems) {
-            for (Resource resource : viewItem.getResources()) {
-                properties.retainAll(resource.getProperties().keySet());
-            }
-        }
-        return properties;
     }
 
 }

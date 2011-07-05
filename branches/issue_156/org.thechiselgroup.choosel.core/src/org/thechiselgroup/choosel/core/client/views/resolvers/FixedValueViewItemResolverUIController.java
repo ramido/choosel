@@ -24,16 +24,15 @@ public class FixedValueViewItemResolverUIController implements
         ViewItemValueResolverUIController {
 
     /**
-     * This class has no associated UI with it
+     * This class has no associated UI with it, so it returns an empty widget
      */
     @Override
     public Widget asWidget() {
-        return null;
+        return new Widget();
     }
 
     /**
-     * Since there is no associated UI with this class, you will never need to
-     * update the resolver
+     * Empty UI, nothing needs to be done here
      */
     @Override
     public void update(LightweightCollection<ViewItem> viewItems) {

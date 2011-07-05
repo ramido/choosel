@@ -33,7 +33,7 @@ public class ResourceCountResolverUIController implements
      */
     @Override
     public Widget asWidget() {
-        return null;
+        return new Widget();
     }
 
     /**

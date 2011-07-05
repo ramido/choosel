@@ -32,8 +32,13 @@ public class CalculationResolverUIControllerFactory implements
 
     @Override
     public ViewItemValueResolverUIController create(
-            ViewItemValueResolver resolver) {
-        return new CalculationResolverUIController(resolver);
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
+
+        assert factory instanceof CalculationResolverFactory;
+
+        return new CalculationResolverUIController(
+                (CalculationResolverFactory) factory, uiModel);
+
     }
 
     @Override
