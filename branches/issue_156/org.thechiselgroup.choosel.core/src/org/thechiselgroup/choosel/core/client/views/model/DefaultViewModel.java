@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -429,7 +430,20 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
             @Override
             public ViewItem getViewItem(String viewItemId) {
-                return DefaultViewModel.this.getViewItem(viewItemId);
+
+                ViewItem viewItem = DefaultViewModel.this
+                        .getViewItem(viewItemId);
+
+                if (viewItem == null) {
+                    throw new NoSuchElementException("View Item with id "
+                            + viewItemId + " is not contained.");
+                }
+                if (DefaultViewModel.this.hasErrors(viewItem)) {
+                    throw new NoSuchElementException("View Item with id "
+                            + viewItemId
+                            + " contains errors and cannot be retrieved.");
+                }
+                return viewItem;
             }
 
             @Override
@@ -440,8 +454,9 @@ public class DefaultViewModel implements ViewModel, Disposable {
             @Override
             public LightweightCollection<ViewItem> getViewItems(
                     Iterable<Resource> resources) {
-
-                return DefaultViewModel.this.getViewItems(resources);
+                return LightweightCollections.getRelativeComplement(
+                        DefaultViewModel.this.getViewItems(resources),
+                        getViewItemsWithErrors());
             }
         });
     }

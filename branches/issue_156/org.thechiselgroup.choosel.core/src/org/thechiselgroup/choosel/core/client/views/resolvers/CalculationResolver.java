@@ -94,8 +94,6 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
         for (Resource resource : resources) {
             // TODO, what happens if this is null, should that be possible,
             // should it not show those resources
-            // TODO also what is used by default and does that make sense
-            // TODO but what would happen to number array if slot was missing
             numberArray.push((Double) resource.getValue(property));
         }
 

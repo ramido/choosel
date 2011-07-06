@@ -24,7 +24,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForResourceSets;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForExactResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
@@ -150,7 +150,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(toResourceSet(resources1, resources2));
 
         verify(helper.getViewContentDisplay(), times(1))
-                .update(argThat(containsViewItemsForResourceSets(resources1,
+                .update(argThat(containsViewItemsForExactResourceSets(resources1,
                         resources2)),
                         emptyLightweightCollection(ViewItem.class),
                         emptyLightweightCollection(ViewItem.class),
@@ -168,9 +168,9 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(2);
 
         assertThat(allValues.get(0),
-                containsViewItemsForResourceSets(resources1));
+                containsViewItemsForExactResourceSets(resources1));
         assertThat(allValues.get(1),
-                containsViewItemsForResourceSets(resources2));
+                containsViewItemsForExactResourceSets(resources2));
     }
 
     private LightweightCollection<ViewItem> captureAddedViewItems() {
@@ -277,7 +277,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
 
         verify(helper.getViewContentDisplay(), times(1)).update(
-                argThat(containsViewItemsForResourceSets(createResources(1))),
+                argThat(containsViewItemsForExactResourceSets(createResources(1))),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
                 (LightweightCollection<Slot>) argThat(containsExactly(slot)));
@@ -552,7 +552,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         verify(helper.getViewContentDisplay(), times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
-                argThat(containsViewItemsForResourceSets(createResources(1))),
+                argThat(containsViewItemsForExactResourceSets(createResources(1))),
                 (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 

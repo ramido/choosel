@@ -87,6 +87,22 @@ public final class ViewItemValueResolverTestUtils {
         return resolver;
     }
 
+    public static ViewItemValueResolver mockResolverThatCanResolveIfContainsResources(
+            final ResourceSet resources) {
+        ViewItemValueResolver resolver = mockResolver();
+        whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
+
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
+                ResourceSet set = viewItem.getResources();
+
+                return set.containsAll(resources);
+            }
+        });
+        return resolver;
+    }
+
     public static ViewItemValueResolver mockResolverThatCanResolveProperty(
             final String property) {
 

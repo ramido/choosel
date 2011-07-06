@@ -58,7 +58,7 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static Matcher<LightweightCollection<ViewItem>> containsViewItemsForResourceSets(
+    public static Matcher<LightweightCollection<ViewItem>> containsViewItemsForExactResourceSets(
             final ResourceSet... resourceSets) {
 
         return new TypeSafeMatcher<LightweightCollection<ViewItem>>() {
