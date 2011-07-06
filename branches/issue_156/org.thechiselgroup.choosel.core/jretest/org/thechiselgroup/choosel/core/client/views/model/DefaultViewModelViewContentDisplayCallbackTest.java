@@ -46,8 +46,6 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  */
 // TODO extract AbstractDefaultViewModelTest superclass
 // TODO handler
-// TODO getById
-// TODO get... by resources
 public class DefaultViewModelViewContentDisplayCallbackTest {
 
     private Slot slot;
@@ -82,17 +80,6 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
                         .getFirstElement().getViewItemID()), is(true));
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void getByIDThrowsExceptionIfViewItemHasErrors() {
-        ResourceSet resources = createResources(TYPE_1, 1);
-
-        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
-        helper.addToContainedResources(resources);
-
-        callback.getViewItem(underTest.getViewItems().getFirstElement()
-                .getViewItemID());
-    }
-
     @Test
     public void getByIDReturnsCorrectViewItem() {
         ResourceSet resources = createResources(TYPE_1, 1);
@@ -108,6 +95,17 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
                 .getFirstElement().getViewItemID()));
 
         assertThat(viewItems, containsViewItemsForExactResourceSets(resources));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void getByIDThrowsExceptionIfViewItemHasErrors() {
+        ResourceSet resources = createResources(TYPE_1, 1);
+
+        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
+        helper.addToContainedResources(resources);
+
+        callback.getViewItem(underTest.getViewItems().getFirstElement()
+                .getViewItemID());
     }
 
     @Test
