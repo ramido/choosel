@@ -38,9 +38,14 @@ public abstract class PropertyDependantViewItemValueResolverFactory implements
             LightweightCollection<ViewItem> viewItems) {
 
         List<String> properties = new ArrayList<String>();
+
+        if (viewItems.isEmpty()) {
+            return properties;
+        }
+
         // intialize properties to be the ones in the first resource
-        Resource firstResource = viewItems.iterator().next().getResources()
-                .iterator().next();
+        Resource firstResource = viewItems.getFirstElement().getResources()
+                .getFirstElement();
         properties.addAll(firstResource.getProperties().keySet());
 
         // only keep properties that are shared by all of the resource

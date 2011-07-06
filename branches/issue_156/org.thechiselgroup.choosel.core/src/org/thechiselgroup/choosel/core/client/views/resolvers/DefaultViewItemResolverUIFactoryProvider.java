@@ -31,17 +31,16 @@ public class DefaultViewItemResolverUIFactoryProvider implements
 
     @Override
     public void add(ViewItemValueResolverUIControllerFactory factory) {
-        if (idToFactoryMap.containsKey(factory.getId())) {
-            return;
-        }
+        assert factory != null;
+        assert !idToFactoryMap.containsKey(factory.getId()) : "Factory for id "
+                + factory.getId() + " is already registered";
         idToFactoryMap.put(factory.getId(), factory);
     }
 
     @Override
     public ViewItemValueResolverUIControllerFactory getFactoryById(String id) {
-        if (!idToFactoryMap.containsKey(id)) {
-            throw new IllegalArgumentException();
-        }
+        assert idToFactoryMap.containsKey(id) : "Factory with id " + id
+                + " not available";
         return idToFactoryMap.get(id);
     }
 

@@ -65,8 +65,6 @@ public class PreconfiguredViewItemValueResolverFactoryProvider extends
         registerFactory(new CalculationResolverFactory(MIN_RESOLVER_FACTORY_ID,
                 new MinCalculation()));
 
-        registerFactory(new ResourceCountResolverFactory());
-
         registerFactory(new FixedValueViewItemResolverFactory(new Double(1.0),
                 DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
         registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,

@@ -29,6 +29,8 @@ public class DefaultViewItemResolverFactoryProvider implements
 
     @Override
     public ViewItemValueResolverFactory getFactoryById(String id) {
+        assert factories.containsKey(id) : "Factory with id " + id
+                + " not available";
         return factories.get(id);
     }
 
@@ -47,9 +49,11 @@ public class DefaultViewItemResolverFactoryProvider implements
      * will not be added.
      */
     public void registerFactory(ViewItemValueResolverFactory resolverFactory) {
-        if (factories.containsKey(resolverFactory.getId())) {
-            return;
-        }
+
+        assert resolverFactory != null;
+        assert !factories.containsKey(resolverFactory.getId()) : "Factory for id "
+                + resolverFactory.getId() + " is already registered";
+
         factories.put(resolverFactory.getId(), resolverFactory);
     }
 }
