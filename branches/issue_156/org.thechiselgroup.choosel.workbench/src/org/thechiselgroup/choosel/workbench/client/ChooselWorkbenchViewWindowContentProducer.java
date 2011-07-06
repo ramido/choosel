@@ -15,15 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
-import java.util.Date;
+import static org.thechiselgroup.choosel.core.client.views.resolvers.PreconfiguredViewItemValueResolverFactoryProvider.*;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.ViewPart;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueViewItemResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
@@ -40,31 +39,40 @@ public class ChooselWorkbenchViewWindowContentProducer extends
     @Inject
     private ViewItemValueResolverFactoryProvider factoryProvider;
 
+    /**
+     * XXX This class relies on the factoryProvider that is defined in the
+     * Choosel core package. I'm not sure if this is good or not.
+     */
     @Override
     protected SlotMappingInitializer createSlotMappingInitializer(
             String contentType) {
 
-        DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer();
+        DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer(
+                factoryProvider);
 
-        // TODO these resolvers should be registered in the provider for them to
-        // be used
         initializer.putDefaultDataTypeValues(DataType.NUMBER,
-                new FixedValueResolver(new Double(0), "Fixed-0",
-                        DataType.NUMBER));
-        initializer
-                .putDefaultDataTypeValues(DataType.SHAPE,
-                        new FixedValueResolver("circle", "Fixed-circle",
-                                DataType.SHAPE)); // TODO
+                ((FixedValueViewItemResolverFactory) factoryProvider
+                        .getFactoryById(FIXED_0_RESOLVER_FACTORY_ID)).create());
+
+        initializer.putDefaultDataTypeValues(DataType.SHAPE,
+                ((FixedValueViewItemResolverFactory) factoryProvider
+                        .getFactoryById(FIXED_CIRCLE_RESOLVER_FACTORY_ID))
+                        .create());
+        // TODO
         // PVShape.CIRCLE
         initializer.putDefaultDataTypeValues(DataType.COLOR,
-                new FixedValueResolver(new Color(100, 149, 237),
-                        "fixed-stdblue", DataType.COLOR));
-        initializer
-                .putDefaultDataTypeValues(DataType.DATE,
-                        new FixedValueResolver(new Date(), "Fixed-date",
-                                DataType.DATE));
+                ((FixedValueViewItemResolverFactory) factoryProvider
+                        .getFactoryById(FIXED_STDBLUE_RESOLVER_FACTORY_ID))
+                        .create());
+
+        initializer.putDefaultDataTypeValues(DataType.DATE,
+                ((FixedValueViewItemResolverFactory) factoryProvider
+                        .getFactoryById(FIXED_DATE_TODAY_FACTORY_ID)).create());
+
         initializer.putDefaultDataTypeValues(DataType.TEXT,
-                new FixedValueResolver("", "Fixed-emptystr", DataType.TEXT));
+                ((FixedValueViewItemResolverFactory) factoryProvider
+                        .getFactoryById(FIXED_EMPTY_STRING_FACTORY_ID))
+                        .create());
 
         return initializer;
     }

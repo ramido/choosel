@@ -55,7 +55,6 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEventHandler;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
@@ -145,7 +144,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
     protected SlotMappingInitializer createSlotMappingInitializer(
             String contentType) {
-        return new DefaultSlotMappingInitializer();
+        return new DefaultSlotMappingInitializer(resolverFactoryProvider);
     }
 
     /**
@@ -156,12 +155,12 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     }
 
     protected VisualMappingsControl createVisualMappingsControl(
-            String contentType, SlotMappingConfigurationUIModel uiModel,
-            ViewModel viewModel) {
+            ResourceGrouping resourceGrouping,
+            SlotMappingConfigurationUIModel uiModel) {
 
         // TODO change configuration to configurationUIModel
-        return new DefaultVisualMappingsControl(uiModel,
-                viewModel.getResourceGrouping(), uiProvider);
+        return new DefaultVisualMappingsControl(uiModel, resourceGrouping,
+                this.uiProvider, resolverFactoryProvider);
     }
 
     // TODO could use some refactoring
@@ -237,7 +236,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
          * 
          */
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
-                contentType, uiModel, viewModel);
+                resourceGrouping, uiModel);
         assert visualMappingsControl != null : "createVisualMappingsControl must not return null";
 
         LightweightList<ViewPart> viewParts = createViewParts(contentType);
