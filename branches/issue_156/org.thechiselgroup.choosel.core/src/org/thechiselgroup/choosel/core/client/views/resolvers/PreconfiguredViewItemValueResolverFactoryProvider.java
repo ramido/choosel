@@ -15,9 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
@@ -28,22 +30,59 @@ import com.google.inject.Inject;
 public class PreconfiguredViewItemValueResolverFactoryProvider extends
         DefaultViewItemResolverFactoryProvider {
 
+    public static final String MIN_RESOLVER_FACTORY_ID = "min";
+
+    public static final String MAX_RESOLVER_FACTORY_ID = "max";
+
+    public static final String AVERAGE_RESOLVER_FACTORY_ID = "avg";
+
+    public static final String SUM_RESOLVER_FACTORY_ID = "sum";
+
+    public static final String TEXT_PROPERTY_RESOLVER_FACTORY_ID = "Text-Property-Resolver";
+
+    public static final String FIXED_EMPTY_STRING_FACTORY_ID = "fixed_empty_string";
+
+    public static final String FIXED_DATE_TODAY_FACTORY_ID = "fixed-date-today";
+
+    public static final String FIXED_STDBLUE_RESOLVER_FACTORY_ID = "fixed-stdblue";
+
+    public static final String FIXED_0_RESOLVER_FACTORY_ID = "Fixed-0";
+
+    public static final String FIXED_1_RESOLVER_FACTORY_ID = "Fixed-1";
+
+    public static final String FIXED_CIRCLE_RESOLVER_FACTORY_ID = "Fixed-circle";
+
     @Inject
     public void registerFactories() {
         factories = new HashMap<String, ViewItemValueResolverFactory>();
         registerFactory(new ResourceCountResolverFactory());
-        registerFactory(new CalculationResolverFactory("sum",
+        registerFactory(new CalculationResolverFactory(SUM_RESOLVER_FACTORY_ID,
                 new SumCalculation()));
-        registerFactory(new CalculationResolverFactory("avg",
-                new AverageCalculation()));
-        registerFactory(new CalculationResolverFactory("max",
+        registerFactory(new CalculationResolverFactory(
+                AVERAGE_RESOLVER_FACTORY_ID, new AverageCalculation()));
+        registerFactory(new CalculationResolverFactory(MAX_RESOLVER_FACTORY_ID,
                 new MaxCalculation()));
-        registerFactory(new CalculationResolverFactory("min",
+        registerFactory(new CalculationResolverFactory(MIN_RESOLVER_FACTORY_ID,
                 new MinCalculation()));
+
+        registerFactory(new ResourceCountResolverFactory());
+
         registerFactory(new FixedValueViewItemResolverFactory(new Double(1.0),
-                DataType.NUMBER, "Fixed-1"));
+                DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
         registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,
-                "Text-Property-Resolver"));
+                TEXT_PROPERTY_RESOLVER_FACTORY_ID));
+
+        // registering factories for ChooselWorkbecnchViewWindowContentProducers
+        registerFactory(new FixedValueViewItemResolverFactory(new Double(0.0),
+                DataType.NUMBER, FIXED_0_RESOLVER_FACTORY_ID));
+        registerFactory(new FixedValueViewItemResolverFactory("circle",
+                DataType.SHAPE, FIXED_CIRCLE_RESOLVER_FACTORY_ID));
+        registerFactory(new FixedValueViewItemResolverFactory(new Color(100,
+                149, 237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
+        registerFactory(new FixedValueViewItemResolverFactory(new Date(),
+                DataType.DATE, FIXED_DATE_TODAY_FACTORY_ID));
+        registerFactory(new FixedValueViewItemResolverFactory("",
+                DataType.TEXT, FIXED_EMPTY_STRING_FACTORY_ID));
 
         /**
          * TODO extract all of the inline fixed property value resolvers into

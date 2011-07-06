@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.thechiselgroup.choosel.core.client.views.resolvers.PreconfiguredViewItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.views.resolvers.PreconfiguredViewItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +26,24 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
-import org.thechiselgroup.choosel.core.client.views.resolvers.TextPropertyResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
 public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
     private Map<DataType, ViewItemValueResolver> defaultDataTypeResolvers = new HashMap<DataType, ViewItemValueResolver>();
+
+    private ViewItemValueResolverFactoryProvider factoryProvider;
+
+    public DefaultSlotMappingInitializer(
+            ViewItemValueResolverFactoryProvider factoryProvider) {
+        assert factoryProvider != null;
+
+        this.factoryProvider = factoryProvider;
+    }
 
     @Override
     public Map<Slot, ViewItemValueResolver> getResolvers(
@@ -64,15 +75,18 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         // dynamic resolution
         String firstProperty = properties.get(0);
 
-        // TODO these should be retrieved by the provider
         switch (dataType) {
         case TEXT:
-            return new ManagedViewItemValueResolverDecorator("a",
-                    new TextPropertyResolver(firstProperty));
+            FirstResourcePropertyResolverFactory firstPropertyResolverFactory = (FirstResourcePropertyResolverFactory) factoryProvider
+                    .getFactoryById(TEXT_PROPERTY_RESOLVER_FACTORY_ID);
+
+            return firstPropertyResolverFactory.create(firstProperty);
         case NUMBER:
-            return new ManagedViewItemValueResolverDecorator(
-                    "a",
-                    new CalculationResolver(firstProperty, new SumCalculation()));
+
+            CalculationResolverFactory sumResolverFactory = (CalculationResolverFactory) factoryProvider
+                    .getFactoryById(SUM_RESOLVER_FACTORY_ID);
+
+            return sumResolverFactory.create(firstProperty);
         }
 
         return new FirstResourcePropertyResolver(firstProperty, dataType);

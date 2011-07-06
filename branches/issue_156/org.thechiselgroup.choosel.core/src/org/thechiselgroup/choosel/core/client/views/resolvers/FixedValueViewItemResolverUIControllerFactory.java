@@ -27,7 +27,7 @@ public class FixedValueViewItemResolverUIControllerFactory implements
     @Override
     public ViewItemValueResolverUIController create(
             ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
-        return new FixedValueViewItemResolverUIController();
+        return new EmptyWidgetUIController();
     }
 
     @Override

@@ -133,7 +133,8 @@ public class DefaultViewModelInitialValuesTest {
                     }
                 });
 
-        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
+        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer(
+                resolverProvider));
         initializer
                 .putDefaultDataTypeValues(DataType.NUMBER,
                         new ManagedViewItemValueResolverDecorator("Fixed-0",

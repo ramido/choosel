@@ -24,6 +24,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 public class ResourceCountResolverFactory implements
         ViewItemValueResolverFactory {
 
+    public static final String ID = "org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolverFactory";
+
     private final Subset subset;
 
     public ResourceCountResolverFactory() {
@@ -40,6 +42,11 @@ public class ResourceCountResolverFactory implements
         return slot.getDataType().equals(DataType.NUMBER);
     }
 
+    public ManagedViewItemValueResolver create() {
+        return new ManagedViewItemValueResolverDecorator(getId(),
+                new ResourceCountResolver(subset));
+    }
+
     @Override
     public ManagedViewItemValueResolver create(
             LightweightCollection<ViewItem> viewItems) {
@@ -50,7 +57,7 @@ public class ResourceCountResolverFactory implements
     // TODO use class name?
     @Override
     public String getId() {
-        return "org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolverFactory";
+        return ID;
     }
 
     @Override

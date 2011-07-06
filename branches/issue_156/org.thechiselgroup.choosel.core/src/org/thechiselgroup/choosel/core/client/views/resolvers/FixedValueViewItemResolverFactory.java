@@ -46,11 +46,15 @@ public class FixedValueViewItemResolverFactory implements
      * This method does not need to worry about the viewItems because it is
      * fixed value
      */
+    public ManagedViewItemValueResolver create() {
+        return new ManagedViewItemValueResolverDecorator(id,
+                new FixedValueResolver(value, dataType));
+    }
+
     @Override
     public ManagedViewItemValueResolver create(
             LightweightCollection<ViewItem> viewItems) {
-        return new ManagedViewItemValueResolverDecorator(id,
-                new FixedValueResolver(value, dataType));
+        return create();
     }
 
     @Override
