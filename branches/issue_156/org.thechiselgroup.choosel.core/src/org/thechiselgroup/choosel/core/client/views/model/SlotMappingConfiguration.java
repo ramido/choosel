@@ -128,6 +128,8 @@ public class SlotMappingConfiguration implements
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         assert slot != null : "slot must not be null";
         assert resolver != null : "resolver must not be null";
+        assert resolver.getTargetSlots() != null : "resolver "
+                + resolver.toString() + " getTargetSlots() must not be null";
         // TODO extract into internal assert method
         assert slotsByID.containsKey(slot.getId()) : "slot " + slot
                 + " is not allowed (valid slots: " + slotsByID.values() + ")";
