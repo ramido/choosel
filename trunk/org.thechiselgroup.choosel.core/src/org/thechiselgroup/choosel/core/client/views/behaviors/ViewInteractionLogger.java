@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
 public class ViewInteractionLogger implements ViewItemBehavior {
@@ -36,11 +37,7 @@ public class ViewInteractionLogger implements ViewItemBehavior {
     }
 
     @Override
-    public void onViewItemCreated(ViewItem viewItem) {
-    }
-
-    @Override
-    public void onViewItemRemoved(ViewItem viewItem) {
+    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
     }
 
 }

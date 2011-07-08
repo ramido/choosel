@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public final class NullLightweightCollection<T> implements
         LightweightCollection<T> {
@@ -36,6 +37,11 @@ public final class NullLightweightCollection<T> implements
     @Override
     public boolean contains(T t) {
         return false;
+    }
+
+    @Override
+    public T getFirstElement() throws NoSuchElementException {
+        throw new NoSuchElementException();
     }
 
     @Override

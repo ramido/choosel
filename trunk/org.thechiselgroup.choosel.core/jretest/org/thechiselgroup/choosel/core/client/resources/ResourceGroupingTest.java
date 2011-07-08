@@ -786,7 +786,7 @@ public class ResourceGroupingTest {
 
         underTest.setCategorizer(categorizer2);
 
-        Set<String> result = underTest.getGroups(createResources(2, 3));
+        Set<String> result = underTest.getGroupIds(createResources(2, 3));
 
         assertContentEquals(toSet(GROUP_2_1, GROUP_1_2), result);
     }
@@ -801,7 +801,7 @@ public class ResourceGroupingTest {
         testResources.remove(createResource(3));
 
         // 3 is not contained any more
-        Set<String> result = underTest.getGroups(createResources(2, 3));
+        Set<String> result = underTest.getGroupIds(createResources(2, 3));
 
         assertContentEquals(toSet(GROUP_1_2), result);
     }
@@ -813,7 +813,7 @@ public class ResourceGroupingTest {
         ResourceSet resources = createResources(1, 2);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroups(createResources(1));
+        Set<String> result = underTest.getGroupIds(createResources(1));
 
         assertContentEquals(toSet(GROUP_1_1), result);
     }
@@ -824,7 +824,7 @@ public class ResourceGroupingTest {
         ResourceSet resources = createResources(1);
         resources.addAll(resources);
 
-        Set<String> result = underTest.getGroups(createResources(2));
+        Set<String> result = underTest.getGroupIds(createResources(2));
 
         assertEquals(true, result.isEmpty());
     }
@@ -836,7 +836,7 @@ public class ResourceGroupingTest {
         ResourceSet resources = createResources(1, 2);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroups(resources);
+        Set<String> result = underTest.getGroupIds(resources);
 
         assertContentEquals(toSet(GROUP_1_1), result);
     }
@@ -847,7 +847,7 @@ public class ResourceGroupingTest {
         ResourceSet resources = createResources(1);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroups(resources);
+        Set<String> result = underTest.getGroupIds(resources);
 
         assertContentEquals(toSet(GROUP_1_1), result);
     }
@@ -858,7 +858,7 @@ public class ResourceGroupingTest {
         ResourceSet resources = createResources(1);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroups(resources);
+        Set<String> result = underTest.getGroupIds(resources);
 
         assertContentEquals(toSet(GROUP_1_1, GROUP_1_2), result);
     }

@@ -47,13 +47,8 @@ public class AverageCalculation implements Calculation {
     }
 
     @Override
-    public String getID() {
-        return "avg";
-    }
-
-    @Override
     public String toString() {
-        return getID();
+        return getDescription();
     }
 
 }

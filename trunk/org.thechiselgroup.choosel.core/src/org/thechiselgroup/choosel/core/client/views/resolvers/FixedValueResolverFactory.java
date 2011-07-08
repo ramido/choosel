@@ -20,7 +20,6 @@ public class FixedValueResolverFactory implements ViewItemResolverFactory {
     private ViewItemValueResolver resolver;
 
     public FixedValueResolverFactory(ViewItemValueResolver resolver) {
-
         this.resolver = resolver;
     }
 

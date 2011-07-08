@@ -45,6 +45,7 @@ import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEventHandler;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
@@ -74,6 +75,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -287,7 +289,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private NodeItem createGraphNodeItem(ViewItem viewItem) {
         // TODO get from group id
-        String type = getCategory(viewItem.getResources().getFirstResource());
+        String type = getCategory(viewItem.getResources().getFirstElement());
 
         NodeItem graphItem = new NodeItem(viewItem, type, graphDisplay);
 
@@ -483,6 +485,12 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private void initArcTypeContainers() {
         ViewItemContainer context = new ViewItemContainer() {
+
+            @Override
+            public HandlerRegistration addHandler(
+                    ViewItemContainerChangeEventHandler handler) {
+                throw new RuntimeException("addHandler not supported");
+            }
 
             @Override
             public boolean containsViewItem(String viewItemId) {

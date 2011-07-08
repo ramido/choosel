@@ -39,13 +39,8 @@ public class SumCalculation implements Calculation {
     }
 
     @Override
-    public String getID() {
-        return "sum";
-    }
-
-    @Override
     public String toString() {
-        return getID();
+        return getDescription();
     }
 
 }

@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class ViewItemStatusResolver implements ViewItemValueResolver {
+public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver {
 
     public static class StatusRule implements ViewItemPredicate {
 
@@ -57,25 +57,23 @@ public class ViewItemStatusResolver implements ViewItemValueResolver {
 
     }
 
-    private final String id;
-
     private final Object defaultValue;
 
     private final StatusRule[] rules;
 
-    public ViewItemStatusResolver(String resolverId, Object defaultValue,
-            StatusRule... rules) {
+    public ViewItemStatusResolver(Object defaultValue, StatusRule... rules) {
         assert defaultValue != null;
         assert rules != null;
 
         this.rules = rules;
         this.defaultValue = defaultValue;
-        this.id = resolverId;
     }
 
     @Override
-    public String getResolverId() {
-        return id;
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        return true;
     }
 
     @Override
@@ -91,5 +89,4 @@ public class ViewItemStatusResolver implements ViewItemValueResolver {
 
         return defaultValue;
     }
-
 }

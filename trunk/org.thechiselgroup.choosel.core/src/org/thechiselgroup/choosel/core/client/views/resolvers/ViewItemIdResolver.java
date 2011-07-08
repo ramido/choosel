@@ -23,13 +23,13 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  * 
  * @author Lars Grammel
  */
-public class ViewItemIdResolver implements ViewItemValueResolver {
-
-    private static final String ID = "ViewItemIdResolver";
+// TODO DataType.TEXT
+public class ViewItemIdResolver extends AbstractSimpleViewItemValueResolver {
 
     @Override
-    public String getResolverId() {
-        return ID;
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+        return true;
     }
 
     @Override

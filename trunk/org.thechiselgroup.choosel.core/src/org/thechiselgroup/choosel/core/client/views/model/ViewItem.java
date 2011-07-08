@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.core.client.views.View;
  * 
  * @see View
  */
+// TODO rename to VisualItem or VisualElement or VisualizationElement?
 public interface ViewItem {
 
     public static enum Status {

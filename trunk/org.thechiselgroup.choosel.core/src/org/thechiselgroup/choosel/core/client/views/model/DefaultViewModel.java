@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +41,10 @@ import org.thechiselgroup.choosel.core.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * <p>
@@ -51,9 +55,13 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * </p>
  * 
  * @author Lars Grammel
+ * @author Patrick Gorman
  */
-public class DefaultViewModel implements ViewModel, Disposable,
-        ViewContentDisplayCallback {
+/*
+ * TODO introduce ViewItemContainer decorator that is filtered to the valid view
+ * items from the error model
+ */
+public class DefaultViewModel implements ViewModel, Disposable {
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -69,20 +77,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private ResourceGrouping resourceGrouping;
 
-    /*
-     * Boolean flag that indicates if the configuration part of the view has
-     * been created. Protected for test usage.
-     * 
-     * XXX This solution breaks down when there is more than one kind of
-     * resource (i.e. with different properties)
-     */
-    private boolean isConfigurationAvailable = false;
-
     private ResourceSet selectedResources;
 
     private ResourceSet highlightedResources;
-
-    private SlotMappingInitializer slotMappingInitializer;
 
     private IntersectionResourceSet highlightedResourcesIntersection;
 
@@ -92,39 +89,109 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private final Logger logger;
 
+    private DefaultViewItemResolutionErrorModel errorModel = new DefaultViewItemResolutionErrorModel();
+
+    private transient PrioritizedHandlerManager handlerManager;
+
     public DefaultViewModel(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
-            SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior,
             ResourceGrouping resourceGrouping, Logger logger) {
 
-        this.logger = logger;
-        assert slotMappingConfiguration != null;
         assert contentDisplay != null;
         assert selectedResources != null;
         assert highlightedResources != null;
-        assert slotMappingInitializer != null;
         assert viewItemBehavior != null;
         assert resourceGrouping != null;
         assert logger != null;
 
-        this.slotMappingInitializer = slotMappingInitializer;
-        this.slotMappingConfiguration = slotMappingConfiguration;
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
         this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
         this.resourceGrouping = resourceGrouping;
+        this.logger = logger;
 
-        slotMappingConfiguration.initSlots(contentDisplay.getSlots());
+        this.slotMappingConfiguration = new SlotMappingConfiguration(
+                contentDisplay.getSlots());
+        this.handlerManager = new PrioritizedHandlerManager(this);
+
+        addHandler(viewItemBehavior);
+
         init(selectedResources);
         initSelectionModelEventHandlers();
         initResourceGrouping();
         initHighlightingModel();
         initContentDisplay();
-        initSlotMappingChangeHandler();
     }
+
+    @Override
+    public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
+        return slotMappingConfiguration.addHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addHandler(
+            ViewItemContainerChangeEventHandler handler) {
+
+        assert handler != null;
+        return handlerManager.addHandler(ViewItemContainerChangeEvent.TYPE,
+                handler);
+    }
+
+    private ViewItemContainerDelta calculateDeltaThatConsidersErrors(
+            ViewItemContainerDelta delta,
+            LightweightCollection<ViewItem> viewItemsThatHadErrors) {
+
+        LightweightList<ViewItem> addedViewItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ViewItem> removedViewItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ViewItem> updatedViewItems = CollectionFactory
+                .createLightweightList();
+
+        // check if added view items should be added or ignored
+        for (ViewItem added : delta.getAddedViewItems()) {
+            boolean hasErrorsNow = errorModel.hasErrors(added);
+
+            if (!hasErrorsNow) {
+                addedViewItems.add(added);
+            }
+        }
+
+        // check if removed resources should to be removed or ignored
+        for (ViewItem removed : delta.getRemovedViewItems()) {
+            boolean hadErrorsBefore = viewItemsThatHadErrors.contains(removed);
+
+            if (!hadErrorsBefore) {
+                removedViewItems.add(removed);
+            }
+        }
+
+        // check if updated resources should to be added, removed, updated, or
+        // ignored
+        for (ViewItem updated : delta.getUpdatedViewItems()) {
+            boolean hasErrorsNow = errorModel.hasErrors(updated);
+            boolean hadErrorsBefore = viewItemsThatHadErrors.contains(updated);
+
+            if (!hasErrorsNow && !hadErrorsBefore) {
+                updatedViewItems.add(updated);
+            } else if (!hasErrorsNow && hadErrorsBefore) {
+                addedViewItems.add(updated);
+            } else if (!hadErrorsBefore && hasErrorsNow) {
+                removedViewItems.add(updated);
+            }
+        }
+
+        return new ViewItemContainerDelta(addedViewItems, updatedViewItems,
+                removedViewItems);
+    }
+
+    private void clearViewItemValueCache(Slot slot) {
+        for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
+            viewItem.clearValueCache(slot);
+        }
+    };
 
     @Override
     public boolean containsViewItem(String groupId) {
@@ -142,8 +209,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
         DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
                 slotMappingConfiguration, viewItemBehavior);
 
-        viewItemBehavior.onViewItemCreated(viewItem);
-
         viewItem.updateHighlightedResources(highlightedResources,
                 LightweightCollections.<Resource> emptyCollection());
 
@@ -158,7 +223,12 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public void dispose() {
         for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
-            viewItemBehavior.onViewItemRemoved(viewItem);
+            // fire event that all view items were removed
+            fireViewItemContainerChangeEvent(new ViewItemContainerDelta(
+                    LightweightCollections.<ViewItem> emptyCollection(),
+                    LightweightCollections.<ViewItem> emptyCollection(),
+                    getViewItems()));
+
             viewItem.dispose();
         }
 
@@ -182,8 +252,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
         handlerRegistrations = null;
     }
 
-    public Map<String, ResourceSet> getCategorizedResourceSets() {
-        return resourceGrouping.getCategorizedResourceSets();
+    private void fireViewItemContainerChangeEvent(ViewItemContainerDelta delta) {
+        assert delta != null;
+
+        // TODO check that delta does contain actual changes (method on delta)
+        handlerManager.fireEvent(new ViewItemContainerChangeEvent(this, delta));
     }
 
     @Override
@@ -229,26 +302,40 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
-    public SlotMappingConfiguration getSlotMappingConfiguration() {
-        return slotMappingConfiguration;
-    }
-
-    public SlotMappingInitializer getSlotMappingInitializer() {
-        return slotMappingInitializer;
-    }
-
-    @Override
-    public String getSlotResolverDescription(Slot slot) {
-        if (!slotMappingConfiguration.containsResolver(slot)) {
-            return "N/A";
-        }
-
-        return slotMappingConfiguration.getResolver(slot).toString();
+    public Slot getSlotById(String slotId) {
+        return slotMappingConfiguration.getSlotById(slotId);
     }
 
     @Override
     public Slot[] getSlots() {
-        return slotMappingConfiguration.getRequiredSlots();
+        return slotMappingConfiguration.getSlots();
+    }
+
+    @Override
+    public LightweightCollection<Slot> getSlotsWithErrors() {
+        return errorModel.getSlotsWithErrors();
+    }
+
+    @Override
+    public LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem) {
+        return errorModel.getSlotsWithErrors(viewItem);
+    }
+
+    @Override
+    public LightweightCollection<Slot> getUnconfiguredSlots() {
+        return slotMappingConfiguration.getUnconfiguredSlots();
+    }
+
+    // TODO cache
+    private LightweightCollection<ViewItem> getValidViewItems() {
+        LightweightList<ViewItem> viewItemsThatWereValid = CollectionFactory
+                .createLightweightList();
+        for (ViewItem viewItem : getViewItems()) {
+            if (!hasErrors(viewItem)) {
+                viewItemsThatWereValid.add(viewItem);
+            }
+        }
+        return viewItemsThatWereValid;
     }
 
     @Override
@@ -261,12 +348,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItemsByGroupId.get(viewItemId);
     }
 
+    // TODO these view items should be cached & the cache should be updated
     @Override
     public LightweightCollection<ViewItem> getViewItems() {
-        LightweightList<ViewItem> result = CollectionFactory
-                .createLightweightList();
-        result.addAll(viewItemsByGroupId.values());
-        return result;
+        return LightweightCollections
+                .<ViewItem> toCollection(viewItemsByGroupId.values());
     }
 
     /**
@@ -279,12 +365,38 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         LightweightList<ViewItem> result = CollectionFactory
                 .createLightweightList();
-        Set<String> groups = resourceGrouping.getGroups(resources);
-        for (String group : groups) {
-            assert viewItemsByGroupId.containsKey(group);
-            result.add(viewItemsByGroupId.get(group));
+        Set<String> groupIds = resourceGrouping.getGroupIds(resources);
+        for (String groupId : groupIds) {
+            assert viewItemsByGroupId.containsKey(groupId) : "view item with id "
+                    + groupId + " not found";
+            result.add(viewItemsByGroupId.get(groupId));
         }
         return result;
+    }
+
+    @Override
+    public LightweightCollection<ViewItem> getViewItemsWithErrors() {
+        return errorModel.getViewItemsWithErrors();
+    }
+
+    @Override
+    public LightweightCollection<ViewItem> getViewItemsWithErrors(Slot slot) {
+        return errorModel.getViewItemsWithErrors(slot);
+    }
+
+    @Override
+    public boolean hasErrors() {
+        return errorModel.hasErrors();
+    }
+
+    @Override
+    public boolean hasErrors(Slot slot) {
+        return errorModel.hasErrors(slot);
+    }
+
+    @Override
+    public boolean hasErrors(ViewItem viewItem) {
+        return errorModel.hasErrors(viewItem);
     }
 
     private void init(Object target) {
@@ -294,7 +406,65 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     private void initContentDisplay() {
-        contentDisplay.init(this);
+        contentDisplay.init(new ViewContentDisplayCallback() {
+            @Override
+            public HandlerRegistration addHandler(
+                    ViewItemContainerChangeEventHandler handler) {
+
+                return null;
+            }
+
+            @Override
+            public boolean containsViewItem(String viewItemId) {
+                return DefaultViewModel.this.containsViewItem(viewItemId)
+                        && !hasErrors(viewItemsByGroupId.get(viewItemId));
+            }
+
+            @Override
+            public ViewItemValueResolver getResolver(Slot slot) {
+                return DefaultViewModel.this.getResolver(slot);
+            }
+
+            @Override
+            public String getSlotResolverDescription(Slot slot) {
+                if (!slotMappingConfiguration.isConfigured(slot)) {
+                    return "N/A";
+                }
+
+                return slotMappingConfiguration.getResolver(slot).toString();
+            }
+
+            @Override
+            public ViewItem getViewItem(String viewItemId) {
+
+                ViewItem viewItem = DefaultViewModel.this
+                        .getViewItem(viewItemId);
+
+                if (viewItem == null) {
+                    throw new NoSuchElementException("View Item with id "
+                            + viewItemId + " is not contained.");
+                }
+                if (DefaultViewModel.this.hasErrors(viewItem)) {
+                    throw new NoSuchElementException("View Item with id "
+                            + viewItemId
+                            + " contains errors and cannot be retrieved.");
+                }
+                return viewItem;
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems() {
+                return getValidViewItems();
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems(
+                    Iterable<Resource> resources) {
+                return LightweightCollections.getRelativeComplement(
+                        DefaultViewModel.this.getViewItems(resources),
+                        getViewItemsWithErrors());
+            }
+        });
     }
 
     /**
@@ -319,32 +489,12 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 }));
     }
 
-    private void initializeVisualMappings(ResourceSet resources) {
-        /*
-         * TODO check if there are changes when adding / adjust each slot -->
-         * stable per slot --> initialize early for the slots & map to object
-         * that has corresponding update method
-         * 
-         * XXX for now: just add a flag if a configuration has been created, and
-         * if that's the case, don't rebuild the configuration.
-         * 
-         * XXX this also fails with redo / undo
-         */
-        // TODO check the validity of the configuration instead
-        if (!isConfigurationAvailable) {
-            slotMappingInitializer.initializeMappings(resources,
-                    contentDisplay, slotMappingConfiguration);
-            isConfigurationAvailable = true;
-        }
-    }
-
     private void initResourceGrouping() {
         resourceGrouping.addHandler(new ResourceGroupingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
-                initializeVisualMappings(getContentResourceSet());
-                updateViewItemsOnModelChange(e);
+                processResourceGroupingUpdate(e);
             }
         });
     }
@@ -361,17 +511,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 }));
     }
 
-    protected void initSlotMappingChangeHandler() {
-        slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
-            @Override
-            public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
-                updateViewContentDisplay(
-                        LightweightCollections.<ViewItem> emptyCollection(),
-                        LightweightCollections.<ViewItem> emptyCollection(),
-                        LightweightCollections.<ViewItem> emptyCollection(),
-                        LightweightCollections.toCollection(e.getSlot()));
-            }
-        });
+    @Override
+    public boolean isConfigured(Slot slot) {
+        return slotMappingConfiguration.isConfigured(slot);
     }
 
     /**
@@ -429,6 +571,23 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return removedViewItems;
     }
 
+    private void processResourceGroupingUpdate(
+            ResourceGroupingChangedEvent event) {
+
+        assert event != null;
+
+        ViewItemContainerDelta delta = updateViewItemsOnModelChange(event);
+        // create a copy of the view items with errors
+        LightweightCollection<ViewItem> viewItemsThatHadErrors = LightweightCollections
+                .copy(errorModel.getViewItemsWithErrors());
+        updateErrorModel(delta);
+        ViewItemContainerDelta deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
+                delta, viewItemsThatHadErrors);
+        updateViewContentDisplay(deltaThatConsidersErrors,
+                LightweightCollections.<Slot> emptyCollection());
+        fireViewItemContainerChangeEvent(delta);
+    }
+
     private LightweightCollection<ViewItem> processUpdates(
             LightweightList<CategorizableResourceGroupingChange> changes) {
 
@@ -443,32 +602,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
             DefaultViewItem viewItem = viewItemsByGroupId.get(change
                     .getGroupID());
 
-            // intersect added with highlighting set - TODO extract
-            LightweightList<Resource> highlightedAdded = highlightedResources
-                    .getIntersection(change.getAddedResources());
-            LightweightList<Resource> highlightedRemoved = highlightedResources
-                    .getIntersection(change.getRemovedResources());
+            updateViewItemHighlightingSet(viewItem, change);
+            updateViewItemSelectionSet(change, viewItem);
 
-            boolean add = false;
-
-            if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
-                viewItem.updateHighlightedResources(highlightedAdded,
-                        highlightedRemoved);
-                add = true;
-            }
-
-            LightweightList<Resource> selectedAdded = selectedResources
-                    .getIntersection(change.getAddedResources());
-            LightweightList<Resource> selectedRemoved = selectedResources
-                    .getIntersection(change.getRemovedResources());
-            if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
-                viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
-                add = true;
-            }
-
-            if (add) {
-                updatedViewItems.add(viewItem);
-            }
+            updatedViewItems.add(viewItem);
         }
 
         return updatedViewItems;
@@ -480,7 +617,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 + groupID;
 
         DefaultViewItem viewItem = viewItemsByGroupId.remove(groupID);
-        viewItemBehavior.onViewItemRemoved(viewItem);
         viewItem.dispose();
 
         assert !viewItemsByGroupId.containsKey(groupID);
@@ -488,10 +624,44 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItem;
     }
 
-    // XXX remove
+    /*
+     * IMPLEMENTATION NOTE: We updated the error model and view content display
+     * directly after the resolver has been set, because this keeps the
+     * algorithm simpler (compared to an event based approach, which would
+     * require prioritizing event handlers etc.)
+     */
     @Override
-    public void setConfigured(boolean configured) {
-        isConfigurationAvailable = configured;
+    public void setResolver(Slot slot, ViewItemValueResolver resolver) {
+        assert slot != null;
+        assert resolver != null;
+
+        // keep information (currently valid / invalid stuff)
+        LightweightCollection<ViewItem> viewItemsThatHadErrors = LightweightCollections
+                .copy(getViewItemsWithErrors());
+        LightweightCollection<ViewItem> viewItemsThatWereValid = LightweightCollections
+                .copy(getValidViewItems());
+
+        clearViewItemValueCache(slot);
+
+        // actually change the slot mapping
+        slotMappingConfiguration.setResolver(slot, resolver);
+
+        updateErrorModel(slot);
+
+        // CASE 1: stuff gets removed
+        // valid --> invalid (for view items)
+        LightweightCollection<ViewItem> viewItemsToAdd = LightweightCollections
+                .getRelativeComplement(viewItemsThatHadErrors,
+                        getViewItemsWithErrors());
+        // CASE 2: stuff gets added
+        // invalid --> valid (for view items)
+        LightweightCollection<ViewItem> viewItemsToRemove = LightweightCollections
+                .getRelativeComplement(viewItemsThatWereValid,
+                        getValidViewItems());
+
+        updateViewContentDisplay(new ViewItemContainerDelta(viewItemsToAdd,
+                LightweightCollections.<ViewItem> emptyCollection(),
+                viewItemsToRemove), LightweightCollections.toCollection(slot));
     }
 
     @Override
@@ -499,6 +669,56 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // TODO Auto-generated method stub
         // XXX test --> remove handler, add handler, change grouping, update
         // view items(remove,add)
+    }
+
+    private void updateErrorModel(LightweightCollection<ViewItem> viewItems) {
+        assert viewItems != null;
+
+        errorModel.clearErrors(viewItems);
+        for (Slot slot : getSlots()) {
+            updateErrorModel(slot, viewItems);
+        }
+    }
+
+    private void updateErrorModel(Slot changedSlot) {
+        assert changedSlot != null;
+
+        errorModel.clearErrors(changedSlot);
+        updateErrorModel(changedSlot, getViewItems());
+    }
+
+    private void updateErrorModel(Slot slot,
+            LightweightCollection<ViewItem> viewItems) {
+
+        if (!slotMappingConfiguration.isConfigured(slot)) {
+            /*
+             * TODO potential optimization: have all invalid state for slot in
+             * error model (would return errors for all view items)
+             */
+            errorModel.reportErrors(slot, viewItems);
+            return;
+        }
+
+        ViewItemValueResolver resolver = slotMappingConfiguration
+                .getResolver(slot);
+
+        for (ViewItem viewItem : viewItems) {
+            if (!resolver.canResolve(viewItem, this)) {
+                /*
+                 * TODO potential optimization: only change error model if state
+                 * for view item has changed (delta update).
+                 */
+                errorModel.reportError(slot, viewItem);
+            }
+        }
+    }
+
+    private void updateErrorModel(ViewItemContainerDelta delta) {
+        assert delta != null;
+
+        updateErrorModel(delta.getAddedViewItems());
+        updateErrorModel(delta.getUpdatedViewItems());
+        errorModel.clearErrors(delta.getRemovedViewItems());
     }
 
     private void updateHighlighting(
@@ -525,9 +745,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
 
         updateViewContentDisplay(
-                LightweightCollections.<ViewItem> emptyCollection(),
-                affectedViewItems,
-                LightweightCollections.<ViewItem> emptyCollection(),
+                new ViewItemContainerDelta(
+                        LightweightCollections.<ViewItem> emptyCollection(),
+                        affectedViewItems,
+                        LightweightCollections.<ViewItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -556,46 +777,78 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
 
         updateViewContentDisplay(
-                LightweightCollections.<ViewItem> emptyCollection(),
-                affectedViewItems,
-                LightweightCollections.<ViewItem> emptyCollection(),
+                new ViewItemContainerDelta(
+                        LightweightCollections.<ViewItem> emptyCollection(),
+                        affectedViewItems,
+                        LightweightCollections.<ViewItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
     /**
-     * Exceptions are logged and not thrown to ensure robustness.
+     * NOTE: Exceptions are logged and not thrown to ensure robustness.
      */
-    private void updateViewContentDisplay(
-            LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    private void updateViewContentDisplay(ViewItemContainerDelta delta,
             LightweightCollection<Slot> changedSlots) {
 
+        if (delta.isEmpty() && changedSlots.isEmpty()) {
+            return;
+        }
+
         try {
-            contentDisplay.update(addedViewItems, updatedViewItems,
-                    removedViewItems, changedSlots);
+            // TODO switch to delta in view content display interface
+            contentDisplay.update(delta.getAddedViewItems(),
+                    delta.getUpdatedViewItems(), delta.getRemovedViewItems(),
+                    changedSlots);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "ViewContentDisplay.update failed", ex);
         }
     }
 
-    private void updateViewItemsOnModelChange(ResourceGroupingChangedEvent e) {
-        assert e != null;
+    private void updateViewItemHighlightingSet(DefaultViewItem viewItem,
+            CategorizableResourceGroupingChange change) {
+
+        LightweightList<Resource> highlightedAdded = highlightedResources
+                .getIntersection(change.getAddedResources());
+        LightweightList<Resource> highlightedRemoved = highlightedResources
+                .getIntersection(change.getRemovedResources());
+
+        if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
+            viewItem.updateHighlightedResources(highlightedAdded,
+                    highlightedRemoved);
+        }
+    }
+
+    private void updateViewItemSelectionSet(
+            CategorizableResourceGroupingChange change, DefaultViewItem viewItem) {
+
+        LightweightList<Resource> selectedAdded = selectedResources
+                .getIntersection(change.getAddedResources());
+        LightweightList<Resource> selectedRemoved = selectedResources
+                .getIntersection(change.getRemovedResources());
+
+        if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
+            viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
+        }
+    }
+
+    private ViewItemContainerDelta updateViewItemsOnModelChange(
+            ResourceGroupingChangedEvent event) {
+
+        assert event != null;
 
         /*
          * IMPORTANT: remove old items before adding new once (there might be
          * conflicts, i.e. groups with the same id)
          */
-        LightweightCollection<ViewItem> removedViewItems = processRemoveChanges(e
+        LightweightCollection<ViewItem> removedViewItems = processRemoveChanges(event
                 .getChanges(Delta.GROUP_REMOVED));
-        LightweightCollection<ViewItem> addedViewItems = processAddChanges(e
+        LightweightCollection<ViewItem> addedViewItems = processAddChanges(event
                 .getChanges(Delta.GROUP_CREATED));
-        LightweightCollection<ViewItem> updatedViewItems = processUpdates(e
+        LightweightCollection<ViewItem> updatedViewItems = processUpdates(event
                 .getChanges(Delta.GROUP_CHANGED));
 
-        updateViewContentDisplay(addedViewItems, updatedViewItems,
-                removedViewItems,
-                LightweightCollections.<Slot> emptyCollection());
+        return new ViewItemContainerDelta(addedViewItems, updatedViewItems,
+                removedViewItems);
     }
 
 }

@@ -24,10 +24,10 @@ public class NoResolverForSlotException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public NoResolverForSlotException(Slot slot,
-            Map<Slot, ViewItemValueResolver> registeredResolvers) {
+            Map<Slot, ViewItemValueResolver> slotsToResolvers) {
 
         super("no resolver registered for slot" + slot
-                + " (registered resolvers: " + registeredResolvers + ")");
+                + " (resolvers registered for slots: " + slotsToResolvers + ")");
     }
 
 }

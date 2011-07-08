@@ -19,6 +19,6 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface SlotMappingChangedHandler extends EventHandler {
 
-    void onResourceCategoriesChanged(SlotMappingChangedEvent e);
+    void onSlotMappingChanged(SlotMappingChangedEvent e);
 
 }

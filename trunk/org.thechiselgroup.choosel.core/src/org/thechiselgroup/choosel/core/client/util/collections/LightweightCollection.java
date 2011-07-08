@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -16,10 +16,11 @@
 package org.thechiselgroup.choosel.core.client.util.collections;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Generic lightweight collection. LightweightCollection provides a read-only
- * interface that extends Iterable and only contains the most important
+ * interface that extends {@link Iterable} and only contains the most important
  * operations and thus facilitate the implementation of optimized JavaScript
  * versions.
  * 
@@ -35,19 +36,27 @@ public interface LightweightCollection<T> extends Iterable<T> {
     boolean contains(T t);
 
     /**
-     * Returns true if there are no elements in this collection, and false if
-     * there are.
+     * @return First item from the collection
+     * 
+     * @throws NoSuchElementException
+     *             Thrown if the collection is empty.
+     */
+    T getFirstElement() throws NoSuchElementException;
+
+    /**
+     * @return {@code true} if there are no elements in this collection, and
+     *         false if there are.
      */
     boolean isEmpty();
 
     /**
-     * Returns the number of elements in this collection.
+     * @return The number of elements in this collection.
      */
     int size();
 
     /**
-     * <b>FOR TEST USAGE.</b> Converts this lightweight collection into a List.
-     * This usually has a fairly high performance penalty and is only
+     * <b>INTENDED FOR TEST USAGE.</b> Converts this lightweight collection into
+     * a List. This usually has a fairly high performance penalty and is only
      * recommended for testing.
      */
     List<T> toList();

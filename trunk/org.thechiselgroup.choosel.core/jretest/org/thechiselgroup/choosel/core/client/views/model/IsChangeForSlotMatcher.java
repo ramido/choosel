@@ -30,7 +30,7 @@ public class IsChangeForSlotMatcher extends
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(" was not called with parameter " + slot);
+        description.appendText(" was not called with event for slot " + slot);
     }
 
     @Override

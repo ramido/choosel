@@ -17,8 +17,12 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
+// TODO inline interface into ViewContentDisplay
+// TODO we need to expose a filtered, more limited version of the ViewItemContainer
+// --> create new superinterface?
 public interface ViewContentDisplayCallback extends ViewItemContainer {
 
+    // TODO is this part of another interface?
     ViewItemValueResolver getResolver(Slot slot);
 
     String getSlotResolverDescription(Slot slot);

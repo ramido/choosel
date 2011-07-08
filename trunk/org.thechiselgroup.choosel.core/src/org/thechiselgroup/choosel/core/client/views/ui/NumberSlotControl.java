@@ -18,8 +18,10 @@ package org.thechiselgroup.choosel.core.client.views.ui;
 import java.util.Arrays;
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
@@ -29,18 +31,21 @@ import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+@Deprecated
 public class NumberSlotControl extends SlotControl {
 
     public class CalculationResolverFactory implements ViewItemResolverFactory {
@@ -48,7 +53,6 @@ public class NumberSlotControl extends SlotControl {
         private Calculation calculation;
 
         public CalculationResolverFactory(Calculation calculation) {
-
             this.calculation = calculation;
         }
 
@@ -102,7 +106,7 @@ public class NumberSlotControl extends SlotControl {
                 new CalculationResolverFactory(new MinCalculation()),
                 new CalculationResolverFactory(new MaxCalculation()),
                 new FixedValueResolverFactory(new FixedValueResolver(
-                        new Double(1))) };
+                        new Double(1), DataType.NUMBER)) };
 
         resolverFactorySelector = new ListBoxControl<ViewItemResolverFactory>(
                 new ExtendedListBox(false),
@@ -131,6 +135,16 @@ public class NumberSlotControl extends SlotControl {
     }
 
     @Override
+    public String getCurrentResolverID() {
+        return null;
+    }
+
+    @Override
+    public void updateOptions(LightweightCollection<ViewItem> viewItems) {
+        // TODO Auto-generated method stub
+
+    }
+
     public void updateOptions(List<String> properties) {
         propertySelector.setValues(properties);
 
@@ -142,8 +156,16 @@ public class NumberSlotControl extends SlotControl {
             if (resolver instanceof CalculationResolver) {
                 String property = ((CalculationResolver) resolver)
                         .getProperty();
+
+                // TODO there is no check to see if that property even exists???
                 propertySelector.setSelectedValue(property);
             }
         }
+    }
+
+    @Override
+    public void setNewUIModel(ViewItemValueResolverUIController resolverUI) {
+        // TODO Auto-generated method stub
+
     }
 }

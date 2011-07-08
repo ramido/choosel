@@ -276,7 +276,7 @@ public class ResourceGrouping implements HasResourceCategorizer,
      * 
      * @return resource group ids
      */
-    public Set<String> getGroups(Iterable<Resource> resources) {
+    public Set<String> getGroupIds(Iterable<Resource> resources) {
         assert resources != null;
 
         Set<String> result = CollectionFactory.createStringSet();

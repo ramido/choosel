@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
 /**
@@ -64,15 +65,25 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
+    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
+        for (ViewItem viewItem : event.getDelta().getAddedViewItems()) {
+            onViewItemCreated(viewItem);
+        }
+        for (ViewItem viewItem : event.getDelta().getRemovedViewItems()) {
+            onViewItemRemoved(viewItem);
+        }
+    }
+
     public void onViewItemCreated(ViewItem viewItem) {
         assert viewItem != null;
         assert !highlightingManagers.containsKey(viewItem.getViewItemID());
 
-        highlightingManagers.put(viewItem.getViewItemID(),
-                new HighlightingManager(highlightingModel, viewItem.getResources()));
+        highlightingManagers.put(
+                viewItem.getViewItemID(),
+                new HighlightingManager(highlightingModel, viewItem
+                        .getResources()));
     }
 
-    @Override
     public void onViewItemRemoved(ViewItem viewItem) {
         assert viewItem != null;
         assert highlightingManagers.containsKey(viewItem.getViewItemID());

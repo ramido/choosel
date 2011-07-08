@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -36,25 +35,15 @@ public class DefaultViewModelDisposeTest {
     private DefaultViewModel underTest;
 
     @Mock
-    private ResourceSet containedResources;
-
-    @Mock
     private HandlerRegistration containedResourcesHandlerRegistration;
-
-    @Mock
-    private ResourceSet highlightedResources;
 
     @Mock
     private HandlerRegistration highlightedResourcesHandlerRegistration;
 
     @Mock
-    private ResourceSet selectedResources;
-
-    @Mock
     private HandlerRegistration selectedResourcesHandlerRegistration;
 
-    @Mock
-    private ViewContentDisplay viewContentDisplay;
+    private DefaultViewModelTestHelper helper;
 
     @Test
     public void disposeContainedResourcesEventHandler() {
@@ -63,7 +52,7 @@ public class DefaultViewModelDisposeTest {
 
     @Test
     public void disposeContentDisplay() {
-        verify(viewContentDisplay, times(1)).dispose();
+        verify(helper.getViewContentDisplay(), times(1)).dispose();
     }
 
     @Test
@@ -81,16 +70,18 @@ public class DefaultViewModelDisposeTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        stubHandlerRegistration(containedResources,
+        helper = new DefaultViewModelTestHelper();
+        helper.mockContainedResources();
+        helper.mockHighlightedResources();
+        helper.mockSelectedResources();
+        stubHandlerRegistration(helper.getContainedResources(),
                 containedResourcesHandlerRegistration);
-        stubHandlerRegistration(selectedResources,
+        stubHandlerRegistration(helper.getSelectedResources(),
                 selectedResourcesHandlerRegistration);
-        stubHandlerRegistration(highlightedResources,
+        stubHandlerRegistration(helper.getHighlightedResources(),
                 highlightedResourcesHandlerRegistration);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(
-                containedResources, highlightedResources, selectedResources,
-                viewContentDisplay);
+        underTest = helper.createTestViewModel();
 
         underTest.dispose();
     }

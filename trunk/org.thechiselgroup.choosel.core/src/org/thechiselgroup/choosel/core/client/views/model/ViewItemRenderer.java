@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
+// TODO pull up slots into this?
 public interface ViewItemRenderer {
 
     /**
@@ -38,6 +39,12 @@ public interface ViewItemRenderer {
      * In addition to changing {@link ViewItem}s, the slot mapping of a
      * visualization could have changed in the same instance. This is reflected
      * by the changedSlots parameter.
+     * </p>
+     * <p>
+     * <b>IMPORTANT:</b> The caller should guarantee that all {@link Slot}s can
+     * always be resolved on the {@link ViewItem}s in the
+     * {@link ViewItemRenderer}. If a {@link ViewItem} cannot resolve all slots
+     * any more, it should be removed.
      * </p>
      * 
      * @param addedViewItems

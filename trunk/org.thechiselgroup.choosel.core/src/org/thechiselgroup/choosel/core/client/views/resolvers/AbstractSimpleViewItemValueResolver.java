@@ -15,10 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-public interface ViewItemValueResolverUIFactory {
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
 
-    ViewItemValueResolverUI create();
+/**
+ * Convenience superclass for {@link ViewItemValueResolver}s that do not depend
+ * on other resolvers.
+ * 
+ * @author Lars Grammel
+ */
+public abstract class AbstractSimpleViewItemValueResolver implements
+        ViewItemValueResolver {
 
-    String getId();
+    @Override
+    public final LightweightCollection<Slot> getTargetSlots() {
+        return LightweightCollections.emptyCollection();
+    }
 
 }

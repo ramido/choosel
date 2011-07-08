@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
 public class CompositeViewItemBehavior implements ViewItemBehavior {
@@ -38,16 +39,9 @@ public class CompositeViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
-    public void onViewItemCreated(ViewItem viewItem) {
+    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
         for (ViewItemBehavior behavior : behaviors) {
-            behavior.onViewItemCreated(viewItem);
-        }
-    }
-
-    @Override
-    public void onViewItemRemoved(ViewItem viewItem) {
-        for (ViewItemBehavior behavior : behaviors) {
-            behavior.onViewItemRemoved(viewItem);
+            behavior.onViewItemContainerChanged(event);
         }
     }
 

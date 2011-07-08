@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
@@ -26,12 +26,39 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
  */
 public interface ViewItemValueResolverFactory {
 
-    ViewItemValueResolver create();
+    /**
+     * A factory must always know if a resolver that it has created is
+     * applicable to a set of view items in a given slot. This means that any
+     * internal state change of a resolver must not change whether or not it can
+     * resolve view items, only how it does the resolution.
+     */
+    boolean canCreateApplicableResolver(Slot slot,
+            LightweightCollection<ViewItem> viewItems);
 
+    /**
+     * @return A new instance of the corresponding
+     *         {@link ManagedViewItemValueResolver}
+     */
+    /*
+     * TODO what I really want to do is pass in a context of the current view in
+     * here. For example, besides current view items, what about passing in the
+     * currently selected property. This would be great if you wanted to select
+     * the same property by default
+     * 
+     * TODO The create methods might need to be resolver specific, because the
+     * ViewItemValueResolvers are immutable and we need to configure parameters.
+     */
+    ManagedViewItemValueResolver create(
+            LightweightCollection<ViewItem> viewItems);
+
+    /**
+     * @return the id of both the factory and the resolver
+     */
     String getId();
 
+    /**
+     * @return The label used in the UI that describes the factory
+     */
     String getLabel();
-
-    boolean isApplicable(Slot slot, LightweightList<ViewItem> viewItems);
 
 }

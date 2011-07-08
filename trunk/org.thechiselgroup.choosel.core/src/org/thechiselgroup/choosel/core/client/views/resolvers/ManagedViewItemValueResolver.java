@@ -15,9 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+/**
+ * Interface for {@link ViewItemValueResolver}s that are created and managed by
+ * a {@link ViewItemValueResolverFactory}.
+ * 
+ * @author Lars Grammel
+ */
+// TODO rename
+public interface ManagedViewItemValueResolver extends ViewItemValueResolver {
 
-public interface ViewItemValueResolverUIFactoryProvider {
-
-    ViewItemValueResolverUIFactory getFactoryById(String id);
+    String getResolverId();
 
 }

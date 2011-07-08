@@ -24,10 +24,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.ContainsResourceGrouping;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
@@ -55,15 +53,12 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
-        this.viewModel = new DefaultViewModel(contentDisplay,
-                new SlotMappingConfiguration(contentDisplay.getSlots()),
-                selectedResource, highlightedResources,
-                new DefaultSlotMappingInitializer(), viewItemBehavior,
-                new ResourceGrouping(new ResourceByUriMultiCategorizer(),
+        this.viewModel = new DefaultViewModel(contentDisplay, selectedResource,
+                highlightedResources, viewItemBehavior, new ResourceGrouping(
+                        new ResourceByUriMultiCategorizer(),
                         new DefaultResourceSetFactory()), Logger.getLogger(""));
 
         setWidget(contentDisplay.asWidget());
-        viewModel.setConfigured(true);
     }
 
     @Override
@@ -98,7 +93,7 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
     }
 
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        viewModel.getSlotMappingConfiguration().setResolver(slot, resolver);
+        viewModel.setResolver(slot, resolver);
     }
 
     @Override

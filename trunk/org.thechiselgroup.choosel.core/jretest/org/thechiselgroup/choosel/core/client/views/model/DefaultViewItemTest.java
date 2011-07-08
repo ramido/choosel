@@ -20,15 +20,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
@@ -51,13 +48,6 @@ public class DefaultViewItemTest {
     private DefaultViewItem underTest;
 
     private Slot numberSlot;
-
-    private SlotMappingChangedHandler captureSlotMappingChangedHandler() {
-        ArgumentCaptor<SlotMappingChangedHandler> captor = ArgumentCaptor
-                .forClass(SlotMappingChangedHandler.class);
-        verify(slotMappingConfiguration, times(1)).addHandler(captor.capture());
-        return captor.getValue();
-    }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingNoContainedResource() {
@@ -341,16 +331,14 @@ public class DefaultViewItemTest {
 
     @Test
     public void getSlotValueClearCacheForAllResourcesOnSlotChange() {
-        SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
-
         resources.addAll(createResources(1, 2, 3, 4));
 
         when(slotMappingConfiguration.resolve(eq(numberSlot), eq(underTest)))
                 .thenReturn(2d, 3d);
 
-        underTest.getValue(numberSlot);
-        handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
-                numberSlot));
+        underTest.getValue(numberSlot); // cache value
+        underTest.clearValueCache(numberSlot);
+
         assertEquals(3d, underTest.getValue(numberSlot));
     }
 

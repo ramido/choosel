@@ -61,7 +61,7 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
 
         // single resource: show properties
         if (viewItem.getResources().size() == 1) {
-            Resource resource = viewItem.getResources().getFirstResource();
+            Resource resource = viewItem.getResources().getFirstElement();
 
             verticalPanel.add(new HTML("<br/><b>One item</b>"));
             Set<String> entrySet = resource.getProperties().keySet();
@@ -78,5 +78,4 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
 
         return verticalPanel;
     }
-
 }

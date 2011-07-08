@@ -16,33 +16,21 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 
 public class DefaultViewModelSlotMappingTest {
@@ -51,16 +39,9 @@ public class DefaultViewModelSlotMappingTest {
 
     private Slot numberSlot;
 
-    private ResourceSet selectedResources;
-
-    private ResourceSet highlightedResources;
-
-    private ResourceSet containedResources;
-
     private DefaultViewModel underTest;
 
-    @Mock
-    private ViewContentDisplay viewContentDisplay;
+    private DefaultViewModelTestHelper helper;
 
     @Test
     public void averageCalculationOverGroup() {
@@ -69,20 +50,16 @@ public class DefaultViewModelSlotMappingTest {
 
     @Test
     public void changeSlotMapping() {
-        underTest.getSlotMappingConfiguration().setResolver(
-                numberSlot,
-                new CalculationResolver("property1",
-                        new SumCalculation()));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                new SumCalculation()));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getValue(numberSlot);
 
-        underTest.getSlotMappingConfiguration().setResolver(
-                numberSlot,
-                new CalculationResolver("property1",
-                        new MaxCalculation()));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                new MaxCalculation()));
 
         assertEquals(8d, resourceItem.getValue(numberSlot));
     }
@@ -101,16 +78,12 @@ public class DefaultViewModelSlotMappingTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        containedResources = new DefaultResourceSet();
-        highlightedResources = new DefaultResourceSet();
-        selectedResources = new DefaultResourceSet();
-
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(
-                containedResources, highlightedResources, selectedResources,
-                viewContentDisplay, textSlot, numberSlot);
+        helper = new DefaultViewModelTestHelper();
+        helper.setSlots(textSlot, numberSlot);
+        underTest = helper.createTestViewModel();
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));
@@ -124,7 +97,7 @@ public class DefaultViewModelSlotMappingTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        containedResources.addAll(toResourceSet(r1, r2, r3));
+        helper.getContainedResources().addAll(toResourceSet(r1, r2, r3));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
     }
@@ -137,10 +110,8 @@ public class DefaultViewModelSlotMappingTest {
     private void testCalculationOverGroup(double expectedResult,
             Calculation calculation) {
 
-        underTest.getSlotMappingConfiguration().setResolver(
-                numberSlot,
-                new CalculationResolver("property1",
-                        calculation));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                calculation));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -148,42 +119,4 @@ public class DefaultViewModelSlotMappingTest {
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));
     }
 
-    /**
-     * Shows the bug that happens when the default view gets notified of the
-     * slot update before the ResourceItems are cleaned (by getting notification
-     * of the slot update). The resource items need to get the notification
-     * first to clean their caching.
-     */
-    @Test
-    public void viewContentUpdateAfterChangedSlotMapping() {
-        underTest.getSlotMappingConfiguration().setResolver(
-                numberSlot,
-                new CalculationResolver("property1",
-                        new SumCalculation()));
-
-        List<ViewItem> resourceItems = underTest.getViewItems().toList();
-        assertEquals(1, resourceItems.size());
-        final ViewItem resourceItem = resourceItems.get(0);
-        resourceItem.getValue(numberSlot);
-
-        /*
-         * XXX contentDisplay must not be inlined in when part, otherwise
-         * Mockito will throw UnfinishedStubbingException.
-         */
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) {
-                assertEquals(8d, resourceItem.getValue(numberSlot));
-                return null;
-            }
-        }).when(viewContentDisplay).update(any(LightweightCollection.class),
-                any(LightweightCollection.class),
-                any(LightweightCollection.class),
-                any(LightweightCollection.class));
-
-        underTest.getSlotMappingConfiguration().setResolver(
-                numberSlot,
-                new CalculationResolver("property1",
-                        new MaxCalculation()));
-    }
 }

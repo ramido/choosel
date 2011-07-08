@@ -31,16 +31,17 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
  * 
  * @author Lars Grammel
  */
+// TODO reconcile matchers, renamings
 public final class HamcrestResourceMatchers {
 
+    // TODO move to generic hamcrest matcher utility class
     public static <T> Matcher<Iterable<T>> containsExactly(
             final LightweightCollection<T> expected) {
 
         return new TypeSafeMatcher<Iterable<T>>() {
             @Override
             public void describeTo(Description description) {
-                description.appendText(" does not contain the same content as "
-                        + expected.toString());
+                description.appendValue(expected);
             }
 
             @Override
@@ -58,6 +59,7 @@ public final class HamcrestResourceMatchers {
         };
     }
 
+    // TODO move to generic hamcrest matcher utility class
     public static <T> Matcher<Iterable<T>> containsExactly(T... expected) {
         LightweightList<T> list = CollectionFactory.createLightweightList();
         for (T t : expected) {
@@ -66,12 +68,13 @@ public final class HamcrestResourceMatchers {
         return containsExactly(list);
     }
 
-    public static Matcher<UriList> containsUrisExactly(final String... expectedUris) {
+    public static Matcher<UriList> containsUrisExactly(
+            final String... expectedUris) {
         return new TypeSafeMatcher<UriList>() {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText(" does not exactly contain { "
+                description.appendText("{ "
                         + StringUtils.toString(",", expectedUris) + " }");
             }
 
@@ -97,7 +100,7 @@ public final class HamcrestResourceMatchers {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText(" does not match exactly { "
+                description.appendText("{ "
                         + StringUtils.toString(",", expected) + " }");
             }
 

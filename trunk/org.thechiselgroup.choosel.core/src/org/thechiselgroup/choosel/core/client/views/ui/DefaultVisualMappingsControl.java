@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -27,10 +28,16 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationUIModel;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactory;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -40,11 +47,11 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private final HasResourceCategorizer resourceGrouping;
 
-    private final SlotMappingConfiguration resolver;
+    private final SlotMappingConfigurationUIModel slotMappingConfigurationUIModel;
+
+    private final ViewItemValueResolverFactoryProvider resolverFactoryProvider;
 
     private ConfigurationPanel visualMappingPanel;
-
-    private final ViewContentDisplay contentDisplay;
 
     private ListBoxControl<String> groupingBox;
 
@@ -52,27 +59,38 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
-    public DefaultVisualMappingsControl(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration resolver,
-            HasResourceCategorizer resourceGrouping) {
+    private final ViewItemValueResolverUIControllerFactoryProvider uiProvider;
 
-        this.contentDisplay = contentDisplay;
-        this.resolver = resolver;
+    public DefaultVisualMappingsControl(
+            SlotMappingConfigurationUIModel slotMappingConfigurationUIModel,
+            HasResourceCategorizer resourceGrouping,
+            ViewItemValueResolverUIControllerFactoryProvider uiProvider,
+            ViewItemValueResolverFactoryProvider resolverFactoryProvider) {
+
+        assert slotMappingConfigurationUIModel != null;
+        assert resourceGrouping != null;
+        assert uiProvider != null;
+        assert resolverFactoryProvider != null;
+
+        this.slotMappingConfigurationUIModel = slotMappingConfigurationUIModel;
+
         this.resourceGrouping = resourceGrouping;
+        this.uiProvider = uiProvider;
+        this.resolverFactoryProvider = resolverFactoryProvider;
     }
 
-    private void addSlotControl(SlotControl control) {
-        assert control != null;
+    private void addSlotControl(Slot slot, SlotControl slotControl) {
+        assert slotControl != null;
+        assert slot != null;
 
-        Slot slot = control.getSlot();
+        visualMappingPanel.setConfigurationSetting(slot.getName(),
+                slotControl.asWidget());
 
-        visualMappingPanel.addConfigurationSetting(slot.getName(),
-                control.asWidget());
-
-        slotControlsByDataType.get(slot.getDataType()).add(control);
-        slotToSlotControls.put(slot, control);
+        slotControlsByDataType.get(slot.getDataType()).add(slotControl);
+        slotToSlotControls.put(slot, slotControl);
     }
 
+    // TODO must we make this a widget before we add things to it or what?
     @Override
     public Widget asWidget() {
         if (visualMappingPanel == null) {
@@ -82,6 +100,24 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return visualMappingPanel;
     }
 
+    private ViewItemValueResolverUIController createUIControllerFromResolver(
+            Slot slot, ManagedViewItemValueResolver currentResolver) {
+        ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
+                .getFactoryById(currentResolver.getResolverId());
+
+        assert uiFactory != null;
+
+        // TODO maybe refactor this, probably some null checks would be great
+        ViewItemValueResolverUIController resolverUI = uiFactory.create(
+                resolverFactoryProvider.getFactoryById(currentResolver
+                        .getResolverId()), slotMappingConfigurationUIModel
+                        .getSlotMappingUIModel(slot),
+                slotMappingConfigurationUIModel.getViewItems());
+        return resolverUI;
+    }
+
+    // TODO uh, shouldnt we just initialize the visualMappingSPanel in the
+    // constructor, as well as the other two things.
     private void init() {
         visualMappingPanel = new ConfigurationPanel();
 
@@ -106,34 +142,79 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             }
         });
 
-        visualMappingPanel.addConfigurationSetting("Grouping",
+        visualMappingPanel.setConfigurationSetting("Grouping",
                 groupingBox.asWidget());
     }
 
+    private SlotControl initSlotControl(Slot slot,
+            ViewItemValueResolverUIController resolverUI,
+            SlotControl currentSlotControl) {
+
+        DefaultSlotControl slotControl = new DefaultSlotControl(slot,
+                slotMappingConfigurationUIModel, resolverUI);
+
+        this.slotToSlotControls.put(slot, slotControl);
+        addSlotControl(slot, slotControl);
+
+        return slotControl;
+
+    }
+
+    // TODO we may want to create add a control for each slot, with an empty
+    // widget
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
+    }
 
-        for (Slot slot : resolver.getRequiredSlots()) {
-            switch (slot.getDataType()) {
-            case TEXT:
-                addSlotControl(new TextSlotControl(slot, resolver));
-                break;
-            case NUMBER:
-                addSlotControl(new NumberSlotControl(slot, resolver));
-                break;
-            }
+    @Override
+    public void updateConfigurationForChangedSlotMapping(Slot slot,
+            ManagedViewItemValueResolver oldResolver,
+            ManagedViewItemValueResolver currentResolver) {
+
+        ViewItemValueResolverUIController resolverUI = createUIControllerFromResolver(
+                slot, currentResolver);
+
+        SlotControl currentSlotControl = this.slotToSlotControls.get(slot);
+        if (currentSlotControl == null) {
+            currentSlotControl = initSlotControl(slot, resolverUI,
+                    currentSlotControl);
+        }
+
+        /*
+         * if the factory has changed, then the uiController must be changed and
+         * updated
+         */
+        if (oldResolver == null
+                || !oldResolver.getResolverId().equals(
+                        currentResolver.getResolverId())) {
+            // if yes, reset the uiController
+
+            // update the resolveUI to ensure that it's in a valid state
+            resolverUI.update(slotMappingConfigurationUIModel.getViewItems());
+            currentSlotControl.setNewUIModel(resolverUI);
+
+            // this is firing the second event
+            currentSlotControl.updateOptions(slotMappingConfigurationUIModel
+                    .getViewItems());
         }
     }
 
-    // TODO link to resource model instead & do updates when resources change
     @Override
-    public void updateConfiguration(ResourceSet resources) {
+    public void updateConfigurationForChangedViewItems(
+            LightweightCollection<ViewItem> viewItems) {
+
+        ResourceSet resources = new DefaultResourceSet();
+        for (ViewItem viewItem : viewItems) {
+            resources.addAll(viewItem.getResources());
+        }
+
         DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
                 .getPropertiesByDataType(resources);
 
-        // TODO update selection of slots?
+        // TODO remove the property selection stuff, and make grouping done the
+        // same way as slots
         updateGroupingBox(propertiesByDataType);
-        updateSlotControls(propertiesByDataType);
+        updateSlotControls(viewItems);
     }
 
     private void updateGroupingBox(
@@ -148,12 +229,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         }
     }
 
-    private void updateSlotControls(
-            DataTypeToListMap<String> propertiesByDataType) {
-
+    private void updateSlotControls(LightweightCollection<ViewItem> viewItems) {
         for (DataType dataType : DataType.values()) {
             for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
-                slotControl.updateOptions(propertiesByDataType.get(dataType));
+                slotControl.updateOptions(viewItems);
             }
         }
     }

@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationPersistableAdapter;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
@@ -198,7 +199,8 @@ public class DefaultView implements View {
                 restorationService, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
                 restorationService, accessor);
-        restore(model.getSlotMappingConfiguration(), state,
+
+        restore(new SlotMappingConfigurationPersistableAdapter(model), state,
                 MEMENTO_SLOT_MAPPINGS, restorationService, accessor);
 
         contentDisplay.endRestore();
@@ -403,7 +405,7 @@ public class DefaultView implements View {
                 resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY,
                 contentDisplay.save(resourceSetCollector));
-        save(model.getSlotMappingConfiguration(), memento,
+        save(new SlotMappingConfigurationPersistableAdapter(model), memento,
                 MEMENTO_SLOT_MAPPINGS, resourceSetCollector);
 
         return memento;
