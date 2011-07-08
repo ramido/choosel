@@ -62,7 +62,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * TODO introduce ViewItemContainer decorator that is filtered to the valid view
  * items from the error model
  */
-public class DefaultVisualizationModel implements VisualizationModel, Disposable {
+public class DefaultVisualizationModel implements VisualizationModel,
+        Disposable {
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -184,8 +185,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
             }
         }
 
-        return new Delta<VisualItem>(addedViewItems, updatedViewItems,
-                removedViewItems);
+        return Delta.createDelta(addedViewItems, updatedViewItems, removedViewItems);
     }
 
     private void clearViewItemValueCache(Slot slot) {
@@ -225,10 +225,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
     public void dispose() {
         for (DefaultVisualItem viewItem : viewItemsByGroupId.values()) {
             // fire event that all view items were removed
-            fireViewItemContainerChangeEvent(new Delta<VisualItem>(
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    getViewItems()));
+            fireViewItemContainerChangeEvent(Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection(), getViewItems()));
 
             viewItem.dispose();
         }
@@ -418,7 +415,8 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
 
             @Override
             public boolean containsViewItem(String viewItemId) {
-                return DefaultVisualizationModel.this.containsViewItem(viewItemId)
+                return DefaultVisualizationModel.this
+                        .containsViewItem(viewItemId)
                         && !hasErrors(viewItemsByGroupId.get(viewItemId));
             }
 
@@ -661,9 +659,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
                 .getRelativeComplement(viewItemsThatWereValid,
                         getValidViewItems());
 
-        updateViewContentDisplay(new Delta<VisualItem>(viewItemsToAdd,
-                LightweightCollections.<VisualItem> emptyCollection(),
-                viewItemsToRemove), LightweightCollections.toCollection(slot));
+        updateViewContentDisplay(Delta.createDelta(viewItemsToAdd, LightweightCollections.<VisualItem> emptyCollection(), viewItemsToRemove), LightweightCollections.toCollection(slot));
     }
 
     @Override
@@ -747,10 +743,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
         }
 
         updateViewContentDisplay(
-                new Delta<VisualItem>(
-                        LightweightCollections.<VisualItem> emptyCollection(),
-                        affectedViewItems,
-                        LightweightCollections.<VisualItem> emptyCollection()),
+                Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), affectedViewItems, LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -779,10 +772,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
         }
 
         updateViewContentDisplay(
-                new Delta<VisualItem>(
-                        LightweightCollections.<VisualItem> emptyCollection(),
-                        affectedViewItems,
-                        LightweightCollections.<VisualItem> emptyCollection()),
+                Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), affectedViewItems, LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -798,9 +788,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
 
         try {
             // TODO switch to delta in view content display interface
-            contentDisplay.update(delta.getAddedElements(),
-                    delta.getUpdatedElements(), delta.getRemovedElements(),
-                    changedSlots);
+            contentDisplay.update(delta, changedSlots);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "ViewContentDisplay.update failed", ex);
         }
@@ -850,8 +838,7 @@ public class DefaultVisualizationModel implements VisualizationModel, Disposable
         LightweightCollection<VisualItem> updatedViewItems = processUpdates(event
                 .getChanges(DeltaType.GROUP_CHANGED));
 
-        return new Delta<VisualItem>(addedViewItems, updatedViewItems,
-                removedViewItems);
+        return Delta.createDelta(addedViewItems, updatedViewItems, removedViewItems);
     }
 
 }

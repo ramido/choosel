@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.core.client.util.math.NumberArray;
@@ -94,8 +95,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
      * items.
      * </p>
      */
-    private void addViewItems(
-            LightweightCollection<VisualItem> addedViewItems) {
+    private void addViewItems(LightweightCollection<VisualItem> addedViewItems) {
 
         assert addedViewItems != null;
 
@@ -209,24 +209,22 @@ public class TextVisualization extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedViewItems,
-            LightweightCollection<VisualItem> updatedViewItems,
-            LightweightCollection<VisualItem> removedViewItems,
-            LightweightCollection<Slot> changedSlots) {
+    public void update(Delta<VisualItem> delta,
+            LightweightCollection<Slot> updatedSlots) {
 
-        addViewItems(addedViewItems);
+        addViewItems(delta.getAddedElements());
 
-        for (VisualItem viewItem : updatedViewItems) {
+        for (VisualItem viewItem : delta.getUpdatedElements()) {
             TextItem textItem = (TextItem) viewItem.getDisplayObject();
             textItem.updateContent();
             textItem.updateStatusStyling();
         }
 
-        for (VisualItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : delta.getRemovedElements()) {
             removeTextItem((TextItem) viewItem.getDisplayObject());
         }
 
-        if (!changedSlots.isEmpty()) {
+        if (!updatedSlots.isEmpty()) {
             for (VisualItem resourceItem : callback.getViewItems()) {
                 TextItem textItem = (TextItem) resourceItem.getDisplayObject();
                 textItem.updateContent();

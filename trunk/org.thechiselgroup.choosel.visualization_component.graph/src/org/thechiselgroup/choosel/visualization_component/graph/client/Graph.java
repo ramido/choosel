@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
@@ -742,27 +743,25 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedViewItems,
-            LightweightCollection<VisualItem> updatedViewItems,
-            LightweightCollection<VisualItem> removedViewItems,
-            LightweightCollection<Slot> changedSlots) {
+    public void update(Delta<VisualItem> delta,
+            LightweightCollection<Slot> updatedSlots) {
 
-        for (VisualItem addedItem : addedViewItems) {
+        for (VisualItem addedItem : delta.getAddedElements()) {
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
 
-        updateArcsForViewItems(addedViewItems);
+        updateArcsForViewItems(delta.getAddedElements());
 
-        for (VisualItem updatedItem : updatedViewItems) {
+        for (VisualItem updatedItem : delta.getUpdatedElements()) {
             updateNode(updatedItem);
         }
 
-        for (VisualItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : delta.getRemovedElements()) {
             removeGraphNode(viewItem);
         }
 
-        if (!changedSlots.isEmpty()) {
+        if (!updatedSlots.isEmpty()) {
             LightweightCollection<VisualItem> viewItems = getCallback()
                     .getViewItems();
             for (VisualItem viewItem : viewItems) {
@@ -777,7 +776,8 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
-    public void updateArcsForViewItems(LightweightCollection<VisualItem> viewItems) {
+    public void updateArcsForViewItems(
+            LightweightCollection<VisualItem> viewItems) {
         assert viewItems != null;
         for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
             container.update(viewItems);

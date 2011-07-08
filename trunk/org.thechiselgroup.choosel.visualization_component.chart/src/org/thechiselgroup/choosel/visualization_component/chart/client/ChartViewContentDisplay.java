@@ -15,13 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
@@ -185,16 +186,14 @@ public abstract class ChartViewContentDisplay extends
      * situation) once no matter how many resource items are being affected.
      */
     @Override
-    public void update(LightweightCollection<VisualItem> addedViewItems,
-            LightweightCollection<VisualItem> updatedViewItems,
-            LightweightCollection<VisualItem> removedViewItems,
+    public void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> changedSlots) {
 
-        for (VisualItem viewItem : addedViewItems) {
+        for (VisualItem viewItem : delta.getAddedElements()) {
             addViewItem(viewItem);
         }
 
-        for (VisualItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : delta.getRemovedElements()) {
             removeViewItem(viewItem);
         }
 
@@ -209,7 +208,8 @@ public abstract class ChartViewContentDisplay extends
          * TODO changing slots requires a rebuild because it affects the scales
          * and rulers - look for a better solution
          */
-        updateChart(!addedViewItems.isEmpty() || !removedViewItems.isEmpty()
+        updateChart(!delta.getAddedElements().isEmpty()
+                || !delta.getRemovedElements().isEmpty()
                 || !changedSlots.isEmpty());
     }
 

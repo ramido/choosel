@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 // TODO pull up slots into this?
@@ -23,10 +24,10 @@ public interface VisualItemRenderer {
     /**
      * <p>
      * Updates the {@link ViewContentDisplay}. There is no overlap between the
-     * three different {@link VisualItem} sets (added, updated, and removed
-     * {@link VisualItem}s). We use a single method to enable the different
-     * {@link ViewContentDisplay}s to do a single refresh of the view instead of
-     * multiple operations.
+     * three different {@link VisualItem} sets in the {@link Delta} (added,
+     * updated, and removed {@link VisualItem}s). We use a single method to
+     * enable the different {@link ViewContentDisplay}s to do a single refresh
+     * of the view instead of multiple operations.
      * </p>
      * <p>
      * The {@link VisualItem}s can be referenced during a session for reference
@@ -47,23 +48,17 @@ public interface VisualItemRenderer {
      * slots any more, it should be removed.
      * </p>
      * 
-     * @param addedViewItems
-     *            {@link VisualItem}s that have been added to the view. Is never
-     *            <code>null</code>, but can be an empty set.
-     * @param updatedViewItems
-     *            {@link VisualItem}s which have changed (status, data, etc.)
-     *            such that their representation needs to be updated. Is never
-     *            <code>null</code>, but can be an empty set.
-     * @param removedViewItems
-     *            {@link VisualItem}s that have been removed from the view. Is
-     *            never <code>null</code>, but can be an empty set.
+     * @param delta
+     *            {@link VisualItem} delta that contains (a) {@link VisualItem}s
+     *            that have been added to the view, (b) {@link VisualItem}s
+     *            which have changed (status, data, etc.) such that their
+     *            representation needs to be updated, and (c) {@link VisualItem}
+     *            s that have been removed from the view.
      * @param updatedSlots
      *            {@link Slot}s for which the mappings have changed. Is never
      *            <code>null</code>, but can be an empty set.
      */
-    void update(LightweightCollection<VisualItem> addedViewItems,
-            LightweightCollection<VisualItem> updatedViewItems,
-            LightweightCollection<VisualItem> removedViewItems,
+    void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> updatedSlots);
 
 }

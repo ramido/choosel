@@ -30,7 +30,6 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
@@ -44,6 +43,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
@@ -153,31 +153,6 @@ public final class ResourcesTestHelper {
     }
 
     // TODO extract hamcrest matcher, inline argThat
-    public static <T> LightweightCollection<T> emptyLightweightCollection(
-            final Class<T> clazz) {
-
-        return argThat(new BaseMatcher<LightweightCollection<T>>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Empty LightweightCollection Matcher");
-            }
-
-            @Override
-            public boolean matches(Object item) {
-                if (item == null) {
-                    return false;
-                }
-
-                if (!(item instanceof LightweightCollection)) {
-                    return false;
-                }
-
-                return ((LightweightCollection) item).isEmpty();
-            }
-        });
-    }
-
-    // TODO extract hamcrest matcher, inline argThat
     public static LightweightCollection<Resource> eqResources(
             final LightweightCollection<Resource> resources) {
 
@@ -195,11 +170,9 @@ public final class ResourcesTestHelper {
         });
     }
 
-    // TODO extract hamcrest matcher, inline argThat
-    public static LightweightCollection<VisualItem> eqViewItems(
+    public static ArgumentMatcher<LightweightCollection<VisualItem>> eqViewItems(
             final LightweightCollection<VisualItem> viewItems) {
-
-        return argThat(new ArgumentMatcher<LightweightCollection<VisualItem>>() {
+        return new ArgumentMatcher<LightweightCollection<VisualItem>>() {
             @Override
             public boolean matches(Object o) {
                 LightweightCollection<VisualItem> set = (LightweightCollection<VisualItem>) o;
@@ -210,13 +183,57 @@ public final class ResourcesTestHelper {
 
                 return set.toList().containsAll(viewItems.toList());
             }
-        });
+        };
     }
 
     public static LightweightCollection<VisualItem> eqViewItems(
             VisualItem... viewItems) {
 
-        return eqViewItems(LightweightCollections.toCollection(viewItems));
+        return argThat(eqViewItems(LightweightCollections.toCollection(viewItems)));
+    }
+
+    public static <T> Matcher<LightweightCollection<T>> isEmptyLightweightCollection(
+            final Class<T> clazz) {
+
+        return new TypeSafeMatcher<LightweightCollection<T>>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Empty LightweightCollection<"
+                        + clazz.getName() + ">");
+            }
+
+            @Override
+            public boolean matchesSafely(LightweightCollection<T> actual) {
+                return actual.isEmpty();
+            }
+        };
+    }
+
+    public static <T> Matcher<Delta<T>> matchesDelta(
+            final Matcher<LightweightCollection<T>> addedElementsMatcher,
+            final Matcher<LightweightCollection<T>> updatedElementsMatcher,
+            final Matcher<LightweightCollection<T>> removedElementsMatcher) {
+
+        return new TypeSafeMatcher<Delta<T>>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("added ")
+                        .appendDescriptionOf(addedElementsMatcher)
+                        .appendText("updated ")
+                        .appendDescriptionOf(updatedElementsMatcher)
+                        .appendText("removed ")
+                        .appendDescriptionOf(removedElementsMatcher);
+            }
+
+            @Override
+            public boolean matchesSafely(Delta<T> actual) {
+                return addedElementsMatcher.matches(actual.getAddedElements())
+                        && updatedElementsMatcher.matches(actual
+                                .getUpdatedElements())
+                        && removedElementsMatcher.matches(actual
+                                .getRemovedElements());
+            }
+        };
     }
 
     public static void verifyOnResourcesAdded(
