@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -24,9 +24,8 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class ViewItemColorResolver implements ViewItemValueResolver {
-
-    private static final String ID = "ViewItemColorResolver";
+// TODO DataType.Color
+public class ViewItemColorResolver extends AbstractSimpleViewItemValueResolver {
 
     private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
             "#A9C0B1" };
@@ -41,8 +40,10 @@ public class ViewItemColorResolver implements ViewItemValueResolver {
     }
 
     @Override
-    public String getResolverId() {
-        return ID;
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        return true;
     }
 
     @Override

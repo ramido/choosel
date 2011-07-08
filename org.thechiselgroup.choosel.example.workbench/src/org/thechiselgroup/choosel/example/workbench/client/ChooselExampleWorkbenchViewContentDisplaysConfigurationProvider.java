@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewContentDisplaysConfigurationProvider;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayConfiguration;
@@ -46,19 +47,18 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         configuration.setSlotResolver(
                 BarChart.BAR_COLOR,
-                new ViewItemStatusResolver("barColorResolver",
-                        Colors.STEELBLUE_C, StatusRule.fullOrPartial(
-                                Colors.ORANGE_C, Subset.SELECTED)));
+                new ViewItemStatusResolver(Colors.STEELBLUE_C, StatusRule
+                        .fullOrPartial(Colors.ORANGE_C, Subset.SELECTED)));
         configuration.setSlotResolver(BarChart.BAR_BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C));
+                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
 
         configuration.setSlotResolver(BarChart.PARTIAL_BAR_LENGTH,
-                new SubsetDelegatingValueResolver("partialBarLength",
-                        BarChart.BAR_LENGTH, Subset.HIGHLIGHTED));
+                new SubsetDelegatingValueResolver(BarChart.BAR_LENGTH,
+                        Subset.HIGHLIGHTED));
         configuration.setSlotResolver(BarChart.PARTIAL_BAR_COLOR,
-                new FixedValueResolver(Colors.YELLOW_C));
+                new FixedValueResolver(Colors.YELLOW_C, DataType.COLOR));
         configuration.setSlotResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C));
+                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
 
         add(configuration);
     }
@@ -71,18 +71,18 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         configuration.setSlotResolver(
                 Map.COLOR,
-                new ViewItemStatusResolver("mapColorResolver",
-                        Colors.STEELBLUE_C.alpha(0.6), StatusRule
-                                .fullOrPartial(Colors.YELLOW_C,
-                                        Subset.HIGHLIGHTED),
-                        StatusRule.fullOrPartial(Colors.ORANGE_C,
-                                Subset.SELECTED)));
+                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
+                        StatusRule.fullOrPartial(Colors.YELLOW_C,
+                                Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
+                                Colors.ORANGE_C, Subset.SELECTED)));
         configuration.setSlotResolver(Map.BORDER_COLOR, new FixedValueResolver(
-                Colors.STEELBLUE_C));
+                Colors.STEELBLUE_C, DataType.COLOR));
 
         // TODO fix z-index
-        configuration.setSlotResolver(Map.Z_INDEX, new FixedValueResolver(1));
-        configuration.setSlotResolver(Map.RADIUS, new FixedValueResolver(5));
+        configuration.setSlotResolver(Map.Z_INDEX, new FixedValueResolver(1,
+                DataType.NUMBER));
+        configuration.setSlotResolver(Map.RADIUS, new FixedValueResolver(5,
+                DataType.NUMBER));
 
         add(configuration);
     }
@@ -94,17 +94,15 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 factory);
 
         configuration.setSlotResolver(ScatterPlot.SIZE, new FixedValueResolver(
-                20));
+                20, DataType.NUMBER));
         configuration.setSlotResolver(ScatterPlot.BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C));
+                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
         configuration.setSlotResolver(
                 ScatterPlot.COLOR,
-                new ViewItemStatusResolver("scatterplotColorResolver",
-                        Colors.STEELBLUE_C.alpha(0.6), StatusRule
-                                .fullOrPartial(Colors.YELLOW_C,
-                                        Subset.HIGHLIGHTED),
-                        StatusRule.fullOrPartial(Colors.ORANGE_C,
-                                Subset.SELECTED)));
+                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
+                        StatusRule.fullOrPartial(Colors.YELLOW_C,
+                                Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
+                                Colors.ORANGE_C, Subset.SELECTED)));
 
         add(configuration);
     }
@@ -122,15 +120,13 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 factory);
 
         configuration.setSlotResolver(TimeLine.BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C));
+                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
         configuration.setSlotResolver(
                 TimeLine.COLOR,
-                new ViewItemStatusResolver("timelineColorResolver",
-                        Colors.STEELBLUE_C.alpha(0.6), StatusRule
-                                .fullOrPartial(Colors.YELLOW_C,
-                                        Subset.HIGHLIGHTED),
-                        StatusRule.fullOrPartial(Colors.ORANGE_C,
-                                Subset.SELECTED)));
+                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
+                        StatusRule.fullOrPartial(Colors.YELLOW_C,
+                                Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
+                                Colors.ORANGE_C, Subset.SELECTED)));
 
         add(configuration);
     }

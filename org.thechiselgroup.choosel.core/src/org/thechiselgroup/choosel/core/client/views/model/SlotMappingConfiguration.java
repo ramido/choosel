@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -18,140 +18,105 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import org.thechiselgroup.choosel.core.client.persistence.Memento;
-import org.thechiselgroup.choosel.core.client.persistence.Persistable;
-import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
-import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
-import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.Calculation;
-import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.NullViewItemResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class SlotMappingConfiguration implements ViewItemValueResolverContext,
-        Persistable {
+// TODO rename to DefaultSlotMappingConfiguration
+public class SlotMappingConfiguration implements
+        SlotMappingConfigurationInterface {
 
-    private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
-
-    private static final String MEMENTO_VALUE_CALCULATION = "calculation";
-
-    private static final String MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY = "first-resource-property";
-
-    private static final String MEMENTO_KEY_PROPERTY = "property";
-
-    private static final String MEMENTO_KEY_TYPE = "type";
+    // TODO move
+    private static <S, T> void assertNoNullValues(Map<S, T> map) {
+        for (Entry<S, T> entry : map.entrySet()) {
+            assert entry.getValue() != null : "map entry for " + entry.getKey()
+                    + " must not be null";
+        }
+    }
 
     private transient PrioritizedHandlerManager handlerManager;
 
-    private Map<Slot, ViewItemValueResolver> slotsToValueResolvers = new HashMap<Slot, ViewItemValueResolver>();
+    private Map<Slot, ViewItemValueResolver> slotsToResolvers = new HashMap<Slot, ViewItemValueResolver>();
 
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
-    // TODO way more tests...
-    // TODO also need to calculate available slots --> based on fixed slots and
-    // whats required
-    // --> required slots
-    private Map<Slot, ViewItemValueResolver> fixedSlotResolvers;
+    private Slot[] slots;
 
-    private Slot[] requiredSlots;
+    public SlotMappingConfiguration(Slot[] slots) {
+        assert slots != null;
 
-    public SlotMappingConfiguration(
-            Map<Slot, ViewItemValueResolver> fixedSlotResolvers,
-            Slot[] requiredSlots) {
-
-        assert fixedSlotResolvers != null;
-
-        this.fixedSlotResolvers = fixedSlotResolvers;
         this.handlerManager = new PrioritizedHandlerManager(this);
+        this.slots = slots;
 
-        LightweightList<Slot> slots = CollectionFactory.createLightweightList();
-        for (Slot slot : requiredSlots) {
-            if (!fixedSlotResolvers.containsKey(slot)) {
-                slots.add(slot);
-            }
-        }
+        initSlotsById(slots);
 
-        this.requiredSlots = slots.toArray(new Slot[slots.size()]);
-
+        assertInvariants();
     }
 
-    public SlotMappingConfiguration(Slot[] requiredSlots) {
-        this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots);
-    }
-
-    /**
-     * Adds an event handler that gets called when mappings change. Supports
-     * {@link PrioritizedEventHandler}.
-     */
+    @Override
     public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
-    public boolean containsResolver(Slot slot) {
-        assert slot != null;
-
-        return slotsToValueResolvers.containsKey(slot)
-                || fixedSlotResolvers.containsKey(slot);
+    private void assertInvariants() {
+        assertNoNullValues(slotsToResolvers);
     }
 
-    public Slot[] getRequiredSlots() {
-        return requiredSlots;
-    }
-
-    // TODO search for calls from outside this class and remove
     @Override
     public ViewItemValueResolver getResolver(Slot slot)
             throws NoResolverForSlotException {
 
         assert slot != null;
 
-        if (!containsResolver(slot)) {
-            throw new NoResolverForSlotException(slot, slotsToValueResolvers);
+        if (!isConfigured(slot)) {
+            throw new NoResolverForSlotException(slot, slotsToResolvers);
         }
 
-        if (slotsToValueResolvers.containsKey(slot)) {
-            return slotsToValueResolvers.get(slot);
+        assert slotsToResolvers.containsKey(slot);
+
+        return slotsToResolvers.get(slot);
+    }
+
+    @Override
+    public Slot getSlotById(String slotId) {
+        assert slotId != null;
+        return slotsByID.get(slotId);
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return slots;
+    }
+
+    @Override
+    public LightweightCollection<Slot> getUnconfiguredSlots() {
+        LightweightList<Slot> unconfiguredSlots = CollectionFactory
+                .createLightweightList();
+        for (Slot slot : slots) {
+            if (!isConfigured(slot)) {
+                unconfiguredSlots.add(slot);
+            }
         }
-
-        assert fixedSlotResolvers.containsKey(slot);
-
-        return fixedSlotResolvers.get(slot);
+        return unconfiguredSlots;
     }
 
-    public Set<Slot> getSlots() {
-        return slotsToValueResolvers.keySet();
-    }
-
-    public void initSlots(Slot[] slots) {
-        assert slots != null;
-
+    private void initSlotsById(Slot[] slots) {
         for (Slot slot : slots) {
             slotsByID.put(slot.getId(), slot);
-            slotsToValueResolvers.put(slot, new NullViewItemResolver());
         }
     }
 
-    public boolean isSlotInitialized(Slot slot) {
-        ViewItemValueResolver viewItemValueResolver = slotsToValueResolvers
-                .get(slot);
-        return viewItemValueResolver != null
-                && !(viewItemValueResolver instanceof NullViewItemResolver);
+    @Override
+    public boolean isConfigured(Slot slot) {
+        assert slot != null;
+
+        return slotsToResolvers.containsKey(slot);
     }
 
     /**
@@ -166,6 +131,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
             throws SlotMappingResolutionException {
 
         try {
+            assert getResolver(slot) != null;
             return getResolver(slot).resolve(viewItem, this);
         } catch (Exception ex) {
             throw new SlotMappingResolutionException(slot, viewItem, ex);
@@ -173,128 +139,41 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     }
 
     @Override
-    public void restore(Memento memento,
-            PersistableRestorationService restorationService,
-            ResourceSetAccessor accessor) {
-
-        for (Entry<String, Memento> entry : memento.getChildren().entrySet()) {
-            String slotId = entry.getKey();
-            Memento child = entry.getValue();
-
-            assert slotsByID.containsKey(slotId) : "no slot with slot id "
-                    + slotId;
-
-            Slot slot = slotsByID.get(slotId);
-
-            if (child.getFactoryId() == null) {
-                String value = (String) child.getValue(MEMENTO_KEY_TYPE);
-                if (MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY.equals(value)) {
-                    String property = (String) child
-                            .getValue(MEMENTO_KEY_PROPERTY);
-
-                    setResolver(slot, new FirstResourcePropertyResolver(
-                            property, slot.getDataType()));
-                } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
-                    String property = (String) child
-                            .getValue(MEMENTO_KEY_PROPERTY);
-                    String calculationType = (String) child
-                            .getValue(MEMENTO_KEY_CALCULATION_TYPE);
-
-                    if ("min".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new MinCalculation()));
-                    } else if ("max".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new MaxCalculation()));
-                    } else if ("sum".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new SumCalculation()));
-                    } else if ("average".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new AverageCalculation()));
-                    }
-                }
-            } else {
-                setResolver(slot,
-                        (ViewItemValueResolver) restorationService
-                                .restoreFromMemento(child, accessor));
-            }
-        }
-    }
-
-    @Override
-    public Memento save(ResourceSetCollector resourceSetCollector) {
-        Memento memento = new Memento();
-
-        for (Entry<Slot, ViewItemValueResolver> entry : slotsToValueResolvers
-                .entrySet()) {
-
-            Slot slot = entry.getKey();
-            ViewItemValueResolver resolver = entry.getValue();
-
-            Memento child = new Memento();
-
-            if (resolver instanceof FirstResourcePropertyResolver) {
-                child.setValue(MEMENTO_KEY_TYPE,
-                        MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY);
-                child.setValue(MEMENTO_KEY_PROPERTY,
-                        ((FirstResourcePropertyResolver) resolver)
-                                .getProperty());
-            } else if (resolver instanceof CalculationResolver) {
-                child.setValue(MEMENTO_KEY_TYPE, MEMENTO_VALUE_CALCULATION);
-
-                Calculation calculation = ((CalculationResolver) resolver)
-                        .getCalculation();
-                child.setValue(MEMENTO_KEY_PROPERTY,
-                        ((CalculationResolver) resolver).getProperty());
-
-                if (calculation instanceof SumCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "sum");
-                } else if (calculation instanceof AverageCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "average");
-                } else if (calculation instanceof MinCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "min");
-                } else if (calculation instanceof MaxCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "max");
-                }
-            } else if (resolver instanceof Persistable) {
-                child = ((Persistable) resolver).save(resourceSetCollector);
-            }
-
-            memento.addChild(slot.getId(), child);
-        }
-
-        return memento;
-    }
-
-    /**
-     * <p>
-     * <b>Note:</b> Slot resolvers that are not returned by getSlots() in the
-     * {@link ViewContentDisplay} can still be configured to allow view content
-     * display decorators to hide and preconfigure slots.
-     * </p>
-     */
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        if (slot == null) {
-            throw new IllegalArgumentException("slot must not be null");
-        }
-        if (resolver == null) {
-            throw new IllegalArgumentException("resolver must not be null");
-        }
+        assertInvariants();
+        assert slot != null : "slot must not be null";
+        assert resolver != null : "resolver must not be null";
+        assert resolver.getTargetSlots() != null : "resolver "
+                + resolver.toString() + " getTargetSlots() must not be null";
+        // TODO extract into internal assert method
+        assert slotsByID.containsKey(slot.getId()) : "slot " + slot
+                + " is not allowed (valid slots: " + slotsByID.values() + ")";
 
-        slotsToValueResolvers.put(slot, resolver);
-        handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
+        ViewItemValueResolver oldResolver = slotsToResolvers.get(slot);
+        slotsToResolvers.put(slot, resolver);
 
-        for (Entry<Slot, ViewItemValueResolver> entry : slotsToValueResolvers
+        handlerManager.fireEvent(new SlotMappingChangedEvent(slot, oldResolver,
+                resolver));
+
+        // fire events for delegating resolvers that reference this slot
+        for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
+            LightweightCollection<Slot> targetSlots = entry.getValue()
+                    .getTargetSlots();
 
-            if ((entry.getValue() instanceof DelegatingViewItemValueResolver)
-                    && (((DelegatingViewItemValueResolver) entry.getValue())
-                            .getTargetSlot().equals(slot))) {
-                handlerManager.fireEvent(new SlotMappingChangedEvent(entry
-                        .getKey()));
+            assert targetSlots != null : "getTargetSlots() for resolver "
+                    + entry.getValue().getClass() + " must not be null";
+
+            for (Slot targetSlot : targetSlots) {
+                if (targetSlot.equals(slot)) {
+                    // TODO I'm not sure if this is how target resolvers work,
+                    // ask lars
+                    handlerManager.fireEvent(new SlotMappingChangedEvent(entry
+                            .getKey(), oldResolver, resolver));
+                }
             }
         }
-    }
 
+        assertInvariants();
+    }
 }

@@ -53,6 +53,10 @@ import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.views.resolvers.DefaultViewItemResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.views.resolvers.DefaultViewItemResolverUIFactoryProvider;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.dnd.client.popup.DragSupportingPopupManagerFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.AllSetDropTargetManager;
 import org.thechiselgroup.choosel.dnd.client.resources.DefaultDropTargetCapabilityChecker;
@@ -117,6 +121,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
+// TODO rename to setup
 public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         implements ChooselInjectionConstants {
 
@@ -321,6 +326,12 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(DropTargetCapabilityChecker.class).to(
                 getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
+        bind(ViewItemValueResolverFactoryProvider.class).to(
+                getResolverFactoryProviderClass()).in(Singleton.class);
+
+        bind(ViewItemValueResolverUIControllerFactoryProvider.class).to(
+                getResolverFactoryUIProviderClass()).in(Singleton.class);
+
         bindDisplays();
 
         bind(DocumentProcessor.class).to(SarissaDocumentProcessor.class).in(
@@ -397,6 +408,14 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {
         return PersistableRestorationServiceProvider.class;
+    }
+
+    protected Class<? extends ViewItemValueResolverFactoryProvider> getResolverFactoryProviderClass() {
+        return DefaultViewItemResolverFactoryProvider.class;
+    }
+
+    protected Class<? extends ViewItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
+        return DefaultViewItemResolverUIFactoryProvider.class;
     }
 
     protected Class<? extends ResourceCategorizer> getResourceCategorizerClass() {

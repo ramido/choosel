@@ -18,42 +18,51 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.*;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.*;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForExactResourceSets;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 
 public class DefaultViewModelTest {
 
     private Slot slot;
 
-    private ResourceSet selectedResources;
-
-    private ResourceSet highlightedResources;
-
-    private ResourceSet containedResources;
-
     private DefaultViewModel underTest;
 
-    @Mock
-    private ViewContentDisplay viewContentDisplay;
+    private DefaultViewModelTestHelper helper;
+
+    private static final String RESOURCE_PROPERTY_1 = "property1";
+
+    @Test
+    public void addingResourceSetsAddsViewItems() {
+        helper.addToContainedResources(createResources(TYPE_1, 1));
+        helper.addToContainedResources(createResources(TYPE_2, 2));
+
+        assertThat(
+                underTest.getViewItems(),
+                containsViewItemsForExactResourceSets(createResources(TYPE_1, 1),
+                        createResources(TYPE_2, 2)));
+    }
 
     @Test
     public void changeTextSlotMapping() {
@@ -61,11 +70,11 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getSlotMappingConfiguration().setResolver(slot,
-                new FirstResourcePropertyResolver("text1", DataType.TEXT));
-        containedResources.add(resource);
-        underTest.getSlotMappingConfiguration().setResolver(slot,
-                new FirstResourcePropertyResolver("text2", DataType.TEXT));
+        underTest.setResolver(slot, new FirstResourcePropertyResolver("text1",
+                DataType.TEXT));
+        helper.getContainedResources().add(resource);
+        underTest.setResolver(slot, new FirstResourcePropertyResolver("text2",
+                DataType.TEXT));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -75,49 +84,31 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void createResourceItemsWhenResourcesAreAdded() {
-        containedResources.addAll(createResources(TYPE_1, 1));
-        containedResources.add(createResource(TYPE_2, 2));
-
-        List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(
-                viewContentDisplay, 2);
-
-        List<ViewItem> set1 = allValues.get(0).toList();
-        assertEquals(1, set1.size());
-        assertThat(set1.get(0).getResources(),
-                containsExactly(createResources(TYPE_1, 1)));
-
-        List<ViewItem> set2 = allValues.get(1).toList();
-        assertEquals(1, set2.size());
-        assertThat(set2.get(0).getResources(),
-                containsExactly(createResources(TYPE_2, 2)));
-    }
-
-    @Test
-    public void deselectResourceItemWhenResourceRemovedFromSelection() {
+    public void deselectViewItemWhenResourceRemovedFromSelection() {
         ResourceSet resources = createResources(1);
 
-        containedResources.addAll(resources);
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
+        helper.getContainedResources().addAll(resources);
 
-        selectedResources.addAll(resources);
-        selectedResources.removeAll(resources);
+        helper.getSelectedResources().addAll(resources);
+        helper.getSelectedResources().removeAll(resources);
 
-        assertThat(viewItems.get(0).getResources(Subset.SELECTED),
+        assertThat(
+                underTest.getViewItems().getFirstElement()
+                        .getResources(Subset.SELECTED),
                 containsExactly(createResources()));
     }
 
     @Test
     public void grouping() {
         Resource r1 = new Resource("test:1");
-        r1.putValue("property1", "value1-1");
+        r1.putValue(RESOURCE_PROPERTY_1, "value1-1");
         r1.putValue("property2", "value2");
 
         Resource r2 = new Resource("test:2");
-        r2.putValue("property1", "value1-2");
+        r2.putValue(RESOURCE_PROPERTY_1, "value1-2");
         r2.putValue("property2", "value2");
 
-        containedResources.addAll(toResourceSet(r1, r2));
+        helper.getContainedResources().addAll(toResourceSet(r1, r2));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
@@ -137,7 +128,7 @@ public class DefaultViewModelTest {
 
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
-        containedResources.add(resource);
+        helper.getContainedResources().add(resource);
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
@@ -159,7 +150,7 @@ public class DefaultViewModelTest {
 
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
-        containedResources.add(resource);
+        helper.getContainedResources().add(resource);
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
@@ -170,56 +161,43 @@ public class DefaultViewModelTest {
     }
 
     @Test
-    public void highlightedResourceSetOnCreatedResourceItems() {
+    public void highlightedResourceSetOnCreatedViewItems() {
         ResourceSet resources = createResources(TYPE_1, 1, 3, 4);
 
-        highlightedResources.addAll(resources);
-        containedResources.addAll(resources);
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
+        helper.getHighlightedResources().addAll(resources);
+        helper.getContainedResources().addAll(resources);
 
-        assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
+        assertThat(
+                underTest.getViewItems().getFirstElement()
+                        .getResources(Subset.HIGHLIGHTED),
                 containsExactly(resources));
     }
 
     @Test
-    public void highlightedResourcesGetAddedToResourceItemOnlyOnceWhenSeveralResourcesFromItemAddedToHoverModel() {
-        ResourceSet resources = createResources(1, 2);
+    public void highlightedResourcesGetAddedToViewItemWhenHoverModelContainsAdditionalResources() {
+        ResourceSet viewResources = toResourceSet(createResource(2));
+        ResourceSet highlightedResources2 = toResourceSet(createResource(1),
+                createResource(2));
 
-        containedResources.addAll(resources);
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
+        helper.getContainedResources().addAll(viewResources);
+        helper.getHighlightedResources().addAll(highlightedResources2);
 
-        highlightedResources.addAll(resources);
-
-        assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
-                containsExactly(resources));
-    }
-
-    @Test
-    public void highlightedResourcesGetAddedToResourceItemWhenHoverModelContainsAdditionalResources() {
-        Resource resource2 = createResource(2);
-        Resource resource1 = createResource(1);
-        ResourceSet viewResources = toResourceSet(resource2);
-        ResourceSet highlightedResources2 = toResourceSet(resource1, resource2);
-
-        containedResources.addAll(viewResources);
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
-
-        highlightedResources.addAll(highlightedResources2);
-
-        assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
+        assertThat(
+                underTest.getViewItems().getFirstElement()
+                        .getResources(Subset.HIGHLIGHTED),
                 containsExactly(viewResources));
     }
 
     @Test
-    public void highlightedResourcesGetAddedToResourceItemWhenResourcesAddedToHoverModel() {
+    public void highlightedResourcesGetAddedToViewItemWhenResourcesAddedToHoverModel() {
         ResourceSet resources = createResources(1);
 
-        containedResources.addAll(resources);
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
+        helper.getContainedResources().addAll(resources);
+        helper.getHighlightedResources().addAll(resources);
 
-        highlightedResources.addAll(resources);
-
-        assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
+        assertThat(
+                underTest.getViewItems().getFirstElement()
+                        .getResources(Subset.HIGHLIGHTED),
                 containsExactly(createResources(1)));
     }
 
@@ -227,30 +205,31 @@ public class DefaultViewModelTest {
     public void highlightedResourcesGetRemovedFromViewItemWhenResourcesRemovedFromHighlightingSet() {
         ResourceSet resources = createResources(1);
 
-        containedResources.addAll(resources);
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
+        helper.getContainedResources().addAll(resources);
+        helper.getHighlightedResources().addAll(resources);
+        helper.getHighlightedResources().removeAll(resources);
 
-        highlightedResources.addAll(resources);
-        highlightedResources.removeAll(resources);
-
-        assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
+        assertThat(
+                underTest.getViewItems().getFirstElement()
+                        .getResources(Subset.HIGHLIGHTED),
                 containsExactly(createResources()));
     }
 
     @Test
     public void initializesContentDisplay() {
-        verify(viewContentDisplay, times(1)).init(
+        verify(helper.getViewContentDisplay(), times(1)).init(
                 any(ViewContentDisplayCallback.class));
     }
 
     @Test
     public void selectViewItemWhenResourceAddedToSelection() {
-        containedResources.add(createResource(1));
-        List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
+        helper.getContainedResources().add(createResource(1));
 
-        selectedResources.add(createResource(1));
+        helper.getSelectedResources().add(createResource(1));
 
-        assertThat(viewItems.get(0).getResources(Subset.SELECTED),
+        assertThat(
+                underTest.getViewItems().getFirstElement()
+                        .getResources(Subset.SELECTED),
                 containsExactly(createResources(1)));
     }
 
@@ -258,92 +237,12 @@ public class DefaultViewModelTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        containedResources = new DefaultResourceSet();
-        highlightedResources = new DefaultResourceSet();
-        selectedResources = new DefaultResourceSet();
-
         slot = new Slot("1", "Description", DataType.TEXT);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(
-                containedResources, highlightedResources, selectedResources,
-                viewContentDisplay, slot);
-    }
-
-    // TODO check highlighted resources in resource item
-    @Test
-    public void updateCalledWhenHighlightingChanges() {
-        ResourceSet resources = createResources(1);
-
-        containedResources.addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(viewContentDisplay);
-
-        highlightedResources.addAll(resources);
-
-        verify(viewContentDisplay, times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWhenResourcesRemoved() {
-        ResourceSet resources1 = createResources(TYPE_1, 1);
-        ResourceSet resources2 = createResources(TYPE_2, 2);
-        ResourceSet resources = toResourceSet(resources1, resources2);
-
-        containedResources.addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(viewContentDisplay);
-
-        containedResources.removeAll(resources);
-        verify(viewContentDisplay, times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
-                eqViewItems(addedViewItems),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWhenSelectionChanges() {
-        ResourceSet resources = createResources(1);
-
-        containedResources.addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems(viewContentDisplay);
-
-        selectedResources.add(createResource(1));
-
-        verify(viewContentDisplay, times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateCalledWith2ViewItemsWhenAddingMixedResourceSet() {
-        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
-        ResourceSet resources2 = createResources(TYPE_2, 4, 2);
-        ResourceSet resources = toResourceSet(resources1, resources2);
-
-        containedResources.addAll(resources);
-
-        verify(viewContentDisplay, times(1)).update(
-                resourceItemsForResourceSets(resources1, resources2),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-    }
-
-    @Test
-    public void updateNeverCalledOnHoverModelChangeThatDoesNotAffectViewResources() {
-        containedResources.add(createResource(2));
-        highlightedResources.add(createResource(1));
-
-        verify(viewContentDisplay, never()).update(
-                emptyLightweightCollection(ViewItem.class),
-                any(LightweightCollection.class),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
+        helper = new DefaultViewModelTestHelper();
+        helper.setSlots(slot);
+        underTest = helper.createTestViewModel();
+        underTest.setResolver(slot, new FixedValueResolver("a", DataType.TEXT));
     }
 
     /**
@@ -355,15 +254,11 @@ public class DefaultViewModelTest {
         ResourceSet originalResources = createResources(TYPE_1, 1);
         ResourceSet addedResources = createResources(TYPE_1, 2);
 
-        containedResources.addAll(originalResources);
-        highlightedResources.addAll(addedResources);
-        containedResources.addAll(addedResources);
+        helper.getContainedResources().addAll(originalResources);
+        helper.getHighlightedResources().addAll(addedResources);
+        helper.getContainedResources().addAll(addedResources);
 
-        List<ViewItem> updatedViewItem = captureUpdatedViewItems(
-                viewContentDisplay).toList();
-
-        assertEquals(1, updatedViewItem.size());
-        ViewItem viewItem = updatedViewItem.get(0);
+        ViewItem viewItem = underTest.getViewItems().getFirstElement();
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.HIGHLIGHTED));
         assertThat(viewItem.getResources(Subset.HIGHLIGHTED),
@@ -379,14 +274,11 @@ public class DefaultViewModelTest {
         ResourceSet originalResources = createLabeledResources(TYPE_1, 1, 2);
         ResourceSet removedResources = createResources(TYPE_1, 2);
 
-        highlightedResources.addAll(removedResources);
-        containedResources.addAll(originalResources);
-        highlightedResources.removeAll(removedResources);
+        helper.getHighlightedResources().addAll(removedResources);
+        helper.getContainedResources().addAll(originalResources);
+        helper.getHighlightedResources().removeAll(removedResources);
 
-        List<ViewItem> updatedViewItem = captureUpdatedViewItems(
-                viewContentDisplay).toList();
-        assertEquals(1, updatedViewItem.size());
-        ViewItem viewItem = updatedViewItem.get(0);
+        ViewItem viewItem = underTest.getViewItems().getFirstElement();
 
         assertEquals(Status.NONE, viewItem.getStatus(Subset.HIGHLIGHTED));
         assertEquals(true, viewItem.getResources(Subset.HIGHLIGHTED).isEmpty());
@@ -401,14 +293,11 @@ public class DefaultViewModelTest {
         ResourceSet originalResources = createLabeledResources(TYPE_1, 1, 2);
         ResourceSet removedResources = createResources(TYPE_1, 2);
 
-        selectedResources.addAll(removedResources);
-        containedResources.addAll(originalResources);
-        selectedResources.removeAll(removedResources);
+        helper.getSelectedResources().addAll(removedResources);
+        helper.getContainedResources().addAll(originalResources);
+        helper.getSelectedResources().removeAll(removedResources);
 
-        List<ViewItem> updatedViewItem = captureUpdatedViewItems(
-                viewContentDisplay).toList();
-        assertEquals(1, updatedViewItem.size());
-        ViewItem viewItem = updatedViewItem.get(0);
+        ViewItem viewItem = underTest.getViewItems().getFirstElement();
 
         assertEquals(Status.NONE, viewItem.getStatus(Subset.SELECTED));
         assertEquals(true, viewItem.getResources(Subset.SELECTED).isEmpty());
@@ -423,15 +312,12 @@ public class DefaultViewModelTest {
         ResourceSet originalResources = createResources(TYPE_1, 1);
         ResourceSet addedResources = createResources(TYPE_1, 2);
 
-        containedResources.addAll(originalResources);
-        selectedResources.addAll(addedResources);
-        highlightedResources.addAll(addedResources);
-        containedResources.addAll(addedResources);
+        helper.getContainedResources().addAll(originalResources);
+        helper.getSelectedResources().addAll(addedResources);
+        helper.getHighlightedResources().addAll(addedResources);
+        helper.getContainedResources().addAll(addedResources);
 
-        List<ViewItem> updatedViewItem = captureUpdatedViewItems(
-                viewContentDisplay).toList();
-        assertEquals(1, updatedViewItem.size());
-        ViewItem viewItem = updatedViewItem.get(0);
+        ViewItem viewItem = underTest.getViewItems().getFirstElement();
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
@@ -451,14 +337,11 @@ public class DefaultViewModelTest {
         ResourceSet originalResources = createResources(TYPE_1, 1);
         ResourceSet addedResources = createResources(TYPE_1, 2);
 
-        containedResources.addAll(originalResources);
-        selectedResources.addAll(addedResources);
-        containedResources.addAll(addedResources);
+        helper.getContainedResources().addAll(originalResources);
+        helper.getSelectedResources().addAll(addedResources);
+        helper.getContainedResources().addAll(addedResources);
 
-        List<ViewItem> updatedViewItem = captureUpdatedViewItems(
-                viewContentDisplay).toList();
-        assertEquals(1, updatedViewItem.size());
-        ViewItem viewItem = updatedViewItem.get(0);
+        ViewItem viewItem = underTest.getViewItems().getFirstElement();
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
@@ -473,15 +356,14 @@ public class DefaultViewModelTest {
     public void viewItemIsSelectedOnCreateWhenResourcesAreAlreadySelected() {
         ResourceSet resources = createResources(1);
 
-        selectedResources.addAll(resources);
-        containedResources.addAll(resources);
+        helper.getSelectedResources().addAll(resources);
+        helper.getContainedResources().addAll(resources);
 
-        List<ViewItem> addedViewItem = captureAddedViewItemsAsList(viewContentDisplay);
-        assertEquals(1, addedViewItem.size());
-        ViewItem viewItem = addedViewItem.get(0);
+        ViewItem viewItem = underTest.getViewItems().getFirstElement();
 
         assertEquals(Status.FULL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
                 containsExactly(resources));
     }
+
 }

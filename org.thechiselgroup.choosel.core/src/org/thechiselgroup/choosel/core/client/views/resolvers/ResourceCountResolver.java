@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -19,9 +19,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
+// TODO DataType.NUMBER
 public class ResourceCountResolver extends SubsetViewItemValueResolver {
-
-    private static final String ID = "ResourceCountResolver";
 
     public ResourceCountResolver() {
         this(Subset.ALL);
@@ -32,8 +31,10 @@ public class ResourceCountResolver extends SubsetViewItemValueResolver {
     }
 
     @Override
-    public String getResolverId() {
-        return ID;
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        return true;
     }
 
     @Override

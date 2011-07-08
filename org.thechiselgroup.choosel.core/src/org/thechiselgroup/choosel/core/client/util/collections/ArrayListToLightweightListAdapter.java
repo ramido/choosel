@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -18,7 +18,10 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+// TODO expose interface with set/remove in a transparent way (e.g. in factory)
+// TODO rename to ArrayListBasedLightweightList
 public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> {
 
     private List<T> delegate = new ArrayList<T>();
@@ -42,6 +45,10 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
         }
     }
 
+    public void clear() {
+        delegate.clear();
+    }
+
     @Override
     public boolean contains(T t) {
         return delegate.contains(t);
@@ -53,6 +60,19 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     }
 
     @Override
+    public T getFirstElement() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        return get(0);
+    }
+
+    public int indexOf(Object o) {
+        return delegate.indexOf(o);
+    }
+
+    @Override
     public boolean isEmpty() {
         return delegate.isEmpty();
     }
@@ -60,6 +80,22 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     @Override
     public Iterator<T> iterator() {
         return delegate.iterator();
+    }
+
+    public int lastIndexOf(Object o) {
+        return delegate.lastIndexOf(o);
+    }
+
+    public T remove(int index) {
+        return delegate.remove(index);
+    }
+
+    public boolean remove(Object o) {
+        return delegate.remove(o);
+    }
+
+    public T set(int index, T element) {
+        return delegate.set(index, element);
     }
 
     @Override

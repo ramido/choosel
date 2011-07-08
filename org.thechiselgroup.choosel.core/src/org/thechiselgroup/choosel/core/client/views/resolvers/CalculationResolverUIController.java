@@ -15,22 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
-/**
- * {@link ViewItemValueResolver}s that delegate to resolvers for other slots
- * should implement this interface to ensure that events are fired correctly by
- * {@link SlotMappingConfiguration}.
- * 
- * @author Lars Grammel
- */
-public interface DelegatingViewItemValueResolver extends ViewItemValueResolver {
+public class CalculationResolverUIController extends
+        PropertyListBoxResolverUIController {
 
-    /**
-     * @return {@link Slot} that this {@link ViewItemValueResolver} delegates
-     *         to.
-     */
-    Slot getTargetSlot();
-
+    public CalculationResolverUIController(CalculationResolverFactory factory,
+            SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems) {
+        super(factory, uiModel, viewItems);
+    }
 }

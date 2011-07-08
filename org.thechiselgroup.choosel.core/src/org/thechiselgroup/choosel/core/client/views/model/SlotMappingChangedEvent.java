@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 public class SlotMappingChangedEvent extends
@@ -24,13 +26,25 @@ public class SlotMappingChangedEvent extends
 
     private final Slot slot;
 
-    public SlotMappingChangedEvent(Slot slot) {
+    private final ViewItemValueResolver oldResolver;
+
+    private final ViewItemValueResolver currentResolver;
+
+    public SlotMappingChangedEvent(Slot slot,
+            ViewItemValueResolver oldResolver,
+            ViewItemValueResolver currentResolver) {
+
+        assert slot != null;
+        assert currentResolver != null;
+
         this.slot = slot;
+        this.currentResolver = currentResolver;
+        this.oldResolver = oldResolver;
     }
 
     @Override
     protected void dispatch(SlotMappingChangedHandler handler) {
-        handler.onResourceCategoriesChanged(this);
+        handler.onSlotMappingChanged(this);
     }
 
     @Override
@@ -38,8 +52,22 @@ public class SlotMappingChangedEvent extends
         return TYPE;
     }
 
+    public ViewItemValueResolver getCurrentResolver() {
+        return currentResolver;
+    }
+
+    public ViewItemValueResolver getOldResolver() {
+        return oldResolver;
+    }
+
     public Slot getSlot() {
         return slot;
+    }
+
+    @Override
+    public String toString() {
+        return "SlotMappingChangedEvent [slot=" + slot + ", oldResolver="
+                + oldResolver + ", currentResolver=" + currentResolver + "]";
     }
 
 }

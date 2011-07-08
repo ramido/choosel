@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -24,7 +24,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class CalculationResolver extends SubsetViewItemValueResolver {
+public class CalculationResolver extends SubsetViewItemValueResolver implements
+        PropertyDependantViewItemValueResolver {
 
     private final String property;
 
@@ -46,15 +47,37 @@ public class CalculationResolver extends SubsetViewItemValueResolver {
         this.calculation = calculation;
     }
 
+    /*
+     * TODO we should check to make sure that the resource's property is the
+     * correct DataType. This should happen in the SlotMappingConfiguration once
+     * Resolvers report their DataType.
+     * 
+     * TODO test (not existing property, invalid data type on property, all
+     * okay)
+     */
+    @Override
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        assert viewItem != null;
+        assert context != null;
+
+        for (Resource resource : viewItem.getResources()) {
+            // XXX also need to check property data type.
+            if (!resource.containsProperty(property)
+                    || resource.getValue(property) == null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public Calculation getCalculation() {
         return calculation;
     }
 
     @Override
-    public String getResolverId() {
-        return calculation.getID();
-    }
-
     public String getProperty() {
         return property;
     }
@@ -72,8 +95,6 @@ public class CalculationResolver extends SubsetViewItemValueResolver {
         for (Resource resource : resources) {
             // TODO, what happens if this is null, should that be possible,
             // should it not show those resources
-            // TODO also what is used by default and does that make sense
-            // TODO but what would happen to number array if slot was missing
             numberArray.push((Double) resource.getValue(property));
         }
 

@@ -15,10 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-public interface ViewItemBehavior extends ViewItemInteractionHandler {
-
-    void onViewItemCreated(ViewItem viewItem);
-
-    void onViewItemRemoved(ViewItem viewItem);
+// TODO should extend view item container change handler instead of having dedicated methods..
+public interface ViewItemBehavior extends ViewItemInteractionHandler,
+        ViewItemContainerChangeEventHandler {
 
 }

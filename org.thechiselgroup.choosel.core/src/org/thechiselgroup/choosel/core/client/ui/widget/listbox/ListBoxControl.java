@@ -72,6 +72,7 @@ public class ListBoxControl<T> implements WidgetAdaptable {
         return presenter.isVisible();
     }
 
+    // TODO this should be changed to addChangeHandler (this is a memory bug)
     // TODO allow for multiple change handlers
     public void setChangeHandler(ChangeHandler changeHandler) {
         assert changeHandler != null;

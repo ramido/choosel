@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -96,6 +97,15 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
+    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
+        for (ViewItem viewItem : event.getDelta().getAddedViewItems()) {
+            onViewItemCreated(viewItem);
+        }
+        for (ViewItem viewItem : event.getDelta().getRemovedViewItems()) {
+            onViewItemRemoved(viewItem);
+        }
+    }
+
     public void onViewItemCreated(ViewItem viewItem) {
         assert viewItem != null;
         assert !popupManagers.containsKey(viewItem.getViewItemID());
@@ -104,7 +114,6 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
                 createPopupManager(viewItem));
     }
 
-    @Override
     public void onViewItemRemoved(ViewItem viewItem) {
         assert viewItem != null;
         assert popupManagers.containsKey(viewItem.getViewItemID());

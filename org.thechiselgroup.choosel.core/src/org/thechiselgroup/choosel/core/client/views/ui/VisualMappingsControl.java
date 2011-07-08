@@ -15,11 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.ui;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 
 public interface VisualMappingsControl extends WidgetAdaptable {
 
-    void updateConfiguration(ResourceSet resources);
+    void updateConfigurationForChangedSlotMapping(Slot slot,
+            ManagedViewItemValueResolver oldResolver,
+            ManagedViewItemValueResolver currentResolver);
+
+    void updateConfigurationForChangedViewItems(
+            LightweightCollection<ViewItem> viewItems);
 
 }

@@ -16,13 +16,15 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver {
+public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
+        implements PropertyDependantViewItemValueResolver {
 
     protected final String property;
 
@@ -34,19 +36,38 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver {
 
     public FirstResourcePropertyResolver(String property, DataType dataType,
             Subset subset) {
+
         super(subset);
+
         assert property != null;
         assert dataType != null;
+
         this.dataType = dataType;
         this.property = property;
+    }
 
+    // TODO test
+    @Override
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        assert viewItem != null;
+        assert context != null;
+
+        ResourceSet resources = viewItem.getResources();
+
+        if (resources.isEmpty()) {
+            return false;
+        }
+
+        Resource resource = ResourceSetUtils.firstResource(resources);
+
+        // XXX need to check for property type
+        return resource.containsProperty(property)
+                && resource.getValue(property) != null;
     }
 
     @Override
-    public String getResolverId() {
-        return "FirstResourcePropertyResolver:" + property;
-    }
-
     public String getProperty() {
         return property;
     }
@@ -54,6 +75,10 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver {
     @Override
     public Object resolve(ViewItem viewItem,
             ViewItemValueResolverContext context, Subset subset) {
+
+        assert canResolve(viewItem, context);
+
+        // TODO what if viewItem could be resolved, but not for subset?
         ResourceSet resources = viewItem.getResources(subset);
         return ResourceSetUtils.firstResource(resources).getValue(property);
     }

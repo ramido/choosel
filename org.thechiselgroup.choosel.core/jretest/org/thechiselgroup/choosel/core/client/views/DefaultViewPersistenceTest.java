@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
@@ -101,11 +100,11 @@ public class DefaultViewPersistenceTest {
         resource.putValue("property1", "value1");
         resource.putValue("property2", "value2");
 
-        originalViewModel.getSlotMappingConfiguration().setResolver(textSlot,
+        originalViewModel.setResolver(textSlot,
                 new FirstResourcePropertyResolver("property1", DataType.TEXT));
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(resource));
-        originalViewModel.getSlotMappingConfiguration().setResolver(textSlot,
+        originalViewModel.setResolver(textSlot,
                 new FirstResourcePropertyResolver("property2", DataType.TEXT));
 
         // 2. save first view
@@ -218,9 +217,11 @@ public class DefaultViewPersistenceTest {
             DefaultSelectionModel selectionModel = new DefaultSelectionModel(
                     mock(LabelProvider.class), resourceSetFactory);
 
-            originalViewModel = DefaultViewModelTestHelper.createTestViewModel(
-                    resourceModel.getResources(), new DefaultResourceSet(),
-                    selectionModel.getSelection(), textSlot, numberSlot);
+            DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
+            helper.setSlots(textSlot, numberSlot);
+            helper.setContainedResources(resourceModel.getResources());
+            helper.setSelectedResources(selectionModel.getSelection());
+            originalViewModel = helper.createTestViewModel();
             originalView = createView(originalViewModel, resourceModel,
                     selectionModel);
         }
@@ -231,9 +232,11 @@ public class DefaultViewPersistenceTest {
             DefaultSelectionModel selectionModel = new DefaultSelectionModel(
                     mock(LabelProvider.class), resourceSetFactory);
 
-            restoredViewModel = DefaultViewModelTestHelper.createTestViewModel(
-                    resourceModel.getResources(), new DefaultResourceSet(),
-                    selectionModel.getSelection(), textSlot, numberSlot);
+            DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
+            helper.setSlots(textSlot, numberSlot);
+            helper.setContainedResources(resourceModel.getResources());
+            helper.setSelectedResources(selectionModel.getSelection());
+            restoredViewModel = helper.createTestViewModel();
             restoredView = createView(restoredViewModel, resourceModel,
                     selectionModel);
         }
@@ -259,8 +262,8 @@ public class DefaultViewPersistenceTest {
                 toResourceSet(r1, r2, r3));
         originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
-        originalViewModel.getSlotMappingConfiguration().setResolver(numberSlot,
-                new CalculationResolver("property1", calculation));
+        originalViewModel.setResolver(numberSlot, new CalculationResolver(
+                "property1", calculation));
 
         // 2. save first view
         DefaultResourceSetCollector collector = new DefaultResourceSetCollector();

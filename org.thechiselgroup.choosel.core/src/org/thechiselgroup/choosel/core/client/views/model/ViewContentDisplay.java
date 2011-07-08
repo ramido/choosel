@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -30,6 +30,9 @@ import org.thechiselgroup.choosel.core.client.views.View;
  * @see View
  * @see ViewItem
  */
+// TODO rename to visualization display or visualization renderer
+// NOTE: 3 main items: slots, properties, functionality interfaces
+// NOTE: has lifecycle (which should be described)
 public interface ViewContentDisplay extends ViewItemRenderer, WidgetAdaptable,
         Disposable, Persistable, Adaptable {
 
@@ -55,6 +58,8 @@ public interface ViewContentDisplay extends ViewItemRenderer, WidgetAdaptable,
      * @return {@link SidePanelSection}s for configuring this view content
      *         display.
      */
+    // XXX view content displays should not expose side panel sections
+    // instead they should provide interfaces they can be adapted to
     SidePanelSection[] getSidePanelSections();
 
     /**

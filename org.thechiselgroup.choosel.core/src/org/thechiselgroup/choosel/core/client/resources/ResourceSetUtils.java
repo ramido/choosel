@@ -47,6 +47,10 @@ public final class ResourceSetUtils {
         DataTypeToListMap<String> result = new DataTypeToListMap<String>();
         Resource resource = resourceSet.getFirstResource();
 
+        if (resource == null) {
+            return result;
+        }
+
         for (Entry<String, Serializable> entry : resource.getProperties()
                 .entrySet()) {
 

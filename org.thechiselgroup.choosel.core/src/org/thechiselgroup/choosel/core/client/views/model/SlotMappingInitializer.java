@@ -15,19 +15,36 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import java.util.Map;
+
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 /**
- * this class defines default mappings between slots that are in the view and
- * Resolvers that are used to resolve that slot.
- * 
- * It takes in a slotMappingConfiguration and adds the mappings to that
- * configuration
+ * Calculates default {@link ViewItemValueResolver}s. Used to set
+ * {@link ViewItemValueResolver}s on a {@link ViewModel} if the mappings for
+ * some {@link Slot}s are invalid.
  */
+// TODO rename to DefaultViewItemValueResolverProvider
 public interface SlotMappingInitializer {
 
-    void initializeMappings(ResourceSet resources,
-            ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration slotMappingConfiguration);
+    /**
+     * Calculates default {@link ViewItemValueResolver}s.
+     * 
+     * @param viewResources
+     *            All {@link Resource}s that are contained in the
+     *            {@link ViewModel}.
+     * @param slotsToUpdate
+     *            {@link Slot}s for which default {@link ViewItemValueResolver}s
+     *            should be calculated.
+     * 
+     * @return A map that contains {@link ViewItemValueResolver}s for some or
+     *         all of the {@link Slot}s specified in {@code slotsToUpdate}.
+     *         There must be no {@link Slot}s in the result that are not
+     *         contained in {@code slotsToUpdate}.
+     */
+    Map<Slot, ViewItemValueResolver> getResolvers(ResourceSet viewResources,
+            Slot[] slotsToUpdate);
 
 }

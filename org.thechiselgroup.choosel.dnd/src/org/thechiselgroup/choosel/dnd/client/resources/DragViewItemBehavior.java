@@ -20,6 +20,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
 /**
@@ -73,6 +74,15 @@ public class DragViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
+    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
+        for (ViewItem viewItem : event.getDelta().getAddedViewItems()) {
+            onViewItemCreated(viewItem);
+        }
+        for (ViewItem viewItem : event.getDelta().getRemovedViewItems()) {
+            onViewItemRemoved(viewItem);
+        }
+    }
+
     public void onViewItemCreated(ViewItem viewItem) {
         assert viewItem != null;
         assert !dragEnablers.containsKey(viewItem.getViewItemID());
@@ -81,7 +91,6 @@ public class DragViewItemBehavior implements ViewItemBehavior {
                 dragEnablerFactory.createDragEnabler(viewItem));
     }
 
-    @Override
     public void onViewItemRemoved(ViewItem viewItem) {
         assert viewItem != null;
         assert dragEnablers.containsKey(viewItem.getViewItemID());

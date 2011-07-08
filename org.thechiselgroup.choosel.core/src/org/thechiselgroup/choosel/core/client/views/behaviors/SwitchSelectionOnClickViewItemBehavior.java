@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
 /**
@@ -50,11 +51,7 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
     }
 
     @Override
-    public void onViewItemCreated(ViewItem viewItem) {
-    }
-
-    @Override
-    public void onViewItemRemoved(ViewItem viewItem) {
+    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
     }
 
     protected void switchSelection(ViewItem viewItem) {

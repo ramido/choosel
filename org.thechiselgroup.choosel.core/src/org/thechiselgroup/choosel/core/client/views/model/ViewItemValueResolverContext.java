@@ -17,8 +17,16 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
+/**
+ * Provides access to {@link ViewItemValueResolver}s by {@link Slot}.
+ * 
+ * @author Lars Grammel
+ */
+// TODO rename to ?
 public interface ViewItemValueResolverContext {
 
+    // TODO documentation
+    // TODO exception
     ViewItemValueResolver getResolver(Slot slot);
 
 }

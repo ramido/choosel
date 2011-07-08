@@ -15,22 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+public interface PropertyDependantViewItemValueResolver extends
+        ViewItemValueResolver {
 
-public class NullViewItemResolver implements ViewItemValueResolver {
-
-    private static final String ID = "NullViewItemResolver";
-
-    @Override
-    public String getResolverId() {
-        return ID;
-    }
-
-    @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
-        return null;
-    }
+    public String getProperty();
 
 }

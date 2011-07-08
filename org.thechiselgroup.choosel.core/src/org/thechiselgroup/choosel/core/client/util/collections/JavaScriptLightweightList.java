@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -110,6 +111,15 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
         }
 
         return this.jsList.get(i);
+    }
+
+    @Override
+    public T getFirstElement() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        return get(0);
     }
 
     @Override

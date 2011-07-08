@@ -26,8 +26,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  * 
  * @author Lars Grammel
  */
-public abstract class SubsetViewItemValueResolver implements
-        ViewItemValueResolver {
+public abstract class SubsetViewItemValueResolver extends
+        AbstractSimpleViewItemValueResolver {
 
     private final Subset subset;
 

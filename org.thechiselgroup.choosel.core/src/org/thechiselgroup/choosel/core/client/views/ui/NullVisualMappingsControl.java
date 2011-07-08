@@ -15,7 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.ui;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -27,7 +30,15 @@ public class NullVisualMappingsControl implements VisualMappingsControl {
     }
 
     @Override
-    public void updateConfiguration(ResourceSet resources) {
+    public void updateConfigurationForChangedSlotMapping(Slot slot,
+            ManagedViewItemValueResolver oldResolver,
+            ManagedViewItemValueResolver currentResolver) {
+
+    }
+
+    @Override
+    public void updateConfigurationForChangedViewItems(
+            LightweightCollection<ViewItem> viewItems) {
     }
 
 }

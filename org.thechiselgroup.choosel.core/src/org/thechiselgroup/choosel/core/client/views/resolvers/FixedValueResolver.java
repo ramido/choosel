@@ -15,21 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class FixedValueResolver implements ViewItemValueResolver {
+// TODO expose data type
+public class FixedValueResolver extends AbstractSimpleViewItemValueResolver {
 
     private final Object value;
 
-    // TODO pass in ID
-    public FixedValueResolver(Object value) {
+    private final DataType dataType;
+
+    public FixedValueResolver(Object value, DataType dataType) {
+        assert value != null;
+        assert dataType != null;
+
         this.value = value;
+        this.dataType = dataType;
     }
 
     @Override
-    public String getResolverId() {
-        return "FixedValueResolver" + value;
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        return true;
     }
 
     @Override

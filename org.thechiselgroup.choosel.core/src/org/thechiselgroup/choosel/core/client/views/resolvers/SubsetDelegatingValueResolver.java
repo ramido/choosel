@@ -15,35 +15,38 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class SubsetDelegatingValueResolver implements
-        DelegatingViewItemValueResolver {
+public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
 
     private Slot slot;
 
+    private LightweightCollection<Slot> slots;
+
     private Subset subset;
 
-    private String id;
-
-    public SubsetDelegatingValueResolver(String id, Slot slot, Subset subset) {
+    public SubsetDelegatingValueResolver(Slot slot, Subset subset) {
         this.slot = slot;
         this.subset = subset;
-        this.id = id;
-    }
 
-    // TODO
-    @Override
-    public String getResolverId() {
-        return id;
+        this.slots = LightweightCollections.toCollection(slot);
     }
 
     @Override
-    public Slot getTargetSlot() {
-        return slot;
+    public boolean canResolve(ViewItem viewItem,
+            ViewItemValueResolverContext context) {
+
+        return context.getResolver(slot).canResolve(viewItem, context);
+    }
+
+    @Override
+    public LightweightCollection<Slot> getTargetSlots() {
+        return slots;
     }
 
     @Override
