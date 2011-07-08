@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetPresenterDropCommandFactory;
 
 public class ResourceSetPresenterDropCommandFactoryTest {
@@ -64,7 +64,7 @@ public class ResourceSetPresenterDropCommandFactoryTest {
     private ResourceModel resourceModel;
 
     @Mock
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     @Test
     public void canDropByDefault() {

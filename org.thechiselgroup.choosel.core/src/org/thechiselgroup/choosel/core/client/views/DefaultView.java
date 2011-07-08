@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationPersistableAdapter;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
 
 import com.google.gwt.core.client.GWT;
@@ -107,7 +107,7 @@ public class DefaultView implements View {
 
     private ViewContentDisplay contentDisplay;
 
-    private ViewModel model;
+    private VisualizationModel model;
 
     private ResourceModel resourceModel;
 
@@ -136,7 +136,7 @@ public class DefaultView implements View {
             Presenter resourceModelPresenter,
             VisualMappingsControl visualMappingsControl,
             LightweightCollection<SidePanelSection> sidePanelSections,
-            ViewModel viewModel, ResourceModel resourceModel,
+            VisualizationModel viewModel, ResourceModel resourceModel,
             SelectionModel selectionModel) {
 
         assert label != null;
@@ -217,7 +217,7 @@ public class DefaultView implements View {
     }
 
     @Override
-    public ViewModel getModel() {
+    public VisualizationModel getModel() {
         return model;
     }
 

@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 
 public interface View extends Adaptable, WidgetAdaptable, Initializable,
         Disposable, Persistable {
@@ -32,9 +32,9 @@ public interface View extends Adaptable, WidgetAdaptable, Initializable,
     String getLabel();
 
     /**
-     * @return {@link ViewModel} that is used in this {@link View}.
+     * @return {@link VisualizationModel} that is used in this {@link View}.
      */
-    ViewModel getModel();
+    VisualizationModel getModel();
 
     ResourceModel getResourceModel();
 

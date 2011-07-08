@@ -43,16 +43,16 @@ public interface VisualItemRenderer {
      * <p>
      * <b>IMPORTANT:</b> The caller should guarantee that all {@link Slot}s can
      * always be resolved on the {@link VisualItem}s in the
-     * {@link VisualItemRenderer}. If a {@link VisualItem} cannot resolve all slots
-     * any more, it should be removed.
+     * {@link VisualItemRenderer}. If a {@link VisualItem} cannot resolve all
+     * slots any more, it should be removed.
      * </p>
      * 
      * @param addedViewItems
      *            {@link VisualItem}s that have been added to the view. Is never
      *            <code>null</code>, but can be an empty set.
      * @param updatedViewItems
-     *            {@link VisualItem}s which have changed (status, data, etc.) such
-     *            that their representation needs to be updated. Is never
+     *            {@link VisualItem}s which have changed (status, data, etc.)
+     *            such that their representation needs to be updated. Is never
      *            <code>null</code>, but can be an empty set.
      * @param removedViewItems
      *            {@link VisualItem}s that have been removed from the view. Is

@@ -26,9 +26,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 
-public class DefaultViewItemResolutionErrorModelTest {
+public class DefaultVisualItemResolutionErrorModelTest {
 
-    private DefaultViewItemResolutionErrorModel underTest;
+    private DefaultVisualItemResolutionErrorModel underTest;
 
     @Mock
     private VisualItem viewItem1;
@@ -292,6 +292,6 @@ public class DefaultViewItemResolutionErrorModelTest {
         when(viewItem1.getId()).thenReturn("v1");
         when(viewItem2.getId()).thenReturn("v2");
 
-        underTest = new DefaultViewItemResolutionErrorModel();
+        underTest = new DefaultVisualItemResolutionErrorModel();
     }
 }

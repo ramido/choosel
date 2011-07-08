@@ -48,8 +48,8 @@ import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlight
 import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
-import org.thechiselgroup.choosel.core.client.views.model.FixedSlotResolversViewModelDecorator;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.views.model.FixedSlotResolversVisualizationModelDecorator;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
@@ -62,7 +62,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEventHandler;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
@@ -229,8 +229,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         resourceGrouping.setResourceSet(resourceModel.getResources());
 
-        ViewModel viewModel = new FixedSlotResolversViewModelDecorator(
-                new DefaultViewModel(contentDisplay,
+        VisualizationModel viewModel = new FixedSlotResolversVisualizationModelDecorator(
+                new DefaultVisualizationModel(contentDisplay,
                         selectionModel.getSelectionProxy(),
                         hoverModel.getResources(), viewItemBehaviors,
                         resourceGrouping, logger), fixedSlotResolvers);

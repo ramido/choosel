@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolver;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,12 +35,12 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 public class SlotMappingConfigurationPersistableAdapterTest {
 
-    private FixedSlotResolversViewModelDecorator underTest;
+    private FixedSlotResolversVisualizationModelDecorator underTest;
 
     private Slot slot1;
 
     @Mock
-    private ViewModel delegate;
+    private VisualizationModel delegate;
 
     @Test
     public void doesNotSaveFixedMappingsToMemento() {
@@ -50,7 +50,7 @@ public class SlotMappingConfigurationPersistableAdapterTest {
         when(delegate.getSlots()).thenReturn(new Slot[] { slot1 });
         when(delegate.isConfigured(any(Slot.class))).thenReturn(true);
 
-        underTest = new FixedSlotResolversViewModelDecorator(delegate,
+        underTest = new FixedSlotResolversVisualizationModelDecorator(delegate,
                 fixedSlotResolvers);
 
         Memento result = new SlotMappingConfigurationPersistableAdapter(

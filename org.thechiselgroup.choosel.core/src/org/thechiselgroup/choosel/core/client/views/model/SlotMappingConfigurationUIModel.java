@@ -53,13 +53,13 @@ public class SlotMappingConfigurationUIModel {
 
     private SlotMappingInitializer slotMappingInitializer;
 
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     private final VisualItemResolutionErrorModel errorModel;
 
     public SlotMappingConfigurationUIModel(
             ViewItemValueResolverFactoryProvider resolverProvider,
-            SlotMappingInitializer slotMappingInitializer, ViewModel viewModel,
+            SlotMappingInitializer slotMappingInitializer, VisualizationModel viewModel,
             VisualItemResolutionErrorModel errorModel) {
 
         assert resolverProvider != null;

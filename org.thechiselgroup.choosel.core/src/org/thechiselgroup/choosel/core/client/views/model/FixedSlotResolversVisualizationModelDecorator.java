@@ -29,22 +29,22 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Decorator for {@link ViewModel} that sets fixed {@link ViewItemValueResolver}
+ * Decorator for {@link VisualizationModel} that sets fixed {@link ViewItemValueResolver}
  * s for one or more {@link Slot}s. The fixed slots are not exposed by this
  * decorator, only the configurable ones.
  * 
  * @author Lars Grammel
  */
 // TODO needs more tests & features, e.g. for the error model decoration
-public class FixedSlotResolversViewModelDecorator implements ViewModel {
+public class FixedSlotResolversVisualizationModelDecorator implements VisualizationModel {
 
-    private ViewModel delegate;
+    private VisualizationModel delegate;
 
     private Map<Slot, ViewItemValueResolver> fixedSlotResolvers;
 
     private Slot[] slots;
 
-    public FixedSlotResolversViewModelDecorator(ViewModel delegate,
+    public FixedSlotResolversVisualizationModelDecorator(VisualizationModel delegate,
             Map<Slot, ViewItemValueResolver> fixedSlotResolvers) {
 
         assert delegate != null;
@@ -175,7 +175,7 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
      * slots that are in the slotMappingConfiguration of the delegate. These
      * slots represent slots that the user is able to configure in the UI
      */
-    private void initAvailableSlots(ViewModel delegate,
+    private void initAvailableSlots(VisualizationModel delegate,
             Map<Slot, ViewItemValueResolver> fixedSlotResolvers) {
         ArrayList<Slot> slotList = new ArrayList<Slot>();
         slotList.addAll(Arrays.asList(delegate.getSlots()));

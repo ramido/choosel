@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolver;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolver;
 
 import org.junit.Before;
 import org.junit.Test;

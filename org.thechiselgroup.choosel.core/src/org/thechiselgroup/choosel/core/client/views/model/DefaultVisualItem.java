@@ -123,7 +123,7 @@ public class DefaultVisualItem implements Disposable, VisualItem {
      * </p>
      * <p>
      * We have chosen to provide an explicit clear method that is called by
-     * {@link DefaultViewModel} instead of listening for slot mapping changes,
+     * {@link DefaultVisualizationModel} instead of listening for slot mapping changes,
      * because there are several constraints on the execution order (e.g. the
      * cache needs to be cleared before the view is re-rendered) and those
      * constraints are easier to develop, test and understand when they are

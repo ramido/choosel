@@ -40,15 +40,15 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
 // TODO migrate to change default slot mapping initializer
-public class DefaultViewModelInitialValuesTest {
+public class DefaultVisualizationModelInitialValuesTest {
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
     private Slot textSlot;
 
     private Slot numberSlot;
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     @Mock
     private VisualItemResolutionErrorModel errorModel;
@@ -103,7 +103,7 @@ public class DefaultViewModelInitialValuesTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         helper.setSlots(textSlot, numberSlot);
 
         underTest = helper.createTestViewModel();

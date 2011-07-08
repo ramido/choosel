@@ -22,7 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForExactResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.*;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.*;
 
 import java.util.NoSuchElementException;
 
@@ -39,20 +39,20 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 /**
  * <p>
  * Tests the {@link ViewContentDisplayCallback} exposed by
- * {@link DefaultViewModel} to its {@link ViewContentDisplay}.
+ * {@link DefaultVisualizationModel} to its {@link ViewContentDisplay}.
  * </p>
  * 
  * @author Lars Grammel
  */
 // TODO extract AbstractDefaultViewModelTest superclass
 // TODO handler
-public class DefaultViewModelViewContentDisplayCallbackTest {
+public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
     private Slot slot;
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     private ViewContentDisplayCallback callback;
 
@@ -183,7 +183,7 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         slot = helper.createSlots(DataType.TEXT)[0];
 
         underTest = helper.createTestViewModel();

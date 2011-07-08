@@ -34,7 +34,7 @@ import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.dnd.client.resources.SelectionPresenterDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -68,7 +68,7 @@ public class SelectionPresenterDropCommandFactoryTest {
     private SelectionModel selectionModel;
 
     @Mock
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     @Test
     public void canDropWhenIntersectionExists() {

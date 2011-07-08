@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 
 /**
  * Model of the {@link VisualItem}/{@link Slot} resolutions that cannot be
- * computed in a {@link ViewModel}.
+ * computed in a {@link VisualizationModel}.
  * 
  * @author Lars Grammel
  */

@@ -24,11 +24,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.ContainsResourceGrouping;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class VisualizationWidget<T extends ViewContentDisplay> extends
         SimplePanel implements HasResourceCategorizer, ContainsResourceGrouping {
 
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     private T contentDisplay;
 
@@ -53,7 +53,7 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
-        this.viewModel = new DefaultViewModel(contentDisplay, selectedResource,
+        this.viewModel = new DefaultVisualizationModel(contentDisplay, selectedResource,
                 highlightedResources, viewItemBehavior, new ResourceGrouping(
                         new ResourceByUriMultiCategorizer(),
                         new DefaultResourceSetFactory()), Logger.getLogger(""));

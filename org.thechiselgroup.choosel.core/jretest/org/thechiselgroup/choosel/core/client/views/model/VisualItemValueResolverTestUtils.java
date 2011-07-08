@@ -33,7 +33,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * 
  * @author Lars Grammel
  */
-public final class ViewItemValueResolverTestUtils {
+public final class VisualItemValueResolverTestUtils {
 
     public static Slot[] createSlots(DataType... dataTypes) {
         Slot[] slots = new Slot[dataTypes.length];
@@ -127,7 +127,7 @@ public final class ViewItemValueResolverTestUtils {
                 any(VisualItemValueResolverContext.class)));
     }
 
-    private ViewItemValueResolverTestUtils() {
+    private VisualItemValueResolverTestUtils() {
     }
 
 }
