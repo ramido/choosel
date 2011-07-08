@@ -28,8 +28,7 @@ import org.thechiselgroup.choosel.core.client.views.View;
  * 
  * @see View
  */
-// TODO rename to VisualItem or VisualElement or VisualizationElement?
-public interface ViewItem {
+public interface VisualItem {
 
     public static enum Status {
 
@@ -49,7 +48,7 @@ public interface ViewItem {
     Object getDisplayObject();
 
     /**
-     * @return All resources that are contained in this {@link ViewItem}.
+     * @return All resources that are contained in this {@link VisualItem}.
      */
     ResourceSet getResources();
 
@@ -67,7 +66,7 @@ public interface ViewItem {
     /**
      * Returns the identifier of the view item.
      */
-    String getViewItemID();
+    String getId();
 
     /**
      * @return true, if the status of the given subset is any of the provided
@@ -82,7 +81,7 @@ public interface ViewItem {
      * Separating the visual representation from the event handling facilitates
      * customization and maintenance.
      */
-    void reportInteraction(ViewItemInteraction interaction);
+    void reportInteraction(VisualItemInteraction interaction);
 
     /**
      * The display object is an arbitrary objects that can be set by a view

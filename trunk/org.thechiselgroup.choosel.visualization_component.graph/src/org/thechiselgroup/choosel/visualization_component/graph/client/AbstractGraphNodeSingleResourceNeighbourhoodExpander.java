@@ -21,12 +21,12 @@ import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCallback;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * Frame for expanding neighbourhoods on {@link ViewItem}s with a single
+ * Frame for expanding neighbourhoods on {@link VisualItem}s with a single
  * {@link Resource}.
  * 
  * @author Lars Grammel
@@ -46,7 +46,7 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
     }
 
     @Override
-    public final void expand(ViewItem viewItem, GraphNodeExpansionCallback graph) {
+    public final void expand(VisualItem viewItem, GraphNodeExpansionCallback graph) {
         assert viewItem != null;
         assert graph != null;
 
@@ -65,11 +65,11 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
      *            {@link Resource}s in neighbourhood (have been added to the
      *            resource manager already) already
      */
-    protected abstract void expandNeighbourhood(ViewItem viewItem,
+    protected abstract void expandNeighbourhood(VisualItem viewItem,
             Resource resource, GraphNodeExpansionCallback graph,
             List<Resource> neighbourhood);
 
-    protected final Resource getSingleResource(ViewItem viewItem) {
+    protected final Resource getSingleResource(VisualItem viewItem) {
         assert viewItem.getResources().size() == 1;
         return viewItem.getResources().getFirstResource();
     }
@@ -80,13 +80,13 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
      * @param resource
      *            TODO
      */
-    protected abstract boolean isNeighbourhoodLoaded(ViewItem viewItem,
+    protected abstract boolean isNeighbourhoodLoaded(VisualItem viewItem,
             Resource resource);
 
-    protected abstract void loadNeighbourhood(ViewItem viewItem,
+    protected abstract void loadNeighbourhood(VisualItem viewItem,
             Resource resource, AsyncCallback<ResourceNeighbourhood> callback);
 
-    private void loadNeighbourhood(final ViewItem viewItem,
+    private void loadNeighbourhood(final VisualItem viewItem,
             final Resource resource, final GraphNodeExpansionCallback graph) {
 
         loadNeighbourhood(viewItem, resource,
@@ -106,6 +106,6 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
     }
 
     protected abstract List<Resource> reconstructNeighbourhood(
-            ViewItem viewItem, Resource resource);
+            VisualItem viewItem, Resource resource);
 
 }

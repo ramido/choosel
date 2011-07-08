@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 
 /**
  * <p>
- * Default implementation of {@link ViewItemResolutionErrorModel}.
+ * Default implementation of {@link VisualItemResolutionErrorModel}.
  * </p>
  * <p>
  * IMPLEMENTATION NOTE: This class assumes that the {@link Slot}s that are
@@ -37,21 +37,21 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
  * @author Lars Grammel
  */
 public class DefaultViewItemResolutionErrorModel implements
-        ViewItemResolutionErrorModel, Cloneable {
+        VisualItemResolutionErrorModel, Cloneable {
 
     /**
      * Contains ids of all slots that have errors as keys, and the
-     * {@link ViewItem}s that could not be resolved for that slot as values.
+     * {@link VisualItem}s that could not be resolved for that slot as values.
      * Slots without errors must not be contained.
      * 
      * @see #assertInvariantIntegrity()
      */
-    private Map<String, ArrayListToLightweightListAdapter<ViewItem>> errorsBySlotId = CollectionFactory
+    private Map<String, ArrayListToLightweightListAdapter<VisualItem>> errorsBySlotId = CollectionFactory
             .createStringMap();
 
     /**
-     * Contains ids of all {@link ViewItem}s that have errors as keys, and the
-     * {@link Slots}s that could not be resolved for that {@link ViewItem} as
+     * Contains ids of all {@link VisualItem}s that have errors as keys, and the
+     * {@link Slots}s that could not be resolved for that {@link VisualItem} as
      * values. ViewItems without errors must not be contained.
      * 
      * @see #assertInvariantIntegrity()
@@ -61,10 +61,10 @@ public class DefaultViewItemResolutionErrorModel implements
 
     private ArrayListToLightweightListAdapter<Slot> slotsWithErrors = new ArrayListToLightweightListAdapter<Slot>();
 
-    private ArrayListToLightweightListAdapter<ViewItem> viewItemsWithErrors = new ArrayListToLightweightListAdapter<ViewItem>();
+    private ArrayListToLightweightListAdapter<VisualItem> viewItemsWithErrors = new ArrayListToLightweightListAdapter<VisualItem>();
 
-    private void addErrorSlotToViewItem(ViewItem viewItem, Slot slot) {
-        String viewItemId = viewItem.getViewItemID();
+    private void addErrorSlotToViewItem(VisualItem viewItem, Slot slot) {
+        String viewItemId = viewItem.getId();
 
         if (!errorsByViewItemId.containsKey(viewItemId)) {
             errorsByViewItemId.put(viewItemId,
@@ -79,16 +79,16 @@ public class DefaultViewItemResolutionErrorModel implements
         }
     }
 
-    private void addErrorViewItemToSlot(Slot slot, ViewItem viewItem) {
+    private void addErrorViewItemToSlot(Slot slot, VisualItem viewItem) {
         String slotId = slot.getId();
 
         if (!errorsBySlotId.containsKey(slotId)) {
             errorsBySlotId.put(slotId,
-                    new ArrayListToLightweightListAdapter<ViewItem>());
+                    new ArrayListToLightweightListAdapter<VisualItem>());
             slotsWithErrors.add(slot);
         }
 
-        ArrayListToLightweightListAdapter<ViewItem> slotErrors = errorsBySlotId
+        ArrayListToLightweightListAdapter<VisualItem> slotErrors = errorsBySlotId
                 .get(slotId);
         if (!slotErrors.contains(viewItem)) {
             slotErrors.add(viewItem);
@@ -122,18 +122,18 @@ public class DefaultViewItemResolutionErrorModel implements
 
     private void assertViewItemsIntegrity() {
         assert errorsByViewItemId.size() == viewItemsWithErrors.size();
-        for (ViewItem viewItem : viewItemsWithErrors) {
-            assert errorsByViewItemId.containsKey(viewItem.getViewItemID()) : "ViewItem with id "
-                    + viewItem.getViewItemID()
+        for (VisualItem viewItem : viewItemsWithErrors) {
+            assert errorsByViewItemId.containsKey(viewItem.getId()) : "ViewItem with id "
+                    + viewItem.getId()
                     + " not contained in viewItemsWithErrors";
         }
     }
 
-    public void clearErrors(LightweightCollection<ViewItem> viewItems) {
+    public void clearErrors(LightweightCollection<VisualItem> viewItems) {
         assert viewItems != null;
         assertInvariantIntegrity();
 
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             clearErrors(viewItem);
         }
 
@@ -149,9 +149,9 @@ public class DefaultViewItemResolutionErrorModel implements
         }
 
         slotsWithErrors.remove(slot);
-        ArrayListToLightweightListAdapter<ViewItem> removedViewItems = errorsBySlotId
+        ArrayListToLightweightListAdapter<VisualItem> removedViewItems = errorsBySlotId
                 .remove(slot.getId());
-        for (ViewItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : removedViewItems) {
             removeSlotFromViewItemErrors(slot, viewItem);
         }
 
@@ -160,7 +160,7 @@ public class DefaultViewItemResolutionErrorModel implements
         assert !hasErrors(slot);
     }
 
-    public void clearErrors(ViewItem viewItem) {
+    public void clearErrors(VisualItem viewItem) {
         assert viewItem != null;
         assertInvariantIntegrity();
 
@@ -170,13 +170,13 @@ public class DefaultViewItemResolutionErrorModel implements
 
         viewItemsWithErrors.remove(viewItem);
         ArrayListToLightweightListAdapter<Slot> removedSlots = errorsByViewItemId
-                .remove(viewItem.getViewItemID());
+                .remove(viewItem.getId());
         for (Slot slot : removedSlots) {
             removeViewItemFromSlotErrors(viewItem, slot);
         }
 
         assertInvariantIntegrity();
-        assert !errorsByViewItemId.containsKey(viewItem.getViewItemID());
+        assert !errorsByViewItemId.containsKey(viewItem.getId());
         assert !hasErrors(viewItem);
     }
 
@@ -186,23 +186,23 @@ public class DefaultViewItemResolutionErrorModel implements
     }
 
     @Override
-    public LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem) {
+    public LightweightCollection<Slot> getSlotsWithErrors(VisualItem viewItem) {
         assert viewItem != null;
 
         if (!hasErrors(viewItem)) {
             return LightweightCollections.emptyCollection();
         }
 
-        return errorsByViewItemId.get(viewItem.getViewItemID());
+        return errorsByViewItemId.get(viewItem.getId());
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItemsWithErrors() {
+    public LightweightCollection<VisualItem> getViewItemsWithErrors() {
         return viewItemsWithErrors;
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItemsWithErrors(Slot slot) {
+    public LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot) {
         assert slot != null;
 
         if (!hasErrors(slot)) {
@@ -225,13 +225,13 @@ public class DefaultViewItemResolutionErrorModel implements
     }
 
     @Override
-    public boolean hasErrors(ViewItem viewItem) {
+    public boolean hasErrors(VisualItem viewItem) {
         assert viewItem != null;
 
-        return errorsByViewItemId.containsKey(viewItem.getViewItemID());
+        return errorsByViewItemId.containsKey(viewItem.getId());
     }
 
-    public void removeError(Slot slot, ViewItem viewItem) {
+    public void removeError(Slot slot, VisualItem viewItem) {
         assert viewItem != null;
         assert slot != null;
         assertInvariantIntegrity();
@@ -242,24 +242,24 @@ public class DefaultViewItemResolutionErrorModel implements
         assertInvariantIntegrity();
     }
 
-    public void removeSlotFromViewItemErrors(Slot slot, ViewItem viewItem) {
-        assert errorsByViewItemId.containsKey(viewItem.getViewItemID());
+    public void removeSlotFromViewItemErrors(Slot slot, VisualItem viewItem) {
+        assert errorsByViewItemId.containsKey(viewItem.getId());
 
         ArrayListToLightweightListAdapter<Slot> slotErrors = errorsByViewItemId
-                .get(viewItem.getViewItemID());
+                .get(viewItem.getId());
         slotErrors.remove(slot);
 
         // remove slot if no errors left
         if (slotErrors.isEmpty()) {
-            errorsByViewItemId.remove(viewItem.getViewItemID());
+            errorsByViewItemId.remove(viewItem.getId());
             viewItemsWithErrors.remove(viewItem);
         }
     }
 
-    private void removeViewItemFromSlotErrors(ViewItem viewItem, Slot slot) {
+    private void removeViewItemFromSlotErrors(VisualItem viewItem, Slot slot) {
         assert errorsBySlotId.containsKey(slot.getId());
 
-        ArrayListToLightweightListAdapter<ViewItem> slotErrors = errorsBySlotId
+        ArrayListToLightweightListAdapter<VisualItem> slotErrors = errorsBySlotId
                 .get(slot.getId());
         slotErrors.remove(viewItem);
 
@@ -270,7 +270,7 @@ public class DefaultViewItemResolutionErrorModel implements
         }
     }
 
-    public void reportError(Slot slot, ViewItem viewItem) {
+    public void reportError(Slot slot, VisualItem viewItem) {
         assert slot != null;
         assert viewItem != null;
         assertInvariantIntegrity();
@@ -282,13 +282,13 @@ public class DefaultViewItemResolutionErrorModel implements
     }
 
     public void reportErrors(Slot slot,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         assert slot != null;
         assert viewItems != null;
         assertInvariantIntegrity();
 
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             reportError(slot, viewItem);
         }
 

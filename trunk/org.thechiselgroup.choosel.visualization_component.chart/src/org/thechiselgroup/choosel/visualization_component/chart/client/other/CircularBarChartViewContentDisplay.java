@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.chart.client.other;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;

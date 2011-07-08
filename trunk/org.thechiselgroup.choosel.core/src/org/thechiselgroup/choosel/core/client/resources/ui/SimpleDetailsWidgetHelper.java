@@ -15,16 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.ui;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SimpleDetailsWidgetHelper implements DetailsWidgetHelper {
 
-    public Widget createDetailsWidget(ViewItem viewItem) {
+    public Widget createDetailsWidget(VisualItem viewItem) {
         return new HTML("<b style='white-space: nowrap;'>"
-                + viewItem.getViewItemID()
+                + viewItem.getId()
                 + "</b><br/><span style='white-space: nowrap;'>"
                 + viewItem.getResources().size() + " items<span>");
     }

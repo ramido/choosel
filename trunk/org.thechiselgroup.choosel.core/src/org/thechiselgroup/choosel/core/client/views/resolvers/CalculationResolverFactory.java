@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public class CalculationResolverFactory extends
         PropertyDependantViewItemValueResolverFactory {
@@ -40,7 +40,7 @@ public class CalculationResolverFactory extends
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         if (!slot.getDataType().equals(DataType.NUMBER)) {
             return false;
@@ -55,7 +55,7 @@ public class CalculationResolverFactory extends
      */
     @Override
     public ManagedViewItemValueResolver create(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         List<String> properties = getSharedProperties(viewItems);
         assert !properties.isEmpty();

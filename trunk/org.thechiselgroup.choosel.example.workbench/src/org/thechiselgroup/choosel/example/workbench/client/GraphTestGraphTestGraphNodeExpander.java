@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.example.workbench.client;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.visualization_component.graph.client.AbstractGraphNodeExpander;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphNodeExpander;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphNodeExpansionCallback;
@@ -25,7 +25,7 @@ public class GraphTestGraphTestGraphNodeExpander extends
         AbstractGraphNodeExpander implements GraphNodeExpander {
 
     @Override
-    public void expand(ViewItem resourceItem,
+    public void expand(VisualItem resourceItem,
             GraphNodeExpansionCallback expansionCallback) {
 
         // TODO better resource item handling

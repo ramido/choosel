@@ -15,19 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
+
 import com.google.gwt.event.shared.GwtEvent;
 
-public class ViewItemContainerChangeEvent extends
-        GwtEvent<ViewItemContainerChangeEventHandler> {
+public class VisualItemContainerChangeEvent extends
+        GwtEvent<VisualItemContainerChangeEventHandler> {
 
-    public static final GwtEvent.Type<ViewItemContainerChangeEventHandler> TYPE = new GwtEvent.Type<ViewItemContainerChangeEventHandler>();
+    public static final GwtEvent.Type<VisualItemContainerChangeEventHandler> TYPE = new GwtEvent.Type<VisualItemContainerChangeEventHandler>();
 
-    private final ViewItemContainer container;
+    private final VisualItemContainer container;
 
-    private final ViewItemContainerDelta delta;
+    private final Delta<VisualItem> delta;
 
-    public ViewItemContainerChangeEvent(ViewItemContainer container,
-            ViewItemContainerDelta delta) {
+    public VisualItemContainerChangeEvent(VisualItemContainer container,
+            Delta<VisualItem> delta) {
 
         assert container != null;
         assert delta != null;
@@ -37,20 +39,20 @@ public class ViewItemContainerChangeEvent extends
     }
 
     @Override
-    protected void dispatch(ViewItemContainerChangeEventHandler handler) {
+    protected void dispatch(VisualItemContainerChangeEventHandler handler) {
         handler.onViewItemContainerChanged(this);
     }
 
     @Override
-    public GwtEvent.Type<ViewItemContainerChangeEventHandler> getAssociatedType() {
+    public GwtEvent.Type<VisualItemContainerChangeEventHandler> getAssociatedType() {
         return TYPE;
     }
 
-    public ViewItemContainer getContainer() {
+    public VisualItemContainer getContainer() {
         return container;
     }
 
-    public ViewItemContainerDelta getDelta() {
+    public Delta<VisualItem> getDelta() {
         return delta;
     }
 

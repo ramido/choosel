@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.geom.LatLng;
@@ -36,7 +36,7 @@ public class DefaultMapRenderer implements MapRenderer {
         this.callback = callback;
     }
 
-    private void initMapItem(ViewItem viewItem) {
+    private void initMapItem(VisualItem viewItem) {
         // TODO iterate over path
         // TODO resolve sets
         // TODO separate resolvers for latitude and longitude
@@ -63,7 +63,7 @@ public class DefaultMapRenderer implements MapRenderer {
     public void onDetach() {
     }
 
-    private void removeOverlay(ViewItem viewItem) {
+    private void removeOverlay(VisualItem viewItem) {
         map.removeOverlay(((DefaultMapItem) viewItem.getDisplayObject())
                 .getOverlay());
     }
@@ -85,9 +85,9 @@ public class DefaultMapRenderer implements MapRenderer {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    public void update(LightweightCollection<VisualItem> addedViewItems,
+            LightweightCollection<VisualItem> updatedViewItems,
+            LightweightCollection<VisualItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO pull up
@@ -95,17 +95,17 @@ public class DefaultMapRenderer implements MapRenderer {
             return;
         }
 
-        for (ViewItem resourceItem : addedViewItems) {
+        for (VisualItem resourceItem : addedViewItems) {
             initMapItem(resourceItem);
         }
 
-        for (ViewItem resourceItem : removedViewItems) {
+        for (VisualItem resourceItem : removedViewItems) {
             removeOverlay(resourceItem);
         }
 
         // TODO refactor
         if (!changedSlots.isEmpty()) {
-            for (ViewItem viewItem : callback.getViewItems()) {
+            for (VisualItem viewItem : callback.getViewItems()) {
                 DefaultMapItem mapItem = (DefaultMapItem) viewItem
                         .getDisplayObject();
                 for (Slot slot : changedSlots) {
@@ -123,8 +123,8 @@ public class DefaultMapRenderer implements MapRenderer {
         updateStatusStyling(updatedViewItems);
     }
 
-    private void updateStatusStyling(LightweightCollection<ViewItem> viewItems) {
-        for (ViewItem viewItem : viewItems) {
+    private void updateStatusStyling(LightweightCollection<VisualItem> viewItems) {
+        for (VisualItem viewItem : viewItems) {
             ((DefaultMapItem) viewItem.getDisplayObject()).setStatusStyling();
         }
     }

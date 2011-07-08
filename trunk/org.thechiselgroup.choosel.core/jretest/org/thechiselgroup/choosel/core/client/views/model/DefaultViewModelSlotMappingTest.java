@@ -53,9 +53,9 @@ public class DefaultViewModelSlotMappingTest {
         underTest.setResolver(numberSlot, new CalculationResolver("property1",
                 new SumCalculation()));
 
-        List<ViewItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
-        ViewItem resourceItem = resourceItems.get(0);
+        VisualItem resourceItem = resourceItems.get(0);
         resourceItem.getValue(numberSlot);
 
         underTest.setResolver(numberSlot, new CalculationResolver("property1",
@@ -113,9 +113,9 @@ public class DefaultViewModelSlotMappingTest {
         underTest.setResolver(numberSlot, new CalculationResolver("property1",
                 calculation));
 
-        List<ViewItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
-        ViewItem resourceItem = resourceItems.get(0);
+        VisualItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));
     }
 

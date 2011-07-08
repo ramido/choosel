@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2011 Lars Grammel 
+ * Copyright 2009, 2010 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,18 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
-
-/**
- * Provides access to {@link ViewItemValueResolver}s by {@link Slot}.
- * 
- * @author Lars Grammel
- */
-// TODO rename to ?
-public interface ViewItemValueResolverContext {
-
-    // TODO documentation
-    // TODO exception
-    ViewItemValueResolver getResolver(Slot slot);
+// TODO should extend view item container change handler instead of having dedicated methods..
+public interface VisualItemBehavior extends VisualItemInteractionHandler,
+        VisualItemContainerChangeEventHandler {
 
 }

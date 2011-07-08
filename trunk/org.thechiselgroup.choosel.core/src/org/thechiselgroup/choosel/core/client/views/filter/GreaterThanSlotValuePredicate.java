@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.filter;
 
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public class GreaterThanSlotValuePredicate implements ViewItemPredicate {
 
@@ -30,7 +30,7 @@ public class GreaterThanSlotValuePredicate implements ViewItemPredicate {
     }
 
     @Override
-    public boolean matches(ViewItem viewItem) {
+    public boolean matches(VisualItem viewItem) {
         return viewItem.getValueAsDouble(slot) > greaterThanValue;
     }
 

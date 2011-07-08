@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 /**
  * This interface is used to return new instances of a
@@ -33,7 +33,7 @@ public interface ViewItemValueResolverFactory {
      * resolve view items, only how it does the resolution.
      */
     boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<ViewItem> viewItems);
+            LightweightCollection<VisualItem> viewItems);
 
     /**
      * @return A new instance of the corresponding
@@ -49,7 +49,7 @@ public interface ViewItemValueResolverFactory {
      * ViewItemValueResolvers are immutable and we need to configure parameters.
      */
     ManagedViewItemValueResolver create(
-            LightweightCollection<ViewItem> viewItems);
+            LightweightCollection<VisualItem> viewItems);
 
     /**
      * @return the id of both the factory and the resolver

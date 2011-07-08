@@ -18,8 +18,8 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
 public class ResourceCountResolverFactory implements
         ViewItemValueResolverFactory {
@@ -38,7 +38,7 @@ public class ResourceCountResolverFactory implements
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         return slot.getDataType().equals(DataType.NUMBER);
     }
 
@@ -49,7 +49,7 @@ public class ResourceCountResolverFactory implements
 
     @Override
     public ManagedViewItemValueResolver create(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         return new ManagedViewItemValueResolverDecorator(getId(),
                 new ResourceCountResolver(subset));
     }

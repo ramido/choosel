@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainer;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 
 /**
@@ -26,18 +26,18 @@ import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Ar
  * @author Lars Grammel
  * 
  * @see Arc
- * @see ViewItem
+ * @see VisualItem
  */
 public interface ArcType {
 
     /**
-     * Returns all arcs that should be connected to a given {@link ViewItem} in
-     * the context of other {@link ViewItem}s.
+     * Returns all arcs that should be connected to a given {@link VisualItem} in
+     * the context of other {@link VisualItem}s.
      * 
      * @param viewItem
-     *            {@link ViewItem} for which potential arcs should be returned
+     *            {@link VisualItem} for which potential arcs should be returned
      * @param context
-     *            context in which the arcs for the {@link ViewItem} should be
+     *            context in which the arcs for the {@link VisualItem} should be
      *            calculated.
      * 
      * @return all arcs that are connected to the node representation of the
@@ -46,8 +46,8 @@ public interface ArcType {
      *         for the same resource item. However, their IDs should match: an
      *         equal arc should have an equal id across multiple calls.
      */
-    LightweightCollection<Arc> getArcs(ViewItem viewItem,
-            ViewItemContainer context);
+    LightweightCollection<Arc> getArcs(VisualItem viewItem,
+            VisualItemContainer context);
 
     /**
      * @return identifier of this arc type. Each ArcType must have a unique

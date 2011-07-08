@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.core.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 
 /**
- * Default implementation of {@link ViewItem}.
+ * Default implementation of {@link VisualItem}.
  * <p>
  * <b>PERFORMANCE NOTE</b>: Provides caching for calculated slot values and for
  * highlighting and selection status.
@@ -38,7 +38,7 @@ import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler
  * @author Lars Grammel
  */
 // TODO separate out resource item controller part
-public class DefaultViewItem implements Disposable, ViewItem {
+public class DefaultVisualItem implements Disposable, VisualItem {
 
     private final class CacheUpdateOnResourceSetChange implements
             ResourceSetChangedEventHandler, PrioritizedEventHandler {
@@ -54,7 +54,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
         }
     }
 
-    private String viewItemID;
+    private String id;
 
     // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
@@ -85,18 +85,18 @@ public class DefaultViewItem implements Disposable, ViewItem {
      */
     private Map<String, Object> cache = CollectionFactory.createStringMap();
 
-    private final ViewItemInteractionHandler interactionHandler;
+    private final VisualItemInteractionHandler interactionHandler;
 
-    public DefaultViewItem(String viewItemID, ResourceSet resources,
+    public DefaultVisualItem(String id, ResourceSet resources,
             SlotMappingConfiguration slotMappingConfiguration,
-            ViewItemInteractionHandler interactionHandler) {
+            VisualItemInteractionHandler interactionHandler) {
 
-        assert viewItemID != null;
+        assert id != null;
         assert resources != null;
         assert slotMappingConfiguration != null;
         assert interactionHandler != null;
 
-        this.viewItemID = viewItemID;
+        this.id = id;
         this.resources = resources;
         this.slotMappingConfiguration = slotMappingConfiguration;
         this.interactionHandler = interactionHandler;
@@ -152,6 +152,11 @@ public class DefaultViewItem implements Disposable, ViewItem {
         }
 
         return cachedHighlightStatus;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -238,11 +243,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
     }
 
     @Override
-    public String getViewItemID() {
-        return viewItemID;
-    }
-
-    @Override
     public boolean isStatus(Subset subset, Status... status) {
         Status realStatus = getStatus(subset);
         for (Status expectedStatus : status) {
@@ -255,7 +255,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
     }
 
     @Override
-    public void reportInteraction(ViewItemInteraction interaction) {
+    public void reportInteraction(VisualItemInteraction interaction) {
         assert interaction != null;
         interactionHandler.onInteraction(this, interaction);
     }
@@ -267,7 +267,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
     @Override
     public String toString() {
-        return "ViewItem[" + resources.toString() + "]";
+        return "VisualItem[" + resources.toString() + "]";
     }
 
     public void updateHighlightedResources(

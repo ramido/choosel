@@ -19,9 +19,9 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
         implements PropertyDependantViewItemValueResolver {
@@ -48,8 +48,8 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
 
     // TODO test
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         assert viewItem != null;
         assert context != null;
@@ -73,8 +73,8 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context, Subset subset) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context, Subset subset) {
 
         assert canResolve(viewItem, context);
 

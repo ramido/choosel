@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
 import org.thechiselgroup.choosel.core.client.views.filter.ViewItemPredicate;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 
@@ -31,7 +31,7 @@ public class ViewItemPredicateJsBooleanFunction implements JsBooleanFunction {
 
     @Override
     public boolean f(JsArgs args) {
-        return predicate.matches(args.<ViewItem> getObject());
+        return predicate.matches(args.<VisualItem> getObject());
     }
 
 }

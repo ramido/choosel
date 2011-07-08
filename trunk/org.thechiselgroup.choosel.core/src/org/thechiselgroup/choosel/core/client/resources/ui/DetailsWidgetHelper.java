@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.ui;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.user.client.ui.Widget;
 
 // TODO rename into details widget factory...
 public interface DetailsWidgetHelper {
 
-    Widget createDetailsWidget(ViewItem viewItem);
+    Widget createDetailsWidget(VisualItem viewItem);
 
 }

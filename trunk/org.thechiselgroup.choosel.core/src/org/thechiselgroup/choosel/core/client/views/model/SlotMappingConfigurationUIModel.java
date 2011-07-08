@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 public class SlotMappingConfigurationUIModel {
 
     private final class VisualMappingUpdaterForViewItemChanges implements
-            ViewItemContainerChangeEventHandler, PrioritizedEventHandler {
+            VisualItemContainerChangeEventHandler, PrioritizedEventHandler {
 
         @Override
         public EventHandlerPriority getPriority() {
@@ -41,7 +41,7 @@ public class SlotMappingConfigurationUIModel {
 
         @Override
         public void onViewItemContainerChanged(
-                ViewItemContainerChangeEvent event) {
+                VisualItemContainerChangeEvent event) {
 
             updateVisualMappings();
         }
@@ -55,12 +55,12 @@ public class SlotMappingConfigurationUIModel {
 
     private ViewModel viewModel;
 
-    private final ViewItemResolutionErrorModel errorModel;
+    private final VisualItemResolutionErrorModel errorModel;
 
     public SlotMappingConfigurationUIModel(
             ViewItemValueResolverFactoryProvider resolverProvider,
             SlotMappingInitializer slotMappingInitializer, ViewModel viewModel,
-            ViewItemResolutionErrorModel errorModel) {
+            VisualItemResolutionErrorModel errorModel) {
 
         assert resolverProvider != null;
         assert slotMappingInitializer != null;
@@ -119,7 +119,7 @@ public class SlotMappingConfigurationUIModel {
         return invalidSlots;
     }
 
-    public LightweightCollection<ViewItem> getViewItems() {
+    public LightweightCollection<VisualItem> getViewItems() {
         return viewModel.getViewItems();
     }
 
@@ -138,7 +138,7 @@ public class SlotMappingConfigurationUIModel {
 
     private void resetMappingsFromInitializer(
             LightweightCollection<Slot> unconfiguredSlots,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         assert !unconfiguredSlots.isEmpty();
 
@@ -178,9 +178,9 @@ public class SlotMappingConfigurationUIModel {
 
     /**
      * Call this method whenever the model changes (whenever the
-     * {@link ViewItem}s change).
+     * {@link VisualItem}s change).
      */
-    private void updateUIModels(LightweightCollection<ViewItem> viewItems) {
+    private void updateUIModels(LightweightCollection<VisualItem> viewItems) {
         for (SlotMappingUIModel uiModel : slotsToSlotMappings.values()) {
             uiModel.updateAllowableFactories(viewItems);
         }
@@ -191,7 +191,7 @@ public class SlotMappingConfigurationUIModel {
     }
 
     // TODO handle view items with errors in here
-    private void updateVisualMappings(LightweightCollection<ViewItem> viewItems) {
+    private void updateVisualMappings(LightweightCollection<VisualItem> viewItems) {
 
         // check to see if the configuration is still valid
         updateUIModels(viewItems);

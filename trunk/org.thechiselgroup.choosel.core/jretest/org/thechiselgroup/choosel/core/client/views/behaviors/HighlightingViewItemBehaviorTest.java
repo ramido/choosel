@@ -27,9 +27,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction.Type;
 
 public class HighlightingViewItemBehaviorTest {
 
@@ -38,7 +38,7 @@ public class HighlightingViewItemBehaviorTest {
     private HighlightingModel hoverModel;
 
     @Mock
-    private ViewItem viewItem;
+    private VisualItem viewItem;
 
     private HighlightingViewItemBehavior underTest;
 
@@ -51,7 +51,7 @@ public class HighlightingViewItemBehaviorTest {
     @Test
     public void disposeRemovesHighlighting() {
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         underTest.onViewItemRemoved(viewItem);
 
@@ -65,12 +65,12 @@ public class HighlightingViewItemBehaviorTest {
     @Test
     public void dragEndRemovesHighlighting() {
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.DRAG_START));
         underTest.onInteraction(viewItem,
-                new ViewItemInteraction(Type.DRAG_END));
+                new VisualItemInteraction(Type.DRAG_END));
 
         assertThat(hoverModel.getResources(),
                 containsExactly(createResources()));
@@ -79,7 +79,7 @@ public class HighlightingViewItemBehaviorTest {
     @Test
     public void mouseOverAddsResourcesToHoverModel() {
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         assertThat(hoverModel.getResources(),
                 containsExactly(createResources(1, 2)));
@@ -92,7 +92,7 @@ public class HighlightingViewItemBehaviorTest {
         hoverModel = spy(new HighlightingModel());
 
         resources = createResources(1, 2);
-        when(viewItem.getViewItemID()).thenReturn(VIEW_ITEM_ID);
+        when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
         when(viewItem.getResources()).thenReturn(resources);
 
         underTest = new HighlightingViewItemBehavior(hoverModel);

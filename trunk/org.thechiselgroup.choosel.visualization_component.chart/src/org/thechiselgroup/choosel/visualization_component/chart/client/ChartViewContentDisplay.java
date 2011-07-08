@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
@@ -44,7 +44,7 @@ public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay implements ChartWidgetCallback {
 
     // TODO wrapper for jsarraygeneric that implements java.util.List
-    protected JsArrayGeneric<ViewItem> viewItemsJsArray = JsUtils
+    protected JsArrayGeneric<VisualItem> viewItemsJsArray = JsUtils
             .createJsArrayGeneric();
 
     protected String[] eventTypes = { PV.Event.CLICK, PV.Event.MOUSEDOWN,
@@ -70,7 +70,7 @@ public abstract class ChartViewContentDisplay extends
 
     protected int height;
 
-    public void addViewItem(ViewItem viewItem) {
+    public void addViewItem(VisualItem viewItem) {
         viewItemsJsArray.push(viewItem);
     }
 
@@ -127,7 +127,7 @@ public abstract class ChartViewContentDisplay extends
         return chartWidget.getPVPanel();
     }
 
-    public ViewItem getViewItem(int index) {
+    public VisualItem getViewItem(int index) {
         assert viewItemsJsArray != null;
         assert 0 <= index;
         assert index < viewItemsJsArray.length();
@@ -138,7 +138,7 @@ public abstract class ChartViewContentDisplay extends
     // TODO refactoring: introduce view item list that offers this functionality
     public boolean hasViewItemsWithPartialSubset(Subset subset) {
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            ViewItem viewItem = viewItemsJsArray.get(i);
+            VisualItem viewItem = viewItemsJsArray.get(i);
             if (viewItem.isStatus(subset, Status.PARTIAL)) {
                 return true;
             }
@@ -153,7 +153,7 @@ public abstract class ChartViewContentDisplay extends
 
     protected void onEvent(Event e, String pvEventType, JsArgs args) {
         int index = args.<PVMark> getThis().index();
-        getViewItem(index).reportInteraction(new ViewItemInteraction(e));
+        getViewItem(index).reportInteraction(new VisualItemInteraction(e));
     }
 
     protected abstract void registerEventHandler(String eventType,
@@ -166,10 +166,10 @@ public abstract class ChartViewContentDisplay extends
     }
 
     // TODO move into js array to java.util.List wrapper
-    public void removeViewItem(ViewItem viewItem) {
+    public void removeViewItem(VisualItem viewItem) {
         int occurences = 0;
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            ViewItem itemFromArray = viewItemsJsArray.get(i);
+            VisualItem itemFromArray = viewItemsJsArray.get(i);
             if (itemFromArray == viewItem) {
                 occurences++;
             } else if (occurences > 0) {
@@ -185,16 +185,16 @@ public abstract class ChartViewContentDisplay extends
      * situation) once no matter how many resource items are being affected.
      */
     @Override
-    public void update(LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    public void update(LightweightCollection<VisualItem> addedViewItems,
+            LightweightCollection<VisualItem> updatedViewItems,
+            LightweightCollection<VisualItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ViewItem viewItem : addedViewItems) {
+        for (VisualItem viewItem : addedViewItems) {
             addViewItem(viewItem);
         }
 
-        for (ViewItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : removedViewItems) {
             removeViewItem(viewItem);
         }
 

@@ -16,14 +16,14 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public class CalculationResolverUIController extends
         PropertyListBoxResolverUIController {
 
     public CalculationResolverUIController(CalculationResolverFactory factory,
             SlotMappingUIModel uiModel,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         super(factory, uiModel, viewItems);
     }
 }

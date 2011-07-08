@@ -32,8 +32,8 @@ import org.thechiselgroup.choosel.core.client.command.NullCommand;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.core.client.ui.Action;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 public class RedoActionStateControllerTest {
@@ -115,8 +115,8 @@ public class RedoActionStateControllerTest {
 		underTest = new RedoActionStateController(commandManager, action);
 
 		when(
-				resolver.resolve(any(ViewItem.class),
-						any(ViewItemValueResolverContext.class)))
+				resolver.resolve(any(VisualItem.class),
+						any(VisualItemValueResolverContext.class)))
 				.thenReturn("");
 		when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);
 

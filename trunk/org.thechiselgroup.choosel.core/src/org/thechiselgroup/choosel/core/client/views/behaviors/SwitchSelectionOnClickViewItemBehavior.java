@@ -16,15 +16,15 @@
 package org.thechiselgroup.choosel.core.client.views.behaviors;
 
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
 /**
- * Manages {@link ViewItem} highlighting in a single view.
+ * Manages {@link VisualItem} highlighting in a single view.
  */
-public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior {
+public class SwitchSelectionOnClickViewItemBehavior implements VisualItemBehavior {
 
     private SelectionModel selectionModel;
 
@@ -39,7 +39,7 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
     }
 
     @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
+    public void onInteraction(VisualItem viewItem, VisualItemInteraction interaction) {
         assert viewItem != null;
         assert interaction != null;
 
@@ -51,10 +51,10 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
     }
 
     @Override
-    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
+    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
     }
 
-    protected void switchSelection(ViewItem viewItem) {
+    protected void switchSelection(VisualItem viewItem) {
         selectionModel.switchSelection(viewItem.getResources());
     }
 

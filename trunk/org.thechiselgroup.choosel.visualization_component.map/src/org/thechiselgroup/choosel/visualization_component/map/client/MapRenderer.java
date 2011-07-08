@@ -16,11 +16,11 @@
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemRenderer;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemRenderer;
 
 import com.google.gwt.maps.client.MapWidget;
 
-public interface MapRenderer extends ViewItemRenderer {
+public interface MapRenderer extends VisualItemRenderer {
 
     void init(MapWidget map, ViewContentDisplayCallback callback);
 

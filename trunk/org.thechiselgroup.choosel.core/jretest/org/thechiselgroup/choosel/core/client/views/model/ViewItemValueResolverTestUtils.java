@@ -77,7 +77,7 @@ public final class ViewItemValueResolverTestUtils {
         whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
+                VisualItem viewItem = (VisualItem) invocation.getArguments()[0];
                 ResourceSet set = viewItem.getResources();
 
                 return set.size() == resources.size()
@@ -94,7 +94,7 @@ public final class ViewItemValueResolverTestUtils {
 
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
+                VisualItem viewItem = (VisualItem) invocation.getArguments()[0];
                 ResourceSet set = viewItem.getResources();
 
                 return set.containsAll(resources);
@@ -110,7 +110,7 @@ public final class ViewItemValueResolverTestUtils {
         whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                ViewItem viewItem = (ViewItem) invocation.getArguments()[0];
+                VisualItem viewItem = (VisualItem) invocation.getArguments()[0];
                 ResourceSet set = viewItem.getResources();
 
                 return set.size() == 1
@@ -123,8 +123,8 @@ public final class ViewItemValueResolverTestUtils {
     private static OngoingStubbing<Boolean> whenCanResolve(
             ViewItemValueResolver resolver) {
 
-        return when(resolver.canResolve(any(ViewItem.class),
-                any(ViewItemValueResolverContext.class)));
+        return when(resolver.canResolve(any(VisualItem.class),
+                any(VisualItemValueResolverContext.class)));
     }
 
     private ViewItemValueResolverTestUtils() {

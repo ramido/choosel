@@ -133,9 +133,9 @@ public class SlotMappingConfigurationUIModelTest {
         return captor.getValue();
     }
 
-    private ViewItemContainerChangeEventHandler captureViewItemContainerChangeEventHandler() {
-        ArgumentCaptor<ViewItemContainerChangeEventHandler> captor = ArgumentCaptor
-                .forClass(ViewItemContainerChangeEventHandler.class);
+    private VisualItemContainerChangeEventHandler captureViewItemContainerChangeEventHandler() {
+        ArgumentCaptor<VisualItemContainerChangeEventHandler> captor = ArgumentCaptor
+                .forClass(VisualItemContainerChangeEventHandler.class);
         verify(viewModel, times(1)).addHandler(captor.capture());
         return captor.getValue();
     }
@@ -169,8 +169,8 @@ public class SlotMappingConfigurationUIModelTest {
         setUpSlots(DataType.TEXT);
         when(viewModel.getResolver(slots[0])).thenReturn(resolver1);
 
-        ViewItem viewItem = mock(ViewItem.class);
-        when(viewItem.getViewItemID()).thenReturn("a");
+        VisualItem viewItem = mock(VisualItem.class);
+        when(viewItem.getId()).thenReturn("a");
         errorModel.reportError(slots[0], viewItem);
 
         underTest = new SlotMappingConfigurationUIModel(resolverProvider,
@@ -207,13 +207,13 @@ public class SlotMappingConfigurationUIModelTest {
         mockFactory(factory2, RESOLVER_ID_2, resolver2);
         when(resolver1.getResolverId()).thenReturn(RESOLVER_ID_1);
         when(
-                resolver1.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
+                resolver1.canResolve(any(VisualItem.class),
+                        any(VisualItemValueResolverContext.class))).thenReturn(
                 true);
         when(resolver2.getResolverId()).thenReturn(RESOLVER_ID_2);
         when(
-                resolver2.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
+                resolver2.canResolve(any(VisualItem.class),
+                        any(VisualItemValueResolverContext.class))).thenReturn(
                 true);
     }
 
@@ -254,11 +254,11 @@ public class SlotMappingConfigurationUIModelTest {
         underTest = new SlotMappingConfigurationUIModel(resolverProvider,
                 initializer, viewModel, errorModel);
 
-        ViewItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
+        VisualItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
 
         ResourceGrouping grouping = mock(ResourceGrouping.class);
         when(viewModel.getViewItems()).thenReturn(
-                CollectionFactory.<ViewItem> createLightweightList());
+                CollectionFactory.<VisualItem> createLightweightList());
         when(viewModel.getResourceGrouping()).thenReturn(grouping);
 
         LightweightList<Slot> badSlots = CollectionFactory

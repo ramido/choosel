@@ -60,8 +60,8 @@ import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurati
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEventHandler;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
@@ -259,10 +259,10 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         String label = contentDisplay.getName();
 
-        viewModel.addHandler(new ViewItemContainerChangeEventHandler() {
+        viewModel.addHandler(new VisualItemContainerChangeEventHandler() {
             @Override
             public void onViewItemContainerChanged(
-                    ViewItemContainerChangeEvent event) {
+                    VisualItemContainerChangeEvent event) {
 
                 visualMappingsControl
                         .updateConfigurationForChangedViewItems(event

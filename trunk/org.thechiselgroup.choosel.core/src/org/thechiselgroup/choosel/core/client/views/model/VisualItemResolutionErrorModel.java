@@ -18,16 +18,16 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 /**
- * Model of the {@link ViewItem}/{@link Slot} resolutions that cannot be
+ * Model of the {@link VisualItem}/{@link Slot} resolutions that cannot be
  * computed in a {@link ViewModel}.
  * 
  * @author Lars Grammel
  */
-public interface ViewItemResolutionErrorModel {
+public interface VisualItemResolutionErrorModel {
 
     /**
      * @return {@link Slot}s for which there are resolution problems for at
-     *         least one {@link ViewItem}.
+     *         least one {@link VisualItem}.
      */
     LightweightCollection<Slot> getSlotsWithErrors();
 
@@ -36,20 +36,20 @@ public interface ViewItemResolutionErrorModel {
      *         all slots can be resolved for the view item, an empty list is
      *         returned.
      */
-    LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem);
+    LightweightCollection<Slot> getSlotsWithErrors(VisualItem viewItem);
 
     /**
-     * @return {@link ViewItem}s for which there are resolution problems for at
+     * @return {@link VisualItem}s for which there are resolution problems for at
      *         least one {@link Slot}.
      */
-    LightweightCollection<ViewItem> getViewItemsWithErrors();
+    LightweightCollection<VisualItem> getViewItemsWithErrors();
 
     /**
      * @return {@link ViewItems}s that could not be resolved for {@code slot}.
-     *         If all {@link ViewItem}s can be resolved for the slot, an empty
+     *         If all {@link VisualItem}s can be resolved for the slot, an empty
      *         list is returned.
      */
-    LightweightCollection<ViewItem> getViewItemsWithErrors(Slot slot);
+    LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot);
 
     /**
      * @return <code>true</code>, if there are any resolution problems.
@@ -66,6 +66,6 @@ public interface ViewItemResolutionErrorModel {
      * @return <code>true</code>, if there are any resolution problems for
      *         {@code viewItem}.
      */
-    boolean hasErrors(ViewItem viewItem);
+    boolean hasErrors(VisualItem viewItem);
 
 }

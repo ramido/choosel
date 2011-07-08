@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -44,7 +44,7 @@ public class DefaultTextItemContainer implements TextItemContainer {
     }
 
     @Override
-    public TextItemLabel createTextItemLabel(ViewItem resourceItem) {
+    public TextItemLabel createTextItemLabel(VisualItem resourceItem) {
         return new DefaultTextItemLabel();
     }
 

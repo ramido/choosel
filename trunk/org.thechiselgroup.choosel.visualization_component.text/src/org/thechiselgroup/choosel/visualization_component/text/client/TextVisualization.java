@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.util.math.NumberArray;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -95,7 +95,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
      * </p>
      */
     private void addViewItems(
-            LightweightCollection<ViewItem> addedViewItems) {
+            LightweightCollection<VisualItem> addedViewItems) {
 
         assert addedViewItems != null;
 
@@ -104,7 +104,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
             return;
         }
 
-        for (ViewItem viewItem : addedViewItems) {
+        for (VisualItem viewItem : addedViewItems) {
             TextItem textItem = createTextItem(viewItem);
             items.add(textItem);
         }
@@ -128,7 +128,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
         }
     }
 
-    private TextItem createTextItem(ViewItem viewItem) {
+    private TextItem createTextItem(VisualItem viewItem) {
         TextItem textItem = new TextItem(viewItem);
 
         TextItemLabel label = textItemContainer.createTextItemLabel(textItem
@@ -209,25 +209,25 @@ public class TextVisualization extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    public void update(LightweightCollection<VisualItem> addedViewItems,
+            LightweightCollection<VisualItem> updatedViewItems,
+            LightweightCollection<VisualItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
         addViewItems(addedViewItems);
 
-        for (ViewItem viewItem : updatedViewItems) {
+        for (VisualItem viewItem : updatedViewItems) {
             TextItem textItem = (TextItem) viewItem.getDisplayObject();
             textItem.updateContent();
             textItem.updateStatusStyling();
         }
 
-        for (ViewItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : removedViewItems) {
             removeTextItem((TextItem) viewItem.getDisplayObject());
         }
 
         if (!changedSlots.isEmpty()) {
-            for (ViewItem resourceItem : callback.getViewItems()) {
+            for (VisualItem resourceItem : callback.getViewItems()) {
                 TextItem textItem = (TextItem) resourceItem.getDisplayObject();
                 textItem.updateContent();
             }

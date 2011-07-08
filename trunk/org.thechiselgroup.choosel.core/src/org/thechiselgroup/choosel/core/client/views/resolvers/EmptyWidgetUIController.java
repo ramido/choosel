@@ -1,7 +1,7 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -15,7 +15,7 @@ public class EmptyWidgetUIController implements
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> viewItems) {
+    public void update(LightweightCollection<VisualItem> viewItems) {
         return;
     }
 

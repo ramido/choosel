@@ -47,7 +47,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public final class ResourcesTestHelper {
 
@@ -58,10 +58,10 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static Matcher<LightweightCollection<ViewItem>> containsViewItemsForExactResourceSets(
+    public static Matcher<LightweightCollection<VisualItem>> containsViewItemsForExactResourceSets(
             final ResourceSet... resourceSets) {
 
-        return new TypeSafeMatcher<LightweightCollection<ViewItem>>() {
+        return new TypeSafeMatcher<LightweightCollection<VisualItem>>() {
             @Override
             public void describeTo(Description description) {
                 for (ResourceSet resourceSet : resourceSets) {
@@ -70,14 +70,14 @@ public final class ResourcesTestHelper {
             }
 
             @Override
-            public boolean matchesSafely(LightweightCollection<ViewItem> set) {
+            public boolean matchesSafely(LightweightCollection<VisualItem> set) {
                 if (set.size() != resourceSets.length) {
                     return false;
                 }
 
                 for (ResourceSet resourceSet : resourceSets) {
                     boolean found = false;
-                    for (ViewItem item : set) {
+                    for (VisualItem item : set) {
                         ResourceSet itemSet = item.getResources();
 
                         if (itemSet.size() == resourceSet.size()
@@ -96,19 +96,19 @@ public final class ResourcesTestHelper {
         };
     }
 
-    public static ViewItem createViewItem(int id) {
+    public static VisualItem createViewItem(int id) {
         return createViewItem("" + id, createResources(id));
     }
 
-    public static ViewItem createViewItem(String viewItemId,
+    public static VisualItem createViewItem(String viewItemId,
             ResourceSet resources) {
 
         final AtomicReference<Object> displayObjectBuffer = new AtomicReference<Object>();
 
-        ViewItem viewItem = mock(ViewItem.class);
+        VisualItem viewItem = mock(VisualItem.class);
 
         when(viewItem.getResources()).thenReturn(resources);
-        when(viewItem.getViewItemID()).thenReturn(viewItemId);
+        when(viewItem.getId()).thenReturn(viewItemId);
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -126,7 +126,7 @@ public final class ResourcesTestHelper {
         return viewItem;
     }
 
-    public static LightweightList<ViewItem> createViewItems(int... viewItemId) {
+    public static LightweightList<VisualItem> createViewItems(int... viewItemId) {
         ResourceSet[] resourceSets = new ResourceSet[viewItemId.length];
         for (int i = 0; i < resourceSets.length; i++) {
             resourceSets[i] = toLabeledResourceSet("" + viewItemId[i],
@@ -139,10 +139,10 @@ public final class ResourcesTestHelper {
      * Creates list of resource items with using the label of the resource sets
      * as group ids.
      */
-    public static LightweightList<ViewItem> createViewItems(
+    public static LightweightList<VisualItem> createViewItems(
             ResourceSet... resourceSets) {
 
-        LightweightList<ViewItem> resourceItems = CollectionFactory
+        LightweightList<VisualItem> resourceItems = CollectionFactory
                 .createLightweightList();
         for (ResourceSet resourceSet : resourceSets) {
             resourceItems.add(createViewItem(resourceSet.getLabel(),
@@ -196,13 +196,13 @@ public final class ResourcesTestHelper {
     }
 
     // TODO extract hamcrest matcher, inline argThat
-    public static LightweightCollection<ViewItem> eqViewItems(
-            final LightweightCollection<ViewItem> viewItems) {
+    public static LightweightCollection<VisualItem> eqViewItems(
+            final LightweightCollection<VisualItem> viewItems) {
 
-        return argThat(new ArgumentMatcher<LightweightCollection<ViewItem>>() {
+        return argThat(new ArgumentMatcher<LightweightCollection<VisualItem>>() {
             @Override
             public boolean matches(Object o) {
-                LightweightCollection<ViewItem> set = (LightweightCollection<ViewItem>) o;
+                LightweightCollection<VisualItem> set = (LightweightCollection<VisualItem>) o;
 
                 if (set.size() != viewItems.size()) {
                     return false;
@@ -213,8 +213,8 @@ public final class ResourcesTestHelper {
         });
     }
 
-    public static LightweightCollection<ViewItem> eqViewItems(
-            ViewItem... viewItems) {
+    public static LightweightCollection<VisualItem> eqViewItems(
+            VisualItem... viewItems) {
 
         return eqViewItems(LightweightCollections.toCollection(viewItems));
     }

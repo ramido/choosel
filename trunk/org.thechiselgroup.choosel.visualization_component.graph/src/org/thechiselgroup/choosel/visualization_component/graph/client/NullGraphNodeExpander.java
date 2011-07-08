@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public class NullGraphNodeExpander implements GraphNodeExpander {
 
     @Override
-    public void expand(ViewItem resource,
+    public void expand(VisualItem resource,
             GraphNodeExpansionCallback expansionCallback) {
     }
 }

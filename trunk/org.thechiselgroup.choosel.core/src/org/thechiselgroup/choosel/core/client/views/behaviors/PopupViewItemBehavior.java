@@ -21,17 +21,17 @@ import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
 import com.google.gwt.dom.client.NativeEvent;
 
 /**
- * Manages {@link ViewItem} popups in a single view.
+ * Manages {@link VisualItem} popups in a single view.
  */
-public class PopupViewItemBehavior implements ViewItemBehavior {
+public class PopupViewItemBehavior implements VisualItemBehavior {
 
     /**
      * Maps view item ids to popup managers.
@@ -54,19 +54,20 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
     }
 
     // for test
-    protected PopupManager createPopupManager(final ViewItem viewItem) {
+    protected PopupManager createPopupManager(final VisualItem viewItem) {
         return popupManagerFactory.createPopupManager(detailsWidgetHelper
                 .createDetailsWidget(viewItem));
     }
 
-    protected PopupManager getPopupManager(ViewItem viewItem) {
-        return popupManagers.get(viewItem.getViewItemID());
+    protected PopupManager getPopupManager(VisualItem viewItem) {
+        return popupManagers.get(viewItem.getId());
     }
 
     @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
+    public void onInteraction(VisualItem viewItem,
+            VisualItemInteraction interaction) {
         assert viewItem != null;
-        assert popupManagers.containsKey(viewItem.getViewItemID());
+        assert popupManagers.containsKey(viewItem.getId());
         assert interaction != null;
 
         PopupManager popupManager = getPopupManager(viewItem);
@@ -97,28 +98,27 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
-        for (ViewItem viewItem : event.getDelta().getAddedViewItems()) {
+    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+        for (VisualItem viewItem : event.getDelta().getAddedElements()) {
             onViewItemCreated(viewItem);
         }
-        for (ViewItem viewItem : event.getDelta().getRemovedViewItems()) {
+        for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
             onViewItemRemoved(viewItem);
         }
     }
 
-    public void onViewItemCreated(ViewItem viewItem) {
+    public void onViewItemCreated(VisualItem viewItem) {
         assert viewItem != null;
-        assert !popupManagers.containsKey(viewItem.getViewItemID());
+        assert !popupManagers.containsKey(viewItem.getId());
 
-        popupManagers.put(viewItem.getViewItemID(),
-                createPopupManager(viewItem));
+        popupManagers.put(viewItem.getId(), createPopupManager(viewItem));
     }
 
-    public void onViewItemRemoved(ViewItem viewItem) {
+    public void onViewItemRemoved(VisualItem viewItem) {
         assert viewItem != null;
-        assert popupManagers.containsKey(viewItem.getViewItemID());
+        assert popupManagers.containsKey(viewItem.getId());
 
-        popupManagers.remove(viewItem.getViewItemID());
+        popupManagers.remove(viewItem.getId());
     }
 
 }

@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.visualization_component.chart.client.function
 
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
@@ -32,7 +32,7 @@ public class ViewItemColorSlotAccessor implements JsStringFunction {
 
     @Override
     public String f(JsArgs args) {
-        ViewItem viewItem = args.getObject();
+        VisualItem viewItem = args.getObject();
         return viewItem.<Color> getValue(slot).toRGBa();
     }
 

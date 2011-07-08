@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 
 // TODO better separation of concern - introduce factories for the expanders
@@ -43,7 +43,7 @@ public interface GraphNodeExpansionCallback {
     @Deprecated
     ResourceManager getResourceManager();
 
-    LightweightCollection<ViewItem> getViewItems(Iterable<Resource> resources);
+    LightweightCollection<VisualItem> getViewItems(Iterable<Resource> resources);
 
     boolean isRestoring();
 
@@ -57,6 +57,6 @@ public interface GraphNodeExpansionCallback {
      * must already be contained in the view content display (i.e. they have
      * been added already and their nodes must be visible).
      */
-    void updateArcsForViewItems(LightweightCollection<ViewItem> viewItems);
+    void updateArcsForViewItems(LightweightCollection<VisualItem> viewItems);
 
 }

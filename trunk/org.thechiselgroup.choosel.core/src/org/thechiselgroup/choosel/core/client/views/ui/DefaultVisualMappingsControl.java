@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationUIModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
@@ -201,10 +201,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     @Override
     public void updateConfigurationForChangedViewItems(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         ResourceSet resources = new DefaultResourceSet();
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             resources.addAll(viewItem.getResources());
         }
 
@@ -229,7 +229,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         }
     }
 
-    private void updateSlotControls(LightweightCollection<ViewItem> viewItems) {
+    private void updateSlotControls(LightweightCollection<VisualItem> viewItems) {
         for (DataType dataType : DataType.values()) {
             for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
                 slotControl.updateOptions(viewItems);

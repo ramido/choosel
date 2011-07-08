@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public class CalculationResolverUIControllerFactory implements
         ViewItemValueResolverUIControllerFactory {
@@ -30,7 +30,7 @@ public class CalculationResolverUIControllerFactory implements
     @Override
     public ViewItemValueResolverUIController create(
             ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         assert factory instanceof CalculationResolverFactory;
 

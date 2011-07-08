@@ -23,47 +23,47 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Read-only container of {@link ViewItem}s.
+ * Read-only container of {@link VisualItem}s.
  * 
  * @author Lars Grammel
  * 
- * @see ViewItem
+ * @see VisualItem
  */
-public interface ViewItemContainer {
+public interface VisualItemContainer {
 
     /**
      * @param handler
-     *            Handler that will be notified whenever the {@link ViewItem}s
+     *            Handler that will be notified whenever the {@link VisualItem}s
      *            in this container change.
      * 
      * @return {@link HandlerRegistration} that can used to remove
      *         {@code handler} from this container.
      */
-    HandlerRegistration addHandler(ViewItemContainerChangeEventHandler handler);
+    HandlerRegistration addHandler(VisualItemContainerChangeEventHandler handler);
 
     /**
-     * @return <code>true</code>, if there is a {@link ViewItem} with the
+     * @return <code>true</code>, if there is a {@link VisualItem} with the
      *         specified <code>viewItemId</code> in this container.
      */
     boolean containsViewItem(String viewItemId);
 
     /**
-     * @Return {@link ViewItem} with the given ID.
+     * @Return {@link VisualItem} with the given ID.
      * 
      * @throws NoSuchElementException
      *             thrown if there no view item with {@code viewItemId}
      */
-    ViewItem getViewItem(String viewItemId) throws NoSuchElementException;
+    VisualItem getViewItem(String viewItemId) throws NoSuchElementException;
 
     /**
-     * @return All {@link ViewItem}s in this container.
+     * @return All {@link VisualItem}s in this container.
      */
-    LightweightCollection<ViewItem> getViewItems();
+    LightweightCollection<VisualItem> getViewItems();
 
     /**
-     * @return {@link ViewItem}s that contain at least one of the given
+     * @return {@link VisualItem}s that contain at least one of the given
      *         {@link Resource}s.
      */
-    LightweightCollection<ViewItem> getViewItems(Iterable<Resource> resources);
+    LightweightCollection<VisualItem> getViewItems(Iterable<Resource> resources);
 
 }

@@ -15,10 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import com.google.gwt.event.shared.EventHandler;
+public interface VisualItemInteractionHandler {
 
-public interface ViewItemContainerChangeEventHandler extends EventHandler {
-
-    void onViewItemContainerChanged(ViewItemContainerChangeEvent event);
+    void onInteraction(VisualItem visualItem, VisualItemInteraction interaction);
 
 }

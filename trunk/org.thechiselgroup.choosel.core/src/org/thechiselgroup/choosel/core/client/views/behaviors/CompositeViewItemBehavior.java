@@ -18,34 +18,34 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
-public class CompositeViewItemBehavior implements ViewItemBehavior {
+public class CompositeViewItemBehavior implements VisualItemBehavior {
 
-    private List<ViewItemBehavior> behaviors = new ArrayList<ViewItemBehavior>();
+    private List<VisualItemBehavior> behaviors = new ArrayList<VisualItemBehavior>();
 
-    public boolean add(ViewItemBehavior e) {
+    public boolean add(VisualItemBehavior e) {
         return behaviors.add(e);
     }
 
     @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
-        for (ViewItemBehavior behavior : behaviors) {
+    public void onInteraction(VisualItem viewItem, VisualItemInteraction interaction) {
+        for (VisualItemBehavior behavior : behaviors) {
             behavior.onInteraction(viewItem, interaction);
         }
     }
 
     @Override
-    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
-        for (ViewItemBehavior behavior : behaviors) {
+    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+        for (VisualItemBehavior behavior : behaviors) {
             behavior.onViewItemContainerChanged(event);
         }
     }
 
-    public boolean remove(ViewItemBehavior e) {
+    public boolean remove(VisualItemBehavior e) {
         return behaviors.remove(e);
     }
 

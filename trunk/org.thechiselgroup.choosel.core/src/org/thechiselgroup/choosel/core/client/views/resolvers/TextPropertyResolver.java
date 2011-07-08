@@ -16,9 +16,9 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 public class TextPropertyResolver extends FirstResourcePropertyResolver {
 
@@ -27,11 +27,11 @@ public class TextPropertyResolver extends FirstResourcePropertyResolver {
     }
 
     @Override
-    public String resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context, Subset subset) {
+    public String resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context, Subset subset) {
         // XXX can lead to weird effects (issue 115)
         if (viewItem.getResources().size() >= 2) {
-            return viewItem.getViewItemID();
+            return viewItem.getId();
         }
 
         return (String) super.resolve(viewItem, context, subset);

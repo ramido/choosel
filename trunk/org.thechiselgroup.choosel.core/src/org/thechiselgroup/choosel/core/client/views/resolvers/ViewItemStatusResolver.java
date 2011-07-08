@@ -16,10 +16,10 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.views.filter.ViewItemPredicate;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver {
 
@@ -51,7 +51,7 @@ public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver 
 
         // TODO extract as ViewItemPredicate
         @Override
-        public boolean matches(ViewItem viewItem) {
+        public boolean matches(VisualItem viewItem) {
             return viewItem.isStatus(subset, status);
         }
 
@@ -70,15 +70,15 @@ public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver 
     }
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
         assert viewItem != null;
 
         for (StatusRule rule : rules) {

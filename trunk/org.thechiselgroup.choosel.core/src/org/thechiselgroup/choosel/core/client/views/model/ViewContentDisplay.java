@@ -28,12 +28,12 @@ import org.thechiselgroup.choosel.core.client.views.View;
  * @author Lars Grammel
  * 
  * @see View
- * @see ViewItem
+ * @see VisualItem
  */
 // TODO rename to visualization display or visualization renderer
 // NOTE: 3 main items: slots, properties, functionality interfaces
 // NOTE: has lifecycle (which should be described)
-public interface ViewContentDisplay extends ViewItemRenderer, WidgetAdaptable,
+public interface ViewContentDisplay extends VisualItemRenderer, WidgetAdaptable,
         Disposable, Persistable, Adaptable {
 
     void checkResize();

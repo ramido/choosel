@@ -17,10 +17,10 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public interface ViewItemValueResolverUIController extends WidgetAdaptable {
 
-    void update(LightweightCollection<ViewItem> viewItems);
+    void update(LightweightCollection<VisualItem> viewItems);
 
 }

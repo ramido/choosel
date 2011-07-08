@@ -64,7 +64,7 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
 
     @Override
     public HandlerRegistration addHandler(
-            ViewItemContainerChangeEventHandler handler) {
+            VisualItemContainerChangeEventHandler handler) {
 
         return delegate.addHandler(handler);
     }
@@ -115,7 +115,7 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
     }
 
     @Override
-    public LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem) {
+    public LightweightCollection<Slot> getSlotsWithErrors(VisualItem viewItem) {
         return delegate.getSlotsWithErrors(viewItem);
     }
 
@@ -130,28 +130,28 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
     }
 
     @Override
-    public ViewItem getViewItem(String viewItemId) {
+    public VisualItem getViewItem(String viewItemId) {
         return delegate.getViewItem(viewItemId);
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItems() {
+    public LightweightCollection<VisualItem> getViewItems() {
         return delegate.getViewItems();
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItems(
+    public LightweightCollection<VisualItem> getViewItems(
             Iterable<Resource> resources) {
         return delegate.getViewItems(resources);
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItemsWithErrors() {
+    public LightweightCollection<VisualItem> getViewItemsWithErrors() {
         return delegate.getViewItemsWithErrors();
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItemsWithErrors(Slot slot) {
+    public LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot) {
         return delegate.getViewItemsWithErrors(slot);
     }
 
@@ -166,7 +166,7 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
     }
 
     @Override
-    public boolean hasErrors(ViewItem viewItem) {
+    public boolean hasErrors(VisualItem viewItem) {
         return delegate.hasErrors(viewItem);
     }
 

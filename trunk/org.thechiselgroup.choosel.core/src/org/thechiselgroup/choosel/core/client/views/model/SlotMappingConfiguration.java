@@ -127,7 +127,7 @@ public class SlotMappingConfiguration implements
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)
      */
-    public Object resolve(Slot slot, ViewItem viewItem)
+    public Object resolve(Slot slot, VisualItem viewItem)
             throws SlotMappingResolutionException {
 
         try {

@@ -19,9 +19,9 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction.Type;
 import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEvent;
 import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEventHandler;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
@@ -41,11 +41,11 @@ public class DragEnabler {
     private static class InvisibleResourceSetAvatar extends
             DraggableResourceSetAvatar {
 
-        private final ViewItem item;
+        private final VisualItem item;
 
         private String text;
 
-        public InvisibleResourceSetAvatar(final ViewItem item, String text,
+        public InvisibleResourceSetAvatar(final VisualItem item, String text,
                 String enabledCSSClass, ResourceSetAvatarType type,
                 Element element, final DragEnabler dragEnabler) {
 
@@ -57,7 +57,7 @@ public class DragEnabler {
             addHandler(new DragProxyDetachedEventHandler() {
                 @Override
                 public void onDragProxyDetached(DragProxyDetachedEvent event) {
-                    item.reportInteraction(new ViewItemInteraction(
+                    item.reportInteraction(new VisualItemInteraction(
                             Type.DRAG_END));
                     dragEnabler.removeAvatar();
                 }
@@ -70,7 +70,7 @@ public class DragEnabler {
 
         @Override
         public ResourceSetAvatar createProxy() {
-            item.reportInteraction(new ViewItemInteraction(Type.DRAG_START));
+            item.reportInteraction(new VisualItemInteraction(Type.DRAG_START));
             return super.createProxy();
         }
 
@@ -88,14 +88,14 @@ public class DragEnabler {
 
     private ResourceSetAvatarDragController dragController;
 
-    private ViewItem viewItem;
+    private VisualItem viewItem;
 
     /**
      * Invisible {@link ResourceSetAvatar} that receives events.
      */
     private ResourceSetAvatar hiddenAvatar;
 
-    public DragEnabler(ViewItem item, Desktop desktop,
+    public DragEnabler(VisualItem item, Desktop desktop,
             ResourceSetAvatarDragController dragController) {
 
         assert item != null;
@@ -126,7 +126,7 @@ public class DragEnabler {
          * XXX using the view item ID as text is problematic, because it is not
          * a good description if there is no aggregation.
          */
-        final String text = viewItem.getViewItemID();
+        final String text = viewItem.getId();
         hiddenAvatar = new InvisibleResourceSetAvatar(viewItem, text,
                 "avatar-resourceSet", ResourceSetAvatarType.SET, span, this);
 
@@ -332,7 +332,7 @@ public class DragEnabler {
         removeAvatar();
     }
 
-    public void onMoveInteraction(ViewItemInteraction interaction) {
+    public void onMoveInteraction(VisualItemInteraction interaction) {
         if (interaction.hasNativeEvent()) {
             forwardMouseMove(interaction.getNativeEvent());
         } else {

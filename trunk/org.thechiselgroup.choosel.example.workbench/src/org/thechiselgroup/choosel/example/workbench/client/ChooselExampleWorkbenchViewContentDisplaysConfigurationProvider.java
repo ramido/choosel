@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewContentDisplaysConfigurationProvider;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SubsetDelegatingValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;

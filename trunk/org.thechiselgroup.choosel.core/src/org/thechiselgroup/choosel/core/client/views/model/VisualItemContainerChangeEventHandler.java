@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-public interface ViewItemInteractionHandler {
+import com.google.gwt.event.shared.EventHandler;
 
-    void onInteraction(ViewItem viewItem, ViewItemInteraction interaction);
+public interface VisualItemContainerChangeEventHandler extends EventHandler {
+
+    void onViewItemContainerChanged(VisualItemContainerChangeEvent event);
 
 }
