@@ -50,6 +50,7 @@ import org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
@@ -150,11 +151,9 @@ public class GraphViewContentDisplayTest {
     }
 
     private void addViewItemToUnderTest(
-            LightweightCollection<VisualItem> resourceItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
-        underTest.update(resourceItems,
-                LightweightCollections.<VisualItem> emptySet(),
-                LightweightCollections.<VisualItem> emptySet(),
+        underTest.update(Delta.createAddedDelta(visualItems),
                 LightweightCollections.<Slot> emptySet());
     }
 
@@ -330,7 +329,7 @@ public class GraphViewContentDisplayTest {
 
         VisualItem result = argument.getValue();
         assertEquals(1, result.getResources().size());
-        assertEquals(resource, result.getResources().getFirstResource());
+        assertEquals(resource, result.getResources().getFirstElement());
     }
 
     @Test
@@ -344,10 +343,9 @@ public class GraphViewContentDisplayTest {
         callback.addViewItem(viewItem);
         addViewItemToUnderTest(LightweightCollections.toCollection(viewItem));
 
-        underTest.update(LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<Slot> emptyCollection());
+        underTest.update(Delta.createRemovedDelta(LightweightCollections
+                .toCollection(viewItem)), LightweightCollections
+                .<Slot> emptyCollection());
 
         assertThat(underTest.getAllResources(),
                 containsExactly(createResources()));
@@ -386,10 +384,9 @@ public class GraphViewContentDisplayTest {
         // simulate remove
         when(graphDisplay.containsNode(groupId1)).thenReturn(false);
         callback.removeResourceItem(resourceItem1);
-        underTest.update(LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.toCollection(resourceItem1),
-                LightweightCollections.<Slot> emptyCollection());
+        underTest.update(Delta.createRemovedDelta(LightweightCollections
+                .toCollection(resourceItem1)), LightweightCollections
+                .<Slot> emptyCollection());
 
         verifyArcRemoved(arcId, groupId1, groupId2);
     }
@@ -422,10 +419,9 @@ public class GraphViewContentDisplayTest {
         // simulate remove
         when(graphDisplay.containsNode(groupId2)).thenReturn(false);
         callback.removeResourceItem(viewItem2);
-        underTest.update(LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.toCollection(viewItem2),
-                LightweightCollections.<Slot> emptyCollection());
+        underTest.update(Delta.createRemovedDelta(LightweightCollections
+                .toCollection(viewItem2)), LightweightCollections
+                .<Slot> emptyCollection());
 
         verifyArcRemoved(arcId, groupId1, groupId2);
     }
@@ -593,10 +589,10 @@ public class GraphViewContentDisplayTest {
                 automaticExpander);
     }
 
-    private void simulateAddViewItems(LightweightCollection<VisualItem> viewItems) {
+    private void simulateAddViewItems(
+            LightweightCollection<VisualItem> viewItems) {
         for (VisualItem viewItem : viewItems) {
-            when(graphDisplay.containsNode(viewItem.getId()))
-                    .thenReturn(true);
+            when(graphDisplay.containsNode(viewItem.getId())).thenReturn(true);
             stubColorSlotValues(viewItem);
         }
         callback.addViewItems(viewItems);

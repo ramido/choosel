@@ -15,13 +15,48 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.collections;
 
-
 /**
- * Change: new, changed, and removed elements.
+ * <p>
+ * Delta of Change: new, changed, and removed elements.
+ * </p>
+ * <p>
+ * It is guaranteed that added, removed and updated elements are never
+ * <code>null</code>, but they can be an empty set.
+ * </p>
  * 
  * @author Lars Grammel
  */
 public class Delta<T> {
+
+    public static <T> Delta<T> createAddedDelta(
+            LightweightCollection<T> addedElements) {
+
+        return new Delta<T>(addedElements,
+                LightweightCollections.<T> emptyCollection(),
+                LightweightCollections.<T> emptyCollection());
+    }
+
+    public static <T> Delta<T> createDelta(
+            LightweightCollection<T> addedElements,
+            LightweightCollection<T> updatedElements,
+            LightweightCollection<T> removedElements) {
+
+        return new Delta<T>(addedElements, updatedElements, removedElements);
+    }
+
+    public static <T> Delta<T> createRemovedDelta(
+            LightweightCollection<T> removedElements) {
+
+        return new Delta<T>(LightweightCollections.<T> emptyCollection(),
+                LightweightCollections.<T> emptyCollection(), removedElements);
+    }
+
+    public static <T> Delta<T> createUpdatedDelta(
+            LightweightCollection<T> updatedElements) {
+
+        return new Delta<T>(LightweightCollections.<T> emptyCollection(),
+                updatedElements, LightweightCollections.<T> emptyCollection());
+    }
 
     private LightweightCollection<T> addedElements;
 
@@ -29,7 +64,7 @@ public class Delta<T> {
 
     private LightweightCollection<T> updatedElements;
 
-    public Delta(LightweightCollection<T> addedElements,
+    private Delta(LightweightCollection<T> addedElements,
             LightweightCollection<T> updatedElements,
             LightweightCollection<T> removedElements) {
 

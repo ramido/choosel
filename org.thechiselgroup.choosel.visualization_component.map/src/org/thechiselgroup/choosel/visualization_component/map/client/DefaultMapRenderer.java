@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
@@ -85,30 +86,28 @@ public class DefaultMapRenderer implements MapRenderer {
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedViewItems,
-            LightweightCollection<VisualItem> updatedViewItems,
-            LightweightCollection<VisualItem> removedViewItems,
-            LightweightCollection<Slot> changedSlots) {
+    public void update(Delta<VisualItem> delta,
+            LightweightCollection<Slot> updatedSlots) {
 
         // TODO pull up
         if (!map.isAttached()) {
             return;
         }
 
-        for (VisualItem resourceItem : addedViewItems) {
+        for (VisualItem resourceItem : delta.getAddedElements()) {
             initMapItem(resourceItem);
         }
 
-        for (VisualItem resourceItem : removedViewItems) {
+        for (VisualItem resourceItem : delta.getRemovedElements()) {
             removeOverlay(resourceItem);
         }
 
         // TODO refactor
-        if (!changedSlots.isEmpty()) {
+        if (!updatedSlots.isEmpty()) {
             for (VisualItem viewItem : callback.getViewItems()) {
                 DefaultMapItem mapItem = (DefaultMapItem) viewItem
                         .getDisplayObject();
-                for (Slot slot : changedSlots) {
+                for (Slot slot : updatedSlots) {
                     if (slot.equals(Map.BORDER_COLOR)) {
                         mapItem.updateBorderColor();
                     } else if (slot.equals(Map.COLOR)) {
@@ -120,7 +119,7 @@ public class DefaultMapRenderer implements MapRenderer {
             }
         }
 
-        updateStatusStyling(updatedViewItems);
+        updateStatusStyling(delta.getUpdatedElements());
     }
 
     private void updateStatusStyling(LightweightCollection<VisualItem> viewItems) {

@@ -15,12 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedDelta;
+
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
@@ -199,9 +202,7 @@ public class Map extends AbstractViewContentDisplay {
         renderer.onAttach();
 
         // add all view items
-        update(callback.getViewItems(),
-                LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.<VisualItem> emptyCollection(),
+        update(createAddedDelta(callback.getViewItems()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -300,19 +301,15 @@ public class Map extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedViewItems,
-            LightweightCollection<VisualItem> updatedViewItems,
-            LightweightCollection<VisualItem> removedViewItems,
-            LightweightCollection<Slot> changedSlots) {
+    public void update(Delta<VisualItem> delta,
+            LightweightCollection<Slot> updatedSlots) {
 
         // TODO pull up
         if (!map.isAttached()) {
             return;
         }
 
-        renderer.update(addedViewItems, updatedViewItems, removedViewItems,
-                changedSlots);
-
+        renderer.update(delta, updatedSlots);
     }
 
 }

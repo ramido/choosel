@@ -20,6 +20,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayProperty;
@@ -217,8 +218,8 @@ public class ScatterPlot extends ChartViewContentDisplay {
         TextBoundsEstimator estimator = new TextBoundsEstimator(FONT_FAMILY,
                 FONT_STYLE, FONT_WEIGHT, FONT_SIZE);
 
-        final Map<String, Integer> textWidths = estimator
-                .getWidths(shapeLegend.values());
+        final Map<String, Integer> textWidths = estimator.getWidths(shapeLegend
+                .values());
 
         int descriptionsWidth = 0;
         for (Integer integer : textWidths.values()) {
@@ -378,9 +379,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedResourceItems,
-            LightweightCollection<VisualItem> updatedResourceItems,
-            LightweightCollection<VisualItem> removedResourceItems,
+    public void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO re-enable
@@ -391,8 +390,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
         this.shapeLegendLabel = callback.getSlotResolverDescription(SHAPE);
         // }
 
-        super.update(addedResourceItems, updatedResourceItems,
-                removedResourceItems, changedSlots);
+        super.update(delta, changedSlots);
     }
 
 }

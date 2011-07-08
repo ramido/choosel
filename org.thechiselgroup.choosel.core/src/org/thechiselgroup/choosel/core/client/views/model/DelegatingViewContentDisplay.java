@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 
@@ -36,6 +37,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
         assert delegate != null;
 
         this.delegate = delegate;
+    }
+
+    @Override
+    public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
+        return delegate.adaptTo(clazz);
     }
 
     @Override
@@ -56,11 +62,6 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public void endRestore() {
         delegate.endRestore();
-    }
-
-    @Override
-    public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
-        return delegate.adaptTo(clazz);
     }
 
     public ViewContentDisplay getDelegate() {
@@ -126,13 +127,9 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedResourceItems,
-            LightweightCollection<VisualItem> updatedResourceItems,
-            LightweightCollection<VisualItem> removedResourceItems,
-            LightweightCollection<Slot> changedSlots) {
-
-        delegate.update(addedResourceItems, updatedResourceItems,
-                removedResourceItems, changedSlots);
+    public void update(Delta<VisualItem> delta,
+            LightweightCollection<Slot> updatedSlots) {
+        delegate.update(delta, updatedSlots);
     }
 
 }

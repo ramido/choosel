@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
@@ -139,9 +140,7 @@ public class TimeLine extends AbstractViewContentDisplay {
     // TODO pull up
     protected void onAttach() {
         // add all view items
-        update(callback.getViewItems(),
-                LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.<VisualItem> emptyCollection(),
+        update(Delta.createDelta(callback.getViewItems(), LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -150,9 +149,7 @@ public class TimeLine extends AbstractViewContentDisplay {
         // might have been disposed (then callback would be null)
         if (callback != null) {
             // remove all view items
-            update(LightweightCollections.<VisualItem> emptyCollection(),
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    callback.getViewItems(),
+            update(Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection(), callback.getViewItems()),
                     LightweightCollections.<Slot> emptyCollection());
         }
     }
@@ -197,36 +194,40 @@ public class TimeLine extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> addedResourceItems,
-            LightweightCollection<VisualItem> updatedResourceItems,
-            LightweightCollection<VisualItem> removedResourceItems,
-            LightweightCollection<Slot> changedSlots) {
+    public void update(Delta<VisualItem> delta,
+            LightweightCollection<Slot> updatedSlots) {
 
         // TODO pull up
         if (!timelineWidget.isAttached()) {
             return;
         }
 
-        if (!addedResourceItems.isEmpty()) {
-            createTimeLineItems(addedResourceItems);
-            addEventsToTimeline(addedResourceItems);
-            updateStatusStyling(addedResourceItems);
+        LightweightCollection<VisualItem> addedVisualItems = delta
+                .getAddedElements();
+        if (!addedVisualItems.isEmpty()) {
+            createTimeLineItems(addedVisualItems);
+            addEventsToTimeline(addedVisualItems);
+            updateStatusStyling(addedVisualItems);
         }
 
-        if (!updatedResourceItems.isEmpty()) {
-            updateStatusStyling(updatedResourceItems);
+        LightweightCollection<VisualItem> updatedVisualItems = delta
+                .getUpdatedElements();
+        if (!updatedVisualItems.isEmpty()) {
+            updateStatusStyling(updatedVisualItems);
         }
 
-        if (!removedResourceItems.isEmpty()) {
-            removeEventsFromTimeline(removedResourceItems);
+        LightweightCollection<VisualItem> removedVisualItems = delta
+                .getRemovedElements();
+        if (!removedVisualItems.isEmpty()) {
+            removeEventsFromTimeline(removedVisualItems);
         }
 
         // TODO refactor
-        if (!changedSlots.isEmpty()) {
+        if (!updatedSlots.isEmpty()) {
             for (VisualItem resourceItem : getCallback().getViewItems()) {
                 TimeLineItem timelineItem = (TimeLineItem) resourceItem
                         .getDisplayObject();
-                for (Slot slot : changedSlots) {
+                for (Slot slot : updatedSlots) {
                     if (slot.equals(BORDER_COLOR)) {
                         timelineItem.updateBorderColor();
                     } else if (slot.equals(COLOR)) {

@@ -22,16 +22,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItem;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
@@ -42,8 +43,6 @@ import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
 public class TextViewContentDisplayTest {
-
-    private ResourceSet allResources;
 
     @Mock
     private ViewContentDisplayCallback callback;
@@ -70,33 +69,26 @@ public class TextViewContentDisplayTest {
         when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
         when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.NONE);
 
-        underTest.update(LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<VisualItem> emptySet(),
-                LightweightCollections.<VisualItem> emptySet(),
+        underTest.update(createAddedDelta(toCollection(viewItem)),
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
         when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.FULL);
-        underTest.update(LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<VisualItem> emptyCollection(),
+        underTest.update(createUpdatedDelta(toCollection(viewItem)),
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
         when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.PARTIAL);
-        underTest.update(LightweightCollections.<VisualItem> emptySet(),
-                LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<VisualItem> emptySet(),
+        underTest.update(createUpdatedDelta(toCollection(viewItem)),
                 LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
 
         // highlighting is removed after drag operation
         when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
-        underTest.update(LightweightCollections.<VisualItem> emptySet(),
-                LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<VisualItem> emptySet(),
-                LightweightCollections.<Slot> emptySet());
+        underTest.update(createUpdatedDelta(LightweightCollections
+                .toCollection(viewItem)), LightweightCollections
+                .<Slot> emptySet());
 
         // check label status (should be: partially selected, but not partially
         // highlighted)
@@ -110,8 +102,6 @@ public class TextViewContentDisplayTest {
     public void setUp() throws Exception {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
-
-        allResources = new DefaultResourceSet();
 
         when(textItemContainer.createTextItemLabel(any(VisualItem.class)))
                 .thenReturn(itemLabel);
