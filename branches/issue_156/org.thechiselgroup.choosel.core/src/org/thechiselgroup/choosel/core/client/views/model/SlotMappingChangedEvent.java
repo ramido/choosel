@@ -26,9 +26,12 @@ public class SlotMappingChangedEvent extends
 
     private final Slot slot;
 
+    private final ViewItemValueResolver oldResolver;
+
     private final ViewItemValueResolver currentResolver;
 
     public SlotMappingChangedEvent(Slot slot,
+            ViewItemValueResolver oldResolver,
             ViewItemValueResolver currentResolver) {
 
         assert slot != null;
@@ -36,6 +39,7 @@ public class SlotMappingChangedEvent extends
 
         this.slot = slot;
         this.currentResolver = currentResolver;
+        this.oldResolver = oldResolver;
     }
 
     @Override
@@ -52,14 +56,18 @@ public class SlotMappingChangedEvent extends
         return currentResolver;
     }
 
+    public ViewItemValueResolver getOldResolver() {
+        return oldResolver;
+    }
+
     public Slot getSlot() {
         return slot;
     }
 
     @Override
     public String toString() {
-        return "SlotMappingChangedEvent [slot=" + slot + ", currentResolver="
-                + currentResolver + "]";
+        return "SlotMappingChangedEvent [slot=" + slot + ", oldResolver="
+                + oldResolver + ", currentResolver=" + currentResolver + "]";
     }
 
 }

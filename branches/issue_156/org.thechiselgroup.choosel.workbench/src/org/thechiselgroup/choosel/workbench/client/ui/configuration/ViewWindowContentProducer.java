@@ -267,11 +267,25 @@ public class ViewWindowContentProducer implements WindowContentProducer {
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
 
                 ViewItemValueResolver resolver = e.getCurrentResolver();
+                ViewItemValueResolver oldResolver = e.getOldResolver();
 
                 assert resolver instanceof ManagedViewItemValueResolver;
 
-                visualMappingsControl.updateConfigurationForChangedSlotMapping(
-                        e.getSlot(), (ManagedViewItemValueResolver) resolver);
+                // TODO refactor
+                if (oldResolver == null) {
+                    visualMappingsControl
+                            .updateConfigurationForChangedSlotMapping(
+                                    e.getSlot(), null,
+                                    (ManagedViewItemValueResolver) resolver);
+                } else {
+                    assert oldResolver instanceof ManagedViewItemValueResolver;
+
+                    visualMappingsControl
+                            .updateConfigurationForChangedSlotMapping(
+                                    e.getSlot(),
+                                    (ManagedViewItemValueResolver) oldResolver,
+                                    (ManagedViewItemValueResolver) resolver);
+                }
             }
         });
 

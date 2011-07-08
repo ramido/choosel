@@ -17,10 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolver;
 
@@ -77,4 +74,5 @@ public class SlotMappingConfigurationTest {
 
         underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 });
     }
+
 }

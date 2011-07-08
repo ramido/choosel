@@ -64,7 +64,8 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
 
         for (Resource resource : viewItem.getResources()) {
             // XXX also need to check property data type.
-            if (!resource.containsProperty(property)) {
+            if (!resource.containsProperty(property)
+                    || resource.getValue(property) == null) {
                 return false;
             }
         }

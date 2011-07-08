@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemVal
 public interface VisualMappingsControl extends WidgetAdaptable {
 
     void updateConfigurationForChangedSlotMapping(Slot slot,
+            ManagedViewItemValueResolver oldResolver,
             ManagedViewItemValueResolver currentResolver);
 
     void updateConfigurationForChangedViewItems(

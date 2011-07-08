@@ -121,7 +121,8 @@ public class SlotMappingUIModel {
     // TODO rethink what I want to do in this situation, I don't need to set an
     // error state because I just check the current resolver's error state,
     // should I even be watching these events
-    public void currentResolverWasSet(ViewItemValueResolver resolver,
+    public void currentResolverWasSet(ViewItemValueResolver oldResolver,
+            ViewItemValueResolver resolver,
             LightweightCollection<ViewItem> viewItems) {
         if (!(resolverIsManaged(resolver))) {
             // I am not managed, and am in error
@@ -139,7 +140,8 @@ public class SlotMappingUIModel {
 
         // TODO I may want to fire this event even though there is an error in
         // the stuff
-        eventBus.fireEvent(new SlotMappingChangedEvent(slot, resolver));
+        eventBus.fireEvent(new SlotMappingChangedEvent(slot, oldResolver,
+                resolver));
     }
 
     public boolean errorsInModel() {

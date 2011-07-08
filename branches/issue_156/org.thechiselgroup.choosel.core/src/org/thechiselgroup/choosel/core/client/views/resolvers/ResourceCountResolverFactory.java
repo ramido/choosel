@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 public class ResourceCountResolverFactory implements
         ViewItemValueResolverFactory {
 
-    public static final String ID = "org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolverFactory";
+    public static final String ID = "ResourceCountResolverFactory";
 
     private final Subset subset;
 

@@ -31,6 +31,14 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class SlotMappingConfiguration implements
         SlotMappingConfigurationInterface {
 
+    // TODO move
+    private static <S, T> void assertNoNullValues(Map<S, T> map) {
+        for (Entry<S, T> entry : map.entrySet()) {
+            assert entry.getValue() != null : "map entry for " + entry.getKey()
+                    + " must not be null";
+        }
+    }
+
     private transient PrioritizedHandlerManager handlerManager;
 
     private Map<Slot, ViewItemValueResolver> slotsToResolvers = new HashMap<Slot, ViewItemValueResolver>();
@@ -46,12 +54,18 @@ public class SlotMappingConfiguration implements
         this.slots = slots;
 
         initSlotsById(slots);
+
+        assertInvariants();
     }
 
     @Override
     public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
+    }
+
+    private void assertInvariants() {
+        assertNoNullValues(slotsToResolvers);
     }
 
     @Override
@@ -126,6 +140,7 @@ public class SlotMappingConfiguration implements
 
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
+        assertInvariants();
         assert slot != null : "slot must not be null";
         assert resolver != null : "resolver must not be null";
         assert resolver.getTargetSlots() != null : "resolver "
@@ -134,19 +149,31 @@ public class SlotMappingConfiguration implements
         assert slotsByID.containsKey(slot.getId()) : "slot " + slot
                 + " is not allowed (valid slots: " + slotsByID.values() + ")";
 
+        ViewItemValueResolver oldResolver = slotsToResolvers.get(slot);
         slotsToResolvers.put(slot, resolver);
 
-        handlerManager.fireEvent(new SlotMappingChangedEvent(slot, resolver));
+        handlerManager.fireEvent(new SlotMappingChangedEvent(slot, oldResolver,
+                resolver));
 
         // fire events for delegating resolvers that reference this slot
         for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
-            for (Slot targetSlot : entry.getValue().getTargetSlots()) {
+            LightweightCollection<Slot> targetSlots = entry.getValue()
+                    .getTargetSlots();
+
+            assert targetSlots != null : "getTargetSlots() for resolver "
+                    + entry.getValue().getClass() + " must not be null";
+
+            for (Slot targetSlot : targetSlots) {
                 if (targetSlot.equals(slot)) {
+                    // TODO I'm not sure if this is how target resolvers work,
+                    // ask lars
                     handlerManager.fireEvent(new SlotMappingChangedEvent(entry
-                            .getKey(), resolver));
+                            .getKey(), oldResolver, resolver));
                 }
             }
         }
+
+        assertInvariants();
     }
 }

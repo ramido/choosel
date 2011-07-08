@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurati
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.TextPropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -67,6 +68,12 @@ public class TextSlotControl extends SlotControl {
     }
 
     @Override
+    public String getCurrentResolverID() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public void updateOptions(LightweightCollection<ViewItem> viewItems) {
         // TODO Auto-generated method stub
 
@@ -86,5 +93,11 @@ public class TextSlotControl extends SlotControl {
                 propertySelector.setSelectedValue(property);
             }
         }
+    }
+
+    @Override
+    public void setNewUIModel(ViewItemValueResolverUIController resolverUI) {
+        // TODO Auto-generated method stub
+
     }
 }

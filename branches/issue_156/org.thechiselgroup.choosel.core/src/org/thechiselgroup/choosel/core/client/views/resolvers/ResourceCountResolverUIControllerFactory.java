@@ -18,8 +18,6 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 public class ResourceCountResolverUIControllerFactory implements
         ViewItemValueResolverUIControllerFactory {
 
-    private static final String ID = "ResourceCountResolver";
-
     @Override
     public ViewItemValueResolverUIController create(
             ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
@@ -28,7 +26,7 @@ public class ResourceCountResolverUIControllerFactory implements
 
     @Override
     public String getId() {
-        return ID;
+        return ResourceCountResolverFactory.ID;
     }
 
 }

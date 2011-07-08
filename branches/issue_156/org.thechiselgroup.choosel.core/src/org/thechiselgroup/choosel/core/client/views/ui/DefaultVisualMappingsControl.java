@@ -100,6 +100,22 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return visualMappingPanel;
     }
 
+    private ViewItemValueResolverUIController createUIControllerFromResolver(
+            Slot slot, ManagedViewItemValueResolver currentResolver) {
+        ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
+                .getFactoryById(currentResolver.getResolverId());
+
+        assert uiFactory != null;
+
+        // TODO realistically, to create a valid preconfigured ui controller,
+        // you need the current view items
+        ViewItemValueResolverUIController resolverUI = uiFactory.create(
+                resolverFactoryProvider.getFactoryById(currentResolver
+                        .getResolverId()), slotMappingConfigurationUIModel
+                        .getSlotMappingUIModel(slot));
+        return resolverUI;
+    }
+
     // TODO uh, shouldnt we just initialize the visualMappingSPanel in the
     // constructor, as well as the other two things.
     private void init() {
@@ -130,40 +146,57 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
                 groupingBox.asWidget());
     }
 
+    private SlotControl initSlotControl(Slot slot,
+            ViewItemValueResolverUIController resolverUI,
+            SlotControl currentSlotControl) {
+
+        DefaultSlotControl slotControl = new DefaultSlotControl(slot,
+                slotMappingConfigurationUIModel, resolverUI);
+
+        this.slotToSlotControls.put(slot, slotControl);
+        addSlotControl(slot, slotControl);
+
+        return slotControl;
+
+    }
+
     // TODO we may want to create add a control for each slot, with an empty
     // widget
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
     }
 
-    // TODO this really needs to take into account the current ViewItems in the
-    // view. What if we change the slot mapping, and what we create is dependant
-    // on the new view items or something
     @Override
     public void updateConfigurationForChangedSlotMapping(Slot slot,
+            ManagedViewItemValueResolver oldResolver,
             ManagedViewItemValueResolver currentResolver) {
 
-        assert currentResolver.equals(slotMappingConfigurationUIModel
-                .getCurrentResolver(slot));
+        ViewItemValueResolverUIController resolverUI = createUIControllerFromResolver(
+                slot, currentResolver);
 
-        if (slotMappingConfigurationUIModel.slotHasInvalidResolver(slot)) {
-            // TODO how should I handle errors here???
+        SlotControl currentSlotControl = this.slotToSlotControls.get(slot);
+        if (currentSlotControl == null) {
+            currentSlotControl = initSlotControl(slot, resolverUI,
+                    currentSlotControl);
         }
 
-        ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
-                .getFactoryById(currentResolver.getResolverId());
+        /*
+         * if the factory has changed, then the uiController must be changed and
+         * updated
+         */
+        if (oldResolver == null
+                || !oldResolver.getResolverId().equals(
+                        currentResolver.getResolverId())) {
+            // if yes, reset the uiController
 
-        assert uiFactory != null;
+            // update the resolveUI to ensure that it's in a valid state
+            resolverUI.update(slotMappingConfigurationUIModel.getViewItems());
+            currentSlotControl.setNewUIModel(resolverUI);
 
-        ViewItemValueResolverUIController resolverUI = uiFactory.create(
-                resolverFactoryProvider.getFactoryById(currentResolver
-                        .getResolverId()), slotMappingConfigurationUIModel
-                        .getSlotMappingUIModel(slot));
-
-        SlotControl slotControl = new DefaultSlotControl(slot,
-                slotMappingConfigurationUIModel, resolverUI);
-
-        addSlotControl(slot, slotControl);
+            // this is firing the second event
+            currentSlotControl.updateOptions(slotMappingConfigurationUIModel
+                    .getViewItems());
+        }
     }
 
     @Override

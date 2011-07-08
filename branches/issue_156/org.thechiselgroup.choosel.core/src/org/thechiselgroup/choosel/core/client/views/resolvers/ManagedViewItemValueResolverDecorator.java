@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 public class ManagedViewItemValueResolverDecorator implements
         ManagedViewItemValueResolver {
 
-    private ViewItemValueResolver delegate;
+    protected ViewItemValueResolver delegate;
 
     private String resolverId;
 

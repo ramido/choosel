@@ -4,11 +4,6 @@ import static org.thechiselgroup.choosel.core.client.views.resolvers.Preconfigur
 
 import java.util.HashMap;
 
-import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-
 import com.google.inject.Inject;
 
 public class PreconfiguredViewItemResolverUIFactoryProvider extends
@@ -17,19 +12,12 @@ public class PreconfiguredViewItemResolverUIFactoryProvider extends
     public void registerFactories() {
         idToFactoryMap = new HashMap<String, ViewItemValueResolverUIControllerFactory>();
 
-        add(new FixedValueViewItemResolverUIControllerFactory("Fixed-1"));
-        add(new FirstResourcePropertyResolverUIControllerFactory(
-                "Text-Property-Resolver"));
-
         add(new ResourceCountResolverUIControllerFactory());
-        add(new CalculationResolverUIControllerFactory(new SumCalculation(),
-                SUM_RESOLVER_FACTORY_ID));
+        add(new CalculationResolverUIControllerFactory(SUM_RESOLVER_FACTORY_ID));
         add(new CalculationResolverUIControllerFactory(
-                new AverageCalculation(), AVERAGE_RESOLVER_FACTORY_ID));
-        add(new CalculationResolverUIControllerFactory(new MaxCalculation(),
-                MAX_RESOLVER_FACTORY_ID));
-        add(new CalculationResolverUIControllerFactory(new MinCalculation(),
-                MIN_RESOLVER_FACTORY_ID));
+                AVERAGE_RESOLVER_FACTORY_ID));
+        add(new CalculationResolverUIControllerFactory(MAX_RESOLVER_FACTORY_ID));
+        add(new CalculationResolverUIControllerFactory(MIN_RESOLVER_FACTORY_ID));
 
         add(new FixedValueViewItemResolverUIControllerFactory(
                 FIXED_1_RESOLVER_FACTORY_ID));

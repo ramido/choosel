@@ -346,7 +346,7 @@ public class SlotMappingConfigurationUIModelTest {
 
         SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
         SlotMappingChangedEvent event = new SlotMappingChangedEvent(slots[0],
-                resolver2);
+                resolver1, resolver2);
         handler.onSlotMappingChanged(event);
 
         SlotMappingChangedEvent resultingEvent = captureSlotMappingChangedEvent(uiModelHandler);

@@ -60,7 +60,8 @@ public class SlotMappingConfigurationUIModel {
         viewModel.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
-                handleResolverChange(e.getSlot(), e.getCurrentResolver());
+                handleResolverChange(e.getSlot(), e.getOldResolver(),
+                        e.getCurrentResolver());
             }
         });
         viewModel.addHandler(new ViewItemContainerChangeEventHandler() {
@@ -110,9 +111,10 @@ public class SlotMappingConfigurationUIModel {
         return viewModel.getViewItems();
     }
 
-    public void handleResolverChange(Slot slot, ViewItemValueResolver resolver) {
-        slotsToSlotMappings.get(slot).currentResolverWasSet(resolver,
-                viewModel.getViewItems());
+    public void handleResolverChange(Slot slot,
+            ViewItemValueResolver oldResolver, ViewItemValueResolver resolver) {
+        slotsToSlotMappings.get(slot).currentResolverWasSet(oldResolver,
+                resolver, viewModel.getViewItems());
     }
 
     private void initSlotModels(Slot[] slots) {

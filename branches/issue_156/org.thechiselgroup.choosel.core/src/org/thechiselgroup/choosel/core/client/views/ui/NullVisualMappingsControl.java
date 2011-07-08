@@ -31,7 +31,9 @@ public class NullVisualMappingsControl implements VisualMappingsControl {
 
     @Override
     public void updateConfigurationForChangedSlotMapping(Slot slot,
+            ManagedViewItemValueResolver oldResolver,
             ManagedViewItemValueResolver currentResolver) {
+
     }
 
     @Override

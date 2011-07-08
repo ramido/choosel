@@ -63,7 +63,8 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
         Resource resource = ResourceSetUtils.firstResource(resources);
 
         // XXX need to check for property type
-        return resource.containsProperty(property);
+        return resource.containsProperty(property)
+                && resource.getValue(property) != null;
     }
 
     @Override
@@ -75,8 +76,9 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
     public Object resolve(ViewItem viewItem,
             ViewItemValueResolverContext context, Subset subset) {
 
-        // TODO what if viewItem could be resolved, but not for subset?
+        assert canResolve(viewItem, context);
 
+        // TODO what if viewItem could be resolved, but not for subset?
         ResourceSet resources = viewItem.getResources(subset);
         return ResourceSetUtils.firstResource(resources).getValue(property);
     }

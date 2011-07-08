@@ -29,7 +29,7 @@ public abstract class AbstractSimpleViewItemValueResolver implements
         ViewItemValueResolver {
 
     @Override
-    public LightweightCollection<Slot> getTargetSlots() {
+    public final LightweightCollection<Slot> getTargetSlots() {
         return LightweightCollections.emptyCollection();
     }
 

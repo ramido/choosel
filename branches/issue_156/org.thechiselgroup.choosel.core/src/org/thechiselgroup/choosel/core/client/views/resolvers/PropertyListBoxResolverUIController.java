@@ -55,6 +55,8 @@ public abstract class PropertyListBoxResolverUIController implements
         }
     };
 
+    // TODO add in the configuration here so we can precalculate the properties
+    // without firing an event
     public PropertyListBoxResolverUIController(
             PropertyDependantViewItemValueResolverFactory resolverFactory,
             SlotMappingUIModel uiModel) {
@@ -86,6 +88,8 @@ public abstract class PropertyListBoxResolverUIController implements
         ManagedViewItemValueResolver currentResolver = uiModel
                 .getCurrentResolver();
 
+        // XXX cannot cast because it is actually the Decorator that we are
+        // getting, and the delegate is the thing that is PropertyDependant
         assert currentResolver instanceof PropertyDependantViewItemValueResolver;
         return (PropertyDependantViewItemValueResolver) currentResolver;
     }

@@ -64,8 +64,9 @@ public class FirstResourcePropertyResolverFactory extends
 
     @Override
     public ManagedViewItemValueResolver create(String property) {
-        return new ManagedViewItemValueResolverDecorator(resolverID,
-                new FirstResourcePropertyResolver(property, dataType));
+        return new PropertyDependantManagedViewItemValueResolverDecorator(
+                resolverID, new FirstResourcePropertyResolver(property,
+                        dataType));
     }
 
     @Override

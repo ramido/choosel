@@ -15,30 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 
 public class CalculationResolverUIControllerFactory implements
         ViewItemValueResolverUIControllerFactory {
 
-    private final Calculation calculation;
-
     private final String id;
 
-    public CalculationResolverUIControllerFactory(Calculation calculation,
-            String id) {
-        this.calculation = calculation;
+    public CalculationResolverUIControllerFactory(String id) {
         this.id = id;
     }
 
-    @Override
     public ViewItemValueResolverUIController create(
             ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
 
         assert factory instanceof CalculationResolverFactory;
 
-        return new CalculationResolverUIController(
+        CalculationResolverUIController calculationResolverUIController = new CalculationResolverUIController(
                 (CalculationResolverFactory) factory, uiModel);
 
+        return calculationResolverUIController;
     }
 
     @Override

@@ -79,8 +79,6 @@ public class PreconfiguredViewItemValueResolverFactoryProvider extends
                 149, 237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
         registerFactory(new FixedValueViewItemResolverFactory(new Date(),
                 DataType.DATE, FIXED_DATE_TODAY_FACTORY_ID));
-        registerFactory(new FixedValueViewItemResolverFactory("",
-                DataType.TEXT, FIXED_EMPTY_STRING_FACTORY_ID));
 
         /**
          * TODO extract all of the inline fixed property value resolvers into

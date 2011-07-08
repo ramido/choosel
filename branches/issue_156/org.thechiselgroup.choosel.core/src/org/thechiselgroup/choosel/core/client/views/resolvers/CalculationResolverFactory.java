@@ -64,7 +64,7 @@ public class CalculationResolverFactory extends
 
     @Override
     public ManagedViewItemValueResolver create(String property) {
-        return new ManagedViewItemValueResolverDecorator(id,
+        return new PropertyDependantManagedViewItemValueResolverDecorator(id,
                 new CalculationResolver(property, calculation));
     }
 

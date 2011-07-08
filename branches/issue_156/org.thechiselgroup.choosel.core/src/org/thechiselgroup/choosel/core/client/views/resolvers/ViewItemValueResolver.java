@@ -63,8 +63,9 @@ public interface ViewItemValueResolver {
 
     /**
      * @return {@link Slot}s that this {@link ViewItemValueResolver} delegates
-     *         to. Can be {@code null} if the this {@link ViewItemValueResolver}
-     *         does not delegate.
+     *         to. Must be an empty collection if the this
+     *         {@link ViewItemValueResolver} does not delegate (see
+     *         {@link AbstractSimpleViewItemValueResolver}).
      */
     LightweightCollection<Slot> getTargetSlots();
 

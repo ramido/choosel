@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver
 import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -134,6 +135,11 @@ public class NumberSlotControl extends SlotControl {
     }
 
     @Override
+    public String getCurrentResolverID() {
+        return null;
+    }
+
+    @Override
     public void updateOptions(LightweightCollection<ViewItem> viewItems) {
         // TODO Auto-generated method stub
 
@@ -155,5 +161,11 @@ public class NumberSlotControl extends SlotControl {
                 propertySelector.setSelectedValue(property);
             }
         }
+    }
+
+    @Override
+    public void setNewUIModel(ViewItemValueResolverUIController resolverUI) {
+        // TODO Auto-generated method stub
+
     }
 }

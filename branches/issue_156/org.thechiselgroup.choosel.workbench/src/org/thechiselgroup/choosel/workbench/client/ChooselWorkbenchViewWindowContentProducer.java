@@ -69,11 +69,6 @@ public class ChooselWorkbenchViewWindowContentProducer extends
                 ((FixedValueViewItemResolverFactory) factoryProvider
                         .getFactoryById(FIXED_DATE_TODAY_FACTORY_ID)).create());
 
-        initializer.putDefaultDataTypeValues(DataType.TEXT,
-                ((FixedValueViewItemResolverFactory) factoryProvider
-                        .getFactoryById(FIXED_EMPTY_STRING_FACTORY_ID))
-                        .create());
-
         return initializer;
     }
 
