@@ -15,11 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 /**
- * Returns the {@link ViewItem} ID.
+ * Returns the {@link VisualItem} ID.
  * 
  * @author Lars Grammel
  */
@@ -27,15 +27,15 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 public class ViewItemIdResolver extends AbstractSimpleViewItemValueResolver {
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
         return true;
     }
 
     @Override
-    public String resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
-        return viewItem.getViewItemID();
+    public String resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
+        return viewItem.getId();
     }
 
 }

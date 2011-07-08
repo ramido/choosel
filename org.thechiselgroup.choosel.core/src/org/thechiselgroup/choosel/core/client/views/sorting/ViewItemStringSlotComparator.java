@@ -18,9 +18,9 @@ package org.thechiselgroup.choosel.core.client.views.sorting;
 import java.util.Comparator;
 
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
-public class ViewItemStringSlotComparator implements Comparator<ViewItem> {
+public class ViewItemStringSlotComparator implements Comparator<VisualItem> {
 
     private Slot slot;
 
@@ -29,7 +29,7 @@ public class ViewItemStringSlotComparator implements Comparator<ViewItem> {
     }
 
     @Override
-    public int compare(ViewItem o1, ViewItem o2) {
+    public int compare(VisualItem o1, VisualItem o2) {
         String s1 = o1.<String> getValue(slot);
         String s2 = o2.<String> getValue(slot);
         return s1.compareTo(s2);

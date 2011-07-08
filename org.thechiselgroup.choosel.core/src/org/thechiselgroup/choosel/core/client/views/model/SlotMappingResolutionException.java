@@ -19,7 +19,7 @@ public class SlotMappingResolutionException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public SlotMappingResolutionException(Slot slot, ViewItem viewItem,
+    public SlotMappingResolutionException(Slot slot, VisualItem viewItem,
             Exception cause) {
 
         super("slot resolution failed [view item=" + viewItem + ";slot=" + slot

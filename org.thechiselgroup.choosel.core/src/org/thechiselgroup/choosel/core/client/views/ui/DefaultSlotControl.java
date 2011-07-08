@@ -10,7 +10,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationUIModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
 
@@ -132,7 +132,7 @@ public class DefaultSlotControl extends SlotControl {
     }
 
     @Override
-    public void updateOptions(LightweightCollection<ViewItem> viewItems) {
+    public void updateOptions(LightweightCollection<VisualItem> viewItems) {
         updateFactorySelector();
         uiController.update(viewItems);
     }

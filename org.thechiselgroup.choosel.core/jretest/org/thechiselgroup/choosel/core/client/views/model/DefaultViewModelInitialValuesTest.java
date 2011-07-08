@@ -51,7 +51,7 @@ public class DefaultViewModelInitialValuesTest {
     private DefaultViewModelTestHelper helper;
 
     @Mock
-    private ViewItemResolutionErrorModel errorModel;
+    private VisualItemResolutionErrorModel errorModel;
 
     @Ignore("these tests need to be reactivated and moved, more of an integration test")
     // TODO This Behavior has changed
@@ -66,9 +66,9 @@ public class DefaultViewModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(numberSlot));
 
-        List<ViewItem> viewItems = underTest.getViewItems().toList();
+        List<VisualItem> viewItems = underTest.getViewItems().toList();
         assertEquals(1, viewItems.size());
-        ViewItem viewItem = viewItems.get(0);
+        VisualItem viewItem = viewItems.get(0);
 
         assertEquals(new Double(0), viewItem.getValue(numberSlot));
     }
@@ -86,9 +86,9 @@ public class DefaultViewModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(textSlot));
 
-        List<ViewItem> viewItems = underTest.getViewItems().toList();
+        List<VisualItem> viewItems = underTest.getViewItems().toList();
         assertEquals(1, viewItems.size());
-        ViewItem viewItem = viewItems.get(0);
+        VisualItem viewItem = viewItems.get(0);
 
         assertEquals("t1", viewItem.getValue(textSlot));
     }

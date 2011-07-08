@@ -49,7 +49,7 @@ import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
@@ -115,10 +115,10 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+        List<VisualItem> resourceItems = restoredViewModel.getViewItems()
                 .toList();
         assertEquals(1, resourceItems.size());
-        ViewItem resourceItem = resourceItems.get(0);
+        VisualItem resourceItem = resourceItems.get(0);
         assertEquals("value2", resourceItem.getValue(textSlot));
     }
 
@@ -158,7 +158,7 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+        List<VisualItem> resourceItems = restoredViewModel.getViewItems()
                 .toList();
         assertEquals(1, resourceItems.size());
         ResourceSet resourceItemResources = resourceItems.get(0).getResources();
@@ -198,7 +198,7 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+        List<VisualItem> resourceItems = restoredViewModel.getViewItems()
                 .toList();
         assertEquals(2, resourceItems.size());
     }
@@ -275,10 +275,10 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+        List<VisualItem> resourceItems = restoredViewModel.getViewItems()
                 .toList();
         assertEquals(1, resourceItems.size());
-        ViewItem resourceItem = resourceItems.get(0);
+        VisualItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));
     }
 

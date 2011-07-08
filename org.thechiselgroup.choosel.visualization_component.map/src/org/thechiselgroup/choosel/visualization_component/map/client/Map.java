@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -200,8 +200,8 @@ public class Map extends AbstractViewContentDisplay {
 
         // add all view items
         update(callback.getViewItems(),
-                LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<VisualItem> emptyCollection(),
+                LightweightCollections.<VisualItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -300,9 +300,9 @@ public class Map extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    public void update(LightweightCollection<VisualItem> addedViewItems,
+            LightweightCollection<VisualItem> updatedViewItems,
+            LightweightCollection<VisualItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO pull up

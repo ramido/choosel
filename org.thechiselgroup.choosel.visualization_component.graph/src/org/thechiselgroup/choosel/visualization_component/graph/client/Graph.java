@@ -43,11 +43,11 @@ import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDis
 import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainer;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEventHandler;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainer;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction.Type;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplayLoadingFailureEvent;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplayLoadingFailureEventHandler;
@@ -134,7 +134,7 @@ public class Graph extends AbstractViewContentDisplay implements
         public void onMouseMove(MouseMoveEvent event) {
             if (currentNode != null) {
                 getViewItem(currentNode).reportInteraction(
-                        new ViewItemInteraction(Type.MOUSE_MOVE, event
+                        new VisualItemInteraction(Type.MOUSE_MOVE, event
                                 .getClientX(), event.getClientY()));
             }
         }
@@ -161,7 +161,7 @@ public class Graph extends AbstractViewContentDisplay implements
             int clientY = event.getMouseY() + asWidget().getAbsoluteTop();
 
             getViewItem(event).reportInteraction(
-                    new ViewItemInteraction(eventType, clientX, clientY));
+                    new VisualItemInteraction(eventType, clientX, clientY));
         }
 
     }
@@ -287,7 +287,7 @@ public class Graph extends AbstractViewContentDisplay implements
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private NodeItem createGraphNodeItem(ViewItem viewItem) {
+    private NodeItem createGraphNodeItem(VisualItem viewItem) {
         // TODO get from group id
         String type = getCategory(viewItem.getResources().getFirstElement());
 
@@ -331,7 +331,7 @@ public class Graph extends AbstractViewContentDisplay implements
     // default visibility for test case use
     List<Node> getAllNodes() {
         List<Node> result = new ArrayList<Node>();
-        for (ViewItem viewItem : getCallback().getViewItems()) {
+        for (VisualItem viewItem : getCallback().getViewItems()) {
             result.add(getNodeFromViewItem(viewItem));
         }
         return result;
@@ -391,20 +391,20 @@ public class Graph extends AbstractViewContentDisplay implements
         return "Graph";
     }
 
-    private Node getNodeFromViewItem(ViewItem viewItem) {
+    private Node getNodeFromViewItem(VisualItem viewItem) {
         return getNodeItem(viewItem).getNode();
     }
 
-    private NodeItem getNodeItem(ViewItem viewItem) {
+    private NodeItem getNodeItem(VisualItem viewItem) {
         return (NodeItem) viewItem.getDisplayObject();
     }
 
     private NodeItem[] getNodeItems() {
-        LightweightCollection<ViewItem> viewItems = getCallback()
+        LightweightCollection<VisualItem> viewItems = getCallback()
                 .getViewItems();
         NodeItem[] nodes = new NodeItem[viewItems.size()];
         int i = 0;
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             nodes[i++] = getNodeItem(viewItem);
         }
         return nodes;
@@ -461,16 +461,16 @@ public class Graph extends AbstractViewContentDisplay implements
                 NODE_BACKGROUND_COLOR };
     }
 
-    private ViewItem getViewItem(Node node) {
+    private VisualItem getViewItem(Node node) {
         return getCallback().getViewItem(node.getId());
     }
 
-    private ViewItem getViewItem(NodeEvent<?> event) {
+    private VisualItem getViewItem(NodeEvent<?> event) {
         return getViewItem(event.getNode());
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItems(
+    public LightweightCollection<VisualItem> getViewItems(
             Iterable<Resource> resources) {
 
         return getCallback().getViewItems(resources);
@@ -484,11 +484,11 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     private void initArcTypeContainers() {
-        ViewItemContainer context = new ViewItemContainer() {
+        VisualItemContainer context = new VisualItemContainer() {
 
             @Override
             public HandlerRegistration addHandler(
-                    ViewItemContainerChangeEventHandler handler) {
+                    VisualItemContainerChangeEventHandler handler) {
                 throw new RuntimeException("addHandler not supported");
             }
 
@@ -498,17 +498,17 @@ public class Graph extends AbstractViewContentDisplay implements
             }
 
             @Override
-            public ViewItem getViewItem(String viewItemId) {
+            public VisualItem getViewItem(String viewItemId) {
                 return getCallback().getViewItem(viewItemId);
             }
 
             @Override
-            public LightweightCollection<ViewItem> getViewItems() {
+            public LightweightCollection<VisualItem> getViewItems() {
                 return getCallback().getViewItems();
             }
 
             @Override
-            public LightweightCollection<ViewItem> getViewItems(
+            public LightweightCollection<VisualItem> getViewItems(
                     Iterable<Resource> resources) {
                 return getCallback().getViewItems(resources);
             }
@@ -620,7 +620,7 @@ public class Graph extends AbstractViewContentDisplay implements
                 }, category);
     }
 
-    private void removeGraphNode(ViewItem viewItem) {
+    private void removeGraphNode(VisualItem viewItem) {
         assert viewItem != null;
 
         nodeResources.removeResourceSet(viewItem.getResources());
@@ -651,11 +651,11 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     private void restoreNodeLocations(Memento state) {
-        LightweightCollection<ViewItem> resourceItems = getCallback()
+        LightweightCollection<VisualItem> resourceItems = getCallback()
                 .getViewItems();
-        for (ViewItem resourceItem : resourceItems) {
+        for (VisualItem resourceItem : resourceItems) {
             NodeItem item = getNodeItem(resourceItem);
-            Memento nodeMemento = state.getChild(resourceItem.getViewItemID());
+            Memento nodeMemento = state.getChild(resourceItem.getId());
             Point location = new Point(
                     (Integer) nodeMemento.getValue(MEMENTO_X),
                     (Integer) nodeMemento.getValue(MEMENTO_Y));
@@ -702,9 +702,9 @@ public class Graph extends AbstractViewContentDisplay implements
     private Memento saveNodeLocations() {
         Memento state = new Memento();
 
-        LightweightCollection<ViewItem> viewItems = getCallback()
+        LightweightCollection<VisualItem> viewItems = getCallback()
                 .getViewItems();
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             NodeItem item = getNodeItem(viewItem);
 
             Point location = graphDisplay.getLocation(item.getNode());
@@ -713,7 +713,7 @@ public class Graph extends AbstractViewContentDisplay implements
             nodeMemento.setValue(MEMENTO_X, location.getX());
             nodeMemento.setValue(MEMENTO_Y, location.getY());
 
-            state.addChild(viewItem.getViewItemID(), nodeMemento);
+            state.addChild(viewItem.getId(), nodeMemento);
         }
         return state;
     }
@@ -742,30 +742,30 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedViewItems,
-            LightweightCollection<ViewItem> updatedViewItems,
-            LightweightCollection<ViewItem> removedViewItems,
+    public void update(LightweightCollection<VisualItem> addedViewItems,
+            LightweightCollection<VisualItem> updatedViewItems,
+            LightweightCollection<VisualItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ViewItem addedItem : addedViewItems) {
+        for (VisualItem addedItem : addedViewItems) {
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
 
         updateArcsForViewItems(addedViewItems);
 
-        for (ViewItem updatedItem : updatedViewItems) {
+        for (VisualItem updatedItem : updatedViewItems) {
             updateNode(updatedItem);
         }
 
-        for (ViewItem viewItem : removedViewItems) {
+        for (VisualItem viewItem : removedViewItems) {
             removeGraphNode(viewItem);
         }
 
         if (!changedSlots.isEmpty()) {
-            LightweightCollection<ViewItem> viewItems = getCallback()
+            LightweightCollection<VisualItem> viewItems = getCallback()
                     .getViewItems();
-            for (ViewItem viewItem : viewItems) {
+            for (VisualItem viewItem : viewItems) {
                 updateNode(viewItem);
             }
         }
@@ -777,14 +777,14 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
-    public void updateArcsForViewItems(LightweightCollection<ViewItem> viewItems) {
+    public void updateArcsForViewItems(LightweightCollection<VisualItem> viewItems) {
         assert viewItems != null;
         for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
             container.update(viewItems);
         }
     }
 
-    private void updateNode(ViewItem viewItem) {
+    private void updateNode(VisualItem viewItem) {
         (getNodeItem(viewItem)).updateNode();
     }
 }

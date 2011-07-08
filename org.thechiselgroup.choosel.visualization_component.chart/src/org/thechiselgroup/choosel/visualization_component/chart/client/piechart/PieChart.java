@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.filter.GreaterThanSlotValuePredicate;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
@@ -65,7 +65,7 @@ public class PieChart extends ChartViewContentDisplay {
     private JsDoubleFunction partialWedgeRadius = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            ViewItem viewItem = args.getObject();
+            VisualItem viewItem = args.getObject();
 
             double partialValue = viewItem.getValueAsDouble(PARTIAL_VALUE);
             double value = viewItem.getValueAsDouble(VALUE);
@@ -94,7 +94,7 @@ public class PieChart extends ChartViewContentDisplay {
     };
 
     /**
-     * For each {@link ViewItem} index, it return the sum of the current and all
+     * For each {@link VisualItem} index, it return the sum of the current and all
      * previous view items. This is required to calculate the start angle, which
      * we need for the partial wedges (because Protovis only automatically
      * calculates the correct start index if the sibling wedges are visible,
@@ -132,7 +132,7 @@ public class PieChart extends ChartViewContentDisplay {
     private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            ViewItem viewItem = args.getObject();
+            VisualItem viewItem = args.getObject();
             return viewItem.getValueAsDouble(VALUE) * 2 * Math.PI
                     / getValueSum();
         }
@@ -142,7 +142,7 @@ public class PieChart extends ChartViewContentDisplay {
     private JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ViewItem viewItem = args.getObject();
+            VisualItem viewItem = args.getObject();
             return Double.toString(viewItem.getValueAsDouble(VALUE)
                     - viewItem.getValueAsDouble(PARTIAL_VALUE));
         }
@@ -151,7 +151,7 @@ public class PieChart extends ChartViewContentDisplay {
     private JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ViewItem viewItem = args.getObject();
+            VisualItem viewItem = args.getObject();
             return Double.toString(viewItem.getValueAsDouble(PARTIAL_VALUE));
         }
     };

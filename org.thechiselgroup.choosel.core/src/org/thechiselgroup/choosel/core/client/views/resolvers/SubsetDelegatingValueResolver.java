@@ -18,9 +18,9 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
 
@@ -38,8 +38,8 @@ public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         return context.getResolver(slot).canResolve(viewItem, context);
     }
@@ -50,8 +50,8 @@ public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         ViewItemValueResolver delegate = context.getResolver(slot);
 

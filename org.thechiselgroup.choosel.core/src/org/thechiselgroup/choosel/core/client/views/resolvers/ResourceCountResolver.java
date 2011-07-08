@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 // TODO DataType.NUMBER
 public class ResourceCountResolver extends SubsetViewItemValueResolver {
@@ -31,15 +31,15 @@ public class ResourceCountResolver extends SubsetViewItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context, Subset subset) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context, Subset subset) {
         return new Double(viewItem.getResources(subset).size());
     }
 

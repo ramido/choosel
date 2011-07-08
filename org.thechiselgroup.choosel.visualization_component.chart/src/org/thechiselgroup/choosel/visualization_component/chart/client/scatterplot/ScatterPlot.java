@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayProperty;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
@@ -87,7 +87,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
 
     /**
      * The shape slot should return a shape value (Strings, see {@link PVShape})
-     * per {@link ViewItem}.
+     * per {@link VisualItem}.
      */
     public static final Slot SHAPE = new Slot("shape", "Shape", DataType.SHAPE);
 
@@ -378,9 +378,9 @@ public class ScatterPlot extends ChartViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<VisualItem> addedResourceItems,
+            LightweightCollection<VisualItem> updatedResourceItems,
+            LightweightCollection<VisualItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO re-enable

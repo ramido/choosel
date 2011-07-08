@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
  */
 public class CategorizableResourceGroupingChange extends ResourceGroupingChange {
 
-    public static enum Delta {
+    public static enum DeltaType {
 
         GROUP_CREATED, GROUP_REMOVED, GROUP_CHANGED
 
@@ -64,7 +64,7 @@ public class CategorizableResourceGroupingChange extends ResourceGroupingChange 
                 || !CollectionUtils.intersects(removedResources.toList(),
                         addedResources.toList());
 
-        return new CategorizableResourceGroupingChange(Delta.GROUP_CHANGED,
+        return new CategorizableResourceGroupingChange(DeltaType.GROUP_CHANGED,
                 groupID, resourceSet,
                 addedResources == null ? LightweightCollections
                         .<Resource> emptyCollection() : addedResources,
@@ -103,7 +103,7 @@ public class CategorizableResourceGroupingChange extends ResourceGroupingChange 
         assert CollectionUtils.contentEquals(resourceSet,
                 CollectionUtils.toList(addedResources));
 
-        return new CategorizableResourceGroupingChange(Delta.GROUP_CREATED,
+        return new CategorizableResourceGroupingChange(DeltaType.GROUP_CREATED,
                 groupID, resourceSet, addedResources,
                 LightweightCollections.<Resource> emptyCollection());
     }
@@ -139,17 +139,17 @@ public class CategorizableResourceGroupingChange extends ResourceGroupingChange 
         assert CollectionUtils.contentEquals(resourceSet,
                 CollectionUtils.toList(removedResources));
 
-        return new CategorizableResourceGroupingChange(Delta.GROUP_REMOVED,
+        return new CategorizableResourceGroupingChange(DeltaType.GROUP_REMOVED,
                 groupID, resourceSet,
                 LightweightCollections.<Resource> emptyCollection(),
                 removedResources);
     }
 
-    private Delta delta;
+    private DeltaType delta;
 
     private String groupID;
 
-    private CategorizableResourceGroupingChange(Delta delta, String groupID,
+    private CategorizableResourceGroupingChange(DeltaType delta, String groupID,
             ResourceSet resourceSet,
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
@@ -204,9 +204,9 @@ public class CategorizableResourceGroupingChange extends ResourceGroupingChange 
     }
 
     /**
-     * @return {@link Delta} - type of change
+     * @return {@link DeltaType} - type of change
      */
-    public Delta getDelta() {
+    public DeltaType getDelta() {
         return delta;
     }
 

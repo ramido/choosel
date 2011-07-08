@@ -21,8 +21,8 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 // TODO DataType.Color
 public class ViewItemColorResolver extends AbstractSimpleViewItemValueResolver {
@@ -40,15 +40,15 @@ public class ViewItemColorResolver extends AbstractSimpleViewItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
         // TODO what if resource.isEmpty?
         if (viewItem.getResources().isEmpty()) {
             return COLORS[0]; // XXX we need something better

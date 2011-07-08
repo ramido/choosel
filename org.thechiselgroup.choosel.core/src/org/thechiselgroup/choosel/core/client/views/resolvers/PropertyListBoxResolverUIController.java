@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -37,16 +37,16 @@ public abstract class PropertyListBoxResolverUIController implements
      * the view items. All of the resources must contain that same property
      */
     private static List<String> getSharedPropertiesFromViewItems(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         List<String> properties = new ArrayList<String>();
 
         // intialize properties to be the ones in the first resource
-        ViewItem firstItem = viewItems.getFirstElement();
+        VisualItem firstItem = viewItems.getFirstElement();
         Resource firstResource = firstItem.getResources().iterator().next();
         properties.addAll(firstResource.getProperties().keySet());
 
         // only keep properties that are shared by all of the resource
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             for (Resource resource : viewItem.getResources()) {
                 properties.retainAll(resource.getProperties().keySet());
             }
@@ -80,7 +80,7 @@ public abstract class PropertyListBoxResolverUIController implements
     public PropertyListBoxResolverUIController(
             PropertyDependantViewItemValueResolverFactory resolverFactory,
             SlotMappingUIModel uiModel,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         this(resolverFactory, uiModel, viewItems,
                 getSharedPropertiesFromViewItems(viewItems).get(0));
     }
@@ -88,7 +88,7 @@ public abstract class PropertyListBoxResolverUIController implements
     public PropertyListBoxResolverUIController(
             PropertyDependantViewItemValueResolverFactory resolverFactory,
             SlotMappingUIModel uiModel,
-            LightweightCollection<ViewItem> viewItems, String property) {
+            LightweightCollection<VisualItem> viewItems, String property) {
         this.uiModel = uiModel;
         this.resolverFactory = resolverFactory;
 
@@ -142,7 +142,7 @@ public abstract class PropertyListBoxResolverUIController implements
      * should say that it is not applicable, and so we should never get here
      */
     @Override
-    public void update(LightweightCollection<ViewItem> viewItems) {
+    public void update(LightweightCollection<VisualItem> viewItems) {
         setProperties(getSharedPropertiesFromViewItems(viewItems));
 
         // the new view items can not be resolved by the current resolver, and

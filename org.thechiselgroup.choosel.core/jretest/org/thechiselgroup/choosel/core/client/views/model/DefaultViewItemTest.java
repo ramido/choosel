@@ -33,8 +33,8 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
 public class DefaultViewItemTest {
 
@@ -45,7 +45,7 @@ public class DefaultViewItemTest {
 
     private ResourceSet resources;
 
-    private DefaultViewItem underTest;
+    private DefaultVisualItem underTest;
 
     private Slot numberSlot;
 
@@ -449,9 +449,9 @@ public class DefaultViewItemTest {
 
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
         resources = new DefaultResourceSet();
-        underTest = spy(new DefaultViewItem(VIEW_ITEM_ID, resources,
+        underTest = spy(new DefaultVisualItem(VIEW_ITEM_ID, resources,
                 slotMappingConfiguration,
-                mock(ViewItemInteractionHandler.class)));
+                mock(VisualItemInteractionHandler.class)));
     }
 
     @Test

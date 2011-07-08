@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationInterface;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemResolutionErrorModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemResolutionErrorModel;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -80,7 +80,7 @@ public class SlotMappingUIModel {
 
     private HandlerManager eventBus;
 
-    private final ViewItemResolutionErrorModel errorModel;
+    private final VisualItemResolutionErrorModel errorModel;
 
     private SlotMappingConfigurationInterface configuration;
 
@@ -88,7 +88,7 @@ public class SlotMappingUIModel {
     public SlotMappingUIModel(Slot slot,
             ViewItemValueResolverFactoryProvider provider,
             SlotMappingConfigurationInterface configuration,
-            ViewItemResolutionErrorModel errorModel) {
+            VisualItemResolutionErrorModel errorModel) {
 
         assert slot != null;
         assert provider != null;
@@ -104,7 +104,7 @@ public class SlotMappingUIModel {
         this.allowableResolverFactories = CollectionFactory.createStringMap();
 
         updateAllowableFactories(CollectionFactory
-                .<ViewItem> createLightweightList());
+                .<VisualItem> createLightweightList());
     }
 
     public void addSlotMappingEventHandler(SlotMappingChangedHandler handler) {
@@ -123,7 +123,7 @@ public class SlotMappingUIModel {
     // should I even be watching these events
     public void currentResolverWasSet(ViewItemValueResolver oldResolver,
             ViewItemValueResolver resolver,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         if (!(resolverIsManaged(resolver))) {
             // I am not managed, and am in error
             return;
@@ -171,7 +171,7 @@ public class SlotMappingUIModel {
      * @return whether or not the current resolver is allowable
      */
     // TODO this should be a one liner
-    public boolean inValidState(LightweightCollection<ViewItem> currentViewItems) {
+    public boolean inValidState(LightweightCollection<VisualItem> currentViewItems) {
         return !errorsInModel()
                 && configuration.getResolver(slot) != null
                 && isAllowableResolver(configuration.getResolver(slot),
@@ -183,7 +183,7 @@ public class SlotMappingUIModel {
      * and whether it is in the Allowable Factories
      */
     public boolean isAllowableResolver(ViewItemValueResolver resolver,
-            LightweightCollection<ViewItem> currentViewItems) {
+            LightweightCollection<VisualItem> currentViewItems) {
         assert resolver != null;
         if (!(resolverIsManaged(resolver))) {
             // Not a managed Resolver
@@ -209,7 +209,7 @@ public class SlotMappingUIModel {
 
         // TODO this is already check elsewhere
         if (currentViewItems != null) {
-            for (ViewItem viewItem : currentViewItems) {
+            for (VisualItem viewItem : currentViewItems) {
                 if (!resolver.canResolve(viewItem, configuration)) {
                     // resolver can not resolve viewItems
                     return false;
@@ -239,7 +239,7 @@ public class SlotMappingUIModel {
      * automatically be changed to null
      */
     public void updateAllowableFactories(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         assert viewItems != null;
         allowableResolverFactories.clear();

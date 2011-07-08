@@ -17,19 +17,19 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 
 /**
  * <p>
- * Calculates a value given a {@link ViewItem}. Implementations of this
+ * Calculates a value given a {@link VisualItem}. Implementations of this
  * interface must be immutable.
  * </p>
  * <p>
  * {@code ViewItemValueResolver}s can use other {@code ViewItemValueResolver}s
  * defined on other {@link Slot}s of this {@link ViewModel} in their
- * calculation. The {@link ViewItemValueResolverContext} exposes those during
+ * calculation. The {@link VisualItemValueResolverContext} exposes those during
  * the calculation. However, they must declare the {@link Slot}s they depend on
  * in {@link #getTargetSlots()}.
  * </p>
@@ -43,11 +43,11 @@ public interface ViewItemValueResolver {
 
     /**
      * Tests if this {@link ViewItemValueResolver} can calculate a value for
-     * {@code viewItem} in the {@link ViewItemValueResolverContext}
+     * {@code viewItem} in the {@link VisualItemValueResolverContext}
      * {@code context}.
      * 
      * @param viewItem
-     *            {@link ViewItem} for which this {@link ViewItemValueResolver}
+     *            {@link VisualItem} for which this {@link ViewItemValueResolver}
      *            is asked to calculate a value.
      * @param context
      *            Context that allows accessing resolvers for other slots. For
@@ -59,7 +59,7 @@ public interface ViewItemValueResolver {
      * @return {@code true}, if a value could be calculated, {@code false}
      *         otherwise.
      */
-    boolean canResolve(ViewItem viewItem, ViewItemValueResolverContext context);
+    boolean canResolve(VisualItem viewItem, VisualItemValueResolverContext context);
 
     /**
      * @return {@link Slot}s that this {@link ViewItemValueResolver} delegates
@@ -70,10 +70,10 @@ public interface ViewItemValueResolver {
     LightweightCollection<Slot> getTargetSlots();
 
     /**
-     * Calculates a value for a {@link ViewItem}.
+     * Calculates a value for a {@link VisualItem}.
      * 
      * @param viewItem
-     *            {@link ViewItem} for which this {@link ViewItemValueResolver}
+     *            {@link VisualItem} for which this {@link ViewItemValueResolver}
      *            is asked to calculate a value.
      * @param context
      *            Context that allows accessing resolvers for other slots. For
@@ -82,10 +82,10 @@ public interface ViewItemValueResolver {
      *            the resolver for the inner color, and darken it to resolve the
      *            border.
      * 
-     * @return Value for the {@link ViewItem}.
+     * @return Value for the {@link VisualItem}.
      */
     // TODO ? document exceptions that are thrown if it cannot be resolved
     // TODO return typed result (requires type system)
-    Object resolve(ViewItem viewItem, ViewItemValueResolverContext context);
+    Object resolve(VisualItem viewItem, VisualItemValueResolverContext context);
 
 }

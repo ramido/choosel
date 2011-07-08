@@ -18,15 +18,15 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
 /**
- * Manages dragging of {@link ViewItem}.
+ * Manages dragging of {@link VisualItem}.
  */
-public class DragViewItemBehavior implements ViewItemBehavior {
+public class DragViewItemBehavior implements VisualItemBehavior {
 
     /**
      * Maps view item ids to drag enablers.
@@ -43,12 +43,13 @@ public class DragViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
+    public void onInteraction(VisualItem viewItem,
+            VisualItemInteraction interaction) {
         assert viewItem != null;
-        assert dragEnablers.containsKey(viewItem.getViewItemID());
+        assert dragEnablers.containsKey(viewItem.getId());
         assert interaction != null;
 
-        DragEnabler enabler = dragEnablers.get(viewItem.getViewItemID());
+        DragEnabler enabler = dragEnablers.get(viewItem.getId());
 
         switch (interaction.getEventType()) {
         case MOUSE_MOVE:
@@ -74,28 +75,28 @@ public class DragViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
-        for (ViewItem viewItem : event.getDelta().getAddedViewItems()) {
+    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+        for (VisualItem viewItem : event.getDelta().getAddedElements()) {
             onViewItemCreated(viewItem);
         }
-        for (ViewItem viewItem : event.getDelta().getRemovedViewItems()) {
+        for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
             onViewItemRemoved(viewItem);
         }
     }
 
-    public void onViewItemCreated(ViewItem viewItem) {
+    public void onViewItemCreated(VisualItem viewItem) {
         assert viewItem != null;
-        assert !dragEnablers.containsKey(viewItem.getViewItemID());
+        assert !dragEnablers.containsKey(viewItem.getId());
 
-        dragEnablers.put(viewItem.getViewItemID(),
+        dragEnablers.put(viewItem.getId(),
                 dragEnablerFactory.createDragEnabler(viewItem));
     }
 
-    public void onViewItemRemoved(ViewItem viewItem) {
+    public void onViewItemRemoved(VisualItem viewItem) {
         assert viewItem != null;
-        assert dragEnablers.containsKey(viewItem.getViewItemID());
+        assert dragEnablers.containsKey(viewItem.getId());
 
-        dragEnablers.remove(viewItem.getViewItemID());
+        dragEnablers.remove(viewItem.getId());
     }
 
 }

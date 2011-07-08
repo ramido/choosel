@@ -20,7 +20,7 @@ import java.util.Set;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -43,11 +43,11 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
     }
 
     @Override
-    public Widget createDetailsWidget(ViewItem viewItem) {
+    public Widget createDetailsWidget(VisualItem viewItem) {
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
         ResourceSetAvatar avatar = avatarFactory.createAvatar(viewItem
                 .getResources());
-        avatar.setText(viewItem.getViewItemID());
+        avatar.setText(viewItem.getId());
         verticalPanel.add(avatar);
 
         // try to resolve slot mappings first

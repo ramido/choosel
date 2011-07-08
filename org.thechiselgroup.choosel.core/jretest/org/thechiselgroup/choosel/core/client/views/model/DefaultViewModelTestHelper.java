@@ -103,7 +103,7 @@ public final class DefaultViewModelTestHelper {
         resourceGrouping.setResourceSet(containedResources);
 
         return spy(new DefaultViewModel(viewContentDisplay, selectedResources,
-                highlightedResources, mock(ViewItemBehavior.class),
+                highlightedResources, mock(VisualItemBehavior.class),
                 resourceGrouping, mock(Logger.class)));
     }
 

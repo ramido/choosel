@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 //TODO rename to SlotMappingConfiguration
 public interface SlotMappingConfigurationInterface extends
-        ViewItemValueResolverContext {
+        VisualItemValueResolverContext {
 
     /**
      * Adds an event handler that gets called when mappings change.
@@ -60,7 +60,7 @@ public interface SlotMappingConfigurationInterface extends
      * Checks if a {@link ViewItemValueResolver} has been set for a {@link Slot}
      * . This does not mean that the value resolver actually resolves to valid
      * values. This would be reported in the
-     * {@link ViewItemResolutionErrorModel}.
+     * {@link VisualItemResolutionErrorModel}.
      * 
      * @return {code true}, if a {@link ViewItemValueResolver} is configured for
      *         {code slot}.

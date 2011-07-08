@@ -31,10 +31,10 @@ public class DefaultViewItemResolutionErrorModelTest {
     private DefaultViewItemResolutionErrorModel underTest;
 
     @Mock
-    private ViewItem viewItem1;
+    private VisualItem viewItem1;
 
     @Mock
-    private ViewItem viewItem2;
+    private VisualItem viewItem2;
 
     private Slot slot1;
 
@@ -289,8 +289,8 @@ public class DefaultViewItemResolutionErrorModelTest {
         slot1 = new Slot("s1", "", DataType.TEXT);
         slot2 = new Slot("s2", "", DataType.TEXT);
 
-        when(viewItem1.getViewItemID()).thenReturn("v1");
-        when(viewItem2.getViewItemID()).thenReturn("v2");
+        when(viewItem1.getId()).thenReturn("v1");
+        when(viewItem2.getId()).thenReturn("v2");
 
         underTest = new DefaultViewItemResolutionErrorModel();
     }

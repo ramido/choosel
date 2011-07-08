@@ -6,14 +6,14 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public abstract class PropertyDependantViewItemValueResolverFactory implements
         ViewItemValueResolverFactory {
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         if (getSharedProperties(viewItems).isEmpty()) {
             return false;
@@ -23,7 +23,7 @@ public abstract class PropertyDependantViewItemValueResolverFactory implements
 
     @Override
     public abstract ManagedViewItemValueResolver create(
-            LightweightCollection<ViewItem> viewItems);
+            LightweightCollection<VisualItem> viewItems);
 
     public abstract ManagedViewItemValueResolver create(String property);
 
@@ -35,7 +35,7 @@ public abstract class PropertyDependantViewItemValueResolverFactory implements
 
     // TODO move somewhere else
     protected List<String> getSharedProperties(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         List<String> properties = new ArrayList<String>();
 
@@ -49,7 +49,7 @@ public abstract class PropertyDependantViewItemValueResolverFactory implements
         properties.addAll(firstResource.getProperties().keySet());
 
         // only keep properties that are shared by all of the resource
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             for (Resource resource : viewItem.getResources()) {
                 properties.retainAll(resource.getProperties().keySet());
             }

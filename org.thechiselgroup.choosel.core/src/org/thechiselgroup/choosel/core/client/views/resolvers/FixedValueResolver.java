@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 // TODO expose data type
 public class FixedValueResolver extends AbstractSimpleViewItemValueResolver {
@@ -35,15 +35,15 @@ public class FixedValueResolver extends AbstractSimpleViewItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
         return value;
     }
 

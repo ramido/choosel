@@ -36,9 +36,9 @@ import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction.Type;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
@@ -56,7 +56,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
     private Popup popup;
 
     @Mock
-    private ViewItem viewItem;
+    private VisualItem viewItem;
 
     private PopupWithHighlightingViewItemBehavior underTest;
 
@@ -69,7 +69,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
     @Test
     public void disposeRemovesPopupHighlighting() {
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
         underTest.onViewItemRemoved(viewItem);
@@ -81,7 +81,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
     @Test
     public void mouseOverPopupAddsResourcesToHoverModel() {
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
         assertThat(hoverModel.getResources(), containsExactly(resources));
@@ -90,10 +90,10 @@ public class PopupWithHighlightingViewItemBehaviorTest {
     @Test
     public void popupClosedOnDragStart() {
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.DRAG_START));
 
         verify(popupManager, times(1)).hidePopup();
@@ -105,7 +105,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         int clientY = 20;
 
         underTest.onViewItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new ViewItemInteraction(
+        underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER, clientX, clientY));
 
         verify(popupManager, times(1)).onMouseOver(clientX, clientY);
@@ -118,7 +118,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         hoverModel = spy(new HighlightingModel());
 
         resources = createResources(1, 2);
-        when(viewItem.getViewItemID()).thenReturn(VIEW_ITEM_ID);
+        when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
         when(viewItem.getResources()).thenReturn(resources);
         when(popupManager.getPopup()).thenReturn(popup);
 
@@ -126,7 +126,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
                 mock(DetailsWidgetHelper.class),
                 mock(PopupManagerFactory.class), hoverModel) {
             @Override
-            protected PopupManager createPopupManager(ViewItem viewItem) {
+            protected PopupManager createPopupManager(VisualItem viewItem) {
                 return popupManager;
             }
         };

@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.ui.Color;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.Event;
@@ -27,9 +27,9 @@ public class DefaultMapItem {
 
     private DefaultOverlay overlay;
 
-    private final ViewItem viewItem;
+    private final VisualItem viewItem;
 
-    public DefaultMapItem(ViewItem viewItem, LatLng point) {
+    public DefaultMapItem(VisualItem viewItem, LatLng point) {
         this.viewItem = viewItem;
 
         overlay = new DefaultOverlay(point, getRadius(), getColor(),
@@ -43,7 +43,7 @@ public class DefaultMapItem {
 
                         // forward
                         DefaultMapItem.this.viewItem
-                                .reportInteraction(new ViewItemInteraction(
+                                .reportInteraction(new VisualItemInteraction(
                                         event));
                     }
                 });

@@ -20,9 +20,9 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.core.client.util.math.NumberArray;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 public class CalculationResolver extends SubsetViewItemValueResolver implements
         PropertyDependantViewItemValueResolver {
@@ -56,8 +56,8 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
      * okay)
      */
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         assert viewItem != null;
         assert context != null;
@@ -83,8 +83,8 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
     }
 
     @Override
-    public Double resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context, Subset subset) {
+    public Double resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context, Subset subset) {
         return calculation.calculate(toNumberArray(viewItem
                 .getResources(subset)));
     }

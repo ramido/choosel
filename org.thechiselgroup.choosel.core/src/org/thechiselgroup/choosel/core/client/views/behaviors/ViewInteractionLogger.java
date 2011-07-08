@@ -17,12 +17,12 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 
 import java.util.logging.Logger;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
-public class ViewInteractionLogger implements ViewItemBehavior {
+public class ViewInteractionLogger implements VisualItemBehavior {
 
     private Logger logger;
 
@@ -31,13 +31,13 @@ public class ViewInteractionLogger implements ViewItemBehavior {
     }
 
     @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
+    public void onInteraction(VisualItem viewItem, VisualItemInteraction interaction) {
         logger.info("onInteraction[Interaction=" + interaction + " ; ViewItem="
                 + viewItem + "]");
     }
 
     @Override
-    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
+    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
     }
 
 }

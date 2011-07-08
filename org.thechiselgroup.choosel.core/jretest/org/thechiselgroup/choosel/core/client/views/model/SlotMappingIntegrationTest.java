@@ -55,7 +55,7 @@ public class SlotMappingIntegrationTest {
     private DefaultViewItemResolverFactoryProvider resolverProvider = new DefaultViewItemResolverFactoryProvider();
 
     @Mock
-    private ViewItemBehavior viewItemBehavior;
+    private VisualItemBehavior viewItemBehavior;
 
     private Logger logger = Logger.getLogger("");
 
@@ -128,11 +128,11 @@ public class SlotMappingIntegrationTest {
                         DataType.NUMBER));
         model.setResolver(requiredSlots[0], resolver2);
 
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
 
         assertEquals(viewItems.size(), 1);
-        Iterator<ViewItem> iterator = viewItems.iterator();
-        ViewItem first = iterator.next();
+        Iterator<VisualItem> iterator = viewItems.iterator();
+        VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 2);
     }
 
@@ -207,9 +207,9 @@ public class SlotMappingIntegrationTest {
                                 DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
         assertTrue(viewItems.size() == 1);
-        ViewItem item = viewItems.iterator().next();
+        VisualItem item = viewItems.iterator().next();
         assertEquals(2, item.getValue(requiredSlots[0]));
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
@@ -274,9 +274,9 @@ public class SlotMappingIntegrationTest {
                                 DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
         assertTrue(viewItems.size() == 1);
-        ViewItem item = viewItems.iterator().next();
+        VisualItem item = viewItems.iterator().next();
         assertEquals(2, item.getValue(requiredSlots[0]));
     }
 
@@ -483,11 +483,11 @@ public class SlotMappingIntegrationTest {
 
         // resolver.setProperty(property2);
 
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
 
         assertEquals(viewItems.size(), 1);
-        Iterator<ViewItem> iterator = viewItems.iterator();
-        ViewItem first = iterator.next();
+        Iterator<VisualItem> iterator = viewItems.iterator();
+        VisualItem first = iterator.next();
         assertEquals(1, first.getValue(requiredSlots[0]));
     }
 
@@ -633,12 +633,12 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property1, 1);
         resourceGrouping.getResourceSet().add(resource);
 
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
 
         assertEquals(viewItems.size(), 1);
 
-        Iterator<ViewItem> iterator = viewItems.iterator();
-        ViewItem first = iterator.next();
+        Iterator<VisualItem> iterator = viewItems.iterator();
+        VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 1);
 
     }
@@ -705,11 +705,11 @@ public class SlotMappingIntegrationTest {
         resourceGrouping.getResourceSet().add(resource1);
 
         /* Test results */
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
         assertTrue(viewItems.size() == 1);
 
-        Iterator<ViewItem> iterator = viewItems.iterator();
-        ViewItem first = iterator.next();
+        Iterator<VisualItem> iterator = viewItems.iterator();
+        VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 1);
         assertEquals(first.getValue(requiredSlots[1]), "a");
 
@@ -765,10 +765,10 @@ public class SlotMappingIntegrationTest {
                 TestResourceSetFactory.createResource(1));
 
         /* Test results */
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
         assertTrue(viewItems.size() == 1);
 
-        ViewItem item = viewItems.iterator().next();
+        VisualItem item = viewItems.iterator().next();
         assertEquals(1, item.getValue(requiredSlots[0]));
     }
 
@@ -814,11 +814,11 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property1, 1);
         resourceGrouping.getResourceSet().add(resource);
 
-        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getViewItems();
 
         assertEquals(1, viewItems.size());
-        Iterator<ViewItem> iterator = viewItems.iterator();
-        ViewItem first = iterator.next();
+        Iterator<VisualItem> iterator = viewItems.iterator();
+        VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 1);
     }
 

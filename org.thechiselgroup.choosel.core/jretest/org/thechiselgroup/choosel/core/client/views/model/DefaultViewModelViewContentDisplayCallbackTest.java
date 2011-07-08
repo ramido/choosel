@@ -65,7 +65,7 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
 
         assertThat(
                 callback.containsViewItem(underTest.getViewItems()
-                        .getFirstElement().getViewItemID()), is(false));
+                        .getFirstElement().getId()), is(false));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
 
         assertThat(
                 callback.containsViewItem(underTest.getViewItems()
-                        .getFirstElement().getViewItemID()), is(true));
+                        .getFirstElement().getId()), is(true));
     }
 
     @Test
@@ -87,12 +87,12 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(resources);
 
-        LightweightList<ViewItem> viewItems = CollectionFactory
+        LightweightList<VisualItem> viewItems = CollectionFactory
                 .createLightweightList();
 
         // get view items that are in the content display
         viewItems.add(callback.getViewItem(underTest.getViewItems()
-                .getFirstElement().getViewItemID()));
+                .getFirstElement().getId()));
 
         assertThat(viewItems, containsViewItemsForExactResourceSets(resources));
     }
@@ -105,7 +105,7 @@ public class DefaultViewModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         callback.getViewItem(underTest.getViewItems().getFirstElement()
-                .getViewItemID());
+                .getId());
     }
 
     @Test

@@ -22,12 +22,12 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
 /**
- * User interaction with the visual representation of a {@link ViewItem}. This
+ * User interaction with the visual representation of a {@link VisualItem}. This
  * should wrap mouse and potentially keyboard interaction. A separate class was
  * introduced to facilitate the integration of components using 3rd party
  * technology, e.g. Flash, Silverlight.
  */
-public class ViewItemInteraction {
+public class VisualItemInteraction {
 
     /**
      * Separate event types are used to enable simulation of events that are not
@@ -41,7 +41,7 @@ public class ViewItemInteraction {
                 Event.ONMOUSEOUT), MOUSE_DOWN(Event.ONMOUSEDOWN), MOUSE_UP(
                 Event.ONMOUSEUP), DRAG_START, DRAG_END, UNDEFINED;
 
-        private static final Map<Integer, Type> typesByCode = new HashMap<Integer, ViewItemInteraction.Type>();
+        private static final Map<Integer, Type> typesByCode = new HashMap<Integer, VisualItemInteraction.Type>();
 
         static {
             Type[] values = values();
@@ -99,7 +99,7 @@ public class ViewItemInteraction {
 
     private Type eventType;
 
-    public ViewItemInteraction(NativeEvent e) {
+    public VisualItemInteraction(NativeEvent e) {
         assert e != null;
 
         this.nativeEvent = e;
@@ -108,11 +108,11 @@ public class ViewItemInteraction {
         this.eventType = Type.byCode(Event.as(e).getTypeInt());
     }
 
-    public ViewItemInteraction(Type eventType) {
+    public VisualItemInteraction(Type eventType) {
         this(eventType, UNKNOWN, UNKNOWN);
     }
 
-    public ViewItemInteraction(Type eventType, int clientX, int clientY) {
+    public VisualItemInteraction(Type eventType, int clientX, int clientY) {
         this.eventType = eventType;
         this.clientX = clientX;
         this.clientY = clientY;
@@ -156,7 +156,7 @@ public class ViewItemInteraction {
 
     @Override
     public String toString() {
-        return "ViewItemInteraction [clientX=" + clientX + ", clientY="
+        return "VisualItemInteraction [clientX=" + clientX + ", clientY="
                 + clientY + ", eventType=" + eventType + "]";
     }
 

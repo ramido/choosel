@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 
@@ -32,7 +32,7 @@ public class ViewItemDoubleSlotAccessor implements JsDoubleFunction {
 
     @Override
     public double f(JsArgs args) {
-        ViewItem viewItem = args.getObject();
+        VisualItem viewItem = args.getObject();
         return viewItem.getValueAsDouble(slot);
     }
 

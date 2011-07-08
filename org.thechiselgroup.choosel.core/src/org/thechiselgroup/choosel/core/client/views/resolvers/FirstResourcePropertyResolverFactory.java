@@ -20,7 +20,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public class FirstResourcePropertyResolverFactory extends
         PropertyDependantViewItemValueResolverFactory {
@@ -37,7 +37,7 @@ public class FirstResourcePropertyResolverFactory extends
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
 
         if (!slot.getDataType().equals(dataType)) {
             return false;
@@ -54,7 +54,7 @@ public class FirstResourcePropertyResolverFactory extends
 
     @Override
     public ManagedViewItemValueResolver create(
-            LightweightCollection<ViewItem> viewItems) {
+            LightweightCollection<VisualItem> viewItems) {
         List<String> properties = getSharedProperties(viewItems);
         assert !properties.isEmpty();
 

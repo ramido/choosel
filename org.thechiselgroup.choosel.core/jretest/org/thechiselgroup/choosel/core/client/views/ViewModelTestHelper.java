@@ -26,43 +26,43 @@ import org.mockito.ArgumentCaptor;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 public final class ViewModelTestHelper {
 
-    public static LightweightCollection<ViewItem> captureAddedViewItems(
+    public static LightweightCollection<VisualItem> captureAddedViewItems(
             ViewContentDisplay contentDisplay) {
 
         return captureAddedViewItems(contentDisplay, 1).get(0);
     }
 
-    public static List<LightweightCollection<ViewItem>> captureAddedViewItems(
+    public static List<LightweightCollection<VisualItem>> captureAddedViewItems(
             ViewContentDisplay contentDisplay, int wantedNumberOfInvocation) {
 
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(contentDisplay, times(wantedNumberOfInvocation)).update(
-                captor.capture(), emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
+                captor.capture(), emptyLightweightCollection(VisualItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 emptyLightweightCollection(Slot.class));
 
         return cast(captor.getAllValues());
     }
 
-    public static List<ViewItem> captureAddedViewItemsAsList(
+    public static List<VisualItem> captureAddedViewItemsAsList(
             ViewContentDisplay contentDisplay) {
 
         return captureAddedViewItems(contentDisplay).toList();
     }
 
-    public static LightweightCollection<ViewItem> captureUpdatedViewItems(
+    public static LightweightCollection<VisualItem> captureUpdatedViewItems(
             ViewContentDisplay contentDisplay) {
 
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(contentDisplay, times(1)).update(
-                emptyLightweightCollection(ViewItem.class), captor.capture(),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class), captor.capture(),
+                emptyLightweightCollection(VisualItem.class),
                 emptyLightweightCollection(Slot.class));
 
         return captor.getValue();
@@ -71,11 +71,11 @@ public final class ViewModelTestHelper {
     /**
      * convert to LightWeightCollection<ViewItem>
      */
-    private static List<LightweightCollection<ViewItem>> cast(
+    private static List<LightweightCollection<VisualItem>> cast(
             List<LightweightCollection> allValues) {
 
-        List<LightweightCollection<ViewItem>> result = new ArrayList<LightweightCollection<ViewItem>>();
-        for (LightweightCollection<ViewItem> lightweightCollection : allValues) {
+        List<LightweightCollection<VisualItem>> result = new ArrayList<LightweightCollection<VisualItem>>();
+        for (LightweightCollection<VisualItem> lightweightCollection : allValues) {
             result.add(lightweightCollection);
         }
         return result;

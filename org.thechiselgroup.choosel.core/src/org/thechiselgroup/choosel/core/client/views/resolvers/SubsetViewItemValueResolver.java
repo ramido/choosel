@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 /**
  * {@link ViewItemValueResolver} that returns results for a specific
- * {@link Subset} of {@link ViewItem}. All such {@link ViewItemValueResolver}s
+ * {@link Subset} of {@link VisualItem}. All such {@link ViewItemValueResolver}s
  * should subclass this class to enable partial highlighting and selection.
  * 
  * @author Lars Grammel
@@ -37,8 +37,8 @@ public abstract class SubsetViewItemValueResolver extends
     }
 
     @Override
-    public final Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public final Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
 
         return resolve(viewItem, context, subset);
     }
@@ -46,7 +46,7 @@ public abstract class SubsetViewItemValueResolver extends
     /**
      * Resolves the view item value for the specified subset.
      */
-    public abstract Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context, Subset subset);
+    public abstract Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context, Subset subset);
 
 }

@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEvent;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -53,10 +53,10 @@ public class PopupWithHighlightingViewItemBehavior extends
     }
 
     @Override
-    public void onViewItemCreated(ViewItem viewItem) {
+    public void onViewItemCreated(VisualItem viewItem) {
         super.onViewItemCreated(viewItem);
 
-        assert !highlightingManagers.containsKey(viewItem.getViewItemID());
+        assert !highlightingManagers.containsKey(viewItem.getId());
 
         final HighlightingManager highlightingManager = new HighlightingManager(
                 hoverModel, viewItem.getResources());
@@ -84,17 +84,17 @@ public class PopupWithHighlightingViewItemBehavior extends
             }
         }, PopupOpacityChangedEvent.TYPE);
 
-        highlightingManagers.put(viewItem.getViewItemID(), highlightingManager);
+        highlightingManagers.put(viewItem.getId(), highlightingManager);
     }
 
     @Override
-    public void onViewItemRemoved(ViewItem viewItem) {
+    public void onViewItemRemoved(VisualItem viewItem) {
         super.onViewItemRemoved(viewItem);
 
-        assert highlightingManagers.containsKey(viewItem.getViewItemID());
+        assert highlightingManagers.containsKey(viewItem.getId());
 
         HighlightingManager manager = highlightingManagers.remove(viewItem
-                .getViewItemID());
+                .getId());
         manager.dispose();
     }
 }

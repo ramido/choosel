@@ -31,7 +31,7 @@ import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolverFactory;
@@ -140,7 +140,7 @@ public class NumberSlotControl extends SlotControl {
     }
 
     @Override
-    public void updateOptions(LightweightCollection<ViewItem> viewItems) {
+    public void updateOptions(LightweightCollection<VisualItem> viewItems) {
         // TODO Auto-generated method stub
 
     }

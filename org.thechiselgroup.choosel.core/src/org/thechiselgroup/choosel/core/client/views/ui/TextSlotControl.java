@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.views.resolvers.TextPropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIController;
@@ -74,7 +74,7 @@ public class TextSlotControl extends SlotControl {
     }
 
     @Override
-    public void updateOptions(LightweightCollection<ViewItem> viewItems) {
+    public void updateOptions(LightweightCollection<VisualItem> viewItems) {
         // TODO Auto-generated method stub
 
     }

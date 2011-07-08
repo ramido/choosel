@@ -24,9 +24,9 @@ import static org.thechiselgroup.choosel.visualization_component.graph.client.wi
 
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
@@ -36,9 +36,9 @@ public class NodeItem {
 
     private Node node;
 
-    private final ViewItem viewItem;
+    private final VisualItem viewItem;
 
-    public NodeItem(ViewItem viewItem, String type, GraphDisplay display) {
+    public NodeItem(VisualItem viewItem, String type, GraphDisplay display) {
         assert viewItem != null;
         assert type != null;
         assert display != null;
@@ -46,7 +46,7 @@ public class NodeItem {
         this.viewItem = viewItem;
         this.display = display;
 
-        node = new Node(viewItem.getViewItemID(), getLabelValue(), type);
+        node = new Node(viewItem.getId(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
@@ -65,7 +65,7 @@ public class NodeItem {
         return viewItem.getValue(Graph.NODE_BORDER_COLOR);
     }
 
-    public ViewItem getViewItem() {
+    public VisualItem getViewItem() {
         return viewItem;
     }
 

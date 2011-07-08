@@ -52,7 +52,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
@@ -60,11 +60,11 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 /**
  * <p>
  * Tests that the {@link DefaultViewModel} calls
- * {@link ViewItemRenderer#update(LightweightCollection, LightweightCollection, LightweightCollection, LightweightCollection)}
+ * {@link VisualItemRenderer#update(LightweightCollection, LightweightCollection, LightweightCollection, LightweightCollection)}
  * correctly.
  * </p>
  * <p>
- * As part of this, we test that it filters the {@link ViewItemContainerDelta}
+ * As part of this, we test that it filters the {@link VisualItemContainerDelta}
  * that is passed into the {@link ViewContentDisplay} by the content of the
  * {@link DefaultViewItemResolutionErrorModel}.
  * </p>
@@ -105,11 +105,11 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      * Convert input to {@code LightWeightCollection<ViewItem>}
      */
     @SuppressWarnings("rawtypes")
-    private static List<LightweightCollection<ViewItem>> cast(
+    private static List<LightweightCollection<VisualItem>> cast(
             List<LightweightCollection> allValues) {
 
-        List<LightweightCollection<ViewItem>> result = new ArrayList<LightweightCollection<ViewItem>>();
-        for (LightweightCollection<ViewItem> lightweightCollection : allValues) {
+        List<LightweightCollection<VisualItem>> result = new ArrayList<LightweightCollection<VisualItem>>();
+        for (LightweightCollection<VisualItem> lightweightCollection : allValues) {
             result.add(lightweightCollection);
         }
         return result;
@@ -152,8 +152,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         verify(helper.getViewContentDisplay(), times(1))
                 .update(argThat(containsViewItemsForExactResourceSets(resources1,
                         resources2)),
-                        emptyLightweightCollection(ViewItem.class),
-                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(VisualItem.class),
+                        emptyLightweightCollection(VisualItem.class),
                         emptyLightweightCollection(Slot.class));
     }
 
@@ -165,7 +165,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(resources1);
         helper.addToContainedResources(resources2);
 
-        List<LightweightCollection<ViewItem>> allValues = captureAddedViewItems(2);
+        List<LightweightCollection<VisualItem>> allValues = captureAddedViewItems(2);
 
         assertThat(allValues.get(0),
                 containsViewItemsForExactResourceSets(resources1));
@@ -173,58 +173,58 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
                 containsViewItemsForExactResourceSets(resources2));
     }
 
-    private LightweightCollection<ViewItem> captureAddedViewItems() {
+    private LightweightCollection<VisualItem> captureAddedViewItems() {
         return captureAddedViewItems(1).get(0);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private List<LightweightCollection<ViewItem>> captureAddedViewItems(
+    private List<LightweightCollection<VisualItem>> captureAddedViewItems(
             int wantedNumberOfInvocation) {
 
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocation))
                 .update(captor.capture(),
-                        emptyLightweightCollection(ViewItem.class),
-                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(VisualItem.class),
+                        emptyLightweightCollection(VisualItem.class),
                         emptyLightweightCollection(Slot.class));
 
         return cast(captor.getAllValues());
     }
 
-    private LightweightCollection<ViewItem> captureRemovedViewItems() {
+    private LightweightCollection<VisualItem> captureRemovedViewItems() {
         return captureRemovedViewItems(1).get(0);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private List<LightweightCollection<ViewItem>> captureRemovedViewItems(
+    private List<LightweightCollection<VisualItem>> captureRemovedViewItems(
             int wantedNumberOfInvocation) {
 
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocation))
-                .update(emptyLightweightCollection(ViewItem.class),
-                        emptyLightweightCollection(ViewItem.class),
+                .update(emptyLightweightCollection(VisualItem.class),
+                        emptyLightweightCollection(VisualItem.class),
                         captor.capture(),
                         emptyLightweightCollection(Slot.class));
 
         return cast(captor.getAllValues());
     }
 
-    private LightweightCollection<ViewItem> captureUpdatedViewItems() {
+    private LightweightCollection<VisualItem> captureUpdatedViewItems() {
         return captureUpdatedViewItems(1).get(0);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private List<LightweightCollection<ViewItem>> captureUpdatedViewItems(
+    private List<LightweightCollection<VisualItem>> captureUpdatedViewItems(
             int wantedNumberOfInvocation) {
 
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocation))
-                .update(emptyLightweightCollection(ViewItem.class),
+                .update(emptyLightweightCollection(VisualItem.class),
                         captor.capture(),
-                        emptyLightweightCollection(ViewItem.class),
+                        emptyLightweightCollection(VisualItem.class),
                         emptyLightweightCollection(Slot.class));
 
         return cast(captor.getAllValues());
@@ -238,7 +238,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private double[] captureViewItemNumberSlotValueOnUpdate(
-            final ViewItem viewItem) {
+            final VisualItem viewItem) {
         final double[] result = new double[1];
         doAnswer(new Answer() {
             @Override
@@ -261,7 +261,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         helper.getContainedResources().addAll(resources);
         helper.getHighlightedResources().addAll(resources);
 
-        LightweightCollection<ViewItem> viewItems = captureUpdatedViewItems();
+        LightweightCollection<VisualItem> viewItems = captureUpdatedViewItems();
 
         assertThat(
                 viewItems.getFirstElement().getResources(Subset.HIGHLIGHTED),
@@ -278,8 +278,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
         verify(helper.getViewContentDisplay(), times(1)).update(
                 argThat(containsViewItemsForExactResourceSets(createResources(1))),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 
@@ -335,14 +335,14 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         ResourceSet resources = createResources(1);
 
         helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
+        LightweightCollection<VisualItem> addedViewItems = captureAddedViewItems();
 
         helper.getHighlightedResources().addAll(resources);
 
         verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 emptyLightweightCollection(Slot.class));
     }
 
@@ -353,12 +353,12 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         ResourceSet resources = toResourceSet(resources1, resources2);
 
         helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
+        LightweightCollection<VisualItem> addedViewItems = captureAddedViewItems();
 
         helper.getContainedResources().removeAll(resources);
         verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 eqViewItems(addedViewItems),
                 emptyLightweightCollection(Slot.class));
     }
@@ -368,14 +368,14 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         ResourceSet resources = createResources(1);
 
         helper.getContainedResources().addAll(resources);
-        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
+        LightweightCollection<VisualItem> addedViewItems = captureAddedViewItems();
 
         helper.getSelectedResources().add(createResource(1));
 
         verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 eqViewItems(addedViewItems),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 emptyLightweightCollection(Slot.class));
     }
 
@@ -477,31 +477,31 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     private void verifyNoViewItemsAdded() {
         verify(helper.getViewContentDisplay(), never()).update(
                 any(LightweightCollection.class),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 emptyLightweightCollection(Slot.class));
     }
 
     @SuppressWarnings("unchecked")
     private void verifyNoViewItemsUpdated() {
         verify(helper.getViewContentDisplay(), never()).update(
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 any(LightweightCollection.class),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 emptyLightweightCollection(Slot.class));
     }
 
     /**
      * Shows the bug that happens when the {@link ViewContentDisplay} is updated
-     * before the {@link ViewItem} cache is cleaned on a {@link Slot} change.
+     * before the {@link VisualItem} cache is cleaned on a {@link Slot} change.
      * The {@link DefaultViewModel} needs to call
-     * {@link DefaultViewItem#clearValueCache(Slot)}.
+     * {@link DefaultVisualItem#clearValueCache(Slot)}.
      */
     @Test
     public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterClearingSlotCache() {
         helper.addToContainedResources(createResource(TYPE_1, 1));
 
-        final ViewItem viewItem = underTest.getViewItems().getFirstElement();
+        final VisualItem viewItem = underTest.getViewItems().getFirstElement();
         viewItem.getValue(slot); // caches values
 
         // needs to be done before changing slot
@@ -515,7 +515,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
 
     /**
      * Shows the bug that happens when the {@link ViewContentDisplay} is updated
-     * before the {@link ViewItem} cache is cleaned on a {@link ResourceSet}
+     * before the {@link VisualItem} cache is cleaned on a {@link ResourceSet}
      * change.
      */
     @Test
@@ -529,7 +529,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         resource1.putValue(propertyName, 1d);
         helper.addToContainedResources(resource1);
 
-        final ViewItem viewItem = underTest.getViewItems().getFirstElement();
+        final VisualItem viewItem = underTest.getViewItems().getFirstElement();
         viewItem.getValue(slot); // caches values
 
         // needs to be done before adding
@@ -550,8 +550,8 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
 
         verify(helper.getViewContentDisplay(), times(1)).update(
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(VisualItem.class),
+                emptyLightweightCollection(VisualItem.class),
                 argThat(containsViewItemsForExactResourceSets(createResources(1))),
                 (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }

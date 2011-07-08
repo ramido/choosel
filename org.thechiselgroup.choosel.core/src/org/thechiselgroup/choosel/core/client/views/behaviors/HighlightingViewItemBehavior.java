@@ -19,15 +19,15 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
 
 /**
- * Manages {@link ViewItem} highlighting in a single view.
+ * Manages {@link VisualItem} highlighting in a single view.
  */
-public class HighlightingViewItemBehavior implements ViewItemBehavior {
+public class HighlightingViewItemBehavior implements VisualItemBehavior {
 
     /**
      * Maps view item ids to highlighting managers.
@@ -43,14 +43,15 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
         this.highlightingModel = highlightingModel;
     }
 
-    protected HighlightingManager getHighlightingManager(ViewItem viewItem) {
-        return highlightingManagers.get(viewItem.getViewItemID());
+    protected HighlightingManager getHighlightingManager(VisualItem viewItem) {
+        return highlightingManagers.get(viewItem.getId());
     }
 
     @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
+    public void onInteraction(VisualItem viewItem,
+            VisualItemInteraction interaction) {
         assert viewItem != null;
-        assert highlightingManagers.containsKey(viewItem.getViewItemID());
+        assert highlightingManagers.containsKey(viewItem.getId());
         assert interaction != null;
 
         switch (interaction.getEventType()) {
@@ -65,35 +66,33 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(ViewItemContainerChangeEvent event) {
-        for (ViewItem viewItem : event.getDelta().getAddedViewItems()) {
+    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+        for (VisualItem viewItem : event.getDelta().getAddedElements()) {
             onViewItemCreated(viewItem);
         }
-        for (ViewItem viewItem : event.getDelta().getRemovedViewItems()) {
+        for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
             onViewItemRemoved(viewItem);
         }
     }
 
-    public void onViewItemCreated(ViewItem viewItem) {
+    public void onViewItemCreated(VisualItem viewItem) {
         assert viewItem != null;
-        assert !highlightingManagers.containsKey(viewItem.getViewItemID());
+        assert !highlightingManagers.containsKey(viewItem.getId());
 
-        highlightingManagers.put(
-                viewItem.getViewItemID(),
-                new HighlightingManager(highlightingModel, viewItem
-                        .getResources()));
+        highlightingManagers.put(viewItem.getId(), new HighlightingManager(
+                highlightingModel, viewItem.getResources()));
     }
 
-    public void onViewItemRemoved(ViewItem viewItem) {
+    public void onViewItemRemoved(VisualItem viewItem) {
         assert viewItem != null;
-        assert highlightingManagers.containsKey(viewItem.getViewItemID());
+        assert highlightingManagers.containsKey(viewItem.getId());
 
         HighlightingManager manager = highlightingManagers.remove(viewItem
-                .getViewItemID());
+                .getId());
         manager.dispose();
     }
 
-    protected void setHighlighting(ViewItem viewItem, boolean shouldHighlight) {
+    protected void setHighlighting(VisualItem viewItem, boolean shouldHighlight) {
         getHighlightingManager(viewItem).setHighlighting(shouldHighlight);
     }
 

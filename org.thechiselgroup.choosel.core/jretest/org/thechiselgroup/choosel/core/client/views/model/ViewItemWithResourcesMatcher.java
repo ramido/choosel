@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 public class ViewItemWithResourcesMatcher extends
-        TypeSafeMatcher<LightweightCollection<ViewItem>> {
+        TypeSafeMatcher<LightweightCollection<VisualItem>> {
 
     public static ViewItemWithResourcesMatcher containsEqualResources(
             Resource... resources) {
@@ -49,7 +49,7 @@ public class ViewItemWithResourcesMatcher extends
     }
 
     @Override
-    public boolean matchesSafely(LightweightCollection<ViewItem> viewItems) {
+    public boolean matchesSafely(LightweightCollection<VisualItem> viewItems) {
         if (viewItems.size() != 1) {
             return false;
         }

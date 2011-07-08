@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.resources;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 
 import com.google.inject.Inject;
@@ -34,7 +34,7 @@ public class DragEnablerFactory {
         this.dragController = dragController;
     }
 
-    public DragEnabler createDragEnabler(ViewItem item) {
+    public DragEnabler createDragEnabler(VisualItem item) {
         return new DragEnabler(item, desktop, dragController);
     }
 

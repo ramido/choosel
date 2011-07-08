@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
@@ -53,7 +53,7 @@ public class TimeLine extends AbstractViewContentDisplay {
     private TimeLineWidget timelineWidget;
 
     private void addEventsToTimeline(
-            LightweightCollection<ViewItem> addedResourceItems) {
+            LightweightCollection<VisualItem> addedResourceItems) {
 
         timelineWidget.addEvents(getTimeLineEvents(addedResourceItems));
     }
@@ -64,9 +64,9 @@ public class TimeLine extends AbstractViewContentDisplay {
     }
 
     private void createTimeLineItems(
-            LightweightCollection<ViewItem> addedResourceItems) {
+            LightweightCollection<VisualItem> addedResourceItems) {
 
-        for (ViewItem resourceItem : addedResourceItems) {
+        for (VisualItem resourceItem : addedResourceItems) {
             resourceItem.setDisplayObject(new TimeLineItem(resourceItem, this));
         }
     }
@@ -121,11 +121,11 @@ public class TimeLine extends AbstractViewContentDisplay {
     }
 
     private JsTimeLineEvent[] getTimeLineEvents(
-            LightweightCollection<ViewItem> resourceItems) {
+            LightweightCollection<VisualItem> resourceItems) {
 
         JsTimeLineEvent[] events = new JsTimeLineEvent[resourceItems.size()];
         int counter = 0;
-        for (ViewItem item : resourceItems) {
+        for (VisualItem item : resourceItems) {
             TimeLineItem timelineItem = (TimeLineItem) item.getDisplayObject();
             events[counter++] = timelineItem.getTimeLineEvent();
         }
@@ -140,8 +140,8 @@ public class TimeLine extends AbstractViewContentDisplay {
     protected void onAttach() {
         // add all view items
         update(callback.getViewItems(),
-                LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<VisualItem> emptyCollection(),
+                LightweightCollections.<VisualItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -150,15 +150,15 @@ public class TimeLine extends AbstractViewContentDisplay {
         // might have been disposed (then callback would be null)
         if (callback != null) {
             // remove all view items
-            update(LightweightCollections.<ViewItem> emptyCollection(),
-                    LightweightCollections.<ViewItem> emptyCollection(),
+            update(LightweightCollections.<VisualItem> emptyCollection(),
+                    LightweightCollections.<VisualItem> emptyCollection(),
                     callback.getViewItems(),
                     LightweightCollections.<Slot> emptyCollection());
         }
     }
 
     private void removeEventsFromTimeline(
-            LightweightCollection<ViewItem> removedResourceItems) {
+            LightweightCollection<VisualItem> removedResourceItems) {
         timelineWidget.removeEvents(getTimeLineEvents(removedResourceItems));
     }
 
@@ -197,9 +197,9 @@ public class TimeLine extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<VisualItem> addedResourceItems,
+            LightweightCollection<VisualItem> updatedResourceItems,
+            LightweightCollection<VisualItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO pull up
@@ -223,7 +223,7 @@ public class TimeLine extends AbstractViewContentDisplay {
 
         // TODO refactor
         if (!changedSlots.isEmpty()) {
-            for (ViewItem resourceItem : getCallback().getViewItems()) {
+            for (VisualItem resourceItem : getCallback().getViewItems()) {
                 TimeLineItem timelineItem = (TimeLineItem) resourceItem
                         .getDisplayObject();
                 for (Slot slot : changedSlots) {
@@ -237,8 +237,8 @@ public class TimeLine extends AbstractViewContentDisplay {
         }
     }
 
-    private void updateStatusStyling(LightweightCollection<ViewItem> viewItems) {
-        for (ViewItem viewItem : viewItems) {
+    private void updateStatusStyling(LightweightCollection<VisualItem> viewItems) {
+        for (VisualItem viewItem : viewItems) {
             ((TimeLineItem) viewItem.getDisplayObject()).setStatusStyling();
         }
     }

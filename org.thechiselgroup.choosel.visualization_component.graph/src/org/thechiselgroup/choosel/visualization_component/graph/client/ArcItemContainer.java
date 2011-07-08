@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainer;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 
@@ -53,12 +53,12 @@ public class ArcItemContainer implements Persistable {
 
     private int arcThickness;
 
-    private final ViewItemContainer context;
+    private final VisualItemContainer context;
 
     private boolean visible;
 
     public ArcItemContainer(ArcType arcType, GraphDisplay graphDisplay,
-            ViewItemContainer context) {
+            VisualItemContainer context) {
 
         assert graphDisplay != null;
         assert arcType != null;
@@ -95,7 +95,7 @@ public class ArcItemContainer implements Persistable {
         return arcType;
     }
 
-    public void removeViewItem(ViewItem viewItem) {
+    public void removeViewItem(VisualItem viewItem) {
         assert viewItem != null;
 
         LightweightCollection<Arc> arcs = arcType.getArcs(viewItem, context);
@@ -171,18 +171,18 @@ public class ArcItemContainer implements Persistable {
         this.visible = visible;
     }
 
-    public void update(LightweightCollection<ViewItem> viewItems) {
+    public void update(LightweightCollection<VisualItem> viewItems) {
         assert viewItems != null;
 
-        for (ViewItem viewItem : viewItems) {
+        for (VisualItem viewItem : viewItems) {
             update(viewItem);
         }
     }
 
-    private void update(ViewItem viewItem) {
+    private void update(VisualItem viewItem) {
         assert viewItem != null;
-        assert context.containsViewItem(viewItem.getViewItemID());
-        assert graphDisplay.containsNode(viewItem.getViewItemID());
+        assert context.containsViewItem(viewItem.getId());
+        assert graphDisplay.containsNode(viewItem.getId());
 
         for (Arc arc : arcType.getArcs(viewItem, context)) {
             // XXX what about changes?

@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
@@ -34,7 +34,7 @@ public class TextItem {
 
     private TextItemLabel label;
 
-    private ViewItem viewItem;
+    private VisualItem viewItem;
 
     /**
      * Flag that marks if the label of this text item has already been added to
@@ -47,7 +47,7 @@ public class TextItem {
 
     private String cachedDescription;
 
-    public TextItem(ViewItem viewItem) {
+    public TextItem(VisualItem viewItem) {
         assert viewItem != null;
 
         this.viewItem = viewItem;
@@ -66,7 +66,7 @@ public class TextItem {
         return label;
     }
 
-    public ViewItem getResourceItem() {
+    public VisualItem getResourceItem() {
         return viewItem;
     }
 
@@ -76,7 +76,7 @@ public class TextItem {
         label.registerHandler(new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                viewItem.reportInteraction(new ViewItemInteraction(event));
+                viewItem.reportInteraction(new VisualItemInteraction(event));
             }
         });
         label.addStyleName(CSS_LIST);

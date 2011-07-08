@@ -4,7 +4,7 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVColor;
@@ -71,7 +71,7 @@ public class HeatBars extends ChartViewContentDisplay {
         public PVColor f(JsArgs args) {
             // figure out which viewItem this data point maps to
             PVMark _this = args.getThis();
-            ViewItem viewItem = viewItemsJsArray.get(_this.parent().index());
+            VisualItem viewItem = viewItemsJsArray.get(_this.parent().index());
 
             // calculate the color based on the resolvers and the binCount
             double value = args.getDouble();
@@ -308,7 +308,7 @@ public class HeatBars extends ChartViewContentDisplay {
 
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
             // each viewItem represents one bar
-            ViewItem viewItem = viewItemsJsArray.get(i);
+            VisualItem viewItem = viewItemsJsArray.get(i);
 
             for (Double binValue : viewItem
                     .<LightweightList<Double>> getValue(BINNING_VALUE)) {
@@ -362,7 +362,7 @@ public class HeatBars extends ChartViewContentDisplay {
         barScaleStart = barScaleEnd;
 
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            ViewItem viewItem = viewItemsJsArray.get(i);
+            VisualItem viewItem = viewItemsJsArray.get(i);
             LightweightList<Double> values = viewItem.getValue(BINNING_VALUE);
             assert values.size() > 0;
 

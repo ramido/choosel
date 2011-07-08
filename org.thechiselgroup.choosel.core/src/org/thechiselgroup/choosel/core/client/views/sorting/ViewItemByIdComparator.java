@@ -17,13 +17,13 @@ package org.thechiselgroup.choosel.core.client.views.sorting;
 
 import java.util.Comparator;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
-public class ViewItemByIdComparator implements Comparator<ViewItem> {
+public class ViewItemByIdComparator implements Comparator<VisualItem> {
 
     @Override
-    public int compare(ViewItem o1, ViewItem o2) {
-        return o1.getViewItemID().compareTo(o2.getViewItemID());
+    public int compare(VisualItem o1, VisualItem o2) {
+        return o1.getId().compareTo(o2.getId());
     }
 
 }

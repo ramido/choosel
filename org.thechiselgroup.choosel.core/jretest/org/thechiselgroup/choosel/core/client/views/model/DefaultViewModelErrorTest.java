@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 /**
- * Tests the error model {@link ViewItemResolutionErrorModel} of the
+ * Tests the error model {@link VisualItemResolutionErrorModel} of the
  * {@link ViewModel} subsystem implemented using {@link DefaultViewModel}.
  * 
  * @author Lars Grammel

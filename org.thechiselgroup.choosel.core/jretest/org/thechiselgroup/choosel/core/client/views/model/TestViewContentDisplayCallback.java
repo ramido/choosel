@@ -27,24 +27,24 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 // TODO extract resource item manager?
 public class TestViewContentDisplayCallback implements
-        ViewContentDisplayCallback, ViewItemContainer {
+        ViewContentDisplayCallback, VisualItemContainer {
 
-    private Map<String, ViewItem> viewItemsByGroupId = CollectionFactory
+    private Map<String, VisualItem> viewItemsByGroupId = CollectionFactory
             .createStringMap();
 
     @Override
     public HandlerRegistration addHandler(
-            ViewItemContainerChangeEventHandler handler) {
+            VisualItemContainerChangeEventHandler handler) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void addViewItem(ViewItem viewItem) {
-        viewItemsByGroupId.put(viewItem.getViewItemID(), viewItem);
+    public void addViewItem(VisualItem viewItem) {
+        viewItemsByGroupId.put(viewItem.getId(), viewItem);
     }
 
-    public void addViewItems(Iterable<ViewItem> viewItems) {
-        for (ViewItem viewItem : viewItems) {
+    public void addViewItems(Iterable<VisualItem> viewItems) {
+        for (VisualItem viewItem : viewItems) {
             addViewItem(viewItem);
         }
     }
@@ -65,27 +65,27 @@ public class TestViewContentDisplayCallback implements
     }
 
     @Override
-    public ViewItem getViewItem(String groupId) {
+    public VisualItem getViewItem(String groupId) {
         return viewItemsByGroupId.get(groupId);
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItems() {
-        LightweightList<ViewItem> result = CollectionFactory
+    public LightweightCollection<VisualItem> getViewItems() {
+        LightweightList<VisualItem> result = CollectionFactory
                 .createLightweightList();
         result.addAll(viewItemsByGroupId.values());
         return result;
     }
 
     @Override
-    public LightweightCollection<ViewItem> getViewItems(
+    public LightweightCollection<VisualItem> getViewItems(
             Iterable<Resource> resources) {
 
         return null;
     }
 
-    public void removeResourceItem(ViewItem viewItem) {
-        viewItemsByGroupId.remove(viewItem.getViewItemID());
+    public void removeResourceItem(VisualItem viewItem) {
+        viewItemsByGroupId.remove(viewItem.getId());
     }
 
 }

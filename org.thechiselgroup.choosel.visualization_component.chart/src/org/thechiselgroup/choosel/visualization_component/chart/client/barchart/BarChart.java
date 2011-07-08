@@ -25,9 +25,9 @@ import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.filter.GreaterThanSlotValuePredicate;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayProperty;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
@@ -284,7 +284,7 @@ public class BarChart extends ChartViewContentDisplay {
     private JsDoubleFunction partialBarLength = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return calculatePartialBarLength(args.<ViewItem> getObject())
+            return calculatePartialBarLength(args.<VisualItem> getObject())
                     - BAR_STROKE_WIDTH; // subtract initial offset
         }
     };
@@ -341,7 +341,7 @@ public class BarChart extends ChartViewContentDisplay {
     protected JsStringFunction barValueLabelTextStyle = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ViewItem viewItem = args.<ViewItem> getObject();
+            VisualItem viewItem = args.<VisualItem> getObject();
             PVMark _this = args.getThis();
 
             if (Status.FULL.equals(viewItem.getStatus(Subset.HIGHLIGHTED))) {
@@ -383,7 +383,7 @@ public class BarChart extends ChartViewContentDisplay {
     protected JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ViewItem viewItem = args.getObject();
+            VisualItem viewItem = args.getObject();
             // TODO separate visibility determination
             return viewItem.getValueAsDouble(BAR_LENGTH)
                     - viewItem.getValueAsDouble(PARTIAL_BAR_LENGTH) < 1 ? null
@@ -395,7 +395,7 @@ public class BarChart extends ChartViewContentDisplay {
     protected JsStringFunction partialBarValueLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ViewItem viewItem = args.getObject();
+            VisualItem viewItem = args.getObject();
             // TODO separate visibility determination
             return viewItem.getValueAsDouble(PARTIAL_BAR_LENGTH) <= 0 ? null
                     : Double.toString(viewItem
@@ -407,7 +407,7 @@ public class BarChart extends ChartViewContentDisplay {
 
     private boolean barSpacing = true;
 
-    private Comparator<ViewItem> viewItemComparator = new ViewItemDoubleComparator(
+    private Comparator<VisualItem> viewItemComparator = new ViewItemDoubleComparator(
             BAR_LENGTH);
 
     private PVLabel barLabel;
@@ -536,7 +536,7 @@ public class BarChart extends ChartViewContentDisplay {
         }
     }
 
-    private double calculatePartialBarLength(ViewItem d) {
+    private double calculatePartialBarLength(VisualItem d) {
         return calculateBarLength(d.getValueAsDouble(PARTIAL_BAR_LENGTH));
     }
 
@@ -805,7 +805,7 @@ public class BarChart extends ChartViewContentDisplay {
         return valueLabelVisibility;
     }
 
-    public Comparator<ViewItem> getViewItemComparator() {
+    public Comparator<VisualItem> getViewItemComparator() {
         return viewItemComparator;
     }
 
@@ -848,7 +848,7 @@ public class BarChart extends ChartViewContentDisplay {
         updateChart(true);
     }
 
-    public void setViewItemComparator(Comparator<ViewItem> viewItemComparator) {
+    public void setViewItemComparator(Comparator<VisualItem> viewItemComparator) {
         if (this.viewItemComparator == viewItemComparator) {
             return;
         }
@@ -858,9 +858,9 @@ public class BarChart extends ChartViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<VisualItem> addedResourceItems,
+            LightweightCollection<VisualItem> updatedResourceItems,
+            LightweightCollection<VisualItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO re-enable - might be wrong for initial configuration...

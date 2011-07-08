@@ -37,9 +37,9 @@ import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
 public class TextViewContentDisplayTest {
 
@@ -62,7 +62,7 @@ public class TextViewContentDisplayTest {
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
         // create resource item that contains 2 resources
-        ViewItem viewItem = createViewItem("", createResources(1, 2));
+        VisualItem viewItem = createViewItem("", createResources(1, 2));
 
         when(viewItem.getValue(TextVisualization.FONT_SIZE_SLOT)).thenReturn(
                 new Double(2));
@@ -71,31 +71,31 @@ public class TextViewContentDisplayTest {
         when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.NONE);
 
         underTest.update(LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<ViewItem> emptySet(),
-                LightweightCollections.<ViewItem> emptySet(),
+                LightweightCollections.<VisualItem> emptySet(),
+                LightweightCollections.<VisualItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
         when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.FULL);
-        underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
+        underTest.update(LightweightCollections.<VisualItem> emptyCollection(),
                 LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<VisualItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
         when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.PARTIAL);
-        underTest.update(LightweightCollections.<ViewItem> emptySet(),
+        underTest.update(LightweightCollections.<VisualItem> emptySet(),
                 LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<ViewItem> emptySet(),
+                LightweightCollections.<VisualItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
 
         // highlighting is removed after drag operation
         when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
-        underTest.update(LightweightCollections.<ViewItem> emptySet(),
+        underTest.update(LightweightCollections.<VisualItem> emptySet(),
                 LightweightCollections.toCollection(viewItem),
-                LightweightCollections.<ViewItem> emptySet(),
+                LightweightCollections.<VisualItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         // check label status (should be: partially selected, but not partially
@@ -113,7 +113,7 @@ public class TextViewContentDisplayTest {
 
         allResources = new DefaultResourceSet();
 
-        when(textItemContainer.createTextItemLabel(any(ViewItem.class)))
+        when(textItemContainer.createTextItemLabel(any(VisualItem.class)))
                 .thenReturn(itemLabel);
 
         underTest = new TextVisualization(textItemContainer);

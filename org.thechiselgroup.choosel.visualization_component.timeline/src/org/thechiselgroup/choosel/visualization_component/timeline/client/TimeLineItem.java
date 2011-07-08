@@ -19,10 +19,10 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -49,9 +49,9 @@ public class TimeLineItem {
 
     private String tickElementID;
 
-    private final ViewItem viewItem;
+    private final VisualItem viewItem;
 
-    public TimeLineItem(ViewItem viewItem, TimeLine view) {
+    public TimeLineItem(VisualItem viewItem, TimeLine view) {
         this.viewItem = viewItem;
 
         Object date = viewItem.getValue(TimeLine.DATE);
@@ -106,7 +106,7 @@ public class TimeLineItem {
         DOM.setEventListener(element, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                viewItem.reportInteraction(new ViewItemInteraction(event));
+                viewItem.reportInteraction(new VisualItemInteraction(event));
             }
         });
     }

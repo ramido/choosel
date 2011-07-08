@@ -39,25 +39,25 @@ public class DefaultViewModelEventTest {
 
     private DefaultViewModel underTest;
 
-    private ViewItemContainerChangeEvent captureEvent(
-            ViewItemContainerChangeEventHandler handler) {
-        ArgumentCaptor<ViewItemContainerChangeEvent> captor = ArgumentCaptor
-                .forClass(ViewItemContainerChangeEvent.class);
+    private VisualItemContainerChangeEvent captureEvent(
+            VisualItemContainerChangeEventHandler handler) {
+        ArgumentCaptor<VisualItemContainerChangeEvent> captor = ArgumentCaptor
+                .forClass(VisualItemContainerChangeEvent.class);
         verify(handler, times(1)).onViewItemContainerChanged(captor.capture());
         return captor.getValue();
     }
 
     @Test
     public void fireViewItemContainerChangeEventWhenViewItemIsAdded() {
-        ViewItemContainerChangeEventHandler handler = mock(ViewItemContainerChangeEventHandler.class);
+        VisualItemContainerChangeEventHandler handler = mock(VisualItemContainerChangeEventHandler.class);
 
         underTest.addHandler(handler);
 
         Resource resource = createResource(1);
         helper.getContainedResources().add(resource);
 
-        LightweightCollection<ViewItem> addedViewItems = captureEvent(handler)
-                .getDelta().getAddedViewItems();
+        LightweightCollection<VisualItem> addedViewItems = captureEvent(handler)
+                .getDelta().getAddedElements();
 
         assertEquals(1, addedViewItems.size());
 
@@ -69,26 +69,26 @@ public class DefaultViewModelEventTest {
 
     @Test
     public void fireViewItemContainerChangeEventWhenViewItemIsRemoved() {
-        ViewItemContainerChangeEventHandler handler = mock(ViewItemContainerChangeEventHandler.class);
+        VisualItemContainerChangeEventHandler handler = mock(VisualItemContainerChangeEventHandler.class);
 
         HandlerRegistration registration = underTest.addHandler(handler);
 
         Resource resource = createResource(1);
         helper.getContainedResources().add(resource);
 
-        ViewItem viewItem = captureEvent(handler).getDelta()
-                .getAddedViewItems().iterator().next();
+        VisualItem viewItem = captureEvent(handler).getDelta()
+                .getAddedElements().iterator().next();
 
-        ViewItemContainerChangeEventHandler handler2 = mock(ViewItemContainerChangeEventHandler.class);
+        VisualItemContainerChangeEventHandler handler2 = mock(VisualItemContainerChangeEventHandler.class);
 
         registration.removeHandler();
         underTest.addHandler(handler2);
 
         helper.getContainedResources().remove(resource);
 
-        ViewItemContainerChangeEvent event2 = captureEvent(handler2);
-        LightweightCollection<ViewItem> removedViewItems = event2.getDelta()
-                .getRemovedViewItems();
+        VisualItemContainerChangeEvent event2 = captureEvent(handler2);
+        LightweightCollection<VisualItem> removedViewItems = event2.getDelta()
+                .getRemovedElements();
         assertEquals(1, removedViewItems.size());
         assertEquals(true, removedViewItems.contains(viewItem));
     }

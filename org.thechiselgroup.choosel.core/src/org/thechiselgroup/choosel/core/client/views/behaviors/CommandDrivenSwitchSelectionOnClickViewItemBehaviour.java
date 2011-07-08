@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.resources.command.SwitchSelectionCommand;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 
 /**
  * Sub-class of SwitchSelectionOnClickViewItemBehaviour that uses a command to
@@ -46,7 +46,7 @@ public class CommandDrivenSwitchSelectionOnClickViewItemBehaviour extends
     }
 
     @Override
-    protected void switchSelection(ViewItem viewItem) {
+    protected void switchSelection(VisualItem viewItem) {
         SwitchSelectionCommand command = new SwitchSelectionCommand(
                 viewItem.getResources(), getSelectionModel());
         commandManager.execute(command);

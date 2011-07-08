@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ContainsResourceGroupi
 import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -48,7 +48,7 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
     private T contentDisplay;
 
     public VisualizationWidget(T contentDisplay, ResourceSet selectedResource,
-            ResourceSet highlightedResources, ViewItemBehavior viewItemBehavior) {
+            ResourceSet highlightedResources, VisualItemBehavior viewItemBehavior) {
 
         assert contentDisplay != null;
 

@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
 
 public class ManagedViewItemValueResolverDecorator implements
         ManagedViewItemValueResolver {
@@ -35,8 +35,8 @@ public class ManagedViewItemValueResolverDecorator implements
     }
 
     @Override
-    public boolean canResolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
         return delegate.canResolve(viewItem, context);
     }
 
@@ -55,8 +55,8 @@ public class ManagedViewItemValueResolverDecorator implements
     }
 
     @Override
-    public Object resolve(ViewItem viewItem,
-            ViewItemValueResolverContext context) {
+    public Object resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
         return delegate.resolve(viewItem, context);
     }
 
