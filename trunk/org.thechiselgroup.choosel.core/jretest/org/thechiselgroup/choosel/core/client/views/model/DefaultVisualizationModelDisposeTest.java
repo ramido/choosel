@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.stubHandlerRegistration;
+import static org.thechiselgroup.choosel.core.client.views.model.DefaultVisualizationModelTestHelper.stubHandlerRegistration;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +30,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * TODO we don't count how often event handler get registered. Every added event
  * handler should also get removed.
  */
-public class DefaultViewModelDisposeTest {
+public class DefaultVisualizationModelDisposeTest {
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
     @Mock
     private HandlerRegistration containedResourcesHandlerRegistration;
@@ -43,7 +43,7 @@ public class DefaultViewModelDisposeTest {
     @Mock
     private HandlerRegistration selectedResourcesHandlerRegistration;
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     @Test
     public void disposeContainedResourcesEventHandler() {
@@ -70,7 +70,7 @@ public class DefaultViewModelDisposeTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         helper.mockContainedResources();
         helper.mockHighlightedResources();
         helper.mockSelectedResources();

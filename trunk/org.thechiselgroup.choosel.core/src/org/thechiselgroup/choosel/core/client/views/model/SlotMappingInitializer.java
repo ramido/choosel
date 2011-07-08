@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 /**
  * Calculates default {@link ViewItemValueResolver}s. Used to set
- * {@link ViewItemValueResolver}s on a {@link ViewModel} if the mappings for
+ * {@link ViewItemValueResolver}s on a {@link VisualizationModel} if the mappings for
  * some {@link Slot}s are invalid.
  */
 // TODO rename to DefaultViewItemValueResolverProvider
@@ -34,7 +34,7 @@ public interface SlotMappingInitializer {
      * 
      * @param viewResources
      *            All {@link Resource}s that are contained in the
-     *            {@link ViewModel}.
+     *            {@link VisualizationModel}.
      * @param slotsToUpdate
      *            {@link Slot}s for which default {@link ViewItemValueResolver}s
      *            should be calculated.

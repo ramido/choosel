@@ -20,12 +20,12 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
 // NOTE: facade to visualization subsystem
 // TODO rename to visualization model?
-public interface ViewModel extends VisualItemContainer, ContainsResourceGrouping,
+public interface VisualizationModel extends VisualItemContainer, ContainsResourceGrouping,
         SlotMappingConfigurationInterface, VisualItemResolutionErrorModel {
 
     /**
      * @return {@link ResourceSet} that the {@link ResourceGrouping} of this
-     *         {@link ViewModel} is based upon.
+     *         {@link VisualizationModel} is based upon.
      */
     // TODO rename -- these are all resources in this visualization
     ResourceSet getContentResourceSet();

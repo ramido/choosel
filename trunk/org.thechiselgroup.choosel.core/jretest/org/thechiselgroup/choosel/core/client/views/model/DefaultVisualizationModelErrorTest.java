@@ -20,9 +20,9 @@ import static org.junit.Assert.assertThat;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemWithResourcesMatcher.containsEqualResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,19 +36,19 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 /**
  * Tests the error model {@link VisualItemResolutionErrorModel} of the
- * {@link ViewModel} subsystem implemented using {@link DefaultViewModel}.
+ * {@link VisualizationModel} subsystem implemented using {@link DefaultVisualizationModel}.
  * 
  * @author Lars Grammel
  */
-public class DefaultViewModelErrorTest {
+public class DefaultVisualizationModelErrorTest {
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     private Resource resource1;
 
     private Resource resource2;
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
     private void addResourcesToUndertest() {
         getResourceSetFromUnderTest().add(resource1);
@@ -148,7 +148,7 @@ public class DefaultViewModelErrorTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         resource1 = createResource("type1", 1);
         resource2 = createResource("type2", 2);
     }

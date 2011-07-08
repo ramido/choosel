@@ -62,7 +62,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * TODO introduce ViewItemContainer decorator that is filtered to the valid view
  * items from the error model
  */
-public class DefaultViewModel implements ViewModel, Disposable {
+public class DefaultVisualizationModel implements VisualizationModel, Disposable {
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -90,11 +90,11 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
     private final Logger logger;
 
-    private DefaultViewItemResolutionErrorModel errorModel = new DefaultViewItemResolutionErrorModel();
+    private DefaultVisualItemResolutionErrorModel errorModel = new DefaultVisualItemResolutionErrorModel();
 
     private transient PrioritizedHandlerManager handlerManager;
 
-    public DefaultViewModel(ViewContentDisplay contentDisplay,
+    public DefaultVisualizationModel(ViewContentDisplay contentDisplay,
             ResourceSet selectedResources, ResourceSet highlightedResources,
             VisualItemBehavior viewItemBehavior,
             ResourceGrouping resourceGrouping, Logger logger) {
@@ -418,13 +418,13 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
             @Override
             public boolean containsViewItem(String viewItemId) {
-                return DefaultViewModel.this.containsViewItem(viewItemId)
+                return DefaultVisualizationModel.this.containsViewItem(viewItemId)
                         && !hasErrors(viewItemsByGroupId.get(viewItemId));
             }
 
             @Override
             public ViewItemValueResolver getResolver(Slot slot) {
-                return DefaultViewModel.this.getResolver(slot);
+                return DefaultVisualizationModel.this.getResolver(slot);
             }
 
             @Override
@@ -439,14 +439,14 @@ public class DefaultViewModel implements ViewModel, Disposable {
             @Override
             public VisualItem getViewItem(String viewItemId) {
 
-                VisualItem viewItem = DefaultViewModel.this
+                VisualItem viewItem = DefaultVisualizationModel.this
                         .getViewItem(viewItemId);
 
                 if (viewItem == null) {
                     throw new NoSuchElementException("View Item with id "
                             + viewItemId + " is not contained.");
                 }
-                if (DefaultViewModel.this.hasErrors(viewItem)) {
+                if (DefaultVisualizationModel.this.hasErrors(viewItem)) {
                     throw new NoSuchElementException("View Item with id "
                             + viewItemId
                             + " contains errors and cannot be retrieved.");
@@ -463,7 +463,7 @@ public class DefaultViewModel implements ViewModel, Disposable {
             public LightweightCollection<VisualItem> getViewItems(
                     Iterable<Resource> resources) {
                 return LightweightCollections.getRelativeComplement(
-                        DefaultViewModel.this.getViewItems(resources),
+                        DefaultVisualizationModel.this.getViewItems(resources),
                         getViewItemsWithErrors());
             }
         });

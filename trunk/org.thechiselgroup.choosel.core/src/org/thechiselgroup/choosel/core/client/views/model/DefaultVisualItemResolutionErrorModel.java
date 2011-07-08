@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
  * 
  * @author Lars Grammel
  */
-public class DefaultViewItemResolutionErrorModel implements
+public class DefaultVisualItemResolutionErrorModel implements
         VisualItemResolutionErrorModel, Cloneable {
 
     /**

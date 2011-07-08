@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
  * </p>
  * <p>
  * {@code ViewItemValueResolver}s can use other {@code ViewItemValueResolver}s
- * defined on other {@link Slot}s of this {@link ViewModel} in their
+ * defined on other {@link Slot}s of this {@link VisualizationModel} in their
  * calculation. The {@link VisualItemValueResolverContext} exposes those during
  * the calculation. However, they must declare the {@link Slot}s they depend on
  * in {@link #getTargetSlots()}.

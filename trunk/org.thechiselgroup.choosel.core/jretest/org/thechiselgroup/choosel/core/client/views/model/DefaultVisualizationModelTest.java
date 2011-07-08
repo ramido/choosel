@@ -43,13 +43,13 @@ import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 
-public class DefaultViewModelTest {
+public class DefaultVisualizationModelTest {
 
     private Slot slot;
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     private static final String RESOURCE_PROPERTY_1 = "property1";
 
@@ -239,7 +239,7 @@ public class DefaultViewModelTest {
 
         slot = new Slot("1", "Description", DataType.TEXT);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         helper.setSlots(slot);
         underTest = helper.createTestViewModel();
         underTest.setResolver(slot, new FixedValueResolver("a", DataType.TEXT));

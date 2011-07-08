@@ -30,7 +30,7 @@ import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.dnd.client.resources.AllSetDropCommandFactory;
 
 public class AllSetCommandFactoryTest {
@@ -56,7 +56,7 @@ public class AllSetCommandFactoryTest {
     private View view;
 
     @Mock
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     @Test
     public void cannotDropIfAllResourcesAreAlreadyContainedInView() {

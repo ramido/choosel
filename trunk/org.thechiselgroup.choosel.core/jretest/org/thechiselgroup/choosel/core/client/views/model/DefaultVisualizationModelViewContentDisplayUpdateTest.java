@@ -32,10 +32,10 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanNeverResolve;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolverThatCanNeverResolve;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemWithResourcesMatcher.containsEqualResources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +59,14 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 /**
  * <p>
- * Tests that the {@link DefaultViewModel} calls
+ * Tests that the {@link DefaultVisualizationModel} calls
  * {@link VisualItemRenderer#update(LightweightCollection, LightweightCollection, LightweightCollection, LightweightCollection)}
  * correctly.
  * </p>
  * <p>
  * As part of this, we test that it filters the {@link VisualItemContainerDelta}
  * that is passed into the {@link ViewContentDisplay} by the content of the
- * {@link DefaultViewItemResolutionErrorModel}.
+ * {@link DefaultVisualItemResolutionErrorModel}.
  * </p>
  * <p>
  * We distinguish the following cases:
@@ -76,7 +76,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * <li>delta=added, current_state=errors ==&gt; ignore
  * {@link #addedViewItemsWithErrorsGetIgnoredWhenResourcesChange()}</li>
  * <li>delta=removed, old_state=valid ==&gt; remove
- * {@link DefaultViewModelTest#updateCalledWhenResourcesRemoved}</li>
+ * {@link DefaultVisualizationModelTest#updateCalledWhenResourcesRemoved}</li>
  * <li>delta=removed, old_state=errors ==&gt; ignore
  * {@link #removedViewItemsWithErrorsGetIgnoredWhenResourcesChange()}</li>
  * <li>delta=updated, old_state=valid, current_state=valid ==&gt; update
@@ -99,7 +99,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
  * @author Patrick Gorman
  */
 // TODO extract AbstractDefaultViewModelTest superclass
-public class DefaultViewModelViewContentDisplayUpdateTest {
+public class DefaultVisualizationModelViewContentDisplayUpdateTest {
 
     /**
      * Convert input to {@code LightWeightCollection<ViewItem>}
@@ -115,9 +115,9 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
         return result;
     }
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     private Slot slot;
 
@@ -321,7 +321,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         slot = helper.createSlots(DataType.NUMBER)[0];
         underTest = helper.createTestViewModel();
 
@@ -494,7 +494,7 @@ public class DefaultViewModelViewContentDisplayUpdateTest {
     /**
      * Shows the bug that happens when the {@link ViewContentDisplay} is updated
      * before the {@link VisualItem} cache is cleaned on a {@link Slot} change.
-     * The {@link DefaultViewModel} needs to call
+     * The {@link DefaultVisualizationModel} needs to call
      * {@link DefaultVisualItem#clearValueCache(Slot)}.
      */
     @Test

@@ -29,18 +29,18 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
 
 public class DefaultViewTest {
 
-    public static interface DisposableViewModel extends ViewModel, Disposable {
+    public static interface DisposableVisualizationModel extends VisualizationModel, Disposable {
     }
 
     private DefaultView underTest;
 
     @Mock
-    private DisposableViewModel viewModel;
+    private DisposableVisualizationModel viewModel;
 
     @Mock
     private Presenter resourceModelPresenter;

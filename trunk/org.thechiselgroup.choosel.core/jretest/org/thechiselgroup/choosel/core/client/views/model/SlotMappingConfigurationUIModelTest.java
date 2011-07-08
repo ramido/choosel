@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createSlots;
+import static org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverTestUtils.createSlots;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,7 +100,7 @@ public class SlotMappingConfigurationUIModelTest {
     private SlotMappingInitializer slotMappingInitializer;
 
     @Mock
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     private Slot[] slots;
 
@@ -113,7 +113,7 @@ public class SlotMappingConfigurationUIModelTest {
     @Mock
     private ManagedViewItemValueResolver resolver2;
 
-    private DefaultViewItemResolutionErrorModel errorModel;
+    private DefaultVisualItemResolutionErrorModel errorModel;
 
     @Mock
     private ViewItemValueResolverFactory factory2;
@@ -311,7 +311,7 @@ public class SlotMappingConfigurationUIModelTest {
 
         setUpResolverProvider(factory1);
 
-        errorModel = new DefaultViewItemResolutionErrorModel();
+        errorModel = new DefaultVisualItemResolutionErrorModel();
     }
 
     public void setUpResolverProvider(ViewItemValueResolverFactory... factories) {

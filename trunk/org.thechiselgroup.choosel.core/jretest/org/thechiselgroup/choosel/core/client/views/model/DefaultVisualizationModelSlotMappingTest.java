@@ -33,15 +33,15 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 
-public class DefaultViewModelSlotMappingTest {
+public class DefaultVisualizationModelSlotMappingTest {
 
     private Slot textSlot;
 
     private Slot numberSlot;
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
     @Test
     public void averageCalculationOverGroup() {
@@ -81,7 +81,7 @@ public class DefaultViewModelSlotMappingTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         helper.setSlots(textSlot, numberSlot);
         underTest = helper.createTestViewModel();
 

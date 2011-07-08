@@ -23,23 +23,23 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
-public class ViewItemWithResourcesMatcher extends
+public class VisualItemWithResourcesMatcher extends
         TypeSafeMatcher<LightweightCollection<VisualItem>> {
 
-    public static ViewItemWithResourcesMatcher containsEqualResources(
+    public static VisualItemWithResourcesMatcher containsEqualResources(
             Resource... resources) {
 
-        return new ViewItemWithResourcesMatcher(toResourceSet(resources));
+        return new VisualItemWithResourcesMatcher(toResourceSet(resources));
     }
 
-    public static ViewItemWithResourcesMatcher containsEqualResources(
+    public static VisualItemWithResourcesMatcher containsEqualResources(
             ResourceSet resources) {
-        return new ViewItemWithResourcesMatcher(resources);
+        return new VisualItemWithResourcesMatcher(resources);
     }
 
     private final ResourceSet resources;
 
-    public ViewItemWithResourcesMatcher(ResourceSet resources) {
+    public VisualItemWithResourcesMatcher(ResourceSet resources) {
         this.resources = resources;
     }
 

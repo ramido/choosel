@@ -40,7 +40,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 import com.google.gwt.event.shared.HandlerRegistration;
 
 // TODO refactor, change into object-based class
-public final class DefaultViewModelTestHelper {
+public final class DefaultVisualizationModelTestHelper {
 
     public static void stubHandlerRegistration(ResourceSet mockedResources,
             HandlerRegistration handlerRegistrationToReturn) {
@@ -80,14 +80,14 @@ public final class DefaultViewModelTestHelper {
     public Slot[] createSlots(DataType... dataTypes) {
         assert dataTypes != null;
 
-        Slot[] slots = ViewItemValueResolverTestUtils.createSlots(dataTypes);
+        Slot[] slots = VisualItemValueResolverTestUtils.createSlots(dataTypes);
 
         setSlots(slots);
 
         return slots;
     }
 
-    public DefaultViewModel createTestViewModel() {
+    public DefaultVisualizationModel createTestViewModel() {
         when(resolverProvider.getResolverFactories()).thenReturn(
                 resolverFactories);
 
@@ -102,7 +102,7 @@ public final class DefaultViewModelTestHelper {
 
         resourceGrouping.setResourceSet(containedResources);
 
-        return spy(new DefaultViewModel(viewContentDisplay, selectedResources,
+        return spy(new DefaultVisualizationModel(viewContentDisplay, selectedResources,
                 highlightedResources, mock(VisualItemBehavior.class),
                 resourceGrouping, mock(Logger.class)));
     }

@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
 
-public class DefaultViewItemTest {
+public class DefaultVisualItemTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 

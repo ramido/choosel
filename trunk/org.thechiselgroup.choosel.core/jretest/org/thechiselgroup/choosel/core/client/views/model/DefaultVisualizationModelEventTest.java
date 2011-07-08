@@ -33,11 +33,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 // TODO test for events on view item updates
 // TODO test for single event when view items are added, removed, updated at the same time
-public class DefaultViewModelEventTest {
+public class DefaultVisualizationModelEventTest {
 
-    private DefaultViewModelTestHelper helper;
+    private DefaultVisualizationModelTestHelper helper;
 
-    private DefaultViewModel underTest;
+    private DefaultVisualizationModel underTest;
 
     private VisualItemContainerChangeEvent captureEvent(
             VisualItemContainerChangeEventHandler handler) {
@@ -97,7 +97,7 @@ public class DefaultViewModelEventTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        helper = new DefaultViewModelTestHelper();
+        helper = new DefaultVisualizationModelTestHelper();
         helper.createSlots();
         underTest = helper.createTestViewModel();
     }

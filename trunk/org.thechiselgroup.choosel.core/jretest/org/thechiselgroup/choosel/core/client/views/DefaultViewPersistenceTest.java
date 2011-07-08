@@ -45,8 +45,8 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultVisualizationModelTestHelper;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
@@ -58,11 +58,11 @@ public class DefaultViewPersistenceTest {
 
     private DefaultView originalView;
 
-    private DefaultViewModel originalViewModel;
+    private DefaultVisualizationModel originalViewModel;
 
     private DefaultView restoredView;
 
-    private DefaultViewModel restoredViewModel;
+    private DefaultVisualizationModel restoredViewModel;
 
     private Slot textSlot;
 
@@ -71,7 +71,7 @@ public class DefaultViewPersistenceTest {
     @Mock
     private PersistableRestorationService restorationService;
 
-    public DefaultView createView(DefaultViewModel viewModel,
+    public DefaultView createView(DefaultVisualizationModel viewModel,
             DefaultResourceModel resourceModel,
             DefaultSelectionModel selectionModel) {
 
@@ -217,7 +217,7 @@ public class DefaultViewPersistenceTest {
             DefaultSelectionModel selectionModel = new DefaultSelectionModel(
                     mock(LabelProvider.class), resourceSetFactory);
 
-            DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
+            DefaultVisualizationModelTestHelper helper = new DefaultVisualizationModelTestHelper();
             helper.setSlots(textSlot, numberSlot);
             helper.setContainedResources(resourceModel.getResources());
             helper.setSelectedResources(selectionModel.getSelection());
@@ -232,7 +232,7 @@ public class DefaultViewPersistenceTest {
             DefaultSelectionModel selectionModel = new DefaultSelectionModel(
                     mock(LabelProvider.class), resourceSetFactory);
 
-            DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
+            DefaultVisualizationModelTestHelper helper = new DefaultVisualizationModelTestHelper();
             helper.setSlots(textSlot, numberSlot);
             helper.setContainedResources(resourceModel.getResources());
             helper.setSelectedResources(selectionModel.getSelection());

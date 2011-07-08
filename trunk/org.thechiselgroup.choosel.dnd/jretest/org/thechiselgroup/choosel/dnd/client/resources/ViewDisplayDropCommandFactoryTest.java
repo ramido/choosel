@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
 import org.thechiselgroup.choosel.dnd.client.resources.ViewDisplayDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -63,7 +63,7 @@ public class ViewDisplayDropCommandFactoryTest {
     private ResourceModel resourceModel;
 
     @Mock
-    private ViewModel viewModel;
+    private VisualizationModel viewModel;
 
     @Ignore
     @Test

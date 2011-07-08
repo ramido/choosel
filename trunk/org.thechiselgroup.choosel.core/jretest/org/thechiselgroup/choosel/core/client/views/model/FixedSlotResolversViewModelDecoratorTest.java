@@ -31,14 +31,14 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 public class FixedSlotResolversViewModelDecoratorTest {
 
-    private FixedSlotResolversViewModelDecorator underTest;
+    private FixedSlotResolversVisualizationModelDecorator underTest;
 
     private Slot slot1;
 
     private Slot slot2;
 
     @Mock
-    private ViewModel delegate;
+    private VisualizationModel delegate;
 
     @Mock
     private ViewItemValueResolver resolver;
@@ -50,7 +50,7 @@ public class FixedSlotResolversViewModelDecoratorTest {
 
         when(delegate.getSlots()).thenReturn(new Slot[] { slot1, slot2 });
 
-        underTest = new FixedSlotResolversViewModelDecorator(delegate,
+        underTest = new FixedSlotResolversVisualizationModelDecorator(delegate,
                 fixedSlotResolvers);
 
         assertThat(underTest.getSlots(), equalsArray(slot2));
@@ -63,7 +63,7 @@ public class FixedSlotResolversViewModelDecoratorTest {
 
         when(delegate.getSlots()).thenReturn(new Slot[] { slot1 });
 
-        underTest = new FixedSlotResolversViewModelDecorator(delegate,
+        underTest = new FixedSlotResolversVisualizationModelDecorator(delegate,
                 fixedSlotResolvers);
 
         verify(delegate, times(1)).setResolver(slot1, resolver);
