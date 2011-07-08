@@ -15,12 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+
 public class ResourceCountResolverUIControllerFactory implements
         ViewItemValueResolverUIControllerFactory {
 
     @Override
     public ViewItemValueResolverUIController create(
-            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems) {
         return new EmptyWidgetUIController();
     }
 

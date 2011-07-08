@@ -15,13 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+
 public interface ViewItemValueResolverUIControllerFactory {
 
     // XXX I'm not convinced that the SlotMappingUIModel should be passed in
     // here. However, there must be a target specified somehow.
     // TODO refactor
     ViewItemValueResolverUIController create(
-            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel);
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems);
 
     String getId();
 

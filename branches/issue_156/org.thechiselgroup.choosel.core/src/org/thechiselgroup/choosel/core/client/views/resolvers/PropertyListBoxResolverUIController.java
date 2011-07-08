@@ -32,6 +32,28 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class PropertyListBoxResolverUIController implements
         ViewItemValueResolverUIController {
 
+    /**
+     * This method will return the properties that it would be ok to select from
+     * the view items. All of the resources must contain that same property
+     */
+    private static List<String> getSharedPropertiesFromViewItems(
+            LightweightCollection<ViewItem> viewItems) {
+        List<String> properties = new ArrayList<String>();
+
+        // intialize properties to be the ones in the first resource
+        ViewItem firstItem = viewItems.getFirstElement();
+        Resource firstResource = firstItem.getResources().iterator().next();
+        properties.addAll(firstResource.getProperties().keySet());
+
+        // only keep properties that are shared by all of the resource
+        for (ViewItem viewItem : viewItems) {
+            for (Resource resource : viewItem.getResources()) {
+                properties.retainAll(resource.getProperties().keySet());
+            }
+        }
+        return properties;
+    }
+
     private final PropertyDependantViewItemValueResolverFactory resolverFactory;
 
     private SlotMappingUIModel uiModel;
@@ -55,17 +77,27 @@ public abstract class PropertyListBoxResolverUIController implements
         }
     };
 
-    // TODO add in the configuration here so we can precalculate the properties
-    // without firing an event
     public PropertyListBoxResolverUIController(
             PropertyDependantViewItemValueResolverFactory resolverFactory,
-            SlotMappingUIModel uiModel) {
+            SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems) {
+        this(resolverFactory, uiModel, viewItems,
+                getSharedPropertiesFromViewItems(viewItems).get(0));
+    }
 
+    public PropertyListBoxResolverUIController(
+            PropertyDependantViewItemValueResolverFactory resolverFactory,
+            SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems, String property) {
         this.uiModel = uiModel;
         this.resolverFactory = resolverFactory;
+
         selector = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
         selector.setChangeHandler(propertySelectChangeHandler);
+
+        setProperties(getSharedPropertiesFromViewItems(viewItems));
+        selector.setSelectedValue(property);
     }
 
     /**
@@ -92,28 +124,6 @@ public abstract class PropertyListBoxResolverUIController implements
         // getting, and the delegate is the thing that is PropertyDependant
         assert currentResolver instanceof PropertyDependantViewItemValueResolver;
         return (PropertyDependantViewItemValueResolver) currentResolver;
-    }
-
-    /**
-     * This method will return the properties that it would be ok to select from
-     * the view items. All of the resources must contain that same property
-     */
-    private List<String> getSharedPropertiesFromViewItems(
-            LightweightCollection<ViewItem> viewItems) {
-        List<String> properties = new ArrayList<String>();
-
-        // intialize properties to be the ones in the first resource
-        ViewItem firstItem = viewItems.getFirstElement();
-        Resource firstResource = firstItem.getResources().iterator().next();
-        properties.addAll(firstResource.getProperties().keySet());
-
-        // only keep properties that are shared by all of the resource
-        for (ViewItem viewItem : viewItems) {
-            for (Resource resource : viewItem.getResources()) {
-                properties.retainAll(resource.getProperties().keySet());
-            }
-        }
-        return properties;
     }
 
     /**

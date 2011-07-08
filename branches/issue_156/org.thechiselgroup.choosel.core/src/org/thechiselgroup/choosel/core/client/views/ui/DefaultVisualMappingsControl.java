@@ -107,12 +107,12 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
         assert uiFactory != null;
 
-        // TODO realistically, to create a valid preconfigured ui controller,
-        // you need the current view items
+        // TODO maybe refactor this, probably some null checks would be great
         ViewItemValueResolverUIController resolverUI = uiFactory.create(
                 resolverFactoryProvider.getFactoryById(currentResolver
                         .getResolverId()), slotMappingConfigurationUIModel
-                        .getSlotMappingUIModel(slot));
+                        .getSlotMappingUIModel(slot),
+                slotMappingConfigurationUIModel.getViewItems());
         return resolverUI;
     }
 

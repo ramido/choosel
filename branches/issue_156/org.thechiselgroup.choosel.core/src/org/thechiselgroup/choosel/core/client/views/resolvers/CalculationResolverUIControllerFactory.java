@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 public class CalculationResolverUIControllerFactory implements
         ViewItemValueResolverUIControllerFactory {
@@ -25,13 +27,15 @@ public class CalculationResolverUIControllerFactory implements
         this.id = id;
     }
 
+    @Override
     public ViewItemValueResolverUIController create(
-            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel) {
+            ViewItemValueResolverFactory factory, SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems) {
 
         assert factory instanceof CalculationResolverFactory;
 
         CalculationResolverUIController calculationResolverUIController = new CalculationResolverUIController(
-                (CalculationResolverFactory) factory, uiModel);
+                (CalculationResolverFactory) factory, uiModel, viewItems);
 
         return calculationResolverUIController;
     }

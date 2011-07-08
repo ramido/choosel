@@ -15,12 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+
 public class FirstResourcePropertyResolverUIController extends
         PropertyListBoxResolverUIController {
 
     public FirstResourcePropertyResolverUIController(
             FirstResourcePropertyResolverFactory resolverFactory,
-            SlotMappingUIModel uiModel) {
-        super(resolverFactory, uiModel);
+            SlotMappingUIModel uiModel,
+            LightweightCollection<ViewItem> viewItems) {
+        super(resolverFactory, uiModel, viewItems);
     }
 }
