@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.client.resources;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -23,9 +23,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toLabeledResourceSet;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toLabeledResourceSet;
 
 import java.util.concurrent.atomic.AtomicReference;
 

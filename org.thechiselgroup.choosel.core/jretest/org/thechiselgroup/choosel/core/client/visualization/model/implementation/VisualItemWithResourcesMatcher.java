@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
 
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;

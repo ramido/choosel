@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;

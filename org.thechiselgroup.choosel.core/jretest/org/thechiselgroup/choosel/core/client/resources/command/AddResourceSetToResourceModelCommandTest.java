@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import java.util.Collection;
 

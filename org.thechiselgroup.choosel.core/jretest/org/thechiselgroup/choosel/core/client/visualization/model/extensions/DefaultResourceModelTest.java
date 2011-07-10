@@ -21,9 +21,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;

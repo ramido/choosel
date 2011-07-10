@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.client.resources;
 
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;

@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 
 import com.google.gwt.user.client.Element;

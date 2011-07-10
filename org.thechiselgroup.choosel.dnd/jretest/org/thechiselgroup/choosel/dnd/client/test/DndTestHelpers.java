@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.dnd.client.test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 
 import com.allen_sauer.gwt.dnd.client.util.DragClientBundle;
 import com.allen_sauer.gwt.dnd.client.util.DragClientBundle.DragCssResource;

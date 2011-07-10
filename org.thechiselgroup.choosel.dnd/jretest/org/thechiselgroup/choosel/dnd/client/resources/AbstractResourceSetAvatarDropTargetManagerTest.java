@@ -29,7 +29,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
-import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;

@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.geometry.Rectangle;
-import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.dnd.client.resources.Area;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;

@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemWithResourcesMatcher.containsEqualResources;
@@ -30,7 +30,7 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;

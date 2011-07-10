@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources.command;
 
 import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Test;

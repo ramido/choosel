@@ -26,8 +26,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.test.TestMouseOverEvent;
+import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.ui.TestMouseOverEvent;
 
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.dom.client.MouseOverHandler;
