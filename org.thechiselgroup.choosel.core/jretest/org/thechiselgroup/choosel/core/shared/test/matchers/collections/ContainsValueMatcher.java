@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.shared.test.matchers.collections;
 
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import java.util.Collection;
 
-public class StubbingArgumentCaptor<T> implements Answer<T> {
+import org.hamcrest.Description;
+import org.junit.internal.matchers.TypeSafeMatcher;
 
-    private Object[] arguments;
+public final class ContainsValueMatcher<T> extends TypeSafeMatcher<Collection<T>> {
+
+    private final T value;
+
+    public ContainsValueMatcher(T value) {
+        this.value = value;
+    }
 
     @Override
-    public T answer(InvocationOnMock invocation) {
-        arguments = invocation.getArguments();
-        return null;
+    public void describeTo(Description description) {
+        description.appendText("contains").appendValue(value);
     }
 
-    public <S> S getAs(Class<S> clazz, int index) {
-        return clazz.cast(arguments[index]);
+    @Override
+    public boolean matchesSafely(Collection<T> collection) {
+        return collection.contains(value);
     }
 
-    public boolean wasCalled() {
-        return arguments != null;
-    }
 }

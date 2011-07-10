@@ -21,23 +21,21 @@ import java.util.Collection;
 
 import org.hamcrest.Matcher;
 import org.thechiselgroup.choosel.core.client.resources.UriList;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 public final class CollectionMatchers {
 
-    public static <T> Matcher<T> contains(Collection<T> expected) {
-        return new ContainsMatcher<T>(expected);
-    }
-
-    public static <T> Matcher<T> contains(LightweightCollection<T> expected) {
-        return CollectionMatchers.<T> contains(expected.toList());
+    public static <T> Matcher<Collection<T>> contains(T expectedValue) {
+        return new ContainsValueMatcher<T>(expectedValue);
     }
 
     public static <T> Matcher<Iterable<T>> containsExactly(
             Collection<T> expected) {
 
-        return new ContainsExactlyMatcher<T>(expected);
+        return new IterableContentMatcher<T, Iterable<T>>(expected);
     }
 
     public static <T> Matcher<Iterable<T>> containsExactly(
@@ -52,6 +50,19 @@ public final class CollectionMatchers {
         return CollectionMatchers.<T> containsExactly(list);
     }
 
+    public static <T> Matcher<LightweightCollection<T>> containsExactlyLightweightCollection(
+            LightweightCollection<T> expected) {
+
+        return new LightweightCollectionContentMatcher<T>(expected);
+    }
+
+    public static <T> Matcher<LightweightCollection<T>> containsExactlyLightweightCollection(
+            T... expected) {
+
+        return containsExactlyLightweightCollection(LightweightCollections
+                .toCollection(expected));
+    }
+
     // TODO move
     public static Matcher<UriList> containsUrisExactly(String... expectedUris) {
         return new UriListEqualsMatcher(expectedUris);
@@ -61,7 +72,29 @@ public final class CollectionMatchers {
         return new ArrayEqualsMatcher<T>(expected);
     }
 
+    public static <T> Matcher<T> isContainedIn(Collection<T> expected) {
+        return new IsContainedInCollectionMatcher<T>(expected);
+    }
+
+    public static <T> Matcher<T> isContainedIn(LightweightCollection<T> expected) {
+        return CollectionMatchers.<T> isContainedIn(expected.toList());
+    }
+
+    public static <T> Matcher<Delta<T>> matchesDelta(
+            Matcher<?> addedElementsMatcher, Matcher<?> updatedElementsMatcher,
+            Matcher<?> removedElementsMatcher) {
+
+        return new CompositeDeltaMatcher<T>(addedElementsMatcher,
+                updatedElementsMatcher, removedElementsMatcher);
+    }
+
     private CollectionMatchers() {
+    }
+
+    public static <T> Matcher<LightweightCollection<T>> isEmptyLightweightCollection(
+            final Class<T> clazz) {
+    
+        return new IsEmptyLightweightCollectionMatcher<T>(clazz);
     }
 
 }

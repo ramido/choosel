@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2011 Lars Grammel 
+ * Copyright 2009, 2010 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.shared.test.mockito;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class FirstInvocationArgumentAnswer<T> implements Answer<T> {
+public class StubbingArgumentCaptor<T> implements Answer<T> {
 
-    @SuppressWarnings("unchecked")
+    private Object[] arguments;
+
     @Override
-    public T answer(InvocationOnMock invocation) throws Throwable {
-        return (T) invocation.getArguments()[0];
+    public T answer(InvocationOnMock invocation) {
+        arguments = invocation.getArguments();
+        return null;
     }
 
+    public <S> S getAs(Class<S> clazz, int index) {
+        return clazz.cast(arguments[index]);
+    }
+
+    public boolean wasCalled() {
+        return arguments != null;
+    }
 }
