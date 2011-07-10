@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.dnd.client.resources;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 
 //TODO possible class name change
 public interface DropTargetCapabilityChecker {

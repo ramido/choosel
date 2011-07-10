@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.AbstractDialog;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogCallback;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;

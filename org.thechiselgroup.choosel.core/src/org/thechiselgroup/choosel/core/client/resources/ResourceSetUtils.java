@@ -22,19 +22,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.DataType;
 
 public final class ResourceSetUtils {
 
     public static final String LATITUDE = "latitude";
 
     public static final String LONGITUDE = "longitude";
-
-    @Deprecated
-    public static Resource firstResource(
-            LightweightCollection<Resource> resources) {
-        return resources.iterator().next();
-    }
 
     public static DataTypeToListMap<String> getPropertiesByDataType(
             ResourceSet resourceSet) {
@@ -45,7 +39,7 @@ public final class ResourceSetUtils {
 
         // no aggregation
         DataTypeToListMap<String> result = new DataTypeToListMap<String>();
-        Resource resource = resourceSet.getFirstResource();
+        Resource resource = resourceSet.getFirstElement();
 
         if (resource == null) {
             return result;
@@ -89,7 +83,7 @@ public final class ResourceSetUtils {
         }
 
         // no aggregation
-        Resource resource = resourceSet.getFirstResource();
+        Resource resource = resourceSet.getFirstElement();
         List<String> properties = new ArrayList<String>();
 
         for (Entry<String, Serializable> entry : resource.getProperties()

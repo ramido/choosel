@@ -20,11 +20,11 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
+import org.thechiselgroup.choosel.core.client.util.DataType;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.regexp.shared.RegExp;

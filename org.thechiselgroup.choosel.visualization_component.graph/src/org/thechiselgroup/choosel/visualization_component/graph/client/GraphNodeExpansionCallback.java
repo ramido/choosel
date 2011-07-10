@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 
 // TODO better separation of concern - introduce factories for the expanders

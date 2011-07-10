@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.DefaultResourceSetCollector;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackDelegate;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;

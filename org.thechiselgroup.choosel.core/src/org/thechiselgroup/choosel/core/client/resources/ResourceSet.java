@@ -121,14 +121,6 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
 
     Resource getByUri(String uri);
 
-    // XXX hack to make changes in resource item work
-    // trace and replace with something more sensible,
-    // especially in the graph
-    // TODO this is actually needed, remove deprecation & introduce exception
-    // TODO replaced by getFirstElement
-    @Deprecated
-    Resource getFirstResource();
-
     /**
      * Calculates the intersection of this resource set and the resources in the
      * parameter.

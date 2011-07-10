@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFact
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.DefaultViewAccessor;
 
 import com.google.inject.Inject;
 

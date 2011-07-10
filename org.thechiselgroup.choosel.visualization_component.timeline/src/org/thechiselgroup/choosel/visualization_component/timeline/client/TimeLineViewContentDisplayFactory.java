@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplayFactory;
 
 public class TimeLineViewContentDisplayFactory implements
         ViewContentDisplayFactory {

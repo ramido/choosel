@@ -18,6 +18,8 @@ package org.thechiselgroup.choosel.core.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.util.DataType;
+
 public class DataTypeToListMap<T> {
 
     private List<T> textList = new ArrayList<T>();

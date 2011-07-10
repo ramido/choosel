@@ -49,14 +49,14 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.core.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.core.client.util.url.UrlFetchService;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
-import org.thechiselgroup.choosel.core.client.views.resolvers.DefaultViewItemResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.DefaultViewItemResolverUIFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.DefaultViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.DefaultViewItemResolverUIFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.dnd.client.popup.DragSupportingPopupManagerFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.AllSetDropTargetManager;
 import org.thechiselgroup.choosel.dnd.client.resources.DefaultDropTargetCapabilityChecker;
@@ -326,7 +326,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(DropTargetCapabilityChecker.class).to(
                 getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
-        bind(ViewItemValueResolverFactoryProvider.class).to(
+        bind(VisualItemValueResolverFactoryProvider.class).to(
                 getResolverFactoryProviderClass()).in(Singleton.class);
 
         bind(ViewItemValueResolverUIControllerFactoryProvider.class).to(
@@ -410,8 +410,8 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         return PersistableRestorationServiceProvider.class;
     }
 
-    protected Class<? extends ViewItemValueResolverFactoryProvider> getResolverFactoryProviderClass() {
-        return DefaultViewItemResolverFactoryProvider.class;
+    protected Class<? extends VisualItemValueResolverFactoryProvider> getResolverFactoryProviderClass() {
+        return DefaultVisualItemResolverFactoryProvider.class;
     }
 
     protected Class<? extends ViewItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {

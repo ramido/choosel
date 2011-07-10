@@ -42,7 +42,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.popup.ResourceSetAvat
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
 

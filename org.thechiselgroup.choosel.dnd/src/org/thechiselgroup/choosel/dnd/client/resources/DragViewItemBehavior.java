@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 
 /**
  * Manages dragging of {@link VisualItem}.

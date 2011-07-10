@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.NullIterable;
 import org.thechiselgroup.choosel.core.client.util.collections.SingleItemCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.SingleItemIterable;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
+import org.thechiselgroup.choosel.core.shared.util.ForTest;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -192,14 +193,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return iterator().next();
     }
 
-    @Override
-    public Resource getFirstResource() {
-        return getFirstElement();
-    }
-
-    /**
-     * <b>FOR TEST USAGE</b>
-     */
+    @ForTest
     public int getHandlerCount(Type<?> type) {
         return handlerManager.getHandlerCount(type);
     }

@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemRenderer;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemRenderer;
 
 import com.google.gwt.maps.client.MapWidget;
 

@@ -15,15 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewContentDisplaysConfigurationProvider;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SubsetDelegatingValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
+import org.thechiselgroup.choosel.core.client.util.DataType;
+import org.thechiselgroup.choosel.core.client.visualization.DefaultViewContentDisplaysConfigurationProvider;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplayConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.SubsetDelegatingValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemStatusResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;

@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.resources.command;
 import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
 
 public class ReplaceSelectionCommand extends AbstractUndoableCommand implements
         HasDescription {

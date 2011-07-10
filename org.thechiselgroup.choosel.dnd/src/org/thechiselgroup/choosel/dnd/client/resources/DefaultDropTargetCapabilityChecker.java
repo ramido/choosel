@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.util.DataType;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 
 public class DefaultDropTargetCapabilityChecker implements
         DropTargetCapabilityChecker {

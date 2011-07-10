@@ -21,8 +21,8 @@ import org.thechiselgroup.choosel.core.client.resources.command.AddResourceSetTo
 import org.thechiselgroup.choosel.core.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 
 import com.google.gwt.user.client.ui.Widget;
 

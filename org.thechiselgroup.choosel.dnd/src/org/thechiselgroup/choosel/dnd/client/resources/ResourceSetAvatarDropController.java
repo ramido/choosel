@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.View;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;

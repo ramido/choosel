@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.core.client.resources.ui.FixedLabelResourceSet
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.resources.DraggableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.DropTargetResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.HighlightingDraggableResourceSetAvatarFactory;

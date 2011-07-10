@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCallback;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -46,7 +46,8 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
     }
 
     @Override
-    public final void expand(VisualItem viewItem, GraphNodeExpansionCallback graph) {
+    public final void expand(VisualItem viewItem,
+            GraphNodeExpansionCallback graph) {
         assert viewItem != null;
         assert graph != null;
 
@@ -71,7 +72,7 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
 
     protected final Resource getSingleResource(VisualItem viewItem) {
         assert viewItem.getResources().size() == 1;
-        return viewItem.getResources().getFirstResource();
+        return viewItem.getResources().getFirstElement();
     }
 
     /**

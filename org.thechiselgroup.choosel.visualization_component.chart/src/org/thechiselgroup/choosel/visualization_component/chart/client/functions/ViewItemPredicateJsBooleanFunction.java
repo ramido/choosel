@@ -15,16 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
-import org.thechiselgroup.choosel.core.client.views.filter.ViewItemPredicate;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.predicates.VisualItemPredicate;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 
 public class ViewItemPredicateJsBooleanFunction implements JsBooleanFunction {
 
-    private final ViewItemPredicate predicate;
+    private final VisualItemPredicate predicate;
 
-    public ViewItemPredicateJsBooleanFunction(ViewItemPredicate predicate) {
+    public ViewItemPredicateJsBooleanFunction(VisualItemPredicate predicate) {
         assert predicate != null;
         this.predicate = predicate;
     }

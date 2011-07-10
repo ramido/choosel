@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 
 public class AllSetDropCommandFactory extends
         AbstractResourceSetAvatarDropCommandFactory {

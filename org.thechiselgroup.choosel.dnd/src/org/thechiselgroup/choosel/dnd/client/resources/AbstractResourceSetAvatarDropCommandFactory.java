@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.dnd.client.resources;
 
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.View;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
 

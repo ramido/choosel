@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.resources;
 
-import org.thechiselgroup.choosel.core.client.views.model.DelegatingViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.visualization.model.DelegatingViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
 
 public class DropEnabledViewContentDisplay extends DelegatingViewContentDisplay {
 
