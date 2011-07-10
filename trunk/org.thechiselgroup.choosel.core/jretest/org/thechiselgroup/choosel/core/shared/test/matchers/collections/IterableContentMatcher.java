@@ -20,30 +20,31 @@ import java.util.Collection;
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
-public final class ContainsExactlyMatcher<T> extends
-        TypeSafeMatcher<Iterable<T>> {
+public final class IterableContentMatcher<T, S extends Iterable<T>> extends
+        TypeSafeMatcher<S> {
 
-    private final Collection<T> expected;
+    private final Collection<T> expectedContent;
 
-    public ContainsExactlyMatcher(Collection<T> expected) {
-        this.expected = expected;
+    public IterableContentMatcher(Collection<T> expectedContent) {
+        this.expectedContent = expectedContent;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendValue(expected);
+        description.appendText("content is").appendValue(expectedContent);
     }
 
     @Override
-    public boolean matchesSafely(Iterable<T> actual) {
+    public boolean matchesSafely(S actual) {
         int actualSize = 0;
         for (T t : actual) {
-            if (!expected.contains(t)) {
+            if (!expectedContent.contains(t)) {
                 return false;
             }
             actualSize++;
         }
 
-        return expected.size() == actualSize;
+        return expectedContent.size() == actualSize;
     }
+
 }

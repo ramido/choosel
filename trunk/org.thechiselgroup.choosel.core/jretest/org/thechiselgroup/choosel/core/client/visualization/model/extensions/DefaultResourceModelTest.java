@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.extensions;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +24,6 @@ import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.contains;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -88,8 +88,9 @@ public class DefaultResourceModelTest {
 
         underTest.addResourceSet(resources);
 
-        assertThat(createResource(1),
-                contains(underTest.getAutomaticResourceSet()));
+        assertThat(
+                underTest.getAutomaticResourceSet().contains(createResource(1)),
+                is(true));
     }
 
     @Test

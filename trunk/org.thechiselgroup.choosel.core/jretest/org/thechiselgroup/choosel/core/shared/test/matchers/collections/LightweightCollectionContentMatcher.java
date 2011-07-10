@@ -15,28 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.shared.test.matchers.collections;
 
-import java.util.Collection;
-
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
-// TODO remove
-public final class ContainsMatcher<T> extends TypeSafeMatcher<T> {
+public final class LightweightCollectionContentMatcher<T> extends
+        TypeSafeMatcher<LightweightCollection<T>> {
 
-    private final Collection<T> collection;
+    private final LightweightCollection<T> expected;
 
-    public ContainsMatcher(Collection<T> collection) {
-        this.collection = collection;
+    public LightweightCollectionContentMatcher(LightweightCollection<T> expected) {
+        this.expected = expected;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("contained in").appendValue(collection);
+        description.appendText("contains exactly").appendValue(expected);
     }
 
     @Override
-    public boolean matchesSafely(T actual) {
-        return collection.contains(actual);
-    }
+    public boolean matchesSafely(LightweightCollection<T> set) {
+        if (set.size() != expected.size()) {
+            return false;
+        }
 
+        return set.toList().containsAll(expected.toList());
+    }
 }

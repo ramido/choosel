@@ -24,9 +24,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForExactResourceSets;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.isEmptyLightweightCollection;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.matchesDelta;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -58,15 +55,13 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemRenderer;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItemResolutionErrorModel;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemRenderer;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 
 /**
  * <p>
@@ -159,13 +154,17 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
 
         helper.addToContainedResources(toResourceSet(resources1, resources2));
 
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                argThat(matchesDelta(
-                        containsViewItemsForExactResourceSets(resources1,
-                                resources2),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class))),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                containsViewItemsForExactResourceSets(
+                                        resources1, resources2),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class))),
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
     }
 
     @Test
@@ -180,14 +179,22 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
 
         assertThat(
                 allValues.get(0),
-                matchesDelta(containsViewItemsForExactResourceSets(resources1),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class)));
+                CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                containsViewItemsForExactResourceSets(resources1),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class)));
         assertThat(
                 allValues.get(1),
-                matchesDelta(containsViewItemsForExactResourceSets(resources2),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class)));
+                CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                containsViewItemsForExactResourceSets(resources2),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class)));
     }
 
     private Delta<VisualItem> captureDelta() {
@@ -201,7 +208,8 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         ArgumentCaptor<Delta> captor = ArgumentCaptor.forClass(Delta.class);
         verify(helper.getViewContentDisplay(), times(wantedNumberOfInvocations))
                 .update(captor.capture(),
-                        argThat(isEmptyLightweightCollection(Slot.class)));
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
         return cast(captor.getAllValues());
     }
 
@@ -251,10 +259,13 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
 
         verify(helper.getViewContentDisplay(), times(1))
-                .update(argThat(matchesDelta(
-                        containsViewItemsForExactResourceSets(createResources(1)),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class))),
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                containsViewItemsForExactResourceSets(createResources(1)),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class))),
                         (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 
@@ -315,12 +326,17 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
 
         helper.getHighlightedResources().addAll(resources);
 
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                argThat(matchesDelta(
-                        isEmptyLightweightCollection(VisualItem.class),
-                        eqViewItems(addedViewItems),
-                        isEmptyLightweightCollection(VisualItem.class))),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .containsExactlyLightweightCollection(addedViewItems),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class))),
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
     }
 
     @Test
@@ -334,12 +350,17 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
                 .getAddedElements();
 
         helper.getContainedResources().removeAll(resources);
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                argThat(matchesDelta(
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        eqViewItems(addedViewItems))),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .containsExactlyLightweightCollection(addedViewItems))),
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
     }
 
     @Test
@@ -352,12 +373,17 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
 
         helper.getSelectedResources().add(createResource(1));
 
-        verify(helper.getViewContentDisplay(), times(1)).update(
-                argThat(matchesDelta(
-                        isEmptyLightweightCollection(VisualItem.class),
-                        eqViewItems(addedViewItems),
-                        isEmptyLightweightCollection(VisualItem.class))),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+        verify(helper.getViewContentDisplay(), times(1))
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .containsExactlyLightweightCollection(addedViewItems),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class))),
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
     }
 
     /**
@@ -441,7 +467,8 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         // update
         verify(helper.getViewContentDisplay(), never()).update(
                 argThat(any(Delta.class)),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+                argThat(CollectionMatchers
+                        .isEmptyLightweightCollection(Slot.class)));
     }
 
     @Test
@@ -453,21 +480,29 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
     }
 
     private void verifyNoViewItemsAdded() {
-        verify(helper.getViewContentDisplay(), never()).update(
-                argThat(matchesDelta(
-                        new IsAnything<LightweightCollection<VisualItem>>(),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class))),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+        verify(helper.getViewContentDisplay(), never())
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                new IsAnything<LightweightCollection<VisualItem>>(),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class))),
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
     }
 
     private void verifyNoViewItemsUpdated() {
-        verify(helper.getViewContentDisplay(), never()).update(
-                argThat(matchesDelta(
-                        isEmptyLightweightCollection(VisualItem.class),
-                        new IsAnything<LightweightCollection<VisualItem>>(),
-                        isEmptyLightweightCollection(VisualItem.class))),
-                argThat(isEmptyLightweightCollection(Slot.class)));
+        verify(helper.getViewContentDisplay(), never())
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                new IsAnything<LightweightCollection<VisualItem>>(),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class))),
+                        argThat(CollectionMatchers
+                                .isEmptyLightweightCollection(Slot.class)));
     }
 
     /**
@@ -529,10 +564,13 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
 
         verify(helper.getViewContentDisplay(), times(1))
-                .update(argThat(matchesDelta(
-                        isEmptyLightweightCollection(VisualItem.class),
-                        isEmptyLightweightCollection(VisualItem.class),
-                        containsViewItemsForExactResourceSets(createResources(1)))),
+                .update(argThat(CollectionMatchers
+                        .<VisualItem> matchesDelta(
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                CollectionMatchers
+                                        .isEmptyLightweightCollection(VisualItem.class),
+                                containsViewItemsForExactResourceSets(createResources(1)))),
                         (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 

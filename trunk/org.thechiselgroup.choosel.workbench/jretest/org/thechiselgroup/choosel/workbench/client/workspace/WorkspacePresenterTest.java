@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.test.StubbingArgumentCaptor;
+import org.thechiselgroup.choosel.core.shared.test.mockito.StubbingArgumentCaptor;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePresenter.WorkspacePresenterDisplay;
 
 import com.google.gwt.event.dom.client.BlurEvent;
