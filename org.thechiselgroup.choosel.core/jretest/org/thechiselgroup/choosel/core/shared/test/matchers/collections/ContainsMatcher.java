@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.shared.test.matchers.collections;
 
-import static org.mockito.AdditionalMatchers.and;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import java.util.Collection;
 
-import java.util.Collections;
-import java.util.Set;
+import org.hamcrest.Description;
+import org.junit.internal.matchers.TypeSafeMatcher;
 
-import org.mockito.Matchers;
+// TODO remove
+public final class ContainsMatcher<T> extends TypeSafeMatcher<T> {
 
-// TODO reconcile matchers, renamings
-public final class Matchers2 {
+    private final Collection<T> collection;
 
-    public static <T> Set<T> emptySet(Class<T> clazz) {
-        return eq(Collections.<T> emptySet());
+    public ContainsMatcher(Collection<T> collection) {
+        this.collection = collection;
     }
 
-    public static <T> T isNotNull(Class<T> clazz) {
-        return clazz.cast(and(any(clazz), Matchers.isNotNull()));
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("contained in").appendValue(collection);
     }
 
-    private Matchers2() {
+    @Override
+    public boolean matchesSafely(T actual) {
+        return collection.contains(actual);
     }
 
 }

@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doAnswer;
@@ -23,7 +24,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toLabeledResourceSet;
@@ -48,6 +48,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 
 public final class ResourcesTestHelper {
 
@@ -189,7 +190,8 @@ public final class ResourcesTestHelper {
     public static LightweightCollection<VisualItem> eqViewItems(
             VisualItem... viewItems) {
 
-        return argThat(eqViewItems(LightweightCollections.toCollection(viewItems)));
+        return argThat(eqViewItems(LightweightCollections
+                .toCollection(viewItems)));
     }
 
     public static <T> Matcher<LightweightCollection<T>> isEmptyLightweightCollection(
@@ -242,8 +244,8 @@ public final class ResourcesTestHelper {
 
         ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
                 .getValue();
-        assertContentEquals(expectedAddedResources, event.getAddedResources()
-                .toList());
+        assertThat(event.getAddedResources().toList(),
+                CollectionMatchers.containsExactly(expectedAddedResources));
         assertEquals(true, event.getRemovedResources().isEmpty());
     }
 
@@ -265,8 +267,8 @@ public final class ResourcesTestHelper {
 
         ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
                 .getValue();
-        assertContentEquals(expectedResources, event.getRemovedResources()
-                .toList());
+        assertThat(event.getRemovedResources().toList(),
+                CollectionMatchers.containsExactly(expectedResources));
         assertEquals(true, event.getAddedResources().isEmpty());
     }
 

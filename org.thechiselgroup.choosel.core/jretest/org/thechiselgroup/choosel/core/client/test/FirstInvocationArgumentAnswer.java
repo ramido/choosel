@@ -20,6 +20,7 @@ import org.mockito.stubbing.Answer;
 
 public class FirstInvocationArgumentAnswer<T> implements Answer<T> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public T answer(InvocationOnMock invocation) throws Throwable {
         return (T) invocation.getArguments()[0];

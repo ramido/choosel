@@ -74,6 +74,7 @@ public class MockitoGWTBridge extends GWTBridge {
     /**
      * @return Mock
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T create(Class<?> classLiteral) {
         Object mock = mock(classLiteral);
@@ -81,12 +82,14 @@ public class MockitoGWTBridge extends GWTBridge {
         return (T) mock;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getCreatedMock(Class<T> classLiteral) {
         List<Object> list = getMockList(classLiteral);
         return (T) (list.isEmpty() ? null : list.get(0));
 
     }
 
+    @SuppressWarnings("unchecked")
     public <T> List<T> getCreatedMocks(Class<T> classLiteral) {
         return (List<T>) getMockList(classLiteral);
     }

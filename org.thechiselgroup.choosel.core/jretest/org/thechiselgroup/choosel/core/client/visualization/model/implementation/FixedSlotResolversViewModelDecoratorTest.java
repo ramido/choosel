@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.equalsArray;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.equalsArray;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -16,13 +16,14 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.extensions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContains;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.contains;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,6 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
-import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultResourceModel;
 
 public class DefaultResourceModelTest {
 
@@ -88,7 +88,8 @@ public class DefaultResourceModelTest {
 
         underTest.addResourceSet(resources);
 
-        assertContains(underTest.getAutomaticResourceSet(), createResource(1));
+        assertThat(createResource(1),
+                contains(underTest.getAutomaticResourceSet()));
     }
 
     @Test
