@@ -23,10 +23,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourcesAdded;
+import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourcesRemoved;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import java.util.List;

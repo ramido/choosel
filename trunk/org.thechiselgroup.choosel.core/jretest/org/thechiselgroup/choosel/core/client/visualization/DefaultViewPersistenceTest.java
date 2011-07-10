@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 

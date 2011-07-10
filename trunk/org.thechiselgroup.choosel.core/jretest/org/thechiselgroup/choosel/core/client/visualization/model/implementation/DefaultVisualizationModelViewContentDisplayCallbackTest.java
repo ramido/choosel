@@ -20,8 +20,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForExactResourceSets;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
+import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.containsViewItemsForExactResourceSets;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.*;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.*;
 
 import java.util.NoSuchElementException;

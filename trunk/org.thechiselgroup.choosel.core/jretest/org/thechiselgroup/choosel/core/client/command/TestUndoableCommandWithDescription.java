@@ -13,31 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-/**
- * 
- */
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.client.command;
 
-import com.google.gwt.event.dom.client.MouseOverEvent;
+import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.util.HasDescription;
 
-public class TestMouseOverEvent extends MouseOverEvent {
+public interface TestUndoableCommandWithDescription extends UndoableCommand,
+        HasDescription {
 
-    private final int clientX;
-
-    private final int clientY;
-
-    public TestMouseOverEvent(int clientX, int clientY) {
-        this.clientX = clientX;
-        this.clientY = clientY;
-    }
-
-    @Override
-    public int getClientX() {
-        return clientX;
-    }
-
-    @Override
-    public int getClientY() {
-        return clientY;
-    }
 }

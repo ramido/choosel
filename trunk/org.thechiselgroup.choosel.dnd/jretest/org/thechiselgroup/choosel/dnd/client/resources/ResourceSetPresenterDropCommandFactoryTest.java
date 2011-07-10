@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import org.thechiselgroup.choosel.core.client.resources.command.AddResourceSetTo
 import org.thechiselgroup.choosel.core.client.resources.command.MergeResourceSetsCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
-import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
