@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.core.client.util.RemoveHandle;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
 

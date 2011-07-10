@@ -36,11 +36,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 
 public class TextViewContentDisplayTest {
 

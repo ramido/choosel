@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainer;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 

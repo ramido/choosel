@@ -18,6 +18,8 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.thechiselgroup.choosel.core.shared.util.ForTest;
+
 /**
  * Generic lightweight collection. LightweightCollection provides a read-only
  * interface that extends {@link Iterable} and only contains the most important
@@ -59,6 +61,7 @@ public interface LightweightCollection<T> extends Iterable<T> {
      * a List. This usually has a fairly high performance penalty and is only
      * recommended for testing.
      */
+    @ForTest
     List<T> toList();
 
 }

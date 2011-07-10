@@ -19,10 +19,10 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

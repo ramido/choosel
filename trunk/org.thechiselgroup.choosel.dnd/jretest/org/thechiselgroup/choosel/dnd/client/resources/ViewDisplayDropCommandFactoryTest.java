@@ -33,10 +33,10 @@ import org.thechiselgroup.choosel.core.client.resources.command.AddResourcesToRe
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
-import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.View;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 import org.thechiselgroup.choosel.dnd.client.resources.ViewDisplayDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;

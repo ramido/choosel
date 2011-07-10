@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChang
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;

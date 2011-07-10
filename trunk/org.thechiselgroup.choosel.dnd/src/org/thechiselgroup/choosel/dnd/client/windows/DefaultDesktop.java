@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;

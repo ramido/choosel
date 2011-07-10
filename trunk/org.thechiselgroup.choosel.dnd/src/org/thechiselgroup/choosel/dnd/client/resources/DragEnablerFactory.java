@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.resources;
 
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 
 import com.google.inject.Inject;

@@ -32,9 +32,9 @@ import org.thechiselgroup.choosel.core.client.command.NullCommand;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.core.client.ui.Action;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemValueResolverContext;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 public class RedoActionStateControllerTest {
 
@@ -50,7 +50,7 @@ public class RedoActionStateControllerTest {
 	private Action action;
 
 	@Mock
-	private ViewItemValueResolver resolver;
+	private VisualItemValueResolver resolver;
 
 	// TODO tests for command manager with initial state
 	@Test

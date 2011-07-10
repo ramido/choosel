@@ -15,10 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
+import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.core.client.views.ViewPart;
+import org.thechiselgroup.choosel.core.client.visualization.View;
+import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 
 public class ShareConfigurationViewPart implements ViewPart {
 

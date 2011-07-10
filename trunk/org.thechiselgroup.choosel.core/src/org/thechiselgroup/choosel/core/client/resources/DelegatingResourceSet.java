@@ -109,11 +109,6 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public Resource getFirstResource() {
-        return delegate.getFirstResource();
-    }
-
-    @Override
     public LightweightList<Resource> getIntersection(
             LightweightCollection<Resource> resources) {
         return delegate.getIntersection(resources);

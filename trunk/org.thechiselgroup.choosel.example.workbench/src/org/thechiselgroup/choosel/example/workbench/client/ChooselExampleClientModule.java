@@ -15,11 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
-import org.thechiselgroup.choosel.core.client.views.resolvers.PreconfiguredViewItemResolverUIFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.PreconfiguredViewItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.PreconfiguredViewItemResolverUIFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphExpansionRegistry;
@@ -41,8 +41,8 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
     }
 
     @Override
-    protected Class<? extends ViewItemValueResolverFactoryProvider> getResolverFactoryProviderClass() {
-        return PreconfiguredViewItemValueResolverFactoryProvider.class;
+    protected Class<? extends VisualItemValueResolverFactoryProvider> getResolverFactoryProviderClass() {
+        return PreconfiguredVisualItemValueResolverFactoryProvider.class;
     }
 
     @Override

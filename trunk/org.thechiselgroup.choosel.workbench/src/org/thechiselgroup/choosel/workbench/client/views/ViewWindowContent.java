@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 
 import com.google.gwt.user.client.ui.Widget;

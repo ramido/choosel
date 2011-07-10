@@ -48,7 +48,7 @@ import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;

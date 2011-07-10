@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.core.client.resources.command.AddResourceSetTo
 import org.thechiselgroup.choosel.core.client.resources.command.MergeResourceSetsCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 
 public class ResourceSetPresenterDropCommandFactory extends
         AbstractResourceSetAvatarDropCommandFactory {

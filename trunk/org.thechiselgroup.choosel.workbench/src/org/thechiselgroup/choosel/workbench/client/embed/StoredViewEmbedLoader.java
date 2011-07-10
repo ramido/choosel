@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.embed;
 
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.workbench.client.init.WindowLocation;
 import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackDelegate;

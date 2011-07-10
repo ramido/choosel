@@ -17,12 +17,12 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.visualization.model.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVMark;

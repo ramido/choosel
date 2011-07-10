@@ -111,11 +111,6 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public Resource getFirstResource() {
-        return null;
-    }
-
-    @Override
     public LightweightList<Resource> getIntersection(
             LightweightCollection<Resource> resources) {
 

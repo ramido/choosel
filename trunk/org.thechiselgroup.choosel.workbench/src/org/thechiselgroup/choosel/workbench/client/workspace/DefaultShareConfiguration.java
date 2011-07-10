@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
+import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.url.UrlBuilder;
-import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.embed.EmbedInitializer;
 import org.thechiselgroup.choosel.workbench.client.embed.StoredViewEmbedLoader;

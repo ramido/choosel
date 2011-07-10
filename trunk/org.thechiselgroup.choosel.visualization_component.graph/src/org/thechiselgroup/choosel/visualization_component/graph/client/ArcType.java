@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainer;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 
 /**

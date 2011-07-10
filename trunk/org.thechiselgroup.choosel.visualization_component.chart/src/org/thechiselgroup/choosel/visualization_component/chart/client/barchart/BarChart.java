@@ -17,19 +17,19 @@ package org.thechiselgroup.choosel.visualization_component.chart.client.barchart
 
 import java.util.Comparator;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
+import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
+import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.filter.GreaterThanSlotValuePredicate;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayProperty;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Status;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayProperty;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.comparators.VisualItemDoubleComparator;
+import org.thechiselgroup.choosel.core.client.visualization.model.predicates.GreaterThanSlotValuePredicate;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVBar;
@@ -408,7 +408,7 @@ public class BarChart extends ChartViewContentDisplay {
 
     private boolean barSpacing = true;
 
-    private Comparator<VisualItem> viewItemComparator = new ViewItemDoubleComparator(
+    private Comparator<VisualItem> viewItemComparator = new VisualItemDoubleComparator(
             BAR_LENGTH);
 
     private PVLabel barLabel;

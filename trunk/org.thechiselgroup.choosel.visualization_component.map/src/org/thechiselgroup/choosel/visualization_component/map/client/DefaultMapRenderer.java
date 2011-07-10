@@ -18,9 +18,9 @@ package org.thechiselgroup.choosel.visualization_component.map.client;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.geom.LatLng;

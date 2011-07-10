@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;

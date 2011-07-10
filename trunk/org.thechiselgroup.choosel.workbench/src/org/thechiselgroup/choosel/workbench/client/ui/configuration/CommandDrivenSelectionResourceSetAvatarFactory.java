@@ -19,8 +19,8 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.command.ReplaceSelectionCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
 import org.thechiselgroup.choosel.dnd.client.resources.SelectionResourceSetAvatarFactory;
 
 /**

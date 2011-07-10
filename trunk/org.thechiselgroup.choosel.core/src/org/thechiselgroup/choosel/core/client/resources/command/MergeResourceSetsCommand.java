@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources.command;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 
 public class MergeResourceSetsCommand extends
         AddResourceSetToResourceSetCommand {

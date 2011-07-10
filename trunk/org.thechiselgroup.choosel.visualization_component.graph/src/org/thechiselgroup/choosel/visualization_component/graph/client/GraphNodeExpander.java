@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 /**
  * Expands a graph node.

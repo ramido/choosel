@@ -1,10 +1,10 @@
 package org.thechiselgroup.choosel.visualization_component.heat_bars.client;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVColor;

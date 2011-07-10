@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.other;
 
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;

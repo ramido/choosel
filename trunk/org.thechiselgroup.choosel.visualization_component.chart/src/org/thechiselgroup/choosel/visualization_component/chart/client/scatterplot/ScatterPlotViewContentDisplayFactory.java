@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplayFactory;
 
 public class ScatterPlotViewContentDisplayFactory implements
         ViewContentDisplayFactory {

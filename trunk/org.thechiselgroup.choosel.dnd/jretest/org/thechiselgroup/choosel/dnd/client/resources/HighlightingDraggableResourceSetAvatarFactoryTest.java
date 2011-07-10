@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;
 
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;

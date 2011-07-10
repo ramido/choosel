@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.workbench.client.ui.configuration;
 import org.thechiselgroup.choosel.core.client.resources.ui.AbstractResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.resources.ui.UpdateResourceSetAvatarLabelFactory;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.resources.DraggableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.DropTargetResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.HighlightingDraggableResourceSetAvatarFactory;

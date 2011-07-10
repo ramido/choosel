@@ -35,42 +35,42 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
+import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
-import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.ViewPart;
-import org.thechiselgroup.choosel.core.client.views.behaviors.CommandDrivenSwitchSelectionOnClickViewItemBehaviour;
-import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultVisualizationModel;
-import org.thechiselgroup.choosel.core.client.views.model.FixedSlotResolversVisualizationModelDecorator;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
-import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedHandler;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfigurationUIModel;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEvent;
-import org.thechiselgroup.choosel.core.client.views.model.VisualItemContainerChangeEventHandler;
-import org.thechiselgroup.choosel.core.client.views.model.VisualizationModel;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverUIControllerFactoryProvider;
-import org.thechiselgroup.choosel.core.client.views.ui.DefaultResourceModelPresenter;
-import org.thechiselgroup.choosel.core.client.views.ui.DefaultSelectionModelPresenter;
-import org.thechiselgroup.choosel.core.client.views.ui.DefaultVisualMappingsControl;
-import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
+import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
+import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.CommandDrivenSwitchSelectionOnClickViewItemBehaviour;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
+import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultResourceModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultSelectionModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.RequiresAutomaticResourceSet;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.FixedSlotResolversVisualizationModelDecorator;
+import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultResourceModelPresenter;
+import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultSelectionModelPresenter;
+import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultVisualMappingsControl;
+import org.thechiselgroup.choosel.core.client.visualization.ui.VisualMappingsControl;
 import org.thechiselgroup.choosel.dnd.client.resources.DragEnablerFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.DragViewItemBehavior;
 import org.thechiselgroup.choosel.dnd.client.resources.DropEnabledViewContentDisplay;
@@ -133,7 +133,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     private CommandManager commandManager;
 
     @Inject
-    private ViewItemValueResolverFactoryProvider resolverFactoryProvider;
+    private VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
     private Logger logger;
 
@@ -167,7 +167,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
     protected VisualMappingsControl createVisualMappingsControl(
             ResourceGrouping resourceGrouping,
-            SlotMappingConfigurationUIModel uiModel) {
+            ManagedSlotMappingConfiguration uiModel) {
 
         // TODO change configuration to configurationUIModel
         return new DefaultVisualMappingsControl(uiModel, resourceGrouping,
@@ -207,7 +207,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory), selectionModel);
 
-        Map<Slot, ViewItemValueResolver> fixedSlotResolvers = viewContentDisplayConfiguration
+        Map<Slot, VisualItemValueResolver> fixedSlotResolvers = viewContentDisplayConfiguration
                 .getFixedSlotResolvers(contentType);
 
         CompositeViewItemBehavior viewItemBehaviors = new CompositeViewItemBehavior();
@@ -235,7 +235,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                         hoverModel.getResources(), viewItemBehaviors,
                         resourceGrouping, logger), fixedSlotResolvers);
 
-        SlotMappingConfigurationUIModel uiModel = new SlotMappingConfigurationUIModel(
+        ManagedSlotMappingConfiguration uiModel = new ManagedSlotMappingConfiguration(
                 resolverFactoryProvider, slotMappingInitializer, viewModel,
                 viewModel);
         /**
@@ -274,25 +274,25 @@ public class ViewWindowContentProducer implements WindowContentProducer {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
 
-                ViewItemValueResolver resolver = e.getCurrentResolver();
-                ViewItemValueResolver oldResolver = e.getOldResolver();
+                VisualItemValueResolver resolver = e.getCurrentResolver();
+                VisualItemValueResolver oldResolver = e.getOldResolver();
 
-                assert resolver instanceof ManagedViewItemValueResolver;
+                assert resolver instanceof ManagedVisualItemValueResolver;
 
                 // TODO refactor
                 if (oldResolver == null) {
                     visualMappingsControl
                             .updateConfigurationForChangedSlotMapping(
                                     e.getSlot(), null,
-                                    (ManagedViewItemValueResolver) resolver);
+                                    (ManagedVisualItemValueResolver) resolver);
                 } else {
-                    assert oldResolver instanceof ManagedViewItemValueResolver;
+                    assert oldResolver instanceof ManagedVisualItemValueResolver;
 
                     visualMappingsControl
                             .updateConfigurationForChangedSlotMapping(
                                     e.getSlot(),
-                                    (ManagedViewItemValueResolver) oldResolver,
-                                    (ManagedViewItemValueResolver) resolver);
+                                    (ManagedVisualItemValueResolver) oldResolver,
+                                    (ManagedVisualItemValueResolver) resolver);
                 }
             }
         });

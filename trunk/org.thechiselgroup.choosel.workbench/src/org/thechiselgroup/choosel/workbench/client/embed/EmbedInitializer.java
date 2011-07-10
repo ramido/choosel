@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.error_handling.LoggingErrorHandler;
 import org.thechiselgroup.choosel.core.client.util.BrowserDetect;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.workbench.client.init.ApplicationInitializer;
 import org.thechiselgroup.choosel.workbench.client.init.WindowLocation;
 

@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
+import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.visualization.View;
 
 public interface ShareConfiguration extends WidgetAdaptable {
 

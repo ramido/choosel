@@ -29,8 +29,8 @@ import org.thechiselgroup.choosel.core.client.resources.ui.popup.ResourceSetAvat
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.View;
+import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
