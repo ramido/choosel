@@ -22,8 +22,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +42,7 @@ import org.thechiselgroup.choosel.core.client.resources.DelegatingResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
@@ -150,7 +149,7 @@ public class DefaultWorkspacePersistenceManagerTest {
         // use string buffer so its modifiable
         final StringBuffer id = new StringBuffer();
 
-        ResourceSet delegate = createResources(1, 2);
+        ResourceSet delegate = ResourceSetTestUtils.createResources(1, 2);
         final ResourceSet unmodifiableSet = new UnmodifiableResourceSet(
                 delegate);
 
@@ -169,10 +168,10 @@ public class DefaultWorkspacePersistenceManagerTest {
                     }
                 });
 
-        when(resourceManager.getByUri(createResource(1).getUri())).thenReturn(
-                createResource(1));
-        when(resourceManager.getByUri(createResource(2).getUri())).thenReturn(
-                createResource(2));
+        when(resourceManager.getByUri(ResourceSetTestUtils.createResource(1).getUri())).thenReturn(
+                ResourceSetTestUtils.createResource(1));
+        when(resourceManager.getByUri(ResourceSetTestUtils.createResource(2).getUri())).thenReturn(
+                ResourceSetTestUtils.createResource(2));
 
         WorkspaceDTO dto = doSave();
         doLoad(dto);

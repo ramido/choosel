@@ -31,7 +31,7 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.command.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopupManager;
@@ -173,7 +173,7 @@ public class ResourceSetAvatarDropControllerTest {
                         any(ResourceSet.class))).thenReturn(true);
         when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
         when(view.getModel()).thenReturn(viewModel);
-        resources = TestResourceSetFactory.createResources(1, 2);
+        resources = ResourceSetTestUtils.createResources(1, 2);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
     }
 

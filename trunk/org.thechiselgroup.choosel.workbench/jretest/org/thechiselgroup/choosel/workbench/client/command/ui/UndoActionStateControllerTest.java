@@ -32,8 +32,8 @@ import org.thechiselgroup.choosel.core.client.command.NullCommand;
 import org.thechiselgroup.choosel.core.client.command.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.ui.Action;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 public class UndoActionStateControllerTest {

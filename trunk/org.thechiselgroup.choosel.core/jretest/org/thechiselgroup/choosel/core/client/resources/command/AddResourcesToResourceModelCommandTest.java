@@ -19,8 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
@@ -43,9 +42,9 @@ public class AddResourcesToResourceModelCommandTest {
 
     @Test
     public void executeAddsResourceToView() {
-        resources = createResources(1, 2);
+        resources = ResourceSetTestUtils.createResources(1, 2);
 
-        ResourceSet viewResources = createResources();
+        ResourceSet viewResources = ResourceSetTestUtils.createResources();
         when(resourceModel.getResources()).thenReturn(viewResources);
         when(resourceModel.containsResources(resources)).thenReturn(true);
         // TODO need more specific condition for containsResources
@@ -77,9 +76,9 @@ public class AddResourcesToResourceModelCommandTest {
 
     @Test
     public void undoOnlyRemovesNewResources() {
-        resources = createResources(1, 2);
+        resources = ResourceSetTestUtils.createResources(1, 2);
 
-        ResourceSet viewResources = createResources(1);
+        ResourceSet viewResources = ResourceSetTestUtils.createResources(1);
         when(resourceModel.getResources()).thenReturn(viewResources);
         when(resourceModel.containsResources(resources)).thenReturn(true);
         // TODO need more specific condition for containsResources
@@ -97,7 +96,7 @@ public class AddResourcesToResourceModelCommandTest {
                 argument.capture());
         LightweightList<Resource> result = argument.getValue();
         assertEquals(1, result.size());
-        assertEquals(true, resources.contains(createResource(2)));
+        assertEquals(true, resources.contains(ResourceSetTestUtils.createResource(2)));
     }
 
 }

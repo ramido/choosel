@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.visualization;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 
@@ -34,6 +33,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiC
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.persistence.DefaultResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
@@ -44,7 +44,6 @@ import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -105,7 +104,7 @@ public class DefaultViewPersistenceTest {
         originalViewModel.setResolver(textSlot,
                 new FirstResourcePropertyResolver("property1", DataType.TEXT));
         originalView.getResourceModel().addUnnamedResources(
-                toResourceSet(resource));
+                ResourceSetTestUtils.toResourceSet(resource));
         originalViewModel.setResolver(textSlot,
                 new FirstResourcePropertyResolver("property2", DataType.TEXT));
 
@@ -146,7 +145,7 @@ public class DefaultViewPersistenceTest {
         r2.putValue("property2", "value2");
 
         originalView.getResourceModel().addUnnamedResources(
-                toResourceSet(r1, r2));
+                ResourceSetTestUtils.toResourceSet(r1, r2));
         originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
@@ -186,7 +185,7 @@ public class DefaultViewPersistenceTest {
         r2.putValue("property2", "value2");
 
         originalView.getResourceModel().addUnnamedResources(
-                toResourceSet(r1, r2));
+                ResourceSetTestUtils.toResourceSet(r1, r2));
         originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
 
@@ -261,7 +260,7 @@ public class DefaultViewPersistenceTest {
         r3.putValue("property2", "value2");
 
         originalView.getResourceModel().addUnnamedResources(
-                toResourceSet(r1, r2, r3));
+                ResourceSetTestUtils.toResourceSet(r1, r2, r3));
         originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
         originalViewModel.setResolver(numberSlot, new CalculationResolver(

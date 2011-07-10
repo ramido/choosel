@@ -27,7 +27,6 @@ import org.thechiselgroup.choosel.core.client.ui.Presenter;
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;

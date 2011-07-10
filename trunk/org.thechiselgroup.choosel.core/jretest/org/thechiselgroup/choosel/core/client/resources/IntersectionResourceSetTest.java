@@ -19,11 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourceSetChanged;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourcesAdded;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.captureOnResourceSetChanged;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Before;
@@ -40,103 +37,103 @@ public class IntersectionResourceSetTest {
 
     @Test
     public void addMultipleResourcesToContainedResourceSet() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         underTest.addResourceSet(resources);
 
-        resources.addAll(createResources(4, 5));
+        resources.addAll(ResourceSetTestUtils.createResources(4, 5));
 
-        assertTrue(underTest.contains(createResource(4)));
-        assertTrue(underTest.contains(createResource(5)));
+        assertTrue(underTest.contains(ResourceSetTestUtils.createResource(4)));
+        assertTrue(underTest.contains(ResourceSetTestUtils.createResource(5)));
     }
 
     @Test
     public void addResourceSetCreatesIntersection() {
-        underTest.addResourceSet(createLabeledResources(1, 2, 3));
-        underTest.addResourceSet(createLabeledResources(3, 4, 5));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(1, 2, 3));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(3, 4, 5));
 
-        assertThat(underTest, containsExactly(createResources(3)));
+        assertThat(underTest, containsExactly(ResourceSetTestUtils.createResources(3)));
     }
 
     @Test
     public void containsResourcesAddedToChildren() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         underTest.addResourceSet(resources);
-        resources.add(createResource(5));
+        resources.add(ResourceSetTestUtils.createResource(5));
 
         assertTrue(underTest.containsEqualResources(resources));
     }
 
     @Test
     public void doesNotContainResourcesRemovedFromChildren() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         underTest.addResourceSet(resources);
-        resources.remove(createResource(1));
+        resources.remove(ResourceSetTestUtils.createResource(1));
 
         assertEquals(2, underTest.size());
         assertTrue(underTest.containsAll(resources));
-        assertFalse(underTest.contains(createResource(1)));
+        assertFalse(underTest.contains(ResourceSetTestUtils.createResource(1)));
     }
 
     @Test
     public void doesRemoveDuplicateResourceOnRemoveInOneResourceSet() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         underTest.addResourceSet(resources);
-        underTest.addResourceSet(createLabeledResources(3, 4, 5));
-        resources.remove(createResource(3));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(3, 4, 5));
+        resources.remove(ResourceSetTestUtils.createResource(3));
 
-        assertThat(underTest, containsExactly(createResources()));
+        assertThat(underTest, containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void doNotFireEventWhenResourceSetAddedButNoRemovedResources() {
-        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(1, 2, 3));
         underTest.addEventHandler(resourceSetChangedHandler);
-        underTest.addResourceSet(createLabeledResources(1, 2, 3, 4));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(1, 2, 3, 4));
 
-        verifyOnResourceSetChanged(0, resourceSetChangedHandler);
+        captureOnResourceSetChanged(0, resourceSetChangedHandler);
     }
 
     @Test
     public void fireEventWhenResourceSetAdded() {
         underTest.addEventHandler(resourceSetChangedHandler);
-        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(1, 2, 3));
 
-        verifyOnResourcesAdded(createResources(1, 2, 3),
+        verifyOnResourcesAdded(ResourceSetTestUtils.createResources(1, 2, 3),
                 resourceSetChangedHandler);
     }
 
     @Test
     public void noContainmenChangeWhenResourceAddedAfterRemove() {
-        Resource addedResource = createResource(8);
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        Resource addedResource = ResourceSetTestUtils.createResource(8);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         underTest.addResourceSet(resources);
         underTest.removeResourceSet(resources);
         resources.add(addedResource);
 
-        assertThat(underTest, containsExactly(createResources()));
+        assertThat(underTest, containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void noFailureOnRemoveInvalidResourceSet() {
-        ResourceSet resources1 = createLabeledResources(1, 2, 3);
+        ResourceSet resources1 = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         underTest.removeResourceSet(resources1);
     }
 
     @Test
     public void removeResourcesDoesNotRemoveDuplicateResource() {
-        ResourceSet resources = createLabeledResources(3, 4, 5);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(3, 4, 5);
 
-        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+        underTest.addResourceSet(ResourceSetTestUtils.createLabeledResources(1, 2, 3));
         underTest.addResourceSet(resources);
         underTest.removeResourceSet(resources);
 
-        assertThat(underTest, containsExactly(createResources(1, 2, 3)));
+        assertThat(underTest, containsExactly(ResourceSetTestUtils.createResources(1, 2, 3)));
     }
 
     @Before

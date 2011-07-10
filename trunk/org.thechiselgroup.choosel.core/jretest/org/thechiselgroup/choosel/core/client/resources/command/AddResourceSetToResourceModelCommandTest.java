@@ -19,9 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import java.util.Collection;
 
@@ -31,6 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 
 public class AddResourceSetToResourceModelCommandTest {
@@ -44,10 +42,10 @@ public class AddResourceSetToResourceModelCommandTest {
 
     @Test
     public void addAlreadyContainedResourcesOnUndo() {
-        ResourceSet viewResources = createResources(1);
+        ResourceSet viewResources = ResourceSetTestUtils.createResources(1);
         when(resourceModel.getResources()).thenReturn(viewResources);
 
-        setUpCommand(createLabeledResources(1, 2));
+        setUpCommand(ResourceSetTestUtils.createLabeledResources(1, 2));
         when(resourceModel.containsResourceSet(resources)).thenReturn(false,
                 true, true, false); // for assertions to work in command
 
@@ -58,7 +56,7 @@ public class AddResourceSetToResourceModelCommandTest {
                 .forClass(Collection.class);
         verify(resourceModel, times(1)).addUnnamedResources(argument.capture());
 
-        assertEquals(true, argument.getValue().contains(createResource(1)));
+        assertEquals(true, argument.getValue().contains(ResourceSetTestUtils.createResource(1)));
     }
 
     @Before

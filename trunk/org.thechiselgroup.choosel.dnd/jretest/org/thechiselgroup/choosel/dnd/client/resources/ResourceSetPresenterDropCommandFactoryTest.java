@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.command.AddResourceSetToResourceSetCommand;
 import org.thechiselgroup.choosel.core.client.resources.command.MergeResourceSetsCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
@@ -36,7 +36,6 @@ import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetPresenterDropCommandFactory;
 
 public class ResourceSetPresenterDropCommandFactoryTest {
 
@@ -74,8 +73,8 @@ public class ResourceSetPresenterDropCommandFactoryTest {
 
     @Test
     public void cannotDropIfAllResourcesAreAlreadyContained() {
-        sourceSet = createResources(1, 2);
-        targetSet = createResources(1, 2, 3, 4);
+        sourceSet = ResourceSetTestUtils.createResources(1, 2);
+        targetSet = ResourceSetTestUtils.createResources(1, 2, 3, 4);
 
         when(targetDragAvatar.getResourceSet()).thenReturn(targetSet);
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);

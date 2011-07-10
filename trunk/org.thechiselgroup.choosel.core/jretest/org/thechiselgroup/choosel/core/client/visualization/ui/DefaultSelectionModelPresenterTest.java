@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.visualization.ui;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +29,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEventHandler;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceSetActivatedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceSetActivatedEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
-import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultSelectionModelPresenter;
 
 public class DefaultSelectionModelPresenterTest {
 
@@ -51,7 +50,7 @@ public class DefaultSelectionModelPresenterTest {
 
     @Test
     public void addResourceSetToSelectionPresenterWhenAddedToModel() {
-        ResourceSet selection = createResources(1);
+        ResourceSet selection = ResourceSetTestUtils.createResources(1);
 
         captureResourceSetAddedHandler().onResourceSetAdded(
                 new ResourceSetAddedEvent(selection));
@@ -96,7 +95,7 @@ public class DefaultSelectionModelPresenterTest {
 
     @Test
     public void removeResourceSetFromSelectionPresenterWhenRemovedFromModel() {
-        ResourceSet selection = createResources(1);
+        ResourceSet selection = ResourceSetTestUtils.createResources(1);
 
         captureResourceSetRemovedHandler().onResourceSetRemoved(
                 new ResourceSetRemovedEvent(selection));
@@ -116,7 +115,7 @@ public class DefaultSelectionModelPresenterTest {
 
     @Test
     public void updateSelectionPresenterWhenSelectionChanges() {
-        ResourceSet selection = createResources(1);
+        ResourceSet selection = ResourceSetTestUtils.createResources(1);
 
         captureResourceSetActivatedHandler().onResourceSetActivated(
                 new ResourceSetActivatedEvent(selection));

@@ -37,7 +37,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.NullIterator;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 

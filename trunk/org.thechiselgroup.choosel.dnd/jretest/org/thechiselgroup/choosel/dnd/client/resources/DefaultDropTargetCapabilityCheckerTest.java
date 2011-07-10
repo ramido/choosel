@@ -27,7 +27,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.dnd.client.resources.DefaultDropTargetCapabilityChecker;
 
 public class DefaultDropTargetCapabilityCheckerTest {
 

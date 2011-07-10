@@ -23,10 +23,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourcesAdded;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourcesRemoved;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.verifyOnResourcesAdded;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import java.util.List;
@@ -46,10 +44,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEventHan
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEventHandler;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.persistence.DefaultResourceSetCollector;
-import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultSelectionModel;
-import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceSetActivatedEvent;
-import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceSetActivatedEventHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -82,7 +78,7 @@ public class DefaultSelectionModelTest {
      */
     @Test
     public void fireActivatedEventWhenRestoringFromMemento() {
-        ResourceSet selection1 = createResources(1);
+        ResourceSet selection1 = ResourceSetTestUtils.createResources(1);
         DefaultResourceSetCollector resourceSetCollector = new DefaultResourceSetCollector();
 
         // create selection
@@ -100,8 +96,8 @@ public class DefaultSelectionModelTest {
 
     @Test
     public void fireActivatedEventWhenSelectionChanges() {
-        ResourceSet selection1 = createResources(1);
-        ResourceSet selection2 = createResources();
+        ResourceSet selection1 = ResourceSetTestUtils.createResources(1);
+        ResourceSet selection2 = ResourceSetTestUtils.createResources();
 
         underTest.addSelectionSet(selection1);
         underTest.addSelectionSet(selection2);
@@ -117,37 +113,37 @@ public class DefaultSelectionModelTest {
     public void fireActivatedEventWhenSelectionCreatedOnSwitch() {
         underTest.setSelection(null);
         underTest.addEventHandler(activatedHandler);
-        underTest.switchSelection(createResources(1));
+        underTest.switchSelection(ResourceSetTestUtils.createResources(1));
 
         verifyActivatedEventFired(underTest.getSelectionSets().get(0));
     }
 
     @Test
     public void fireResourcesAddedWhenResourceAddedToSelection() {
-        selection = createResources();
+        selection = ResourceSetTestUtils.createResources();
         underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
         underTest.addEventHandler(resourceSetChangedHandler);
 
-        selection.add(createResource(1));
+        selection.add(ResourceSetTestUtils.createResource(1));
 
-        verifyOnResourcesAdded(createResources(1), resourceSetChangedHandler);
+        verifyOnResourcesAdded(ResourceSetTestUtils.createResources(1), resourceSetChangedHandler);
     }
 
     @Test
     public void fireResourcesAddedWhenSelectionChanges() {
-        selection = createResources(1);
+        selection = ResourceSetTestUtils.createResources(1);
         underTest.addSelectionSet(selection);
         underTest.addEventHandler(resourceSetChangedHandler);
         underTest.setSelection(selection);
 
-        verifyOnResourcesAdded(createResources(1), resourceSetChangedHandler);
+        verifyOnResourcesAdded(ResourceSetTestUtils.createResources(1), resourceSetChangedHandler);
 
     }
 
     @Test
     public void fireResourceSetAddedEventWhenResourceSetAdded() {
-        ResourceSet selection = createResources(1);
+        ResourceSet selection = ResourceSetTestUtils.createResources(1);
         ResourceSetAddedEventHandler resourceSetAddedHandler = mock(ResourceSetAddedEventHandler.class);
 
         underTest.addEventHandler(resourceSetAddedHandler);
@@ -163,7 +159,7 @@ public class DefaultSelectionModelTest {
 
     @Test
     public void fireResourceSetRemovedEventWhenResourceSetRemoved() {
-        ResourceSet selection = createResources(1);
+        ResourceSet selection = ResourceSetTestUtils.createResources(1);
         ResourceSetRemovedEventHandler resourceSetaddedHandler = mock(ResourceSetRemovedEventHandler.class);
 
         underTest.addSelectionSet(selection);
@@ -180,21 +176,21 @@ public class DefaultSelectionModelTest {
 
     @Test
     public void fireResourcesRemoveEventWhenResourceRemovedFromSelection() {
-        selection = createResources();
+        selection = ResourceSetTestUtils.createResources();
         underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
-        selection.add(createResource(1));
+        selection.add(ResourceSetTestUtils.createResource(1));
         underTest.addEventHandler(resourceSetChangedHandler);
-        selection.remove(createResource(1));
+        selection.remove(ResourceSetTestUtils.createResource(1));
 
-        verifyOnResourcesRemoved(createResources(1), resourceSetChangedHandler);
+        verifyOnResourcesRemoved(ResourceSetTestUtils.createResources(1), resourceSetChangedHandler);
     }
 
     @Test
     public void fireResourcesRemoveEventWhenSelectionChanges() {
-        ResourceSet resources1 = createResources(1);
-        ResourceSet resources2 = createResources();
+        ResourceSet resources1 = ResourceSetTestUtils.createResources(1);
+        ResourceSet resources2 = ResourceSetTestUtils.createResources();
 
         underTest.addSelectionSet(resources1);
         underTest.addSelectionSet(resources2);
@@ -203,13 +199,13 @@ public class DefaultSelectionModelTest {
         underTest.addEventHandler(resourceSetChangedHandler);
         underTest.setSelection(resources2);
 
-        verifyOnResourcesRemoved(createResources(1), resourceSetChangedHandler);
+        verifyOnResourcesRemoved(ResourceSetTestUtils.createResources(1), resourceSetChangedHandler);
     }
 
     @Test
     public void partialSelectionIsChangedToFullSelectionOnSwitch() {
-        ResourceSet resources1 = createResources(1);
-        ResourceSet resources2 = createResources(1, 2);
+        ResourceSet resources1 = ResourceSetTestUtils.createResources(1);
+        ResourceSet resources2 = ResourceSetTestUtils.createResources(1, 2);
 
         underTest.switchSelection(resources1);
         underTest.switchSelection(resources2);
@@ -232,12 +228,12 @@ public class DefaultSelectionModelTest {
     @Test
     public void switchSelectionCreatesSelectionIfNoneExists() {
         underTest.setSelection(null);
-        underTest.switchSelection(createResources(1));
+        underTest.switchSelection(ResourceSetTestUtils.createResources(1));
 
         List<ResourceSet> selectionSets = underTest.getSelectionSets();
         assertEquals(1, selectionSets.size());
-        assertEquals(true, selectionSets.get(0).contains(createResource(1)));
-        assertEquals(true, underTest.getSelection().contains(createResource(1)));
+        assertEquals(true, selectionSets.get(0).contains(ResourceSetTestUtils.createResource(1)));
+        assertEquals(true, underTest.getSelection().contains(ResourceSetTestUtils.createResource(1)));
     }
 
     private void verifyActivatedEventFired(ResourceSet selection) {

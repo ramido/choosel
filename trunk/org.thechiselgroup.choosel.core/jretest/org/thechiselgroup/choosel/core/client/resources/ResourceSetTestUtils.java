@@ -15,11 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.isEmpty;
 
-public final class TestResourceSetFactory {
+import org.junit.Assert;
+import org.mockito.ArgumentCaptor;
+
+public final class ResourceSetTestUtils {
 
     public static final String TYPE_1 = "type-1";
 
@@ -32,6 +37,26 @@ public final class TestResourceSetFactory {
     public static final String NUMBER_PROPERTY_1 = "number-1";
 
     public static final String NUMBER_PROPERTY_2 = "number-2";
+
+    public static void assertContainsResource(boolean expected,
+            ResourceSet resourceSet, String resourceType, int resourceId) {
+
+        Assert.assertEquals(expected, resourceSet.contains(ResourceSetTestUtils
+                .createResource(resourceType, resourceId)));
+    }
+
+    public static ArgumentCaptor<ResourceSetChangedEvent> captureOnResourceSetChanged(
+            int expectedInvocationCount,
+            ResourceSetChangedEventHandler resourcesChangedHandler) {
+
+        ArgumentCaptor<ResourceSetChangedEvent> argument = ArgumentCaptor
+                .forClass(ResourceSetChangedEvent.class);
+
+        verify(resourcesChangedHandler, times(expectedInvocationCount))
+                .onResourceSetChanged(argument.capture());
+
+        return argument;
+    }
 
     public static ResourceSet createLabeledResources(int... indices) {
         return createLabeledResources(SET_LABEL, TYPE_1, indices);
@@ -127,7 +152,29 @@ public final class TestResourceSetFactory {
         return result;
     }
 
-    private TestResourceSetFactory() {
+    public static void verifyOnResourcesAdded(
+            ResourceSet expectedAddedResources,
+            ResourceSetChangedEventHandler handler) {
+
+        ResourceSetChangedEvent event = captureOnResourceSetChanged(1, handler)
+                .getValue();
+
+        assertThat(event.getAddedResources(),
+                containsExactly(expectedAddedResources));
+        assertThat(event.getRemovedResources(), isEmpty(Resource.class));
     }
 
+    public static void verifyOnResourcesRemoved(ResourceSet expectedResources,
+            ResourceSetChangedEventHandler handler) {
+
+        ResourceSetChangedEvent event = captureOnResourceSetChanged(1, handler)
+                .getValue();
+
+        assertThat(event.getAddedResources(), isEmpty(Resource.class));
+        assertThat(event.getRemovedResources(),
+                containsExactly(expectedResources));
+    }
+
+    private ResourceSetTestUtils() {
+    }
 }

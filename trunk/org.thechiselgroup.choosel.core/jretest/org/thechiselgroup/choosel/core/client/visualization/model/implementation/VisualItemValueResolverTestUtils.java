@@ -26,8 +26,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 
@@ -94,7 +94,6 @@ public final class VisualItemValueResolverTestUtils {
             final ResourceSet resources) {
         VisualItemValueResolver resolver = mockResolver();
         whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
-
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 VisualItem viewItem = (VisualItem) invocation.getArguments()[0];

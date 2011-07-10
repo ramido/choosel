@@ -16,11 +16,11 @@
 package org.thechiselgroup.choosel.core.client.resources.command;
 
 import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Test;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 
 public class ReplaceResourceSetContentCommandTest {
 
@@ -30,21 +30,21 @@ public class ReplaceResourceSetContentCommandTest {
 
     @Test
     public void resourcesReplacedOnExecute() {
-        setUpCommand(createResources(4), createResources(1, 2, 3));
+        setUpCommand(ResourceSetTestUtils.createResources(4), ResourceSetTestUtils.createResources(1, 2, 3));
 
         underTest.execute();
 
-        assertThat(resources, containsExactly(createResources(1, 2, 3)));
+        assertThat(resources, containsExactly(ResourceSetTestUtils.createResources(1, 2, 3)));
     }
 
     @Test
     public void restoreTargetSetOnUndo() {
-        setUpCommand(createResources(4), createResources(1, 2, 3));
+        setUpCommand(ResourceSetTestUtils.createResources(4), ResourceSetTestUtils.createResources(1, 2, 3));
 
         underTest.execute();
         underTest.undo();
 
-        assertThat(resources, containsExactly(createResources(4)));
+        assertThat(resources, containsExactly(ResourceSetTestUtils.createResources(4)));
     }
 
     private void setUpCommand(ResourceSet resources, ResourceSet newContent) {

@@ -26,10 +26,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
-import org.thechiselgroup.choosel.dnd.client.windows.CreateWindowCommand;
-import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
-import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
-import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
 
 public class CreateWindowCommandTest {
 

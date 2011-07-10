@@ -34,8 +34,6 @@ import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.FixedSlotResolversVisualizationModelDecorator;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.SlotMappingConfigurationPersistableAdapter;
 
 public class SlotMappingConfigurationPersistableAdapterTest {
 

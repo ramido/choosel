@@ -17,7 +17,9 @@ package org.thechiselgroup.choosel.core.client.visualization.model.initializatio
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -39,9 +41,9 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemReso
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModelTestHelper;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;

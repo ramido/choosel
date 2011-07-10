@@ -22,7 +22,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Before;
@@ -31,11 +30,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction.Type;
@@ -76,7 +75,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         underTest.onViewItemRemoved(viewItem);
 
         assertThat(hoverModel.getResources(),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
@@ -118,7 +117,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
 
         hoverModel = spy(new HighlightingModel());
 
-        resources = createResources(1, 2);
+        resources = ResourceSetTestUtils.createResources(1, 2);
         when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
         when(viewItem.getResources()).thenReturn(resources);
         when(popupManager.getPopup()).thenReturn(popup);

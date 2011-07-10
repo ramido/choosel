@@ -19,13 +19,13 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
 
 public class ReplaceSelectionCommandTest {
@@ -41,7 +41,7 @@ public class ReplaceSelectionCommandTest {
 
     @Test
     public void setNewSelectionSetOnExecute() {
-        setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(ResourceSetTestUtils.createResources(1, 2, 3), ResourceSetTestUtils.createResources());
 
         command.execute();
 
@@ -50,7 +50,7 @@ public class ReplaceSelectionCommandTest {
 
     @Test
     public void setOldSelectionSetOnUndo() {
-        setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(ResourceSetTestUtils.createResources(1, 2, 3), ResourceSetTestUtils.createResources());
 
         command.execute();
         command.undo();

@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,11 +26,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -57,7 +56,7 @@ public class DefaultVisualizationModelEventTest {
 
         underTest.addHandler(handler);
 
-        Resource resource = createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         helper.getContainedResources().add(resource);
 
         LightweightCollection<VisualItem> addedViewItems = captureEvent(handler)
@@ -77,7 +76,7 @@ public class DefaultVisualizationModelEventTest {
 
         HandlerRegistration registration = underTest.addHandler(handler);
 
-        Resource resource = createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         helper.getContainedResources().add(resource);
 
         VisualItem viewItem = captureEvent(handler).getDelta()

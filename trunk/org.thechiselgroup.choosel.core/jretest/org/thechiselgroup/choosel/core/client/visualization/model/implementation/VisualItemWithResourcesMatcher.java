@@ -15,12 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
-
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
@@ -30,7 +29,7 @@ public class VisualItemWithResourcesMatcher extends
     public static VisualItemWithResourcesMatcher containsEqualResources(
             Resource... resources) {
 
-        return new VisualItemWithResourcesMatcher(toResourceSet(resources));
+        return new VisualItemWithResourcesMatcher(ResourceSetTestUtils.toResourceSet(resources));
     }
 
     public static VisualItemWithResourcesMatcher containsEqualResources(

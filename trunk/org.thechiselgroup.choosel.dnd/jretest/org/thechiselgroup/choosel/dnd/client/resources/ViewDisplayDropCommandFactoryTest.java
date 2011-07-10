@@ -37,7 +37,6 @@ import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
-import org.thechiselgroup.choosel.dnd.client.resources.ViewDisplayDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 
