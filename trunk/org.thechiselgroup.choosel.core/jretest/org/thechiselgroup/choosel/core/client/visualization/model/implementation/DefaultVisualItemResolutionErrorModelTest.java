@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Before;
 import org.junit.Test;

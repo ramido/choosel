@@ -15,16 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.test;
 
-import static org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils.toSet;
+import static org.junit.Assert.assertThat;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 
 public final class AdvancedAsserts {
 
@@ -37,61 +34,11 @@ public final class AdvancedAsserts {
         }
     }
 
-    public static <T> void assertContains(Collection<T> c, T value) {
-        assertContains(value + " should be contained in " + c, c, value);
-    }
-
-    public static <T> void assertContains(ResourceSet c, Resource value) {
-        assertContains(value + " should be contained in " + c, c, value);
-    }
-
-    public static <T> void assertContains(String failureMessage,
-            Collection<T> collection, T value) {
-
-        Assert.assertEquals(failureMessage, true, collection.contains(value));
-    }
-
-    public static <T> void assertContains(String failureMessage,
-            ResourceSet resourceSet, Resource resource) {
-
-        Assert.assertEquals(failureMessage, true,
-                resourceSet.contains(resource));
-    }
-
-    public static <T> void assertContentEquals(Collection<T> expected,
-            Collection<T> actual) {
-
-        String failureMessage = "expected: " + expected + ", but was: "
-                + actual;
-
-        Assert.assertEquals(failureMessage, expected.size(), actual.size());
-        for (T expectedValue : expected) {
-            assertContains(failureMessage, actual, expectedValue);
-        }
-    }
-
-    public static <T> void assertContentEquals(
-            LightweightCollection<T> expected, LightweightCollection<T> actual) {
-
-        assertContentEquals(expected.toList(), actual.toList());
-    }
-
-    public static <T> void assertContentEquals(ResourceSet expected,
-            Collection<Resource> actual) {
-
-        String failureMessage = "expected: " + expected + ", but was: "
-                + actual;
-
-        Assert.assertEquals(failureMessage, expected.size(), actual.size());
-        for (Resource expectedValue : expected) {
-            assertContains(failureMessage, actual, expectedValue);
-        }
-    }
-
     public static <S, T> void assertMapKeysEqual(Map<S, T> result,
             S... expectedKeys) {
 
-        assertContentEquals(toSet(expectedKeys), result.keySet());
+        assertThat(result.keySet(),
+                CollectionMatchers.containsExactly(expectedKeys));
     }
 
     public static <T> void assertSortedEquals(List<T> expected, List<T> actual) {

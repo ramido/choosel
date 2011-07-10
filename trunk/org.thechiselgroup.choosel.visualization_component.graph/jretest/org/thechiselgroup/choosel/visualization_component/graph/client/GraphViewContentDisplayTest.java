@@ -24,13 +24,12 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItem;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItems;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.After;
 import org.junit.Before;
@@ -59,6 +58,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.TestViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.ArcSettings;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
@@ -133,7 +133,8 @@ public class GraphViewContentDisplayTest {
                 .forClass(VisualItem.class);
         verify(arcType, times(2)).getArcs(captor.capture(),
                 any(VisualItemContainer.class));
-        assertContentEquals(viewItems.toList(), captor.getAllValues());
+        assertThat(captor.getAllValues(),
+                CollectionMatchers.containsExactly(viewItems.toList()));
     }
 
     @Test
@@ -296,8 +297,9 @@ public class GraphViewContentDisplayTest {
         Node node1 = ((NodeItem) viewItem1.getDisplayObject()).getNode();
         Node node2 = ((NodeItem) viewItem2.getDisplayObject()).getNode();
 
-        assertContentEquals(CollectionUtils.toList(node1, node2),
-                underTest.getAllNodes());
+        assertThat(underTest.getAllNodes(),
+                CollectionMatchers.containsExactly(CollectionUtils.toList(
+                        node1, node2)));
     }
 
     private void init() {

@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources;
 
 import static org.junit.Assert.assertEquals;
-import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
+import static org.junit.Assert.assertThat;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 
 public class DefaultResourceSetTest extends AbstractResourceSetTest {
 
@@ -209,10 +210,10 @@ public class DefaultResourceSetTest extends AbstractResourceSetTest {
         ResourceSetChangedEvent event = verifyOnResourceSetChanged(1,
                 changedHandler).getValue();
 
-        assertContentEquals(createResources(3), event.getAddedResources()
-                .toList());
-        assertContentEquals(createResources(2), event.getRemovedResources()
-                .toList());
+        assertThat(event.getAddedResources().toList(),
+                CollectionMatchers.containsExactly(createResources(3)));
+        assertThat(event.getRemovedResources().toList(),
+                CollectionMatchers.containsExactly(createResources(2)));
     }
 
     @Test

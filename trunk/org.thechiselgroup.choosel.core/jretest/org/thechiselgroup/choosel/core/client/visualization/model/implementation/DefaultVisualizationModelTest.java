@@ -20,7 +20,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.containsViewItemsForExactResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
@@ -28,6 +27,7 @@ import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import java.util.List;
 

@@ -15,14 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace.command;
 
+import static org.mockito.AdditionalMatchers.and;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.test.Matchers2.isNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.util.callbacks.NullAsyncCallback;
@@ -32,6 +34,10 @@ import org.thechiselgroup.choosel.workbench.client.workspace.command.LoadWorkspa
 import org.thechiselgroup.choosel.workbench.client.workspace.command.LoadWorkspaceDialogCommand.LoadWorkspacePreviewsCallback;
 
 public class LoadWorkspaceDialogCommandTest {
+
+    private static <T> T isNotNull(Class<T> clazz) {
+        return clazz.cast(and(any(clazz), Matchers.isNotNull()));
+    }
 
     @Mock
     private DetailsDisplay detailsDisplay;
