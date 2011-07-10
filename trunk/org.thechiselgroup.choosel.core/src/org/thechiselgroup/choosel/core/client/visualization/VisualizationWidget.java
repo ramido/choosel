@@ -20,14 +20,12 @@ import java.util.logging.Logger;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.visualization.model.ContainsResourceGrouping;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 
@@ -41,29 +39,30 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Lars Grammel
  */
 public class VisualizationWidget<T extends ViewContentDisplay> extends
-        SimplePanel implements HasResourceCategorizer, ContainsResourceGrouping {
+        SimplePanel implements HasResourceCategorizer {
 
     private VisualizationModel viewModel;
 
     private T contentDisplay;
 
     public VisualizationWidget(T contentDisplay, ResourceSet selectedResource,
-            ResourceSet highlightedResources, VisualItemBehavior viewItemBehavior) {
+            ResourceSet highlightedResources,
+            VisualItemBehavior viewItemBehavior) {
 
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
-        this.viewModel = new DefaultVisualizationModel(contentDisplay, selectedResource,
-                highlightedResources, viewItemBehavior, new ResourceGrouping(
-                        new ResourceByUriMultiCategorizer(),
-                        new DefaultResourceSetFactory()), Logger.getLogger(""));
+        this.viewModel = new DefaultVisualizationModel(contentDisplay,
+                selectedResource, highlightedResources, viewItemBehavior,
+                Logger.getLogger(""), new DefaultResourceSetFactory(),
+                new ResourceByUriMultiCategorizer());
 
         setWidget(contentDisplay.asWidget());
     }
 
     @Override
     public ResourceMultiCategorizer getCategorizer() {
-        return viewModel.getResourceGrouping().getCategorizer();
+        return viewModel.getCategorizer();
     }
 
     public T getContentDisplay() {
@@ -71,21 +70,16 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
     }
 
     public ResourceSet getContentResourceSet() {
-        return viewModel.getResourceGrouping().getResourceSet();
-    }
-
-    @Override
-    public ResourceGrouping getResourceGrouping() {
-        return viewModel.getResourceGrouping();
+        return viewModel.getContentResourceSet();
     }
 
     @Override
     public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
-        viewModel.getResourceGrouping().setCategorizer(newCategorizer);
+        viewModel.setCategorizer(newCategorizer);
     }
 
     public void setContentResourceSet(ResourceSet contentResourceSet) {
-        viewModel.getResourceGrouping().setResourceSet(contentResourceSet);
+        viewModel.setContentResourceSet(contentResourceSet);
     }
 
     public void setPropertyValue(String property, Object value) {
@@ -94,11 +88,6 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
 
     public void setResolver(Slot slot, VisualItemValueResolver resolver) {
         viewModel.setResolver(slot, resolver);
-    }
-
-    @Override
-    public void setResourceGrouping(ResourceGrouping resourceGrouping) {
-        viewModel.setResourceGrouping(resourceGrouping);
     }
 
     @Override

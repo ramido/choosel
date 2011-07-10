@@ -21,28 +21,29 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Decorator for {@link VisualizationModel} that sets fixed {@link VisualItemValueResolver}
- * s for one or more {@link Slot}s. The fixed slots are not exposed by this
- * decorator, only the configurable ones.
+ * Decorator for {@link VisualizationModel} that sets fixed
+ * {@link VisualItemValueResolver} s for one or more {@link Slot}s. The fixed
+ * slots are not exposed by this decorator, only the configurable ones.
  * 
  * @author Lars Grammel
  */
 // TODO needs more tests & features, e.g. for the error model decoration
-public class FixedSlotResolversVisualizationModelDecorator implements VisualizationModel {
+public class FixedSlotResolversVisualizationModelDecorator implements
+        VisualizationModel {
 
     private VisualizationModel delegate;
 
@@ -50,7 +51,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements Visualizat
 
     private Slot[] slots;
 
-    public FixedSlotResolversVisualizationModelDecorator(VisualizationModel delegate,
+    public FixedSlotResolversVisualizationModelDecorator(
+            VisualizationModel delegate,
             Map<Slot, VisualItemValueResolver> fixedSlotResolvers) {
 
         assert delegate != null;
@@ -81,6 +83,11 @@ public class FixedSlotResolversVisualizationModelDecorator implements Visualizat
     }
 
     @Override
+    public ResourceMultiCategorizer getCategorizer() {
+        return delegate.getCategorizer();
+    }
+
+    @Override
     public ResourceSet getContentResourceSet() {
         return delegate.getContentResourceSet();
     }
@@ -93,11 +100,6 @@ public class FixedSlotResolversVisualizationModelDecorator implements Visualizat
     @Override
     public VisualItemValueResolver getResolver(Slot slot) {
         return delegate.getResolver(slot);
-    }
-
-    @Override
-    public ResourceGrouping getResourceGrouping() {
-        return delegate.getResourceGrouping();
     }
 
     @Override
@@ -202,13 +204,18 @@ public class FixedSlotResolversVisualizationModelDecorator implements Visualizat
     }
 
     @Override
-    public void setResolver(Slot slot, VisualItemValueResolver resolver) {
-        delegate.setResolver(slot, resolver);
+    public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
+        delegate.setCategorizer(newCategorizer);
     }
 
     @Override
-    public void setResourceGrouping(ResourceGrouping resourceGrouping) {
-        delegate.setResourceGrouping(resourceGrouping);
+    public void setContentResourceSet(ResourceSet resources) {
+        delegate.setContentResourceSet(resources);
+    }
+
+    @Override
+    public void setResolver(Slot slot, VisualItemValueResolver resolver) {
+        delegate.setResolver(slot, resolver);
     }
 
 }

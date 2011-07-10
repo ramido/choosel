@@ -15,26 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
+import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
-// NOTE: facade to visualization subsystem
-// TODO rename to visualization model?
+// TODO javadoc
+// NOTE: facade to visualization subsystem 
 public interface VisualizationModel extends VisualItemContainer,
-        ContainsResourceGrouping, SlotMappingConfiguration,
+        HasResourceCategorizer, SlotMappingConfiguration,
         VisualItemResolutionErrorModel {
 
     /**
-     * @return {@link ResourceSet} that the {@link ResourceGrouping} of this
-     *         {@link VisualizationModel} is based upon.
+     * @return {@link ResourceSet} of the {@link Resource}s that are visualized
+     *         in this {@link VisualizationModel}.
      */
-    // TODO rename -- these are all resources in this visualization
+    // TODO rename
     ResourceSet getContentResourceSet();
-
-    // TODO get/set multi categorizer -- superinterface shared with resource
-    // grouping
-
-    // TODO Type mapping operations
 
     // TODO set
     // TODO ReadableResourcesSet
@@ -46,5 +42,8 @@ public interface VisualizationModel extends VisualItemContainer,
 
     // TODO remove, expose visualization properties instead
     ViewContentDisplay getViewContentDisplay();
+
+    // TODO rename
+    void setContentResourceSet(ResourceSet resources);
 
 }

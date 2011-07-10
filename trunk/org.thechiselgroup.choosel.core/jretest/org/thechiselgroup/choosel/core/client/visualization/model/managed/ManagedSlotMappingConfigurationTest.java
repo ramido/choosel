@@ -36,7 +36,6 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -264,10 +263,8 @@ public class ManagedSlotMappingConfigurationTest {
 
         VisualItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
 
-        ResourceGrouping grouping = mock(ResourceGrouping.class);
         when(viewModel.getViewItems()).thenReturn(
                 CollectionFactory.<VisualItem> createLightweightList());
-        when(viewModel.getResourceGrouping()).thenReturn(grouping);
 
         LightweightList<Slot> badSlots = CollectionFactory
                 .createLightweightList();
@@ -322,7 +319,8 @@ public class ManagedSlotMappingConfigurationTest {
         errorModel = new DefaultVisualItemResolutionErrorModel();
     }
 
-    public void setUpResolverProvider(VisualItemValueResolverFactory... factories) {
+    public void setUpResolverProvider(
+            VisualItemValueResolverFactory... factories) {
 
         LightweightList<VisualItemValueResolverFactory> factoryList = CollectionFactory
                 .createLightweightList();
