@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -28,10 +27,17 @@ import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupChangedDelta;
 import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupCreatedDelta;
 import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupRemovedDelta;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TYPE_2;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.captureOnResourceSetChanged;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils.toSet;
 import static org.thechiselgroup.choosel.core.shared.test.AdvancedAsserts.assertMapKeysEqual;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.contains;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.isEmpty;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,9 +49,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 
 public class ResourceGroupingTest {
 
@@ -77,174 +81,146 @@ public class ResourceGroupingTest {
 
     private DefaultResourceSet testResources;
 
-    // XXX
     @Test
     public void addAndRemoveUncategorizableAndCategorizableResourcesEventsFired() {
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3));
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4));
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 5), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 6));
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer1, createResource(TYPE_1, 2), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 3));
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 4));
+        setUpCategory(categorizer1, createResource(TYPE_1, 5), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 6));
         underTest.setCategorizer(categorizer1);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 3, 4));
+        testResources.addAll(createResources(TYPE_1, 1, 2, 3, 4));
 
         underTest.addHandler(changeHandler);
 
-        testResources.change(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 5, 6),
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 3));
+        testResources.change(createResources(TYPE_1, 5, 6),
+                createResources(TYPE_1, 1, 3));
 
         ResourceGroupingChangedEvent event = captureResourceChangedEvent();
         LightweightList<CategorizableResourceGroupingChange> changes = event
                 .getChanges();
         UncategorizableResourceGroupingChange uncategorizableResourceChanges = event
-                .getUncategorizableResourceChanges();
-
-        assertThat(changes.toList(), CollectionMatchers.containsExactly(toSet(
-                newGroupChangedDelta(GROUP_1_1, ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2, 5),
-                        ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 5), null),
-                newGroupChangedDelta(GROUP_1_1, ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2, 5),
-                        null, ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1)))));
+                .getUncategorizableChanges();
 
         assertThat(
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 6),
-                CollectionMatchers
-                        .containsExactly(uncategorizableResourceChanges.addedResources));
-        assertThat(
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 3),
-                CollectionMatchers
-                        .containsExactly(uncategorizableResourceChanges.removedResources));
+                changes,
+                containsExactly(
+                        newGroupChangedDelta(GROUP_1_1,
+                                createResources(TYPE_1, 2, 5),
+                                createResources(TYPE_1, 5), null),
+                        newGroupChangedDelta(GROUP_1_1,
+                                createResources(TYPE_1, 2, 5), null,
+                                createResources(TYPE_1, 1))));
+
+        assertThat(uncategorizableResourceChanges.addedResources,
+                containsExactly(createResources(TYPE_1, 6)));
+        assertThat(uncategorizableResourceChanges.removedResources,
+                containsExactly(createResources(TYPE_1, 3)));
     }
 
-    // XXX
     @Test
     public void addAndRemoveUncategorizableAndCategorizableResourcesSetContent() {
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3));
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4));
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 5), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 6));
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer1, createResource(TYPE_1, 2), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 3));
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 4));
+        setUpCategory(categorizer1, createResource(TYPE_1, 5), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 6));
 
         underTest.setCategorizer(categorizer1);
 
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 3, 4));
+        testResources.addAll(createResources(TYPE_1, 1, 2, 3, 4));
 
-        testResources.change(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 5, 6),
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 3));
+        testResources.change(createResources(TYPE_1, 5, 6),
+                createResources(TYPE_1, 1, 3));
 
-        Map<String, ResourceSet> categorizedResourceSets = underTest
-                .getCategorizedResourceSets();
-        ResourceSet uncategorizedResources = underTest
-                .getUncategorizableResources();
-
-        assertThat(categorizedResourceSets.get(GROUP_1_1),
-                containsExactly(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2, 5)));
-
-        assertThat(ResourceSetTestUtils.createResources(4, 6),
-                CollectionMatchers.containsExactly(uncategorizedResources));
+        assertThat(underTest.getCategorizedResourceSets().get(GROUP_1_1),
+                containsExactly(createResources(TYPE_1, 2, 5)));
+        assertThat(underTest.getUncategorizableResources(),
+                containsExactly(createResources(4, 6)));
     }
 
-    // XXX
     @Test
     public void addOneCategorizableAndOneUncategorizableResourceToEmptyGroupEventFired() {
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_2, 2));
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_2, 2));
         underTest.setCategorizer(categorizer1);
         underTest.addHandler(changeHandler);
 
-        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
-        resources.add(ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_2, 2));
+        ResourceSet resources = createResources(TYPE_1, 1);
+        resources.add(createResource(TYPE_2, 2));
         testResources.addAll(resources);
 
         ResourceGroupingChangedEvent event = captureResourceChangedEvent();
 
-        LightweightList<CategorizableResourceGroupingChange> changes = event
-                .getChanges();
-
-        UncategorizableResourceGroupingChange uncategorizableChange = event
-                .getUncategorizableResourceChanges();
-
-        assertThat(changes.toList(),
-                CollectionMatchers.containsExactly(toSet(newGroupCreatedDelta(
-                        GROUP_1_1, ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1)))));
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 2),
-                CollectionMatchers
-                        .containsExactly(uncategorizableChange.addedResources));
-        assertTrue(uncategorizableChange.removedResources.isEmpty());
-
+        assertThat(
+                event.getChanges(),
+                containsExactly(newGroupCreatedDelta(GROUP_1_1,
+                        createResources(TYPE_1, 1))));
+        assertThat(event.getUncategorizableChanges().addedResources,
+                containsExactly(createResources(TYPE_2, 2)));
+        assertThat(event.getUncategorizableChanges().removedResources,
+                isEmpty(Resource.class));
     }
 
-    // XXX
     @Test
     public void addOneCategorizableAndOneUncategorizableResourceToEmptyGroupSetContent() {
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_2, 2));
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_2, 2));
         underTest.setCategorizer(categorizer1);
 
-        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
-        resources.add(ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_2, 2));
+        ResourceSet resources = createResources(TYPE_1, 1);
+        resources.add(createResource(TYPE_2, 2));
         testResources.addAll(resources);
 
-        Map<String, ResourceSet> result = underTest
-                .getCategorizedResourceSets();
-
-        ResourceSet uncategorizableResources = underTest
-                .getUncategorizableResources();
-
-        assertMapKeysEqual(result, GROUP_1_1);
-        assertThat(result.get(GROUP_1_1),
-                containsExactly(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1)));
-
-        assertNotNull(uncategorizableResources);
-        assertThat(uncategorizableResources,
-                containsExactly(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 2)));
+        assertMapKeysEqual(underTest.getCategorizedResourceSets(), GROUP_1_1);
+        assertThat(underTest.getCategorizedResourceSets().get(GROUP_1_1),
+                containsExactly(createResources(TYPE_1, 1)));
+        assertThat(underTest.getUncategorizableResources(),
+                containsExactly(createResources(TYPE_2, 2)));
     }
 
     @Test
     public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
         setUpCategory(categorizer1, 1, GROUP_1_1, GROUP_1_2);
 
-        testResources.add(ResourceSetTestUtils.createResource(1));
+        testResources.add(createResource(1));
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertThat(result.get(GROUP_1_1), containsExactly(ResourceSetTestUtils.createResources(1)));
-        assertThat(result.get(GROUP_1_2), containsExactly(ResourceSetTestUtils.createResources(1)));
+        assertThat(result.get(GROUP_1_1), containsExactly(createResources(1)));
+        assertThat(result.get(GROUP_1_2), containsExactly(createResources(1)));
     }
 
-    // XXX
     @Test
     public void addUncategorizableResourcestoEmptyGroupEventFired() {
         setUpNullCategorizer(categorizer3);
         underTest.setCategorizer(categorizer3);
         underTest.addHandler(changeHandler);
 
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
         UncategorizableResourceGroupingChange changes = captureUncategorizableChanges();
 
-        LightweightCollection<Resource> addedResources = changes.addedResources;
-        LightweightCollection<Resource> removedResources = changes.removedResources;
-
         assertThat(changes.resourceSet, containsExactly(testResources));
-        assertTrue(addedResources.contains(ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1)));
-        assertTrue(addedResources.contains(ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2)));
-        assertTrue(removedResources.isEmpty());
+        assertThat(changes.addedResources.toList(),
+                contains(createResource(TYPE_1, 1)));
+        assertThat(changes.addedResources.toList(),
+                contains(createResource(TYPE_1, 2)));
+        assertThat(changes.removedResources, isEmpty(Resource.class));
     }
 
-    // XXX
     @Test
     public void addUncategorizableResourcestoEmptyGroupSetContent() {
         setUpNullCategorizer(categorizer3);
         underTest.setCategorizer(categorizer3);
 
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
-        ResourceSet result = underTest.getUncategorizableResources();
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
-        assertNotNull(result);
-        assertThat(result, containsExactly(testResources));
+        assertThat(underTest.getUncategorizableResources(),
+                containsExactly(testResources));
     }
 
     public List<CategorizableResourceGroupingChange> captureChanges() {
@@ -264,25 +240,25 @@ public class ResourceGroupingTest {
 
     public UncategorizableResourceGroupingChange captureUncategorizableChanges() {
         ResourceGroupingChangedEvent resourceChangedEvent = captureResourceChangedEvent();
-        return resourceChangedEvent.getUncategorizableResourceChanges();
+        return resourceChangedEvent.getUncategorizableChanges();
     }
 
+    /*
+     * TODO: This test was migrated here. Check if case is already covered by
+     * other tests.
+     */
     @Test
     public void categorizeResources() {
-        /*
-         * TODO: This test was migrated here. Check if case is already covered
-         * by other tests.
-         */
-        ResourceSet resources1 = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 3, 4);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3), GROUP_1_1);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4), GROUP_1_1);
+        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer1, createResource(TYPE_1, 3), GROUP_1_1);
+        setUpCategory(categorizer1, createResource(TYPE_1, 4), GROUP_1_1);
 
-        ResourceSet resources2 = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 2, 4);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_2, 2), GROUP_1_2);
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_2, 4), GROUP_1_2);
+        ResourceSet resources2 = createResources(TYPE_2, 2, 4);
+        setUpCategory(categorizer1, createResource(TYPE_2, 2), GROUP_1_2);
+        setUpCategory(categorizer1, createResource(TYPE_2, 4), GROUP_1_2);
 
-        ResourceSet resources = ResourceSetTestUtils.toResourceSet(resources1, resources2);
+        ResourceSet resources = toResourceSet(resources1, resources2);
 
         testResources.addAll(resources);
         Map<String, ResourceSet> result = underTest
@@ -300,10 +276,10 @@ public class ResourceGroupingTest {
     public void changeCategorizerCreatesTwoCategorizedFromTwoUncategorizedEventsFired() {
         setUpNullCategorizer(categorizer2);
         underTest.setCategorizer(categorizer2);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 2), GROUP_1_1);
 
         underTest.addHandler(changeHandler);
 
@@ -311,235 +287,209 @@ public class ResourceGroupingTest {
 
         ResourceGroupingChangedEvent event = captureResourceChangedEvent();
         UncategorizableResourceGroupingChange uncategorizableResourceChanges = event
-                .getUncategorizableResourceChanges();
+                .getUncategorizableChanges();
         LightweightList<CategorizableResourceGroupingChange> changes = event
                 .getChanges();
 
         assertThat(
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2),
-                CollectionMatchers
-                        .containsExactly(uncategorizableResourceChanges.removedResources));
+                createResources(TYPE_1, 1, 2),
+                containsExactly(uncategorizableResourceChanges.removedResources));
         assertTrue(uncategorizableResourceChanges.addedResources.isEmpty());
-
-        assertThat(changes.toList(),
-                CollectionMatchers.containsExactly(toSet(newGroupCreatedDelta(
-                        GROUP_1_1, ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2)))));
+        assertThat(
+                changes,
+                containsExactly(newGroupCreatedDelta(GROUP_1_1,
+                        createResources(TYPE_1, 1, 2))));
     }
 
-    // XXX
     @Test
     public void changeCategorizerCreatesTwoCategorizedFromTwoUncategorizedSetContent() {
         setUpNullCategorizer(categorizer2);
         underTest.setCategorizer(categorizer2);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 2), GROUP_1_1);
 
         underTest.setCategorizer(categorizer3);
 
-        Map<String, ResourceSet> categorizedResourceSets = underTest
-                .getCategorizedResourceSets();
-        ResourceSet uncategorizedResources = underTest
-                .getUncategorizableResources();
-
-        assertTrue(uncategorizedResources.isEmpty());
-        assertMapKeysEqual(categorizedResourceSets, GROUP_1_1);
-        assertThat(categorizedResourceSets.get(GROUP_1_1),
-                containsExactly(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2)));
+        assertTrue(underTest.getUncategorizableResources().isEmpty());
+        assertMapKeysEqual(underTest.getCategorizedResourceSets(), GROUP_1_1);
+        assertThat(underTest.getCategorizedResourceSets().get(GROUP_1_1),
+                containsExactly(createResources(TYPE_1, 1, 2)));
     }
 
-    // XXX
     @Test
     public void changeCategorizerCreatesTwoUncategorizedFrom2CategorizedResourcesEventFired() {
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 2), GROUP_1_1);
 
         underTest.setCategorizer(categorizer2);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
         underTest.addHandler(changeHandler);
 
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1));
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2));
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 1));
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 2));
 
         underTest.setCategorizer(categorizer3);
 
         UncategorizableResourceGroupingChange change = captureUncategorizableChanges();
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2),
-                CollectionMatchers.containsExactly(change.addedResources));
+
+        assertThat(change.addedResources,
+                containsExactly(createResources(TYPE_1, 1, 2)));
         assertTrue(change.removedResources.isEmpty());
     }
 
-    // XXX
     @Test
     public void changeCategorizerCreatesTwoUncategorizedFrom2CategorizedResourcesSetContent() {
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
+        testResources.addAll(createResources(TYPE_1, 1, 2));
+        setUpCategory(categorizer2, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 2), GROUP_1_1);
 
         underTest.setCategorizer(categorizer2);
 
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1));
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2));
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 1));
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 2));
 
         underTest.setCategorizer(categorizer3);
 
         ResourceSet resources = underTest.getUncategorizableResources();
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2),
-                CollectionMatchers.containsExactly(resources));
-
+        assertThat(resources, containsExactly(createResources(TYPE_1, 1, 2)));
         assertTrue(underTest.getCategorizedResourceSets().entrySet().isEmpty());
     }
 
     @Test
     public void changeCategorizerFiresEvents1() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer2);
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
-        assertThat(changes, CollectionMatchers.containsExactly(toSet(
-                newGroupRemovedDelta(GROUP_1_1, ResourceSetTestUtils.createResources(1, 2, 3)),
-                newGroupRemovedDelta(GROUP_1_2, ResourceSetTestUtils.createResources(4, 5)),
-                newGroupCreatedDelta(GROUP_2_1, ResourceSetTestUtils.createResources(1)),
-                newGroupCreatedDelta(GROUP_2_2, ResourceSetTestUtils.createResources(2)),
-                newGroupCreatedDelta(GROUP_2_3, ResourceSetTestUtils.createResources(3, 4)),
-                newGroupCreatedDelta(GROUP_2_4, ResourceSetTestUtils.createResources(4, 5)))));
+        assertThat(
+                changes,
+                containsExactly(
+                        newGroupRemovedDelta(GROUP_1_1,
+                                createResources(1, 2, 3)),
+                        newGroupRemovedDelta(GROUP_1_2, createResources(4, 5)),
+                        newGroupCreatedDelta(GROUP_2_1, createResources(1)),
+                        newGroupCreatedDelta(GROUP_2_2, createResources(2)),
+                        newGroupCreatedDelta(GROUP_2_3, createResources(3, 4)),
+                        newGroupCreatedDelta(GROUP_2_4, createResources(4, 5))));
     }
 
     @Test
     public void changeCategorizerFiresEvents2() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.setCategorizer(categorizer2);
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer1);
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
-        assertThat(changes, CollectionMatchers.containsExactly(toSet(
-                newGroupCreatedDelta(GROUP_1_1, ResourceSetTestUtils.createResources(1, 2, 3)),
-                newGroupCreatedDelta(GROUP_1_2, ResourceSetTestUtils.createResources(4, 5)),
-                newGroupRemovedDelta(GROUP_2_1, ResourceSetTestUtils.createResources(1)),
-                newGroupRemovedDelta(GROUP_2_2, ResourceSetTestUtils.createResources(2)),
-                newGroupRemovedDelta(GROUP_2_3, ResourceSetTestUtils.createResources(3, 4)),
-                newGroupRemovedDelta(GROUP_2_4, ResourceSetTestUtils.createResources(4, 5)))));
+        assertThat(
+                changes,
+                containsExactly(
+                        newGroupCreatedDelta(GROUP_1_1,
+                                createResources(1, 2, 3)),
+                        newGroupCreatedDelta(GROUP_1_2, createResources(4, 5)),
+                        newGroupRemovedDelta(GROUP_2_1, createResources(1)),
+                        newGroupRemovedDelta(GROUP_2_2, createResources(2)),
+                        newGroupRemovedDelta(GROUP_2_3, createResources(3, 4)),
+                        newGroupRemovedDelta(GROUP_2_4, createResources(4, 5))));
     }
 
-    // XXX
     @Test
     public void changeCategorizerMixedCategorizationResourcesEventsFired() {
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3), GROUP_1_1);
-        setUpNullCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4));
-        setUpNullCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 5));
+        setUpCategory(categorizer2, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 2), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 3), GROUP_1_1);
+        setUpNullCategory(categorizer2, createResource(TYPE_1, 4));
+        setUpNullCategory(categorizer2, createResource(TYPE_1, 5));
 
         underTest.setCategorizer(categorizer2);
 
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 3, 4, 5));
+        testResources.addAll(createResources(TYPE_1, 1, 2, 3, 4, 5));
 
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3));
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4));
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 5), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 2), GROUP_1_1);
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 3));
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 4));
+        setUpCategory(categorizer3, createResource(TYPE_1, 5), GROUP_1_1);
 
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer3);
 
         ResourceGroupingChangedEvent event = captureResourceChangedEvent();
-        UncategorizableResourceGroupingChange uncategorizableResourceChanges = event
-                .getUncategorizableResourceChanges();
-        LightweightList<CategorizableResourceGroupingChange> changes = event
-                .getChanges();
 
-        // TODO this illustrates somethign about the bug that we found
-        // this test shows that 4 is removed and added later to the
-        // uncategorizedresourceset
-
-        // The problem is related to the fact that we never destroy the
-        // uncategorized group
-        // the problem is solved in categorized groups by destroying the group
-        // and then recreating it
-
-        // Possble solutions: change how both work to calculate the overall
-        // change
-        // do a calculation on the added and removed and remove any duplicated
-        // as they will cancel
+        assertThat(event.getUncategorizableChanges().addedResources,
+                containsExactly(createResources(TYPE_1, 3, 4)));
+        assertThat(event.getUncategorizableChanges().removedResources,
+                containsExactly(createResources(TYPE_1, 4, 5)));
         assertThat(
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 3, 4),
-                CollectionMatchers
-                        .containsExactly(uncategorizableResourceChanges.addedResources));
-        assertThat(
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 4, 5),
-                CollectionMatchers
-                        .containsExactly(uncategorizableResourceChanges.removedResources));
-
-        // TODO this illustrates a similar issue with categorized resources
-        assertThat(changes.toList(), CollectionMatchers.containsExactly(toSet(
-                newGroupRemovedDelta(GROUP_1_1,
-                        ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 3)),
-                newGroupCreatedDelta(GROUP_1_1,
-                        ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 5)))));
+                event.getChanges(),
+                containsExactly(
+                        newGroupRemovedDelta(GROUP_1_1,
+                                createResources(TYPE_1, 1, 2, 3)),
+                        newGroupCreatedDelta(GROUP_1_1,
+                                createResources(TYPE_1, 1, 2, 5))));
 
     }
 
-    // XXX
     @Test
     public void changeCategorizerMixedCategorizationResourcesSetContent() {
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
-        setUpCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3), GROUP_1_1);
-        setUpNullCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4));
-        setUpNullCategory(categorizer2, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 5));
+        setUpCategory(categorizer2, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 2), GROUP_1_1);
+        setUpCategory(categorizer2, createResource(TYPE_1, 3), GROUP_1_1);
+        setUpNullCategory(categorizer2, createResource(TYPE_1, 4));
+        setUpNullCategory(categorizer2, createResource(TYPE_1, 5));
 
         underTest.setCategorizer(categorizer2);
 
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 3, 4, 5));
+        testResources.addAll(createResources(TYPE_1, 1, 2, 3, 4, 5));
 
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2), GROUP_1_1);
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 3));
-        setUpNullCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 4));
-        setUpCategory(categorizer3, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 5), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer3, createResource(TYPE_1, 2), GROUP_1_1);
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 3));
+        setUpNullCategory(categorizer3, createResource(TYPE_1, 4));
+        setUpCategory(categorizer3, createResource(TYPE_1, 5), GROUP_1_1);
 
         underTest.setCategorizer(categorizer3);
 
         Map<String, ResourceSet> categorizedResourceSets = underTest
                 .getCategorizedResourceSets();
-        ResourceSet uncategorizedResources = underTest
-                .getUncategorizableResources();
 
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 3, 4),
-                CollectionMatchers.containsExactly(uncategorizedResources));
+        assertThat(underTest.getUncategorizableResources(),
+                containsExactly(createResources(TYPE_1, 3, 4)));
         assertMapKeysEqual(categorizedResourceSets, GROUP_1_1);
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2, 5),
-                CollectionMatchers.containsExactly(categorizedResourceSets
-                        .get(GROUP_1_1)));
+        assertThat(categorizedResourceSets.get(GROUP_1_1),
+                containsExactly(createResources(TYPE_1, 1, 2, 5)));
     }
 
     @Test
     public void changeCategorizerUpdatesCategories1() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.setCategorizer(categorizer2);
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_1, GROUP_2_2, GROUP_2_3, GROUP_2_4);
-        assertThat(result.get(GROUP_2_1), containsExactly(ResourceSetTestUtils.createResources(1)));
-        assertThat(result.get(GROUP_2_2), containsExactly(ResourceSetTestUtils.createResources(2)));
+        assertThat(result.get(GROUP_2_1), containsExactly(createResources(1)));
+        assertThat(result.get(GROUP_2_2), containsExactly(createResources(2)));
         assertThat(result.get(GROUP_2_3),
-                containsExactly(ResourceSetTestUtils.createResources(3, 4)));
+                containsExactly(createResources(3, 4)));
         assertThat(result.get(GROUP_2_4),
-                containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
     public void changeCategorizerUpdatesCategories2() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.setCategorizer(categorizer2);
         underTest.setCategorizer(categorizer1);
 
@@ -548,16 +498,17 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
         assertThat(result.get(GROUP_1_1),
-                containsExactly(ResourceSetTestUtils.createResources(1, 2, 3)));
+                containsExactly(createResources(1, 2, 3)));
         assertThat(result.get(GROUP_1_2),
-                containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
     public void changeCategorizerUpdatesCategoriesAfterAddAllTwiceAndRemoveAll() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2));
-        testResources.removeAll(ResourceSetTestUtils.createResources(1, 2));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2));
+        testResources.removeAll(createResources(1, 2));
         underTest.setCategorizer(categorizer2);
 
         Map<String, ResourceSet> result = underTest
@@ -565,15 +516,16 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
         assertThat(result.get(GROUP_2_3),
-                containsExactly(ResourceSetTestUtils.createResources(3, 4)));
+                containsExactly(createResources(3, 4)));
         assertThat(result.get(GROUP_2_4),
-                containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
     public void changeCategorizerUpdatesCategoriesAfterRemoveAll() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
-        testResources.removeAll(ResourceSetTestUtils.createResources(1, 2));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
+        testResources.removeAll(createResources(1, 2));
         underTest.setCategorizer(categorizer2);
 
         Map<String, ResourceSet> result = underTest
@@ -581,14 +533,15 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
         assertThat(result.get(GROUP_2_3),
-                containsExactly(ResourceSetTestUtils.createResources(3, 4)));
+                containsExactly(createResources(3, 4)));
         assertThat(result.get(GROUP_2_4),
-                containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
     public void changeToSameCategorizerDoesNotFireEvent() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer1);
 
@@ -598,16 +551,17 @@ public class ResourceGroupingTest {
 
     @Test
     public void createCategories() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
         assertThat(result.get(GROUP_1_1),
-                containsExactly(ResourceSetTestUtils.createResources(1, 2, 3)));
+                containsExactly(createResources(1, 2, 3)));
         assertThat(result.get(GROUP_1_2),
-                containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
@@ -621,32 +575,36 @@ public class ResourceGroupingTest {
 
     @Test
     public void fireResourceCategoryAddedAndChangeChangeOnAdd() {
-        Resource resource = ResourceSetTestUtils.createResource(1);
+        Resource resource = createResource(1);
 
         underTest.addHandler(changeHandler);
         testResources.add(resource);
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
-        assertThat(changes,
-                CollectionMatchers.containsExactly(toSet(newGroupCreatedDelta(
-                        GROUP_1_1, ResourceSetTestUtils.toResourceSet(resource)))));
+        assertThat(
+                changes,
+                containsExactly(newGroupCreatedDelta(GROUP_1_1,
+                        ResourceSetTestUtils.toResourceSet(resource))));
     }
 
     // TODO test for add all --> multiple categories
 
     @Test
     public void fireResourceCategoryAddedAndChangedOnAddAll() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        testResources.addAll(createResources(1, 2));
         underTest.addHandler(changeHandler);
-        testResources.addAll(ResourceSetTestUtils.createResources(3, 4, 5));
+        testResources.addAll(createResources(3, 4, 5));
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
-        assertThat(changes, CollectionMatchers.containsExactly(toSet(
-                newGroupChangedDelta(GROUP_1_1, ResourceSetTestUtils.createResources(1, 2, 3),
-                        ResourceSetTestUtils.createResources(3), null),
-                newGroupCreatedDelta(GROUP_1_2, ResourceSetTestUtils.createResources(4, 5)))));
+        assertThat(
+                changes,
+                containsExactly(
+                        newGroupChangedDelta(GROUP_1_1,
+                                createResources(1, 2, 3), createResources(3),
+                                null),
+                        newGroupCreatedDelta(GROUP_1_2, createResources(4, 5))));
     }
 
     /**
@@ -662,15 +620,16 @@ public class ResourceGroupingTest {
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
 
-                assertThat(e.getChanges().toList(), CollectionMatchers
-                        .containsExactly(toSet(newGroupCreatedDelta(GROUP_1_1,
-                                ResourceSetTestUtils.createResources(1)))));
+                assertThat(
+                        e.getChanges(),
+                        containsExactly(newGroupCreatedDelta(GROUP_1_1,
+                                createResources(1))));
 
                 called[0] = true;
             }
         });
 
-        testResources.add(ResourceSetTestUtils.createResource(1));
+        testResources.add(createResource(1));
 
         assertEquals(true, called[0]);
     }
@@ -688,15 +647,16 @@ public class ResourceGroupingTest {
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
 
-                assertThat(e.getChanges().toList(), CollectionMatchers
-                        .containsExactly(toSet(newGroupCreatedDelta(GROUP_1_1,
-                                ResourceSetTestUtils.createResources(1, 2, 3)))));
+                assertThat(
+                        e.getChanges().toList(),
+                        containsExactly(newGroupCreatedDelta(GROUP_1_1,
+                                createResources(1, 2, 3))));
 
                 called[0] = true;
             }
         });
 
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3));
 
         assertEquals(true, called[0]);
     }
@@ -704,26 +664,27 @@ public class ResourceGroupingTest {
     @Test
     public void fireResourceCategoryRemovedAndUpdateChangesWhenRemovingOneAndAHalfCategories() {
         ResourceSet allResources = new DefaultResourceSet();
-        allResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        allResources.addAll(createResources(1, 2, 3, 4));
 
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
         testResources.removeAll(allResources);
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
-        Set<CategorizableResourceGroupingChange> expectedChanges = toSet(
-                CategorizableResourceGroupingChange.newGroupRemovedDelta(
-                        GROUP_1_1, ResourceSetTestUtils.createResources(1, 2, 3)),
-                newGroupChangedDelta(GROUP_1_2, ResourceSetTestUtils.createResources(5), null,
-                        ResourceSetTestUtils.createResources(4)));
-
-        assertThat(changes, CollectionMatchers.containsExactly(expectedChanges));
+        assertThat(
+                changes,
+                containsExactly(
+                        newGroupRemovedDelta(GROUP_1_1,
+                                createResources(1, 2, 3)),
+                        newGroupChangedDelta(GROUP_1_2, createResources(5),
+                                null, createResources(4))));
     }
 
     @Test
     public void fireResourceCategoryRemovedChangeOnRemove() {
-        Resource resource = ResourceSetTestUtils.createResource(1);
+        Resource resource = createResource(1);
 
         testResources.add(resource);
         underTest.addHandler(changeHandler);
@@ -733,46 +694,42 @@ public class ResourceGroupingTest {
 
         assertThat(
                 changes,
-                CollectionMatchers
-                        .containsExactly(toSet(CategorizableResourceGroupingChange
-                                .newGroupRemovedDelta(GROUP_1_1,
-                                        ResourceSetTestUtils.toResourceSet(resource)))));
+                containsExactly(newGroupRemovedDelta(GROUP_1_1,
+                        toResourceSet(resource))));
     }
 
     @Test
     public void fireResourceCategoryRemovedChangeOnRemoveAll() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3));
         underTest.addHandler(changeHandler);
-        testResources.removeAll(ResourceSetTestUtils.createResources(1, 2, 3));
+        testResources.removeAll(createResources(1, 2, 3));
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
         assertThat(
                 changes,
-                CollectionMatchers
-                        .containsExactly(toSet(CategorizableResourceGroupingChange
-                                .newGroupRemovedDelta(GROUP_1_1,
-                                        ResourceSetTestUtils.createResources(1, 2, 3)))));
+                containsExactly(newGroupRemovedDelta(GROUP_1_1,
+                        createResources(1, 2, 3))));
     }
 
     @Test
     public void fireResourceCategoryRemovedChangesWhenRemovingTwoCategories() {
         ResourceSet allResources = new DefaultResourceSet();
-        allResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        allResources.addAll(createResources(1, 2, 3, 4, 5));
 
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
         testResources.removeAll(allResources);
 
         List<CategorizableResourceGroupingChange> changes = captureChanges();
 
-        Set<CategorizableResourceGroupingChange> expectedChanges = toSet(
-                CategorizableResourceGroupingChange.newGroupRemovedDelta(
-                        GROUP_1_1, ResourceSetTestUtils.createResources(1, 2, 3)),
-                CategorizableResourceGroupingChange.newGroupRemovedDelta(
-                        GROUP_1_2, ResourceSetTestUtils.createResources(4, 5)));
-
-        assertThat(changes, CollectionMatchers.containsExactly(expectedChanges));
+        assertThat(
+                changes,
+                containsExactly(
+                        newGroupRemovedDelta(GROUP_1_1,
+                                createResources(1, 2, 3)),
+                        newGroupRemovedDelta(GROUP_1_2, createResources(4, 5))));
     }
 
     @Test
@@ -785,15 +742,14 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer2, 2, GROUP_1_2);
         setUpCategory(categorizer2, 3, GROUP_2_1);
 
-        ResourceSet resources = ResourceSetTestUtils.createResources(1, 2, 3);
+        ResourceSet resources = createResources(1, 2, 3);
         testResources.addAll(resources);
 
         underTest.setCategorizer(categorizer2);
 
-        Set<String> result = underTest.getGroupIds(ResourceSetTestUtils.createResources(2, 3));
+        Set<String> result = underTest.getGroupIds(createResources(2, 3));
 
-        assertThat(result,
-                CollectionMatchers.containsExactly(toSet(GROUP_2_1, GROUP_1_2)));
+        assertThat(result, containsExactly(GROUP_2_1, GROUP_1_2));
     }
 
     @Test
@@ -801,215 +757,192 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_2);
         setUpCategory(categorizer1, 3, GROUP_1_1);
-        ResourceSet resources = ResourceSetTestUtils.createResources(1, 2, 3);
+        ResourceSet resources = createResources(1, 2, 3);
         testResources.addAll(resources);
-        testResources.remove(ResourceSetTestUtils.createResource(3));
+        testResources.remove(createResource(3));
 
         // 3 is not contained any more
-        Set<String> result = underTest.getGroupIds(ResourceSetTestUtils.createResources(2, 3));
+        Set<String> result = underTest.getGroupIds(createResources(2, 3));
 
-        assertThat(result, CollectionMatchers.containsExactly(toSet(GROUP_1_2)));
+        assertThat(result, containsExactly(GROUP_1_2));
     }
 
     @Test
     public void getGroupsAfterAddAllReturningExcludingOneGroup() {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_2);
-        ResourceSet resources = ResourceSetTestUtils.createResources(1, 2);
+        ResourceSet resources = createResources(1, 2);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroupIds(ResourceSetTestUtils.createResources(1));
+        Set<String> result = underTest.getGroupIds(createResources(1));
 
-        assertThat(result, CollectionMatchers.containsExactly(toSet(GROUP_1_1)));
+        assertThat(result, containsExactly(GROUP_1_1));
     }
 
     @Test
     public void getGroupsAfterAddAllReturningNothingForNotIncludedResource() {
         setUpCategory(categorizer1, 1, GROUP_1_1);
-        ResourceSet resources = ResourceSetTestUtils.createResources(1);
+        ResourceSet resources = createResources(1);
         resources.addAll(resources);
 
-        Set<String> result = underTest.getGroupIds(ResourceSetTestUtils.createResources(2));
-
-        assertEquals(true, result.isEmpty());
+        assertTrue(underTest.getGroupIds(createResources(2)).isEmpty());
     }
 
     @Test
     public void getGroupsAfterAddAllReturningOneGroupForSeveralResources() {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_1);
-        ResourceSet resources = ResourceSetTestUtils.createResources(1, 2);
+        ResourceSet resources = createResources(1, 2);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroupIds(resources);
-
-        assertThat(result, CollectionMatchers.containsExactly(toSet(GROUP_1_1)));
+        assertThat(underTest.getGroupIds(resources), containsExactly(GROUP_1_1));
     }
 
     @Test
     public void getGroupsAfterAddAllReturningSingleGroupForSingleResource() {
         setUpCategory(categorizer1, 1, GROUP_1_1);
-        ResourceSet resources = ResourceSetTestUtils.createResources(1);
+        ResourceSet resources = createResources(1);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroupIds(resources);
-
-        assertThat(result, CollectionMatchers.containsExactly(toSet(GROUP_1_1)));
+        assertThat(underTest.getGroupIds(resources), containsExactly(GROUP_1_1));
     }
 
     @Test
     public void getGroupsAfterAddAllReturningTwoGroupsForSingleResource() {
         setUpCategory(categorizer1, 1, GROUP_1_1, GROUP_1_2);
-        ResourceSet resources = ResourceSetTestUtils.createResources(1);
+        ResourceSet resources = createResources(1);
         testResources.addAll(resources);
 
-        Set<String> result = underTest.getGroupIds(resources);
-
-        assertThat(result,
-                CollectionMatchers.containsExactly(toSet(GROUP_1_1, GROUP_1_2)));
+        assertThat(underTest.getGroupIds(resources),
+                containsExactly(GROUP_1_1, GROUP_1_2));
     }
 
     @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemove() {
-        testResources.add(ResourceSetTestUtils.createResource(1));
+        testResources.add(createResource(1));
         ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(GROUP_1_1);
         ResourceSetChangedEventHandler resourcesChangedHandler = mock(ResourceSetChangedEventHandler.class);
         categorizedResources.addEventHandler(resourcesChangedHandler);
-        testResources.remove(ResourceSetTestUtils.createResource(1));
+        testResources.remove(createResource(1));
 
         captureOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemoveAll() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3));
         ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(GROUP_1_1);
         ResourceSetChangedEventHandler resourcesChangedHandler = mock(ResourceSetChangedEventHandler.class);
         categorizedResources.addEventHandler(resourcesChangedHandler);
-        testResources.removeAll(ResourceSetTestUtils.createResources(1, 2, 3));
+        testResources.removeAll(createResources(1, 2, 3));
 
         captureOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
-    // XXX
     @Test
     public void removeAndAddUncategorizableToSetWithTwoUncategorizableEventsFired() {
         setUpNullCategorizer(categorizer3);
         underTest.setCategorizer(categorizer3);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
         underTest.addHandler(changeHandler);
 
-        testResources.change(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 3),
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1));
+        testResources.change(createResources(TYPE_1, 3),
+                createResources(TYPE_1, 1));
         UncategorizableResourceGroupingChange changes = captureUncategorizableChanges();
 
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 3),
-                CollectionMatchers.containsExactly(changes.addedResources));
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1),
-                CollectionMatchers.containsExactly(changes.removedResources));
+        assertThat(changes.addedResources,
+                containsExactly(createResources(TYPE_1, 3)));
+        assertThat(changes.removedResources,
+                containsExactly(createResources(TYPE_1, 1)));
     }
 
-    // XXX
     @Test
     public void removeAndAddUncategorizableToSetWithTwoUncategorizableSetContent() {
         setUpNullCategorizer(categorizer3);
         underTest.setCategorizer(categorizer3);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
-        testResources.change(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 3),
-                ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1));
+        testResources.change(createResources(TYPE_1, 3),
+                createResources(TYPE_1, 1));
 
-        ResourceSet resources = underTest.getUncategorizableResources();
-        assertThat(resources,
-                CollectionMatchers
-                        .containsExactly(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2, 3)));
+        assertThat(underTest.getUncategorizableResources(),
+                containsExactly(createResources(TYPE_1, 2, 3)));
     }
 
-    // XXX
     @Test
     public void removeOneUncategorizedResourceAndOneCategorizedResourceFromGroupingEventFired() {
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2));
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 2));
         underTest.setCategorizer(categorizer1);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
         underTest.addHandler(changeHandler);
-        testResources.removeAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.removeAll(createResources(TYPE_1, 1, 2));
 
         ResourceGroupingChangedEvent event = captureResourceChangedEvent();
-        LightweightList<CategorizableResourceGroupingChange> categorizableEvents = event
-                .getChanges();
-        UncategorizableResourceGroupingChange uncategorizableEvent = event
-                .getUncategorizableResourceChanges();
 
-        assertThat(categorizableEvents.toList(),
-                CollectionMatchers.containsExactly(toSet(newGroupRemovedDelta(
-                        GROUP_1_1, ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1)))));
-
-        assertTrue(uncategorizableEvent.addedResources.isEmpty());
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2),
-                CollectionMatchers
-                        .containsExactly(uncategorizableEvent.removedResources));
+        assertThat(
+                event.getChanges(),
+                containsExactly(newGroupRemovedDelta(GROUP_1_1,
+                        createResources(TYPE_1, 1))));
+        assertTrue(event.getUncategorizableChanges().addedResources.isEmpty());
+        assertThat(event.getUncategorizableChanges().removedResources,
+                containsExactly(createResources(TYPE_1, 2)));
     }
 
-    // XXX
     @Test
     public void removeOneUncategorizedResourceAndOneCategorizedResourceFromGroupingSetContent() {
-        setUpCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 1), GROUP_1_1);
-        setUpNullCategory(categorizer1, ResourceSetTestUtils.createResource(ResourceSetTestUtils.TYPE_1, 2));
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpNullCategory(categorizer1, createResource(TYPE_1, 2));
         underTest.setCategorizer(categorizer1);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
-        testResources.removeAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
-
-        ResourceSet uncategorizedResources = underTest
-                .getUncategorizableResources();
+        testResources.removeAll(createResources(TYPE_1, 1, 2));
 
         assertThat(underTest.containsGroup(GROUP_1_1), is(false));
-        assertTrue(uncategorizedResources.isEmpty());
+        assertTrue(underTest.getUncategorizableResources().isEmpty());
     }
 
     @Test
     public void removeResourceSet() {
-        testResources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4, 5));
-        testResources.removeAll(ResourceSetTestUtils.createResources(1, 2, 3));
+        testResources.addAll(ResourceSetTestUtils
+                .createResources(1, 2, 3, 4, 5));
+        testResources.removeAll(createResources(1, 2, 3));
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
 
         assertEquals(1, result.size());
         assertTrue(result.containsKey(GROUP_1_2));
-        assertTrue(result.get(GROUP_1_2).containsEqualResources(
-                ResourceSetTestUtils.createResources(4, 5)));
+        assertThat(result.get(GROUP_1_2),
+                containsExactly(createResources(4, 5)));
     }
 
-    // XXX
     @Test
     public void removeUncategorizableResourcesFromGroupFireEvent() {
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
         setUpNullCategorizer(categorizer3);
         underTest.setCategorizer(categorizer3);
 
         underTest.addHandler(changeHandler);
-        testResources.removeAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.removeAll(createResources(TYPE_1, 1, 2));
 
         UncategorizableResourceGroupingChange changes = captureUncategorizableChanges();
 
-        assertThat(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2),
-                CollectionMatchers.containsExactly(changes.removedResources));
+        assertThat(changes.removedResources,
+                containsExactly(createResources(TYPE_1, 1, 2)));
         assertTrue(changes.addedResources.isEmpty());
     }
 
-    // XXX
     @Test
     public void removeUncategorizableResourcesFromGroupSetContent() {
         setUpNullCategorizer(categorizer3);
         underTest.setCategorizer(categorizer3);
-        testResources.addAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.addAll(createResources(TYPE_1, 1, 2));
 
-        testResources.removeAll(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 2));
+        testResources.removeAll(createResources(TYPE_1, 1, 2));
 
         ResourceSet uncategorizableResources = underTest
                 .getUncategorizableResources();
@@ -1047,7 +980,7 @@ public class ResourceGroupingTest {
     private void setUpCategory(ResourceMultiCategorizer categorizer,
             int resourceId, String... category) {
 
-        setUpCategory(categorizer, ResourceSetTestUtils.createResource(resourceId), category);
+        setUpCategory(categorizer, createResource(resourceId), category);
     }
 
     public void setUpCategory(ResourceMultiCategorizer categorizer,

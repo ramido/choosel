@@ -74,6 +74,10 @@ public final class CollectionMatchers {
         return CollectionMatchers.<T> isContainedIn(expected.toList());
     }
 
+    public static <T extends Object> Matcher<LightweightCollection<T>> isEmpty() {
+        return new IsEmptyLightweightCollectionMatcher<T>();
+    }
+
     public static <T> Matcher<LightweightCollection<T>> isEmpty(Class<T> clazz) {
         return new IsEmptyLightweightCollectionMatcher<T>();
     }

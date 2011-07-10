@@ -92,7 +92,7 @@ public class ResourceGroupingChangedEvent extends
         return changesByDeltaType.get(deltaType.name());
     }
 
-    public UncategorizableResourceGroupingChange getUncategorizableResourceChanges() {
+    public UncategorizableResourceGroupingChange getUncategorizableChanges() {
         return uncategorizableChanges;
     }
 
