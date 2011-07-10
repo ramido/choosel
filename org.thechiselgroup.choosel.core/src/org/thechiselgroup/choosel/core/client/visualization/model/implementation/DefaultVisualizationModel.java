@@ -29,9 +29,11 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.HandlerRegistrationSet;
@@ -47,11 +49,11 @@ import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -106,27 +108,29 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     public DefaultVisualizationModel(ViewContentDisplay contentDisplay,
             ResourceSet selectedResources, ResourceSet highlightedResources,
-            VisualItemBehavior viewItemBehavior,
-            ResourceGrouping resourceGrouping, Logger logger) {
+            VisualItemBehavior viewItemBehavior, Logger logger,
+            ResourceSetFactory resourceSetFactory,
+            ResourceMultiCategorizer multiCategorizer) {
 
         assert contentDisplay != null;
         assert selectedResources != null;
         assert highlightedResources != null;
         assert viewItemBehavior != null;
-        assert resourceGrouping != null;
         assert logger != null;
 
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
         this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
-        this.resourceGrouping = resourceGrouping;
         this.logger = logger;
 
+        this.resourceGrouping = new ResourceGrouping(multiCategorizer,
+                resourceSetFactory);
         this.slotMappingConfiguration = new DefaultSlotMappingConfiguration(
                 contentDisplay.getSlots());
         this.handlerManager = new PrioritizedHandlerManager(this);
 
+        // TODO should be external...
         addHandler(viewItemBehavior);
 
         init(selectedResources);
@@ -194,7 +198,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
             }
         }
 
-        return Delta.createDelta(addedViewItems, updatedViewItems, removedViewItems);
+        return Delta.createDelta(addedViewItems, updatedViewItems,
+                removedViewItems);
     }
 
     private void clearViewItemValueCache(Slot slot) {
@@ -234,7 +239,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
     public void dispose() {
         for (DefaultVisualItem viewItem : viewItemsByGroupId.values()) {
             // fire event that all view items were removed
-            fireViewItemContainerChangeEvent(Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection(), getViewItems()));
+            fireViewItemContainerChangeEvent(Delta.createDelta(
+                    LightweightCollections.<VisualItem> emptyCollection(),
+                    LightweightCollections.<VisualItem> emptyCollection(),
+                    getViewItems()));
 
             viewItem.dispose();
         }
@@ -268,6 +276,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     @Override
+    public ResourceMultiCategorizer getCategorizer() {
+        return resourceGrouping.getCategorizer();
+    }
+
+    @Override
     public ResourceSet getContentResourceSet() {
         return resourceGrouping.getResourceSet();
     }
@@ -297,11 +310,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
     @Override
     public VisualItemValueResolver getResolver(Slot slot) {
         return slotMappingConfiguration.getResolver(slot);
-    }
-
-    @Override
-    public ResourceGrouping getResourceGrouping() {
-        return resourceGrouping;
     }
 
     @Override
@@ -633,6 +641,16 @@ public class DefaultVisualizationModel implements VisualizationModel,
         return viewItem;
     }
 
+    @Override
+    public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
+        resourceGrouping.setCategorizer(newCategorizer);
+    }
+
+    @Override
+    public void setContentResourceSet(ResourceSet resources) {
+        resourceGrouping.setResourceSet(resources);
+    }
+
     /*
      * IMPLEMENTATION NOTE: We updated the error model and view content display
      * directly after the resolver has been set, because this keeps the
@@ -668,14 +686,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getRelativeComplement(viewItemsThatWereValid,
                         getValidViewItems());
 
-        updateViewContentDisplay(Delta.createDelta(viewItemsToAdd, LightweightCollections.<VisualItem> emptyCollection(), viewItemsToRemove), LightweightCollections.toCollection(slot));
-    }
-
-    @Override
-    public void setResourceGrouping(ResourceGrouping resourceGrouping) {
-        // TODO Auto-generated method stub
-        // XXX test --> remove handler, add handler, change grouping, update
-        // view items(remove,add)
+        updateViewContentDisplay(Delta.createDelta(viewItemsToAdd,
+                LightweightCollections.<VisualItem> emptyCollection(),
+                viewItemsToRemove), LightweightCollections.toCollection(slot));
     }
 
     private void updateErrorModel(Delta<VisualItem> delta) {
@@ -751,8 +764,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     addedResourcesInThisView, removedResourcesInThisView);
         }
 
-        updateViewContentDisplay(
-                Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), affectedViewItems, LightweightCollections.<VisualItem> emptyCollection()),
+        updateViewContentDisplay(Delta.createDelta(
+                LightweightCollections.<VisualItem> emptyCollection(),
+                affectedViewItems,
+                LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -780,8 +795,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     addedResourcesInThisView, removedResourcesInThisView);
         }
 
-        updateViewContentDisplay(
-                Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), affectedViewItems, LightweightCollections.<VisualItem> emptyCollection()),
+        updateViewContentDisplay(Delta.createDelta(
+                LightweightCollections.<VisualItem> emptyCollection(),
+                affectedViewItems,
+                LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -847,7 +864,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightCollection<VisualItem> updatedViewItems = processUpdates(event
                 .getChanges(DeltaType.GROUP_CHANGED));
 
-        return Delta.createDelta(addedViewItems, updatedViewItems, removedViewItems);
+        return Delta.createDelta(addedViewItems, updatedViewItems,
+                removedViewItems);
     }
 
 }

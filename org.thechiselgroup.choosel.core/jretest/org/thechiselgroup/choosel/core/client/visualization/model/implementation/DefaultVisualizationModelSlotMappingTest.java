@@ -99,9 +99,10 @@ public class DefaultVisualizationModelSlotMappingTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        helper.getContainedResources().addAll(ResourceSetTestUtils.toResourceSet(r1, r2, r3));
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("property2"));
+        helper.getContainedResources().addAll(
+                ResourceSetTestUtils.toResourceSet(r1, r2, r3));
+        underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                "property2"));
     }
 
     @Test

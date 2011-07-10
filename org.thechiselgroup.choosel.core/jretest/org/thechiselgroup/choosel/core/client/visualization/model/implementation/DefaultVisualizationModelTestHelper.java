@@ -27,7 +27,6 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactor
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.DataType;
@@ -97,17 +96,15 @@ public final class DefaultVisualizationModelTestHelper {
         when(viewContentDisplay.getSlots()).thenReturn(slots);
         when(viewContentDisplay.isReady()).thenReturn(true);
 
-        // TODO we want to make the categorizer more flexible
-        ResourceGrouping resourceGrouping = new ResourceGrouping(
+        DefaultVisualizationModel visualizationModel = spy(new DefaultVisualizationModel(
+                viewContentDisplay, selectedResources, highlightedResources,
+                mock(VisualItemBehavior.class), mock(Logger.class),
+                new DefaultResourceSetFactory(),
                 new ResourceCategorizerToMultiCategorizerAdapter(
-                        new ResourceByUriTypeCategorizer()),
-                new DefaultResourceSetFactory());
+                        new ResourceByUriTypeCategorizer())));
 
-        resourceGrouping.setResourceSet(containedResources);
-
-        return spy(new DefaultVisualizationModel(viewContentDisplay, selectedResources,
-                highlightedResources, mock(VisualItemBehavior.class),
-                resourceGrouping, mock(Logger.class)));
+        visualizationModel.setContentResourceSet(containedResources);
+        return visualizationModel;
     }
 
     public ResourceSet getContainedResources() {

@@ -27,11 +27,11 @@ import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemResolutionErrorModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 
 public class ManagedSlotMappingConfiguration {
@@ -155,7 +155,7 @@ public class ManagedSlotMappingConfiguration {
                 new Slot[unconfiguredSlots.size()]);
 
         for (Entry<Slot, VisualItemValueResolver> entry : slotMappingInitializer
-                .getResolvers(visualizationModel.getResourceGrouping().getResourceSet(),
+                .getResolvers(visualizationModel.getContentResourceSet(),
                         slotsAsArray).entrySet()) {
 
             Slot slot = entry.getKey();
@@ -187,7 +187,8 @@ public class ManagedSlotMappingConfiguration {
      * Call this method whenever the model changes (whenever the
      * {@link VisualItem}s change).
      */
-    private void updateManagedMappings(LightweightCollection<VisualItem> viewItems) {
+    private void updateManagedMappings(
+            LightweightCollection<VisualItem> viewItems) {
         for (ManagedSlotMapping managedMapping : slotsToSlotMappings.values()) {
             managedMapping.updateAllowableFactories(viewItems);
         }
@@ -205,7 +206,8 @@ public class ManagedSlotMappingConfiguration {
         updateManagedMappings(viewItems);
 
         // reset the unconfigured slots
-        LightweightCollection<Slot> slots = visualizationModel.getUnconfiguredSlots();
+        LightweightCollection<Slot> slots = visualizationModel
+                .getUnconfiguredSlots();
 
         if (!slots.isEmpty()) {
             resetMappingsFromInitializer(slots, viewItems);

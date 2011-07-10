@@ -52,12 +52,17 @@ public class DefaultVisualizationModelTest {
 
     @Test
     public void addingResourceSetsAddsViewItems() {
-        helper.addToContainedResources(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1));
-        helper.addToContainedResources(ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 2));
+        helper.addToContainedResources(ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 1));
+        helper.addToContainedResources(ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_2, 2));
 
         assertThat(underTest.getViewItems(),
                 VisualItemTestUtils.containsViewItemsForExactResourceSets(
-                        ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1), ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 2)));
+                        ResourceSetTestUtils.createResources(
+                                ResourceSetTestUtils.TYPE_1, 1),
+                        ResourceSetTestUtils.createResources(
+                                ResourceSetTestUtils.TYPE_2, 2)));
     }
 
     @Test
@@ -104,9 +109,10 @@ public class DefaultVisualizationModelTest {
         r2.putValue(RESOURCE_PROPERTY_1, "value1-2");
         r2.putValue("property2", "value2");
 
-        helper.getContainedResources().addAll(ResourceSetTestUtils.toResourceSet(r1, r2));
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("property2"));
+        helper.getContainedResources().addAll(
+                ResourceSetTestUtils.toResourceSet(r1, r2));
+        underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                "property2"));
 
         List<VisualItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -122,11 +128,11 @@ public class DefaultVisualizationModelTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category2");
 
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text1"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text1"));
         helper.getContainedResources().add(resource);
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text2"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
 
         List<VisualItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -144,11 +150,11 @@ public class DefaultVisualizationModelTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category1");
 
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text1"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text1"));
         helper.getContainedResources().add(resource);
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text2"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
 
         List<VisualItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -158,7 +164,8 @@ public class DefaultVisualizationModelTest {
 
     @Test
     public void highlightedResourceSetOnCreatedViewItems() {
-        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1, 3, 4);
+        ResourceSet resources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 1, 3, 4);
 
         helper.getHighlightedResources().addAll(resources);
         helper.getContainedResources().addAll(resources);
@@ -171,8 +178,10 @@ public class DefaultVisualizationModelTest {
 
     @Test
     public void highlightedResourcesGetAddedToViewItemWhenHoverModelContainsAdditionalResources() {
-        ResourceSet viewResources = ResourceSetTestUtils.toResourceSet(ResourceSetTestUtils.createResource(2));
-        ResourceSet highlightedResources2 = ResourceSetTestUtils.toResourceSet(ResourceSetTestUtils.createResource(1),
+        ResourceSet viewResources = ResourceSetTestUtils
+                .toResourceSet(ResourceSetTestUtils.createResource(2));
+        ResourceSet highlightedResources2 = ResourceSetTestUtils.toResourceSet(
+                ResourceSetTestUtils.createResource(1),
                 ResourceSetTestUtils.createResource(2));
 
         helper.getContainedResources().addAll(viewResources);
@@ -219,9 +228,11 @@ public class DefaultVisualizationModelTest {
 
     @Test
     public void selectViewItemWhenResourceAddedToSelection() {
-        helper.getContainedResources().add(ResourceSetTestUtils.createResource(1));
+        helper.getContainedResources().add(
+                ResourceSetTestUtils.createResource(1));
 
-        helper.getSelectedResources().add(ResourceSetTestUtils.createResource(1));
+        helper.getSelectedResources().add(
+                ResourceSetTestUtils.createResource(1));
 
         assertThat(
                 underTest.getViewItems().getFirstElement()
@@ -247,8 +258,10 @@ public class DefaultVisualizationModelTest {
      */
     @Test
     public void viewItemIsHighlightedOnChangeWhenAddedResourcesAreAlreadyHighlighted() {
-        ResourceSet originalResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
-        ResourceSet addedResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2);
+        ResourceSet originalResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 1);
+        ResourceSet addedResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 2);
 
         helper.getContainedResources().addAll(originalResources);
         helper.getHighlightedResources().addAll(addedResources);
@@ -267,8 +280,10 @@ public class DefaultVisualizationModelTest {
      */
     @Test
     public void viewItemIsNotHighlightedOnChangeWhenOnlyRemovedResourcesAreHighlighted() {
-        ResourceSet originalResources = ResourceSetTestUtils.createLabeledResources(ResourceSetTestUtils.TYPE_1, 1, 2);
-        ResourceSet removedResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2);
+        ResourceSet originalResources = ResourceSetTestUtils
+                .createLabeledResources(ResourceSetTestUtils.TYPE_1, 1, 2);
+        ResourceSet removedResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 2);
 
         helper.getHighlightedResources().addAll(removedResources);
         helper.getContainedResources().addAll(originalResources);
@@ -286,8 +301,10 @@ public class DefaultVisualizationModelTest {
      */
     @Test
     public void viewItemIsNotSelectedOnChangeWhenOnlyRemovedResourcesAreSelected() {
-        ResourceSet originalResources = ResourceSetTestUtils.createLabeledResources(ResourceSetTestUtils.TYPE_1, 1, 2);
-        ResourceSet removedResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2);
+        ResourceSet originalResources = ResourceSetTestUtils
+                .createLabeledResources(ResourceSetTestUtils.TYPE_1, 1, 2);
+        ResourceSet removedResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 2);
 
         helper.getSelectedResources().addAll(removedResources);
         helper.getContainedResources().addAll(originalResources);
@@ -305,8 +322,10 @@ public class DefaultVisualizationModelTest {
      */
     @Test
     public void viewItemIsSelectedHighlightedOnChangeWhenAddedResourcesAreAlreadySelectedHighlighted() {
-        ResourceSet originalResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
-        ResourceSet addedResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2);
+        ResourceSet originalResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 1);
+        ResourceSet addedResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 2);
 
         helper.getContainedResources().addAll(originalResources);
         helper.getSelectedResources().addAll(addedResources);
@@ -330,8 +349,10 @@ public class DefaultVisualizationModelTest {
      */
     @Test
     public void viewItemIsSelectedOnChangeWhenAddedResourcesAreAlreadySelected() {
-        ResourceSet originalResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
-        ResourceSet addedResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 2);
+        ResourceSet originalResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 1);
+        ResourceSet addedResources = ResourceSetTestUtils.createResources(
+                ResourceSetTestUtils.TYPE_1, 2);
 
         helper.getContainedResources().addAll(originalResources);
         helper.getSelectedResources().addAll(addedResources);

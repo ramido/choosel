@@ -29,8 +29,8 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
@@ -49,9 +49,9 @@ import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultResourceModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultSelectionModel;
@@ -62,8 +62,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.implementation
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.FixedSlotResolversVisualizationModelDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
@@ -166,7 +166,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     }
 
     protected VisualMappingsControl createVisualMappingsControl(
-            ResourceGrouping resourceGrouping,
+            HasResourceCategorizer resourceGrouping,
             ManagedSlotMappingConfiguration uiModel) {
 
         // TODO change configuration to configurationUIModel
@@ -223,28 +223,26 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
 
-        ResourceGrouping resourceGrouping = new ResourceGrouping(
-                new ResourceByUriMultiCategorizer(),
-                new DefaultResourceSetFactory());
-
-        resourceGrouping.setResourceSet(resourceModel.getResources());
-
-        VisualizationModel viewModel = new FixedSlotResolversVisualizationModelDecorator(
+        VisualizationModel visualizationModel = new FixedSlotResolversVisualizationModelDecorator(
                 new DefaultVisualizationModel(contentDisplay,
                         selectionModel.getSelectionProxy(),
-                        hoverModel.getResources(), viewItemBehaviors,
-                        resourceGrouping, logger), fixedSlotResolvers);
+                        hoverModel.getResources(), viewItemBehaviors, logger,
+                        new DefaultResourceSetFactory(),
+                        new ResourceByUriMultiCategorizer()),
+                fixedSlotResolvers);
+
+        visualizationModel.setContentResourceSet(resourceModel.getResources());
 
         ManagedSlotMappingConfiguration uiModel = new ManagedSlotMappingConfiguration(
-                resolverFactoryProvider, slotMappingInitializer, viewModel,
-                viewModel);
+                resolverFactoryProvider, slotMappingInitializer,
+                visualizationModel, visualizationModel);
         /**
          * Visual Mappings Control is what sets up the side panel section that
          * handles mapping the slot to its resolvers.
          * 
          */
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
-                resourceGrouping, uiModel);
+                visualizationModel, uiModel);
         assert visualMappingsControl != null : "createVisualMappingsControl must not return null";
 
         LightweightList<ViewPart> viewParts = createViewParts(contentType);
@@ -259,18 +257,19 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         String label = contentDisplay.getName();
 
-        viewModel.addHandler(new VisualItemContainerChangeEventHandler() {
-            @Override
-            public void onViewItemContainerChanged(
-                    VisualItemContainerChangeEvent event) {
+        visualizationModel
+                .addHandler(new VisualItemContainerChangeEventHandler() {
+                    @Override
+                    public void onViewItemContainerChanged(
+                            VisualItemContainerChangeEvent event) {
 
-                visualMappingsControl
-                        .updateConfigurationForChangedViewItems(event
-                                .getContainer().getViewItems());
-            }
-        });
+                        visualMappingsControl
+                                .updateConfigurationForChangedViewItems(event
+                                        .getContainer().getViewItems());
+                    }
+                });
 
-        viewModel.addHandler(new SlotMappingChangedHandler() {
+        visualizationModel.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
 
@@ -288,18 +287,17 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 } else {
                     assert oldResolver instanceof ManagedVisualItemValueResolver;
 
-                    visualMappingsControl
-                            .updateConfigurationForChangedSlotMapping(
-                                    e.getSlot(),
-                                    (ManagedVisualItemValueResolver) oldResolver,
-                                    (ManagedVisualItemValueResolver) resolver);
+                    visualMappingsControl.updateConfigurationForChangedSlotMapping(
+                            e.getSlot(),
+                            (ManagedVisualItemValueResolver) oldResolver,
+                            (ManagedVisualItemValueResolver) resolver);
                 }
             }
         });
 
         DefaultView view = new DefaultView(contentDisplay, label, contentType,
                 selectionModelPresenter, resourceModelPresenter,
-                visualMappingsControl, sidePanelSections, viewModel,
+                visualMappingsControl, sidePanelSections, visualizationModel,
                 resourceModel, selectionModel);
 
         for (ViewPart viewPart : viewParts) {

@@ -37,7 +37,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationM
 
 /**
  * Tests the error model {@link VisualItemResolutionErrorModel} of the
- * {@link VisualizationModel} subsystem implemented using {@link DefaultVisualizationModel}.
+ * {@link VisualizationModel} subsystem implemented using
+ * {@link DefaultVisualizationModel}.
  * 
  * @author Lars Grammel
  */
@@ -63,13 +64,14 @@ public class DefaultVisualizationModelErrorTest {
 
         underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
 
-        getResourceSetFromUnderTest().add(ResourceSetTestUtils.createResource(1));
+        getResourceSetFromUnderTest().add(
+                ResourceSetTestUtils.createResource(1));
 
         assertThat(underTest.hasErrors(), is(false));
     }
 
     private ResourceSet getResourceSetFromUnderTest() {
-        return underTest.getResourceGrouping().getResourceSet();
+        return underTest.getContentResourceSet();
     }
 
     @Test
@@ -124,7 +126,8 @@ public class DefaultVisualizationModelErrorTest {
     }
 
     private void setResolver(Slot[] slots, Resource... resources) {
-        VisualItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(ResourceSetTestUtils.toResourceSet(resources));
+        VisualItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(ResourceSetTestUtils
+                .toResourceSet(resources));
         underTest.setResolver(slots[0], resolver);
     }
 
@@ -159,7 +162,8 @@ public class DefaultVisualizationModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        getResourceSetFromUnderTest().add(ResourceSetTestUtils.createResource(1));
+        getResourceSetFromUnderTest().add(
+                ResourceSetTestUtils.createResource(1));
 
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[0]));
@@ -171,7 +175,8 @@ public class DefaultVisualizationModelErrorTest {
 
         underTest = helper.createTestViewModel();
 
-        getResourceSetFromUnderTest().add(ResourceSetTestUtils.createResource(1));
+        getResourceSetFromUnderTest().add(
+                ResourceSetTestUtils.createResource(1));
 
         underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
         assertThat(underTest.hasErrors(), is(true));
