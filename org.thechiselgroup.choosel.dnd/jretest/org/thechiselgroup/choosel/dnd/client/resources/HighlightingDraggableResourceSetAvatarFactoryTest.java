@@ -22,7 +22,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +30,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.HighlightingResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
@@ -67,7 +67,7 @@ public class HighlightingDraggableResourceSetAvatarFactoryTest {
 
     @Test
     public void addDisposeHook() {
-        underTest.createAvatar(createResources(1));
+        underTest.createAvatar(ResourceSetTestUtils.createResources(1));
 
         ArgumentCaptor<Disposable> argument = ArgumentCaptor
                 .forClass(Disposable.class);
@@ -101,7 +101,7 @@ public class HighlightingDraggableResourceSetAvatarFactoryTest {
         MockitoAnnotations.initMocks(this);
         DndTestHelpers.mockDragClientBundle(bridge);
 
-        resources = spy(createResources(1));
+        resources = spy(ResourceSetTestUtils.createResources(1));
         hoverModel = spy(new HighlightingModel());
 
         underTest = new HighlightingDraggableResourceSetAvatarFactory(delegate,

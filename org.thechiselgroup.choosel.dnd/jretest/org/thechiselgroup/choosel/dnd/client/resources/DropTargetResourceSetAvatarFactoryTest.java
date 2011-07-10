@@ -19,7 +19,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,12 +27,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.dnd.client.resources.DropTargetResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;
 
 public class DropTargetResourceSetAvatarFactoryTest {
@@ -51,7 +49,7 @@ public class DropTargetResourceSetAvatarFactoryTest {
 
     @Test
     public void addDisposeHook() {
-        underTest.createAvatar(createResources(1));
+        underTest.createAvatar(ResourceSetTestUtils.createResources(1));
 
         ArgumentCaptor<Disposable> argument = ArgumentCaptor
                 .forClass(Disposable.class);
@@ -64,7 +62,7 @@ public class DropTargetResourceSetAvatarFactoryTest {
 
     @Test
     public void enableDropTarget() {
-        underTest.createAvatar(createResources(1));
+        underTest.createAvatar(ResourceSetTestUtils.createResources(1));
 
         verify(dropTargetManager, times(1)).enableDropTarget(dragAvatar);
     }

@@ -20,7 +20,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -52,7 +52,7 @@ public class UpdateResourceSetAvatarWhenLabelChangesManagerTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        resources = spy(createLabeledResources(INITIAL_LABEL, "type", 2));
+        resources = spy(ResourceSetTestUtils.createLabeledResources(INITIAL_LABEL, "type", 2));
 
         when(avatar.getResourceSet()).thenReturn(resources);
         when(
@@ -77,7 +77,7 @@ public class UpdateResourceSetAvatarWhenLabelChangesManagerTest {
 
         argument.getValue().onResourcesChanged(
                 new ResourceSetAvatarResourcesChangedEvent(avatar,
-                        createLabeledResources("label", "type", 1), resources));
+                        ResourceSetTestUtils.createLabeledResources("label", "type", 1), resources));
 
         verify(avatar, times(1)).setText("label");
     }

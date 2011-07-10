@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.visualization.behaviors;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Before;
@@ -26,7 +25,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction.Type;
@@ -57,7 +56,7 @@ public class HighlightingViewItemBehaviorTest {
         underTest.onViewItemRemoved(viewItem);
 
         assertThat(hoverModel.getResources(),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     /**
@@ -74,7 +73,7 @@ public class HighlightingViewItemBehaviorTest {
                 new VisualItemInteraction(Type.DRAG_END));
 
         assertThat(hoverModel.getResources(),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
@@ -83,7 +82,7 @@ public class HighlightingViewItemBehaviorTest {
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         assertThat(hoverModel.getResources(),
-                containsExactly(createResources(1, 2)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2)));
     }
 
     @Before
@@ -92,7 +91,7 @@ public class HighlightingViewItemBehaviorTest {
 
         hoverModel = spy(new HighlightingModel());
 
-        resources = createResources(1, 2);
+        resources = ResourceSetTestUtils.createResources(1, 2);
         when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
         when(viewItem.getResources()).thenReturn(resources);
 

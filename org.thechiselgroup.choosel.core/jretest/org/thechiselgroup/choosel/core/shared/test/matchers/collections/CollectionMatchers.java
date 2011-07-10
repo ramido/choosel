@@ -20,7 +20,6 @@ import static org.thechiselgroup.choosel.core.client.util.collections.Collection
 import java.util.Collection;
 
 import org.hamcrest.Matcher;
-import org.thechiselgroup.choosel.core.client.resources.UriList;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
@@ -63,11 +62,6 @@ public final class CollectionMatchers {
                 .toCollection(expected));
     }
 
-    // TODO move
-    public static Matcher<UriList> containsUrisExactly(String... expectedUris) {
-        return new UriListEqualsMatcher(expectedUris);
-    }
-
     public static <T> Matcher<T[]> equalsArray(T... expected) {
         return new ArrayEqualsMatcher<T>(expected);
     }
@@ -80,6 +74,10 @@ public final class CollectionMatchers {
         return CollectionMatchers.<T> isContainedIn(expected.toList());
     }
 
+    public static <T> Matcher<LightweightCollection<T>> isEmpty(Class<T> clazz) {
+        return new IsEmptyLightweightCollectionMatcher<T>();
+    }
+
     public static <T> Matcher<Delta<T>> matchesDelta(
             Matcher<?> addedElementsMatcher, Matcher<?> updatedElementsMatcher,
             Matcher<?> removedElementsMatcher) {
@@ -89,12 +87,6 @@ public final class CollectionMatchers {
     }
 
     private CollectionMatchers() {
-    }
-
-    public static <T> Matcher<LightweightCollection<T>> isEmptyLightweightCollection(
-            final Class<T> clazz) {
-    
-        return new IsEmptyLightweightCollectionMatcher<T>(clazz);
     }
 
 }

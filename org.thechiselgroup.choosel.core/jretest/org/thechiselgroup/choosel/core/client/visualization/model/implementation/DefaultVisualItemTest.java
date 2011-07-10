@@ -21,7 +21,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Before;
@@ -31,14 +30,13 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteractionHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultSlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteractionHandler;
 
 public class DefaultVisualItemTest {
 
@@ -55,263 +53,263 @@ public class DefaultVisualItemTest {
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingNoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(5, 6),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingOneContainedContainedResourceOutOfTwoResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1, 5),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingOnePlusOneContainedContainedResourceOutOfTwoResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateHighlightedResources(createResources(2, 5),
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(2, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1, 2)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2)));
     }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingOnePlusTwoContainedResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateHighlightedResources(createResources(2, 3),
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1, 2, 3)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2, 3)));
     }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingOnePlusZeroContainedResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateHighlightedResources(createResources(5, 6),
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingTwoContainedResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1, 2)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2)));
     }
 
     @Test
     public void getHighlightedResourcesAfterHighlightedSubsetIsRemoved() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
-        resources.removeAll(createResources(1, 2));
+        resources.removeAll(ResourceSetTestUtils.createResources(1, 2));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getHighlightedResourcesAfterRemoveHighlightingNoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(5, 6));
+                ResourceSetTestUtils.createResources(5, 6));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getHighlightedResourcesAfterRemoveHighlightingOneFromOneContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1, 6));
+                ResourceSetTestUtils.createResources(1, 6));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getHighlightedResourcesAfterRemoveHighlightingOneFromTwoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(2, 5));
+                ResourceSetTestUtils.createResources(2, 5));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getHighlightedResourcesAfterRemoveHighlightingTwoFromTwoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1, 2));
+                ResourceSetTestUtils.createResources(1, 2));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getHighlightedResourcesAfterRemoveHighlightingZeroFromOneContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(5, 6));
+                ResourceSetTestUtils.createResources(5, 6));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingNoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(5, 6),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingOneContainedContainedResourceOutOfTwoResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1, 5),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingOnePlusOneContainedContainedResourceOutOfTwoResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateSelectedResources(createResources(2, 5),
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(2, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1, 2)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2)));
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingOnePlusTwoContainedResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateSelectedResources(createResources(2, 3),
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1, 2, 3)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2, 3)));
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingOnePlusZeroContainedResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateSelectedResources(createResources(5, 6),
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingTwoContainedResources() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1, 2)));
+                containsExactly(ResourceSetTestUtils.createResources(1, 2)));
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingNoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(5, 6));
+                ResourceSetTestUtils.createResources(5, 6));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingOneFromOneContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1, 6));
+                ResourceSetTestUtils.createResources(1, 6));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingOneFromTwoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(2, 5));
+                ResourceSetTestUtils.createResources(2, 5));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingTwoFromTwoContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1, 2));
+                ResourceSetTestUtils.createResources(1, 2));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingZeroFromOneContainedResource() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(5, 6));
+                ResourceSetTestUtils.createResources(5, 6));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources(1)));
+                containsExactly(ResourceSetTestUtils.createResources(1)));
     }
 
     @Test
     public void getSelectedResourcesAfterSelectedSubsetIsRemoved() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
-        resources.removeAll(createResources(1, 2));
+        resources.removeAll(ResourceSetTestUtils.createResources(1, 2));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
     }
 
     @Test
     public void getSlotValue() {
-        resources.addAll(createResources(1, 2, 3, 4));
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
 
         when(slotMappingConfiguration.resolve(eq(numberSlot), eq(underTest)))
                 .thenReturn(2d);
@@ -322,20 +320,20 @@ public class DefaultVisualItemTest {
 
     @Test
     public void getSlotValueClearCacheForAllResourcesOnResourceSetChange() {
-        resources.addAll(createResources(1, 2, 3, 4));
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
 
         when(slotMappingConfiguration.resolve(eq(numberSlot), eq(underTest)))
                 .thenReturn(2d, 3d);
 
         underTest.getValue(numberSlot);
-        resources.removeAll(createResources(1));
+        resources.removeAll(ResourceSetTestUtils.createResources(1));
         Object result = underTest.getValue(numberSlot);
         assertEquals(3d, result);
     }
 
     @Test
     public void getSlotValueClearCacheForAllResourcesOnSlotChange() {
-        resources.addAll(createResources(1, 2, 3, 4));
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
 
         when(slotMappingConfiguration.resolve(eq(numberSlot), eq(underTest)))
                 .thenReturn(2d, 3d);
@@ -348,17 +346,17 @@ public class DefaultVisualItemTest {
 
     @Test
     public void highlightStatusAfterHighlightedSubsetIsRemoved() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
-        resources.removeAll(createResources(1, 2));
+        resources.removeAll(ResourceSetTestUtils.createResources(1, 2));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
     }
 
     @Test
     public void highlightStatusCompleteWhenTwoOutOfTwoResourcesHighlighted() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.FULL, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -366,8 +364,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void highlightStatusNoneWhenZeroOutOfTwoResourcesHighlighted() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateHighlightedResources(createResources(),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -375,8 +373,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void highlightStatusNoneWhenZeroOutOfZeroResourcesHighlighted() {
-        resources.addAll(createResources());
-        underTest.updateHighlightedResources(createResources(),
+        resources.addAll(ResourceSetTestUtils.createResources());
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -384,8 +382,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void highlightStatusPartialWhenOneOutOfTwoResourcesHighlighted() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.PARTIAL, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -404,17 +402,17 @@ public class DefaultVisualItemTest {
 
     @Test
     public void selectionStatusAfterSelectedSubsetIsRemoved() {
-        resources.addAll(createResources(1, 2, 3, 4));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
-        resources.removeAll(createResources(1, 2));
+        resources.removeAll(ResourceSetTestUtils.createResources(1, 2));
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
     }
 
     @Test
     public void selectStatusCompleteWhenTwoOutOfTwoResourcesSelected() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.FULL, underTest.getStatus(Subset.SELECTED));
@@ -422,8 +420,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void selectStatusNoneWhenZeroOutOfTwoResourcesSelected() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateSelectedResources(createResources(),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
@@ -431,8 +429,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void selectStatusNoneWhenZeroOutOfZeroResourcesSelected() {
-        resources.addAll(createResources());
-        underTest.updateSelectedResources(createResources(),
+        resources.addAll(ResourceSetTestUtils.createResources());
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
@@ -440,8 +438,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void selectStatusPartialWhenOneOutOfTwoResourcesSelected() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(Status.PARTIAL, underTest.getStatus(Subset.SELECTED));
@@ -466,8 +464,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void statusIsHighlighted() {
-        resources.addAll(createResources(1));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.FULL, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -475,10 +473,10 @@ public class DefaultVisualItemTest {
 
     @Test
     public void statusIsHighlightedSelected() {
-        resources.addAll(createResources(1));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.updateSelectedResources(createResources(1),
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.FULL, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.FULL, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -486,20 +484,20 @@ public class DefaultVisualItemTest {
 
     @Test
     public void statusIsNotHighlightedAfterRemovingHighlightedResources() {
-        resources.addAll(createResources(1));
-        underTest.updateHighlightedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1));
+                ResourceSetTestUtils.createResources(1));
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
     }
 
     @Test
     public void statusIsNotHighlightedOnEmptyAdd() {
-        resources.addAll(createResources(1));
-        underTest.updateHighlightedResources(createResources(2),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(2),
                 LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -507,20 +505,20 @@ public class DefaultVisualItemTest {
 
     @Test
     public void statusIsNotSelectedAfterRemovingSelectedResources() {
-        resources.addAll(createResources(1));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1));
+                ResourceSetTestUtils.createResources(1));
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
     }
 
     @Test
     public void statusIsNotSelectedOnEmptyAdd() {
-        resources.addAll(createResources(1));
-        underTest.updateSelectedResources(createResources(2),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(2),
                 LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -528,8 +526,8 @@ public class DefaultVisualItemTest {
 
     @Test
     public void statusIsSelected() {
-        resources.addAll(createResources(1));
-        underTest.updateSelectedResources(createResources(1),
+        resources.addAll(ResourceSetTestUtils.createResources(1));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.FULL, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
@@ -537,41 +535,41 @@ public class DefaultVisualItemTest {
 
     @Test
     public void statusPartiallyHighlightedAfterOneResourceIsRemovedFromHighlight() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1));
+                ResourceSetTestUtils.createResources(1));
         assertEquals(Status.NONE, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.PARTIAL, underTest.getStatus(Subset.HIGHLIGHTED));
     }
 
     @Test
     public void statusPartiallyHighlightedSelectedAfterOneResourceIsRemovedFromHighlightAndSelection() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateHighlightedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateHighlightedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1));
-        underTest.updateSelectedResources(createResources(1, 2),
+                ResourceSetTestUtils.createResources(1));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1));
+                ResourceSetTestUtils.createResources(1));
         assertEquals(Status.PARTIAL, underTest.getStatus(Subset.SELECTED));
         assertEquals(Status.PARTIAL, underTest.getStatus(Subset.HIGHLIGHTED));
     }
 
     @Test
     public void statusPartiallySelectedAfterOneResourceIsRemovedFromSelect() {
-        resources.addAll(createResources(1, 2));
-        underTest.updateSelectedResources(createResources(1, 2),
+        resources.addAll(ResourceSetTestUtils.createResources(1, 2));
+        underTest.updateSelectedResources(ResourceSetTestUtils.createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
-                createResources(1));
+                ResourceSetTestUtils.createResources(1));
         assertEquals(Status.NONE, underTest.getStatus(Subset.HIGHLIGHTED));
         assertEquals(Status.PARTIAL, underTest.getStatus(Subset.SELECTED));
     }

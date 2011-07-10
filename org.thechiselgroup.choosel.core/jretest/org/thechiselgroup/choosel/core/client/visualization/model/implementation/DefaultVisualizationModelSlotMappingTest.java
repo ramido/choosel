@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.junit.Assert.assertEquals;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 
@@ -25,6 +24,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -33,7 +33,6 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.CalculationResolver;
 
 public class DefaultVisualizationModelSlotMappingTest {
@@ -100,7 +99,7 @@ public class DefaultVisualizationModelSlotMappingTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        helper.getContainedResources().addAll(toResourceSet(r1, r2, r3));
+        helper.getContainedResources().addAll(ResourceSetTestUtils.toResourceSet(r1, r2, r3));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
     }

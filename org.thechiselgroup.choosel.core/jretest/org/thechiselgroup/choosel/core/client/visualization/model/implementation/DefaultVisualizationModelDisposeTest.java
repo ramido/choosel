@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 

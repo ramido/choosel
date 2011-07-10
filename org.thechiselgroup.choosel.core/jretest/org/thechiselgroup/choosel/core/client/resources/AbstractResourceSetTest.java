@@ -16,9 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources;
 
 import static org.junit.Assert.assertEquals;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourceSetChanged;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.captureOnResourceSetChanged;
 
 import org.mockito.Mock;
 
@@ -32,12 +30,12 @@ public class AbstractResourceSetTest {
     protected ResourceSetChangedEventHandler changedHandler;
 
     protected void verifyChangeHandlerNotCalled() {
-        verifyOnResourceSetChanged(0, changedHandler);
+        captureOnResourceSetChanged(0, changedHandler);
     }
 
     protected void verifyOnResourcesAdded(int... resourceNumbers) {
-        ResourcesTestHelper.verifyOnResourcesAdded(
-                createResources(resourceNumbers), changedHandler);
+        ResourceSetTestUtils.verifyOnResourcesAdded(
+                ResourceSetTestUtils.createResources(resourceNumbers), changedHandler);
     }
 
     protected HandlerRegistration registerEventHandler() {
@@ -49,7 +47,7 @@ public class AbstractResourceSetTest {
     }
 
     protected void assertContainsResource(int resourceNumber, boolean expected) {
-        assertEquals(expected, underTestAsResourceSet.contains(createResource(resourceNumber)));
+        assertEquals(expected, underTestAsResourceSet.contains(ResourceSetTestUtils.createResource(resourceNumber)));
     }
 
 }

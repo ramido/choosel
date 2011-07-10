@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingManager;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 
 public class HighlightingManagerTest {

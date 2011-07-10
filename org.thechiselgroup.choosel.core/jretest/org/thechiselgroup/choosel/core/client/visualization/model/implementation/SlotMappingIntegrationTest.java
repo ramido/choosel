@@ -15,9 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import java.util.HashMap;
@@ -36,19 +37,17 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultSlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.TestSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
@@ -126,7 +125,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource = TestResourceSetFactory.createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 1);
         resource.putValue(property2, 2);
         resourceGrouping.getResourceSet().add(resource);
@@ -202,7 +201,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource1 = TestResourceSetFactory.createResource(1);
+        Resource resource1 = ResourceSetTestUtils.createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, 2);
 
@@ -226,7 +225,7 @@ public class SlotMappingIntegrationTest {
         viewItems = model.getViewItems();
         assertTrue(viewItems.size() == 0);
 
-        Resource resource2 = createResource(2);
+        Resource resource2 = ResourceSetTestUtils.createResource(2);
         resource2.putValue(property1, 1);
 
         resourceGrouping.getResourceSet().add(resource2);
@@ -269,7 +268,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource1 = createResource(1);
+        Resource resource1 = ResourceSetTestUtils.createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, 2);
 
@@ -355,7 +354,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel viewModel = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource = TestResourceSetFactory.createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 1);
         // unresolvable by either resolvers
         resource.putValue(property2, "a");
@@ -416,7 +415,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel viewModel = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource = TestResourceSetFactory.createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
 
         resourceGrouping.getResourceSet().add(resource);
 
@@ -485,7 +484,7 @@ public class SlotMappingIntegrationTest {
         slotMappingConfiguration.setResolver(requiredSlots[0], resolver);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource = TestResourceSetFactory.createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 2);
         resourceGrouping.getResourceSet().add(resource);
 
@@ -533,7 +532,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource1 = TestResourceSetFactory.createResource(1);
+        Resource resource1 = ResourceSetTestUtils.createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, 2);
 
@@ -578,7 +577,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource1 = TestResourceSetFactory.createResource(1);
+        Resource resource1 = ResourceSetTestUtils.createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, 2);
 
@@ -637,7 +636,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource = TestResourceSetFactory.createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 1);
         resourceGrouping.getResourceSet().add(resource);
 
@@ -706,7 +705,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
-        Resource resource1 = TestResourceSetFactory.createResource(1);
+        Resource resource1 = ResourceSetTestUtils.createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, "a");
 
@@ -770,7 +769,7 @@ public class SlotMappingIntegrationTest {
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         resourceGrouping.getResourceSet().add(
-                TestResourceSetFactory.createResource(1));
+                ResourceSetTestUtils.createResource(1));
 
         /* Test results */
         LightweightCollection<VisualItem> viewItems = model.getViewItems();
@@ -818,7 +817,7 @@ public class SlotMappingIntegrationTest {
         DefaultVisualizationModel model = createViewModel(resourceGrouping);
         resourceGrouping.setResourceSet(new DefaultResourceSet());
 
-        Resource resource = TestResourceSetFactory.createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 1);
         resourceGrouping.getResourceSet().add(resource);
 

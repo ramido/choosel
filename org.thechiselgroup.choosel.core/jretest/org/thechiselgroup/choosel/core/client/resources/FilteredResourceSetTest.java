@@ -18,9 +18,7 @@ package org.thechiselgroup.choosel.core.client.resources;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourceSetChanged;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.captureOnResourceSetChanged;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +78,7 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
     }
 
     private void addToSource(int... resourceNumbers) {
-        source.addAll(createResources(resourceNumbers));
+        source.addAll(ResourceSetTestUtils.createResources(resourceNumbers));
     }
 
     @Test
@@ -120,12 +118,12 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
         registerEventHandler();
         invertOnSource(1, 2, 3, 4);
 
-        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1,
+        ResourceSetChangedEvent event = captureOnResourceSetChanged(1,
                 changedHandler).getValue();
         assertThat(event.getRemovedResources(),
-                CollectionMatchers.containsExactly(createResources(1)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(1)));
         assertThat(event.getAddedResources(),
-                CollectionMatchers.containsExactly(createResources(2)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(2)));
     }
 
     @Test
@@ -150,7 +148,7 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
     }
 
     private void invertOnSource(int... resourceNumbers) {
-        source.invertAll(createResources(resourceNumbers));
+        source.invertAll(ResourceSetTestUtils.createResources(resourceNumbers));
     }
 
     private void preparePredicate(int resourceNumber, boolean value) {
@@ -161,7 +159,7 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
 
     private void preparePredicate(int resourceNumber, boolean value,
             Predicate<Resource> predicate) {
-        when(predicate.evaluate(createResource(resourceNumber))).thenReturn(
+        when(predicate.evaluate(ResourceSetTestUtils.createResource(resourceNumber))).thenReturn(
                 value);
     }
 
@@ -177,7 +175,7 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
     }
 
     private void removeFromSource(int... resourceNumbers) {
-        source.removeAll(createResources(resourceNumbers));
+        source.removeAll(ResourceSetTestUtils.createResources(resourceNumbers));
     }
 
     @Before

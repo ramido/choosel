@@ -20,9 +20,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,9 +30,9 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultResourceModel;
-import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultResourceModelPresenter;
 
 public class DefaultResourceModelPresenterTest {
 
@@ -51,7 +48,7 @@ public class DefaultResourceModelPresenterTest {
 
     @Test
     public void addingUnlabeledSetDoesNotChangeOriginalSetsPresenter() {
-        Resource resource = createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         DefaultResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
 
@@ -62,22 +59,22 @@ public class DefaultResourceModelPresenterTest {
 
     @Test
     public void allResourcesPresenterContainsSetWithAllResources() {
-        resourceModel.addResourceSet(createLabeledResources(1));
-        resourceModel.addUnnamedResources(createResources(2));
+        resourceModel.addResourceSet(ResourceSetTestUtils.createLabeledResources(1));
+        resourceModel.addUnnamedResources(ResourceSetTestUtils.createResources(2));
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
         verify(allResourcesPresenter, times(1)).addResourceSet(
                 argument.capture());
 
-        assertEquals(true, argument.getValue().contains(createResource(1)));
-        assertEquals(true, argument.getValue().contains(createResource(2)));
+        assertEquals(true, argument.getValue().contains(ResourceSetTestUtils.createResource(1)));
+        assertEquals(true, argument.getValue().contains(ResourceSetTestUtils.createResource(2)));
         assertEquals(2, argument.getValue().size());
     }
 
     @Test
     public void callOriginalSetsPresenterOnLabeledResourcesAdded() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         resourceModel.addResourceSet(resources);
 
@@ -86,7 +83,7 @@ public class DefaultResourceModelPresenterTest {
 
     @Test
     public void callOriginalSetsPresenterOnLabeledResourcesAddedOnlyOnce() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         resourceModel.addResourceSet(resources);
         resourceModel.addResourceSet(resources);
@@ -96,7 +93,7 @@ public class DefaultResourceModelPresenterTest {
 
     @Test
     public void callResourceSetsPresenterOnLabeledResourcesRemoved() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
+        ResourceSet resources = ResourceSetTestUtils.createLabeledResources(1, 2, 3);
 
         resourceModel.addResourceSet(resources);
         resourceModel.removeResourceSet(resources);
@@ -107,7 +104,7 @@ public class DefaultResourceModelPresenterTest {
 
     @Test
     public void doNotCallOriginalSetsPresenterOnAddingUnlabeledResources() {
-        Resource resource = createResource(1);
+        Resource resource = ResourceSetTestUtils.createResource(1);
         DefaultResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
 

@@ -18,7 +18,10 @@ package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.createSlots;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
@@ -41,19 +44,13 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItemResolutionErrorModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.TestSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 
 /**
  * 

@@ -16,7 +16,9 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.equalsArray;
 
 import java.util.HashMap;
@@ -30,7 +32,6 @@ import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.FixedSlotResolversVisualizationModelDecorator;
 
 public class FixedSlotResolversViewModelDecoratorTest {
 

@@ -20,7 +20,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +31,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarEnabledStatusEvent;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarEnabledStatusEventHandler;
@@ -70,7 +70,7 @@ public class PopupResourceSetAvatarFactoryTest {
     @Test
     public void disablePopupManagerIfAvatarGetsDisabled() {
         when(avatar.isEnabled()).thenReturn(true);
-        underTest.createAvatar(createResources(1));
+        underTest.createAvatar(ResourceSetTestUtils.createResources(1));
 
         ArgumentCaptor<ResourceSetAvatarEnabledStatusEventHandler> argument = ArgumentCaptor
                 .forClass(ResourceSetAvatarEnabledStatusEventHandler.class);
@@ -86,7 +86,7 @@ public class PopupResourceSetAvatarFactoryTest {
     @Test
     public void disablePopupManagerIfAvatarIsDisabled() {
         when(avatar.isEnabled()).thenReturn(false);
-        underTest.createAvatar(createResources(1));
+        underTest.createAvatar(ResourceSetTestUtils.createResources(1));
 
         verify(popupManager, times(1)).setEnabled(false);
     }
@@ -94,7 +94,7 @@ public class PopupResourceSetAvatarFactoryTest {
     @Test
     public void enablePopupManagerIfAvatarIsEnabled() {
         when(avatar.isEnabled()).thenReturn(true);
-        underTest.createAvatar(createResources(1));
+        underTest.createAvatar(ResourceSetTestUtils.createResources(1));
 
         verify(popupManager, times(1)).setEnabled(true);
     }
@@ -104,7 +104,7 @@ public class PopupResourceSetAvatarFactoryTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        resources = spy(createResources(1));
+        resources = spy(ResourceSetTestUtils.createResources(1));
 
         List<Action> actions = Collections.emptyList();
         underTest = new PopupResourceSetAvatarFactory(delegate, viewAccessor,

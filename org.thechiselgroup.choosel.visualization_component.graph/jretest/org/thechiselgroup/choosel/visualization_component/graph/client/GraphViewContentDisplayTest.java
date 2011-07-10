@@ -24,11 +24,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.createViewItem;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.createViewItems;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.toResourceSet;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.After;
@@ -44,8 +39,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper;
-import org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
@@ -58,6 +52,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.TestViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemTestUtils;
 import org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.ArcSettings;
@@ -125,7 +120,7 @@ public class GraphViewContentDisplayTest {
         init();
         arcTypeReturnsArcs(any(VisualItem.class));
 
-        LightweightCollection<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightCollection<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
 
         simulateAddViewItems(viewItems);
 
@@ -139,14 +134,14 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void addResourceItemToAllResource() {
-        ResourceSet resourceSet = createResources(1);
-        VisualItem viewItem = createViewItem("1", resourceSet);
+        ResourceSet resourceSet = ResourceSetTestUtils.createResources(1);
+        VisualItem viewItem = VisualItemTestUtils.createViewItem("1", resourceSet);
 
         init();
 
         simulateAddViewItems(LightweightCollections.toCollection(viewItem));
 
-        resourceSet.add(createResource(2));
+        resourceSet.add(ResourceSetTestUtils.createResource(2));
 
         assertThat(underTest.getAllResources(), containsExactly(resourceSet));
     }
@@ -161,7 +156,7 @@ public class GraphViewContentDisplayTest {
     @Test
     public void arcsAreAddedWhenAddingResourceItems() {
         String arcId = "arcid";
-        LightweightList<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -177,7 +172,7 @@ public class GraphViewContentDisplayTest {
     @Test
     public void arcsAreRemovedWhenSettingArcTypeNotInvisible() {
         String arcId = "arcid";
-        LightweightList<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -200,7 +195,7 @@ public class GraphViewContentDisplayTest {
 
         arcTypeReturnsArcs(any(VisualItem.class), createArc("arcid1", 1, 2));
         underTest.setArcTypeVisible(arcTypeId, false);
-        simulateAddViewItems(createViewItems(1, 2));
+        simulateAddViewItems(VisualItemTestUtils.createViewItems(1, 2));
         underTest.setArcTypeVisible(arcTypeId, true);
 
         verifyArcShown("arcid1", 1, 2);
@@ -267,7 +262,7 @@ public class GraphViewContentDisplayTest {
 
         arcTypeReturnsArcs(any(VisualItem.class), createArc("arcid1", 1, 2));
         underTest.setArcTypeVisible(arcTypeId, false);
-        simulateAddViewItems(createViewItems(1, 2));
+        simulateAddViewItems(VisualItemTestUtils.createViewItems(1, 2));
 
         verifyNoArcAdded();
     }
@@ -279,7 +274,7 @@ public class GraphViewContentDisplayTest {
 
         arcTypeReturnsArcs(any(VisualItem.class), createArc("arcid1", 1, 2),
                 createArc("arcid2", 2, 1));
-        simulateAddViewItems(createViewItems(1));
+        simulateAddViewItems(VisualItemTestUtils.createViewItems(1));
 
         verifyNoArcAdded();
     }
@@ -288,8 +283,8 @@ public class GraphViewContentDisplayTest {
     public void getAllNodes() {
         init();
 
-        VisualItem viewItem1 = createViewItem(1);
-        VisualItem viewItem2 = createViewItem(2);
+        VisualItem viewItem1 = VisualItemTestUtils.createViewItem(1);
+        VisualItem viewItem2 = VisualItemTestUtils.createViewItem(2);
 
         simulateAddViewItems(LightweightCollections.toCollection(viewItem1,
                 viewItem2));
@@ -316,9 +311,9 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
         init();
 
-        Resource resource = createResource(1);
-        VisualItem viewItem = ResourcesTestHelper.createViewItem("1",
-                toResourceSet(resource));
+        Resource resource = ResourceSetTestUtils.createResource(1);
+        VisualItem viewItem = VisualItemTestUtils.createViewItem("1",
+                ResourceSetTestUtils.toResourceSet(resource));
 
         stubColorSlotValues(viewItem);
         callback.addViewItem(viewItem);
@@ -338,8 +333,8 @@ public class GraphViewContentDisplayTest {
     public void removeResourceItemFromAllResource() {
         init();
 
-        ResourceSet resourceSet = createResources(1);
-        VisualItem viewItem = createViewItem("1", resourceSet);
+        ResourceSet resourceSet = ResourceSetTestUtils.createResources(1);
+        VisualItem viewItem = VisualItemTestUtils.createViewItem("1", resourceSet);
 
         stubColorSlotValues(viewItem);
         callback.addViewItem(viewItem);
@@ -350,7 +345,7 @@ public class GraphViewContentDisplayTest {
                 .<Slot> emptyCollection());
 
         assertThat(underTest.getAllResources(),
-                containsExactly(createResources()));
+                containsExactly(ResourceSetTestUtils.createResources()));
 
     }
 
@@ -360,11 +355,11 @@ public class GraphViewContentDisplayTest {
         String groupId1 = "1";
         String groupId2 = "2";
 
-        ResourceSet resourceSet1 = createResources(1);
-        ResourceSet resourceSet2 = createResources(2);
+        ResourceSet resourceSet1 = ResourceSetTestUtils.createResources(1);
+        ResourceSet resourceSet2 = ResourceSetTestUtils.createResources(2);
 
-        VisualItem resourceItem1 = createViewItem(groupId1, resourceSet1);
-        VisualItem resourceItem2 = createViewItem(groupId2, resourceSet2);
+        VisualItem resourceItem1 = VisualItemTestUtils.createViewItem(groupId1, resourceSet1);
+        VisualItem resourceItem2 = VisualItemTestUtils.createViewItem(groupId2, resourceSet2);
 
         LightweightCollection<VisualItem> resourceItems = LightweightCollections
                 .toCollection(resourceItem1, resourceItem2);
@@ -399,11 +394,11 @@ public class GraphViewContentDisplayTest {
         String groupId1 = "1";
         String groupId2 = "2";
 
-        ResourceSet resourceSet1 = createResources(1);
-        ResourceSet resourceSet2 = createResources(2);
+        ResourceSet resourceSet1 = ResourceSetTestUtils.createResources(1);
+        ResourceSet resourceSet2 = ResourceSetTestUtils.createResources(2);
 
-        VisualItem viewItem1 = createViewItem(groupId1, resourceSet1);
-        VisualItem viewItem2 = createViewItem(groupId2, resourceSet2);
+        VisualItem viewItem1 = VisualItemTestUtils.createViewItem(groupId1, resourceSet1);
+        VisualItem viewItem2 = VisualItemTestUtils.createViewItem(groupId2, resourceSet2);
 
         LightweightCollection<VisualItem> viewItems = LightweightCollections
                 .toCollection(viewItem1, viewItem2);
@@ -430,7 +425,7 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcColorOnContainerChangesColorOfExistingArcs() {
-        LightweightList<VisualItem> resourceItems = createViewItems(1, 2);
+        LightweightList<VisualItem> resourceItems = VisualItemTestUtils.createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -456,7 +451,7 @@ public class GraphViewContentDisplayTest {
         String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
-        LightweightList<VisualItem> resourceItems = createViewItems(1, 2);
+        LightweightList<VisualItem> resourceItems = VisualItemTestUtils.createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -479,7 +474,7 @@ public class GraphViewContentDisplayTest {
         arcStyleProviderReturnArcType();
         init();
 
-        LightweightList<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
         Arc arc = createArc("arcid", 1, 2);
         arcTypeReturnsArcs(eq(viewItems.get(0)), arc);
         arcTypeReturnsArcs(eq(viewItems.get(1)));
@@ -501,7 +496,7 @@ public class GraphViewContentDisplayTest {
         arcStyleProviderReturnArcType();
         init();
 
-        LightweightList<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
         String newStyle = ArcSettings.ARC_STYLE_DASHED;
         underTest.getArcItemContainer(arcTypeId).setArcStyle(newStyle);
 
@@ -520,7 +515,7 @@ public class GraphViewContentDisplayTest {
         arcStyleProviderReturnArcType();
         init();
 
-        LightweightList<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
         Arc arc = createArc("arcid", 1, 2);
         arcTypeReturnsArcs(eq(viewItems.get(0)), arc);
         arcTypeReturnsArcs(eq(viewItems.get(1)));
@@ -542,7 +537,7 @@ public class GraphViewContentDisplayTest {
         arcStyleProviderReturnArcType();
         init();
 
-        LightweightList<VisualItem> viewItems = ResourcesTestHelper
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils
                 .createViewItems(1, 2);
         int newThickness = 4;
         underTest.getArcItemContainer(arcTypeId).setArcThickness(newThickness);
@@ -585,7 +580,7 @@ public class GraphViewContentDisplayTest {
         when(arcType.getDefaultArcThickness()).thenReturn(arcThickness);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-                TestResourceSetFactory.TYPE_1);
+                ResourceSetTestUtils.TYPE_1);
 
         when(registry.getAutomaticExpander(any(String.class))).thenReturn(
                 automaticExpander);
@@ -615,7 +610,7 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void updateArcsForResourceItems() {
-        LightweightList<VisualItem> viewItems = createViewItems(1, 2);
+        LightweightList<VisualItem> viewItems = VisualItemTestUtils.createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();

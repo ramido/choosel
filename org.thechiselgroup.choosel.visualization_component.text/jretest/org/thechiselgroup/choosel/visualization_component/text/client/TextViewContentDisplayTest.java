@@ -20,8 +20,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.createViewItem;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
@@ -33,7 +31,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
@@ -41,6 +39,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDis
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemTestUtils;
 
 public class TextViewContentDisplayTest {
 
@@ -61,7 +60,7 @@ public class TextViewContentDisplayTest {
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
         // create resource item that contains 2 resources
-        VisualItem viewItem = createViewItem("", createResources(1, 2));
+        VisualItem viewItem = VisualItemTestUtils.createViewItem("", ResourceSetTestUtils.createResources(1, 2));
 
         when(viewItem.getValue(TextVisualization.FONT_SIZE_SLOT)).thenReturn(
                 new Double(2));
@@ -111,7 +110,7 @@ public class TextViewContentDisplayTest {
         underTest.init(callback);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-                TestResourceSetFactory.TYPE_1);
+                ResourceSetTestUtils.TYPE_1);
     }
 
     @After

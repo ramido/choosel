@@ -22,8 +22,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.verifyOnResourceSetChanged;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.captureOnResourceSetChanged;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,9 +72,9 @@ public class ProxyResourceSetTest {
         underTest.addEventHandler(resourcesChangedHandler);
         underTest.dispose();
 
-        resourceSets[0].addAll(createResources(3, 4));
+        resourceSets[0].addAll(ResourceSetTestUtils.createResources(3, 4));
 
-        verifyOnResourceSetChanged(0, resourcesChangedHandler);
+        captureOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
@@ -84,9 +83,9 @@ public class ProxyResourceSetTest {
         underTest.setDelegate(resourceSets[1]);
         underTest.addEventHandler(resourcesChangedHandler);
 
-        resourceSets[0].addAll(createResources(3, 4));
+        resourceSets[0].addAll(ResourceSetTestUtils.createResources(3, 4));
 
-        verifyOnResourceSetChanged(0, resourcesChangedHandler);
+        captureOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
@@ -95,9 +94,9 @@ public class ProxyResourceSetTest {
         underTest.addEventHandler(resourcesChangedHandler);
         underTest.dispose();
 
-        resourceSets[0].removeAll(createResources(1, 2));
+        resourceSets[0].removeAll(ResourceSetTestUtils.createResources(1, 2));
 
-        verifyOnResourceSetChanged(0, resourcesChangedHandler);
+        captureOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
@@ -106,9 +105,9 @@ public class ProxyResourceSetTest {
         underTest.setDelegate(resourceSets[1]);
         underTest.addEventHandler(resourcesChangedHandler);
 
-        resourceSets[0].removeAll(createResources(1, 2));
+        resourceSets[0].removeAll(ResourceSetTestUtils.createResources(1, 2));
 
-        verifyOnResourceSetChanged(0, resourcesChangedHandler);
+        captureOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
@@ -129,13 +128,13 @@ public class ProxyResourceSetTest {
         underTest.setDelegate(resourceSets[0]);
         underTest.addEventHandler(resourcesChangedHandler);
 
-        resourceSets[0].addAll(createResources(3, 4));
+        resourceSets[0].addAll(ResourceSetTestUtils.createResources(3, 4));
 
-        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+        ResourceSetChangedEvent firedEvent = captureOnResourceSetChanged(1,
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getAddedResources().toList(),
-                CollectionMatchers.containsExactly(createResources(3, 4)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(3, 4)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -145,13 +144,13 @@ public class ProxyResourceSetTest {
         underTest.setDelegate(resourceSets[1]);
         underTest.addEventHandler(resourcesChangedHandler);
 
-        resourceSets[1].addAll(createResources(4, 5));
+        resourceSets[1].addAll(ResourceSetTestUtils.createResources(4, 5));
 
-        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+        ResourceSetChangedEvent firedEvent = captureOnResourceSetChanged(1,
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getAddedResources().toList(),
-                CollectionMatchers.containsExactly(createResources(4, 5)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(4, 5)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -162,13 +161,13 @@ public class ProxyResourceSetTest {
 
         underTest.setDelegate(resourceSets[3]);
 
-        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1,
+        ResourceSetChangedEvent event = captureOnResourceSetChanged(1,
                 resourcesChangedHandler).getValue();
 
         assertThat(event.getAddedResources().toList(),
-                CollectionMatchers.containsExactly(createResources(4, 5)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(4, 5)));
         assertThat(event.getRemovedResources().toList(),
-                CollectionMatchers.containsExactly(createResources(1, 2)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(1, 2)));
 
         assertSame(underTest, event.getTarget());
     }
@@ -178,13 +177,13 @@ public class ProxyResourceSetTest {
         underTest.setDelegate(resourceSets[0]);
         underTest.addEventHandler(resourcesChangedHandler);
 
-        resourceSets[0].removeAll(createResources(1, 2));
+        resourceSets[0].removeAll(ResourceSetTestUtils.createResources(1, 2));
 
-        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+        ResourceSetChangedEvent firedEvent = captureOnResourceSetChanged(1,
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getRemovedResources().toList(),
-                CollectionMatchers.containsExactly(createResources(1, 2)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(1, 2)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -194,13 +193,13 @@ public class ProxyResourceSetTest {
         underTest.setDelegate(resourceSets[1]);
         underTest.addEventHandler(resourcesChangedHandler);
 
-        resourceSets[1].removeAll(createResources(2, 3));
+        resourceSets[1].removeAll(ResourceSetTestUtils.createResources(2, 3));
 
-        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+        ResourceSetChangedEvent firedEvent = captureOnResourceSetChanged(1,
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getRemovedResources().toList(),
-                CollectionMatchers.containsExactly(createResources(2, 3)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(2, 3)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -246,9 +245,9 @@ public class ProxyResourceSetTest {
         underTest = new ProxyResourceSet();
 
         resourceSets = new ResourceSet[4];
-        resourceSets[0] = createResources(1, 2);
-        resourceSets[1] = createResources(2, 3);
-        resourceSets[2] = createResources(1, 2, 3);
-        resourceSets[3] = createResources(3, 4, 5);
+        resourceSets[0] = ResourceSetTestUtils.createResources(1, 2);
+        resourceSets[1] = ResourceSetTestUtils.createResources(2, 3);
+        resourceSets[2] = ResourceSetTestUtils.createResources(1, 2, 3);
+        resourceSets[3] = ResourceSetTestUtils.createResources(3, 4, 5);
     }
 }

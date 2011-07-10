@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.command;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 
 public interface TestUndoableCommandWithDescription extends UndoableCommand,

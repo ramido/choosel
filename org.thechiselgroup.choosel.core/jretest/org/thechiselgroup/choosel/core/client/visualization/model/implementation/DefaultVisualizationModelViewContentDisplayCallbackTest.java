@@ -20,9 +20,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.resources.ResourcesTestHelper.containsViewItemsForExactResourceSets;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.*;
-import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.*;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolver;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanNeverResolve;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 
 import java.util.NoSuchElementException;
 
@@ -31,15 +32,15 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
     @Test
     public void containsViewItemsReturnsFalseForViewItemsWithErrors() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
         helper.addToContainedResources(resources);
@@ -75,7 +76,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
     @Test
     public void containsViewItemsReturnsTrueForViewItemsWithoutErrors() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(resources);
@@ -87,7 +88,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
     @Test
     public void getByIDReturnsCorrectViewItem() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(resources);
@@ -99,23 +100,24 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         viewItems.add(callback.getViewItem(underTest.getViewItems()
                 .getFirstElement().getId()));
 
-        assertThat(viewItems, containsViewItemsForExactResourceSets(resources));
+        assertThat(viewItems,
+                VisualItemTestUtils
+                        .containsViewItemsForExactResourceSets(resources));
     }
 
     @Test(expected = NoSuchElementException.class)
     public void getByIDThrowsExceptionIfViewItemHasErrors() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
         helper.addToContainedResources(resources);
 
-        callback.getViewItem(underTest.getViewItems().getFirstElement()
-                .getId());
+        callback.getViewItem(underTest.getViewItems().getFirstElement().getId());
     }
 
     @Test
     public void getByResourcesIsEmptyForResourceInvalid() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
 
@@ -126,55 +128,59 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
     @Test
     public void getByResourcesOnlyReturnsValidViewItems() {
-        ResourceSet resources1 = createResources(TYPE_1, 1);
-        ResourceSet resources2 = createResources(TYPE_2, 2);
+        ResourceSet resources1 = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
+        ResourceSet resources2 = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 2);
 
         underTest.setResolver(slot,
                 mockResolverThatCanResolveExactResourceSet(resources1));
 
-        ResourceSet allResources = createResources(TYPE_1);
+        ResourceSet allResources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1);
         allResources.addAll(resources1);
         allResources.addAll(resources2);
 
         helper.addToContainedResources(allResources);
 
         assertThat(callback.getViewItems(allResources),
-                containsViewItemsForExactResourceSets(resources1));
+                VisualItemTestUtils
+                        .containsViewItemsForExactResourceSets(resources1));
     }
 
     @Test
     public void getByResourcesReturnsValidViewItemForOneResource() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
 
         helper.addToContainedResources(resources);
 
         assertThat(callback.getViewItems(resources),
-                containsViewItemsForExactResourceSets(resources));
+                VisualItemTestUtils
+                        .containsViewItemsForExactResourceSets(resources));
     }
 
     @Test
     public void getViewItemsExcludesViewItemsWithErrors() {
-        ResourceSet resources1 = createResources(TYPE_1, 1);
-        ResourceSet resources2 = createResources(TYPE_2, 1);
+        ResourceSet resources1 = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
+        ResourceSet resources2 = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_2, 1);
 
         setCanResolverIfContainsResourceExactlyResolver(resources1);
-        helper.addToContainedResources(toResourceSet(resources1, resources2));
+        helper.addToContainedResources(ResourceSetTestUtils.toResourceSet(resources1, resources2));
 
         assertThat(callback.getViewItems(),
-                containsViewItemsForExactResourceSets(resources1));
+                VisualItemTestUtils
+                        .containsViewItemsForExactResourceSets(resources1));
     }
 
     @Test
     public void getViewItemsReturnsAddedViewItem() {
-        ResourceSet resources = createResources(TYPE_1, 1);
+        ResourceSet resources = ResourceSetTestUtils.createResources(ResourceSetTestUtils.TYPE_1, 1);
 
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(resources);
 
         assertThat(callback.getViewItems(),
-                containsViewItemsForExactResourceSets(resources));
+                VisualItemTestUtils
+                        .containsViewItemsForExactResourceSets(resources));
     }
 
     private void setCanResolverIfContainsResourceExactlyResolver(

@@ -27,7 +27,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItemResolutionErrorModel;
 
 public class DefaultVisualItemResolutionErrorModelTest {
 

@@ -20,8 +20,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -55,16 +54,16 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
 
     @Test
     public void disableIfResourceRemoved() {
-        resources.add(createResource(2));
+        resources.add(ResourceSetTestUtils.createResource(2));
         underTest.init();
-        resources.remove(createResource(2));
+        resources.remove(ResourceSetTestUtils.createResource(2));
 
         verify(avatar, times(1)).setEnabled(false);
     }
 
     @Test
     public void enabledIfNotEmptyByDefault() {
-        resources.add(createResource(2));
+        resources.add(ResourceSetTestUtils.createResource(2));
         underTest.init();
 
         verify(avatar, times(1)).setEnabled(true);
@@ -73,7 +72,7 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
     @Test
     public void enableIfResourceAdded() {
         underTest.init();
-        resources.add(createResource(2));
+        resources.add(ResourceSetTestUtils.createResource(2));
 
         verify(avatar, times(1)).setEnabled(true);
     }
@@ -83,7 +82,7 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        resources = spy(createResources());
+        resources = spy(ResourceSetTestUtils.createResources());
 
         when(avatar.getResourceSet()).thenReturn(resources);
         when(
@@ -108,7 +107,7 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
 
         argument.getValue().onResourcesChanged(
                 new ResourceSetAvatarResourcesChangedEvent(avatar,
-                        createResources(1), resources));
+                        ResourceSetTestUtils.createResources(1), resources));
 
         verify(avatar, times(1)).setEnabled(false);
     }

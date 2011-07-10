@@ -18,8 +18,6 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.resources.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +25,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
@@ -35,7 +34,6 @@ import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
-import org.thechiselgroup.choosel.dnd.client.resources.SelectionPresenterDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -72,10 +70,10 @@ public class SelectionPresenterDropCommandFactoryTest {
 
     @Test
     public void canDropWhenIntersectionExists() {
-        viewResources = spy(createResources(1, 2));
+        viewResources = spy(ResourceSetTestUtils.createResources(1, 2));
         when(resourceModel.getResources()).thenReturn(viewResources);
 
-        sourceSet = spy(createLabeledResources(2, 3));
+        sourceSet = spy(ResourceSetTestUtils.createLabeledResources(2, 3));
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
 
         assertEquals(true, dropCommandFactory.canDrop(dragAvatar));
@@ -83,7 +81,7 @@ public class SelectionPresenterDropCommandFactoryTest {
 
     @Test
     public void cannotDropIfNoResourcesFromSetAreContainedInView() {
-        viewResources = spy(createResources(3, 4, 5));
+        viewResources = spy(ResourceSetTestUtils.createResources(3, 4, 5));
         when(resourceModel.getResources()).thenReturn(viewResources);
         when(viewModel.getContentResourceSet()).thenReturn(viewResources);
         assertEquals(false, dropCommandFactory.canDrop(dragAvatar));
@@ -100,9 +98,9 @@ public class SelectionPresenterDropCommandFactoryTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        sourceSet = spy(createLabeledResources(1, 2));
-        viewResources = spy(createResources(1, 3, 4, 5));
-        selectionSet = spy(createResources(4));
+        sourceSet = spy(ResourceSetTestUtils.createLabeledResources(1, 2));
+        viewResources = spy(ResourceSetTestUtils.createResources(1, 3, 4, 5));
+        selectionSet = spy(ResourceSetTestUtils.createResources(4));
 
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
         when(accessor.findView(dropTarget)).thenReturn(view);
