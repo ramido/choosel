@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.initialization
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.PreconfiguredViewItemResolverUIFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphExpansionRegistry;
@@ -46,7 +46,7 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
     }
 
     @Override
-    protected Class<? extends ViewItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
+    protected Class<? extends VisualItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
         return PreconfiguredViewItemResolverUIFactoryProvider.class;
     }
 
