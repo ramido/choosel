@@ -32,11 +32,13 @@ public final class ResourceSetTestUtils {
 
     public static final String SET_LABEL = "label";
 
-    public static final String TEXT_PROPERTY = "text-1";
-
     public static final String NUMBER_PROPERTY_1 = "number-1";
 
     public static final String NUMBER_PROPERTY_2 = "number-2";
+
+    public static final String TEXT_PROPERTY_1 = "text-1";
+
+    public static final String TEXT_PROPERTY_2 = "text-2";
 
     public static void assertContainsResource(boolean expected,
             ResourceSet resourceSet, String resourceType, int resourceId) {
@@ -87,7 +89,9 @@ public final class ResourceSetTestUtils {
 
         r.putValue(NUMBER_PROPERTY_1, value1);
         r.putValue(NUMBER_PROPERTY_2, value2);
-        r.putValue(TEXT_PROPERTY, value1 + " " + value2);
+
+        r.putValue(TEXT_PROPERTY_1, "t1 " + index);
+        r.putValue(TEXT_PROPERTY_2, "t2 " + index);
 
         return r;
     }

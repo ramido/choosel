@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBeha
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 
-public class CompositeViewItemBehavior implements VisualItemBehavior {
+public class CompositeVisualItemBehavior implements VisualItemBehavior {
 
     private List<VisualItemBehavior> behaviors = new ArrayList<VisualItemBehavior>();
 

@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
@@ -141,7 +140,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         initResourceGrouping();
         initHighlightingModel();
         initContentDisplay();
-        initVisualItems();
+
+        assert getContentResourceSet().isEmpty();
     }
 
     @Override
@@ -535,27 +535,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
                                 event.getRemovedResources());
                     }
                 }));
-    }
-
-    // XXX needs extension
-    private void initVisualItems() {
-        // TODO large add operation
-        // TODO use error model... --> test case
-        LightweightList<VisualItem> addedVisualItems = CollectionFactory
-                .createLightweightList();
-        for (Entry<String, ResourceSet> entry : resourceGrouping
-                .getCategorizedResourceSets().entrySet()) {
-
-            /*
-             * TODO calculate intersection between content set and
-             * highlighted/selected resource (OPTIMIZATION)
-             */
-            addedVisualItems.add(createVisualItem(entry.getKey(),
-                    entry.getValue(), highlightedResources, selectedResources));
-        }
-
-        // TODO clear for the ones with error --> test
-        // TODO test --> notify view content display
     }
 
     @Override

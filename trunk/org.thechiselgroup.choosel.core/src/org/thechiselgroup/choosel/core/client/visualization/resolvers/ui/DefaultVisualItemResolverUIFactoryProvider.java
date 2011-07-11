@@ -19,13 +19,13 @@ import java.util.Map;
 
 import com.google.inject.Inject;
 
-public class DefaultViewItemResolverUIFactoryProvider implements
-        ViewItemValueResolverUIControllerFactoryProvider {
+public class DefaultVisualItemResolverUIFactoryProvider implements
+        VisualItemValueResolverUIControllerFactoryProvider {
 
     protected Map<String, ViewItemValueResolverUIControllerFactory> idToFactoryMap;
 
     @Inject
-    public DefaultViewItemResolverUIFactoryProvider() {
+    public DefaultVisualItemResolverUIFactoryProvider() {
 
     }
 
