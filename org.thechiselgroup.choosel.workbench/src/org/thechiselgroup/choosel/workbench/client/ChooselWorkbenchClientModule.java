@@ -55,8 +55,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Hig
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.DefaultViewItemResolverUIFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.DefaultVisualItemResolverUIFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.dnd.client.popup.DragSupportingPopupManagerFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.AllSetDropTargetManager;
 import org.thechiselgroup.choosel.dnd.client.resources.DefaultDropTargetCapabilityChecker;
@@ -329,7 +329,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(VisualItemValueResolverFactoryProvider.class).to(
                 getResolverFactoryProviderClass()).in(Singleton.class);
 
-        bind(ViewItemValueResolverUIControllerFactoryProvider.class).to(
+        bind(VisualItemValueResolverUIControllerFactoryProvider.class).to(
                 getResolverFactoryUIProviderClass()).in(Singleton.class);
 
         bindDisplays();
@@ -414,8 +414,8 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         return DefaultVisualItemResolverFactoryProvider.class;
     }
 
-    protected Class<? extends ViewItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
-        return DefaultViewItemResolverUIFactoryProvider.class;
+    protected Class<? extends VisualItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
+        return DefaultVisualItemResolverUIFactoryProvider.class;
     }
 
     protected Class<? extends ResourceCategorizer> getResourceCategorizerClass() {

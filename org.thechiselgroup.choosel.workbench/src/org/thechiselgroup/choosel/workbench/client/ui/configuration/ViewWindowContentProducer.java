@@ -42,7 +42,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.CommandDrivenSwitchSelectionOnClickViewItemBehaviour;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeVisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
@@ -66,7 +66,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Manage
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultResourceModelPresenter;
 import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultSelectionModelPresenter;
 import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultVisualMappingsControl;
@@ -118,7 +118,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     private HighlightingModel hoverModel;
 
     @Inject
-    private ViewItemValueResolverUIControllerFactoryProvider uiProvider;
+    private VisualItemValueResolverUIControllerFactoryProvider uiProvider;
 
     @Inject
     private PopupManagerFactory popupManagerFactory;
@@ -210,7 +210,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         Map<Slot, VisualItemValueResolver> fixedSlotResolvers = viewContentDisplayConfiguration
                 .getFixedSlotResolvers(contentType);
 
-        CompositeViewItemBehavior viewItemBehaviors = new CompositeViewItemBehavior();
+        CompositeVisualItemBehavior viewItemBehaviors = new CompositeVisualItemBehavior();
 
         // viewItemBehaviors.add(new ViewInteractionLogger(logger));
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));

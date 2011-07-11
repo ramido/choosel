@@ -95,7 +95,7 @@ public final class VisualItemTestUtils {
         return createViewItem("" + id, ResourceSetTestUtils.createResources(id));
     }
 
-    public static Matcher<LightweightCollection<VisualItem>> containsViewItemsForExactResourceSets(
+    public static Matcher<LightweightCollection<VisualItem>> containsVisualItemsForExactResourceSets(
             final ResourceSet... resourceSets) {
     
         return new TypeSafeMatcher<LightweightCollection<VisualItem>>() {

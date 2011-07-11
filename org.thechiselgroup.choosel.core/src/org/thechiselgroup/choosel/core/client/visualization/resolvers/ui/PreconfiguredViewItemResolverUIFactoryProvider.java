@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.Pr
 import com.google.inject.Inject;
 
 public class PreconfiguredViewItemResolverUIFactoryProvider extends
-        DefaultViewItemResolverUIFactoryProvider {
+        DefaultVisualItemResolverUIFactoryProvider {
 
     @Inject
     public void registerFactories() {

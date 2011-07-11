@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemWithResourcesMatcher.containsEqualResources;
@@ -126,8 +127,7 @@ public class DefaultVisualizationModelErrorTest {
     }
 
     private void setResolver(Slot[] slots, Resource... resources) {
-        VisualItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(ResourceSetTestUtils
-                .toResourceSet(resources));
+        VisualItemValueResolver resolver = mockResolverThatCanResolveExactResourceSet(toResourceSet(resources));
         underTest.setResolver(slots[0], resolver);
     }
 

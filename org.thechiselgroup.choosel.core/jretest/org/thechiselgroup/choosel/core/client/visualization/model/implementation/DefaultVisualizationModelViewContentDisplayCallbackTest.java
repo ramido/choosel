@@ -102,7 +102,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         assertThat(viewItems,
                 VisualItemTestUtils
-                        .containsViewItemsForExactResourceSets(resources));
+                        .containsVisualItemsForExactResourceSets(resources));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -142,7 +142,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         assertThat(callback.getVisualItems(allResources),
                 VisualItemTestUtils
-                        .containsViewItemsForExactResourceSets(resources1));
+                        .containsVisualItemsForExactResourceSets(resources1));
     }
 
     @Test
@@ -155,7 +155,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         assertThat(callback.getVisualItems(resources),
                 VisualItemTestUtils
-                        .containsViewItemsForExactResourceSets(resources));
+                        .containsVisualItemsForExactResourceSets(resources));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         assertThat(callback.getVisualItems(),
                 VisualItemTestUtils
-                        .containsViewItemsForExactResourceSets(resources1));
+                        .containsVisualItemsForExactResourceSets(resources1));
     }
 
     @Test
@@ -180,7 +180,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         assertThat(callback.getVisualItems(),
                 VisualItemTestUtils
-                        .containsViewItemsForExactResourceSets(resources));
+                        .containsVisualItemsForExactResourceSets(resources));
     }
 
     private void setCanResolverIfContainsResourceExactlyResolver(

@@ -37,7 +37,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Manage
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIController;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -59,12 +59,12 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
-    private final ViewItemValueResolverUIControllerFactoryProvider uiProvider;
+    private final VisualItemValueResolverUIControllerFactoryProvider uiProvider;
 
     public DefaultVisualMappingsControl(
             ManagedSlotMappingConfiguration slotMappingConfigurationUIModel,
             HasResourceCategorizer resourceGrouping,
-            ViewItemValueResolverUIControllerFactoryProvider uiProvider,
+            VisualItemValueResolverUIControllerFactoryProvider uiProvider,
             VisualItemValueResolverFactoryProvider resolverFactoryProvider) {
 
         assert slotMappingConfigurationUIModel != null;
