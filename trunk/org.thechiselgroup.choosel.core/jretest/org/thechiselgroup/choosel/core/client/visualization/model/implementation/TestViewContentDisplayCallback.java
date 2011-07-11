@@ -55,7 +55,7 @@ public class TestViewContentDisplayCallback implements
     }
 
     @Override
-    public boolean containsViewItem(String viewItemId) {
+    public boolean containsVisualItem(String viewItemId) {
         return viewItemsByGroupId.containsKey(viewItemId);
     }
 
@@ -70,12 +70,12 @@ public class TestViewContentDisplayCallback implements
     }
 
     @Override
-    public VisualItem getViewItem(String groupId) {
+    public VisualItem getVisualItem(String groupId) {
         return viewItemsByGroupId.get(groupId);
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItems() {
+    public LightweightCollection<VisualItem> getVisualItems() {
         LightweightList<VisualItem> result = CollectionFactory
                 .createLightweightList();
         result.addAll(viewItemsByGroupId.values());
@@ -83,7 +83,7 @@ public class TestViewContentDisplayCallback implements
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItems(
+    public LightweightCollection<VisualItem> getVisualItems(
             Iterable<Resource> resources) {
 
         return null;

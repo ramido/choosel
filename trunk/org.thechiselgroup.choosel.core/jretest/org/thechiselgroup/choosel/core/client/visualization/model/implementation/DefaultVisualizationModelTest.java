@@ -20,18 +20,25 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -57,12 +64,37 @@ public class DefaultVisualizationModelTest {
         helper.addToContainedResources(ResourceSetTestUtils.createResources(
                 ResourceSetTestUtils.TYPE_2, 2));
 
-        assertThat(underTest.getViewItems(),
+        assertThat(underTest.getVisualItems(),
                 VisualItemTestUtils.containsViewItemsForExactResourceSets(
                         ResourceSetTestUtils.createResources(
                                 ResourceSetTestUtils.TYPE_1, 1),
                         ResourceSetTestUtils.createResources(
                                 ResourceSetTestUtils.TYPE_2, 2)));
+    }
+
+    @Test
+    public void addResourcesToInitialContentCreatesVisualItems() {
+        DefaultVisualizationModel model = new DefaultVisualizationModel(
+                helper.getViewContentDisplay(), new DefaultResourceSet(),
+                new DefaultResourceSet(), new CompositeViewItemBehavior(),
+                Logger.getAnonymousLogger(), new DefaultResourceSetFactory(),
+                new ResourceByUriMultiCategorizer());
+
+        Resource r1 = new Resource("test:1");
+        r1.putValue(RESOURCE_PROPERTY_1, "value1-1");
+        r1.putValue("property2", "value2");
+
+        Resource r2 = new Resource("test:2");
+        r2.putValue(RESOURCE_PROPERTY_1, "value1-2");
+        r2.putValue("property2", "value2");
+
+        model.getContentResourceSet().addAll(toResourceSet(r1, r2));
+        model.setCategorizer(new ResourceByPropertyMultiCategorizer("property2"));
+
+        LightweightCollection<VisualItem> visualItems = model.getVisualItems();
+        assertEquals(1, visualItems.size());
+        assertThat(visualItems.getFirstElement().getResources(),
+                containsExactly(r1, r2));
     }
 
     @Test
@@ -77,7 +109,7 @@ public class DefaultVisualizationModelTest {
         underTest.setResolver(slot, new FirstResourcePropertyResolver("text2",
                 DataType.TEXT));
 
-        List<VisualItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
 
@@ -94,7 +126,7 @@ public class DefaultVisualizationModelTest {
         helper.getSelectedResources().removeAll(resources);
 
         assertThat(
-                underTest.getViewItems().getFirstElement()
+                underTest.getVisualItems().getFirstElement()
                         .getResources(Subset.SELECTED),
                 containsExactly(ResourceSetTestUtils.createResources()));
     }
@@ -114,12 +146,12 @@ public class DefaultVisualizationModelTest {
         underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
                 "property2"));
 
-        List<VisualItem> resourceItems = underTest.getViewItems().toList();
-        assertEquals(1, resourceItems.size());
-        ResourceSet resourceItemResources = resourceItems.get(0).getResources();
-        assertEquals(2, resourceItemResources.size());
-        assertEquals(true, resourceItemResources.contains(r1));
-        assertEquals(true, resourceItemResources.contains(r2));
+        List<VisualItem> visualItems = underTest.getVisualItems().toList();
+        assertEquals(1, visualItems.size());
+        ResourceSet visualItemResources = visualItems.get(0).getResources();
+        assertEquals(2, visualItemResources.size());
+        assertEquals(true, visualItemResources.contains(r1));
+        assertEquals(true, visualItemResources.contains(r2));
     }
 
     @Test
@@ -134,7 +166,7 @@ public class DefaultVisualizationModelTest {
         underTest
                 .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
 
-        List<VisualItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
         assertEquals("category2", resourceItem.getId());
@@ -156,7 +188,7 @@ public class DefaultVisualizationModelTest {
         underTest
                 .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
 
-        List<VisualItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
         assertEquals("category1", resourceItem.getId());
@@ -171,7 +203,7 @@ public class DefaultVisualizationModelTest {
         helper.getContainedResources().addAll(resources);
 
         assertThat(
-                underTest.getViewItems().getFirstElement()
+                underTest.getVisualItems().getFirstElement()
                         .getResources(Subset.HIGHLIGHTED),
                 containsExactly(resources));
     }
@@ -188,7 +220,7 @@ public class DefaultVisualizationModelTest {
         helper.getHighlightedResources().addAll(highlightedResources2);
 
         assertThat(
-                underTest.getViewItems().getFirstElement()
+                underTest.getVisualItems().getFirstElement()
                         .getResources(Subset.HIGHLIGHTED),
                 containsExactly(viewResources));
     }
@@ -201,7 +233,7 @@ public class DefaultVisualizationModelTest {
         helper.getHighlightedResources().addAll(resources);
 
         assertThat(
-                underTest.getViewItems().getFirstElement()
+                underTest.getVisualItems().getFirstElement()
                         .getResources(Subset.HIGHLIGHTED),
                 containsExactly(ResourceSetTestUtils.createResources(1)));
     }
@@ -215,7 +247,7 @@ public class DefaultVisualizationModelTest {
         helper.getHighlightedResources().removeAll(resources);
 
         assertThat(
-                underTest.getViewItems().getFirstElement()
+                underTest.getVisualItems().getFirstElement()
                         .getResources(Subset.HIGHLIGHTED),
                 containsExactly(ResourceSetTestUtils.createResources()));
     }
@@ -235,7 +267,7 @@ public class DefaultVisualizationModelTest {
                 ResourceSetTestUtils.createResource(1));
 
         assertThat(
-                underTest.getViewItems().getFirstElement()
+                underTest.getVisualItems().getFirstElement()
                         .getResources(Subset.SELECTED),
                 containsExactly(ResourceSetTestUtils.createResources(1)));
     }
@@ -267,7 +299,7 @@ public class DefaultVisualizationModelTest {
         helper.getHighlightedResources().addAll(addedResources);
         helper.getContainedResources().addAll(addedResources);
 
-        VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        VisualItem viewItem = underTest.getVisualItems().getFirstElement();
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.HIGHLIGHTED));
         assertThat(viewItem.getResources(Subset.HIGHLIGHTED),
@@ -289,7 +321,7 @@ public class DefaultVisualizationModelTest {
         helper.getContainedResources().addAll(originalResources);
         helper.getHighlightedResources().removeAll(removedResources);
 
-        VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        VisualItem viewItem = underTest.getVisualItems().getFirstElement();
 
         assertEquals(Status.NONE, viewItem.getStatus(Subset.HIGHLIGHTED));
         assertEquals(true, viewItem.getResources(Subset.HIGHLIGHTED).isEmpty());
@@ -310,7 +342,7 @@ public class DefaultVisualizationModelTest {
         helper.getContainedResources().addAll(originalResources);
         helper.getSelectedResources().removeAll(removedResources);
 
-        VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        VisualItem viewItem = underTest.getVisualItems().getFirstElement();
 
         assertEquals(Status.NONE, viewItem.getStatus(Subset.SELECTED));
         assertEquals(true, viewItem.getResources(Subset.SELECTED).isEmpty());
@@ -332,7 +364,7 @@ public class DefaultVisualizationModelTest {
         helper.getHighlightedResources().addAll(addedResources);
         helper.getContainedResources().addAll(addedResources);
 
-        VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        VisualItem viewItem = underTest.getVisualItems().getFirstElement();
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
@@ -358,7 +390,7 @@ public class DefaultVisualizationModelTest {
         helper.getSelectedResources().addAll(addedResources);
         helper.getContainedResources().addAll(addedResources);
 
-        VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        VisualItem viewItem = underTest.getVisualItems().getFirstElement();
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
@@ -376,7 +408,7 @@ public class DefaultVisualizationModelTest {
         helper.getSelectedResources().addAll(resources);
         helper.getContainedResources().addAll(resources);
 
-        VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        VisualItem viewItem = underTest.getVisualItems().getFirstElement();
 
         assertEquals(Status.FULL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),

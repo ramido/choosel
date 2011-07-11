@@ -140,7 +140,7 @@ public class TimeLine extends AbstractViewContentDisplay {
     // TODO pull up
     protected void onAttach() {
         // add all view items
-        update(Delta.createDelta(callback.getViewItems(), LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection()),
+        update(Delta.createDelta(callback.getVisualItems(), LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -149,7 +149,7 @@ public class TimeLine extends AbstractViewContentDisplay {
         // might have been disposed (then callback would be null)
         if (callback != null) {
             // remove all view items
-            update(Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection(), callback.getViewItems()),
+            update(Delta.createDelta(LightweightCollections.<VisualItem> emptyCollection(), LightweightCollections.<VisualItem> emptyCollection(), callback.getVisualItems()),
                     LightweightCollections.<Slot> emptyCollection());
         }
     }
@@ -224,7 +224,7 @@ public class TimeLine extends AbstractViewContentDisplay {
 
         // TODO refactor
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem resourceItem : getCallback().getViewItems()) {
+            for (VisualItem resourceItem : getCallback().getVisualItems()) {
                 TimeLineItem timelineItem = (TimeLineItem) resourceItem
                         .getDisplayObject();
                 for (Slot slot : updatedSlots) {

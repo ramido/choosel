@@ -45,7 +45,7 @@ public interface VisualItemContainer {
      * @return <code>true</code>, if there is a {@link VisualItem} with the
      *         specified <code>viewItemId</code> in this container.
      */
-    boolean containsViewItem(String viewItemId);
+    boolean containsVisualItem(String viewItemId);
 
     /**
      * @Return {@link VisualItem} with the given ID.
@@ -53,17 +53,17 @@ public interface VisualItemContainer {
      * @throws NoSuchElementException
      *             thrown if there no view item with {@code viewItemId}
      */
-    VisualItem getViewItem(String viewItemId) throws NoSuchElementException;
+    VisualItem getVisualItem(String viewItemId) throws NoSuchElementException;
 
     /**
      * @return All {@link VisualItem}s in this container.
      */
-    LightweightCollection<VisualItem> getViewItems();
+    LightweightCollection<VisualItem> getVisualItems();
 
     /**
      * @return {@link VisualItem}s that contain at least one of the given
      *         {@link Resource}s.
      */
-    LightweightCollection<VisualItem> getViewItems(Iterable<Resource> resources);
+    LightweightCollection<VisualItem> getVisualItems(Iterable<Resource> resources);
 
 }

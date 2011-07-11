@@ -200,7 +200,7 @@ public class DefaultVisualItemResolutionErrorModel implements
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItemsWithErrors() {
+    public LightweightCollection<VisualItem> getVisualItemsWithErrors() {
         return viewItemsWithErrors;
     }
 

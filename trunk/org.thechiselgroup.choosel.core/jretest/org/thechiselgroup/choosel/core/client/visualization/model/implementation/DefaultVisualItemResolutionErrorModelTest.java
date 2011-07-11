@@ -224,7 +224,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
     public void reportErrorAddsViewItemToViewItemErrors() {
         underTest.reportError(slot1, viewItem1);
 
-        assertThat(underTest.getViewItemsWithErrors(),
+        assertThat(underTest.getVisualItemsWithErrors(),
                 containsExactly(viewItem1));
     }
 
@@ -280,7 +280,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
         underTest.reportError(slot1, viewItem1);
         underTest.reportError(slot1, viewItem1);
 
-        assertThat(underTest.getViewItemsWithErrors(),
+        assertThat(underTest.getVisualItemsWithErrors(),
                 containsExactly(viewItem1));
     }
 

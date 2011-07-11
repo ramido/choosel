@@ -121,7 +121,7 @@ public class DefaultVisualizationModelErrorTest {
 
         ResourceSet resources = new DefaultResourceSet();
         resources.add(resource2);
-        assertThat(underTest.getViewItemsWithErrors(),
+        assertThat(underTest.getVisualItemsWithErrors(),
                 containsEqualResources(resource2));
     }
 

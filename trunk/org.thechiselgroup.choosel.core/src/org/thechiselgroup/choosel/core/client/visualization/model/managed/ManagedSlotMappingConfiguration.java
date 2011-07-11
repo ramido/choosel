@@ -126,14 +126,14 @@ public class ManagedSlotMappingConfiguration {
     }
 
     public LightweightCollection<VisualItem> getViewItems() {
-        return visualizationModel.getViewItems();
+        return visualizationModel.getVisualItems();
     }
 
     public void handleResolverChange(Slot slot,
             VisualItemValueResolver oldResolver,
             VisualItemValueResolver resolver) {
         slotsToSlotMappings.get(slot).currentResolverWasSet(oldResolver,
-                resolver, visualizationModel.getViewItems());
+                resolver, visualizationModel.getVisualItems());
     }
 
     private void initSlotModels(Slot[] slots) {
@@ -180,7 +180,7 @@ public class ManagedSlotMappingConfiguration {
     public boolean slotHasInvalidResolver(Slot slot) {
         assert slotsToSlotMappings.containsKey(slot);
         return slotsToSlotMappings.get(slot).inValidState(
-                visualizationModel.getViewItems());
+                visualizationModel.getVisualItems());
     }
 
     /**
@@ -195,7 +195,7 @@ public class ManagedSlotMappingConfiguration {
     }
 
     private void updateVisualMappings() {
-        updateVisualMappings(visualizationModel.getViewItems());
+        updateVisualMappings(visualizationModel.getVisualItems());
     }
 
     // TODO handle view items with errors in here

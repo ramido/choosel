@@ -202,7 +202,7 @@ public class Map extends AbstractViewContentDisplay {
         renderer.onAttach();
 
         // add all view items
-        update(createAddedDelta(callback.getViewItems()),
+        update(createAddedDelta(callback.getVisualItems()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 

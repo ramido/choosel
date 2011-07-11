@@ -332,7 +332,7 @@ public class Graph extends AbstractViewContentDisplay implements
     // default visibility for test case use
     List<Node> getAllNodes() {
         List<Node> result = new ArrayList<Node>();
-        for (VisualItem viewItem : getCallback().getViewItems()) {
+        for (VisualItem viewItem : getCallback().getVisualItems()) {
             result.add(getNodeFromViewItem(viewItem));
         }
         return result;
@@ -402,7 +402,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private NodeItem[] getNodeItems() {
         LightweightCollection<VisualItem> viewItems = getCallback()
-                .getViewItems();
+                .getVisualItems();
         NodeItem[] nodes = new NodeItem[viewItems.size()];
         int i = 0;
         for (VisualItem viewItem : viewItems) {
@@ -463,7 +463,7 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     private VisualItem getViewItem(Node node) {
-        return getCallback().getViewItem(node.getId());
+        return getCallback().getVisualItem(node.getId());
     }
 
     private VisualItem getViewItem(NodeEvent<?> event) {
@@ -474,7 +474,7 @@ public class Graph extends AbstractViewContentDisplay implements
     public LightweightCollection<VisualItem> getViewItems(
             Iterable<Resource> resources) {
 
-        return getCallback().getViewItems(resources);
+        return getCallback().getVisualItems(resources);
     }
 
     @Override
@@ -494,24 +494,24 @@ public class Graph extends AbstractViewContentDisplay implements
             }
 
             @Override
-            public boolean containsViewItem(String viewItemId) {
-                return getCallback().containsViewItem(viewItemId);
+            public boolean containsVisualItem(String viewItemId) {
+                return getCallback().containsVisualItem(viewItemId);
             }
 
             @Override
-            public VisualItem getViewItem(String viewItemId) {
-                return getCallback().getViewItem(viewItemId);
+            public VisualItem getVisualItem(String viewItemId) {
+                return getCallback().getVisualItem(viewItemId);
             }
 
             @Override
-            public LightweightCollection<VisualItem> getViewItems() {
-                return getCallback().getViewItems();
+            public LightweightCollection<VisualItem> getVisualItems() {
+                return getCallback().getVisualItems();
             }
 
             @Override
-            public LightweightCollection<VisualItem> getViewItems(
+            public LightweightCollection<VisualItem> getVisualItems(
                     Iterable<Resource> resources) {
-                return getCallback().getViewItems(resources);
+                return getCallback().getVisualItems(resources);
             }
         };
 
@@ -590,7 +590,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
         assert node != null;
 
-        if (getCallback().getViewItems().size() > 1) {
+        if (getCallback().getVisualItems().size() > 1) {
             return;
         }
 
@@ -653,7 +653,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private void restoreNodeLocations(Memento state) {
         LightweightCollection<VisualItem> resourceItems = getCallback()
-                .getViewItems();
+                .getVisualItems();
         for (VisualItem resourceItem : resourceItems) {
             NodeItem item = getNodeItem(resourceItem);
             Memento nodeMemento = state.getChild(resourceItem.getId());
@@ -704,7 +704,7 @@ public class Graph extends AbstractViewContentDisplay implements
         Memento state = new Memento();
 
         LightweightCollection<VisualItem> viewItems = getCallback()
-                .getViewItems();
+                .getVisualItems();
         for (VisualItem viewItem : viewItems) {
             NodeItem item = getNodeItem(viewItem);
 
@@ -763,7 +763,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
         if (!updatedSlots.isEmpty()) {
             LightweightCollection<VisualItem> viewItems = getCallback()
-                    .getViewItems();
+                    .getVisualItems();
             for (VisualItem viewItem : viewItems) {
                 updateNode(viewItem);
             }

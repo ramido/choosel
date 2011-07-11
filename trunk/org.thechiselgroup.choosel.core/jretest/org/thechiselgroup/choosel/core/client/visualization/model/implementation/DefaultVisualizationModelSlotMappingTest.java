@@ -55,7 +55,7 @@ public class DefaultVisualizationModelSlotMappingTest {
         underTest.setResolver(numberSlot, new CalculationResolver("property1",
                 new SumCalculation()));
 
-        List<VisualItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
         resourceItem.getValue(numberSlot);
@@ -116,7 +116,7 @@ public class DefaultVisualizationModelSlotMappingTest {
         underTest.setResolver(numberSlot, new CalculationResolver("property1",
                 calculation));
 
-        List<VisualItem> resourceItems = underTest.getViewItems().toList();
+        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));

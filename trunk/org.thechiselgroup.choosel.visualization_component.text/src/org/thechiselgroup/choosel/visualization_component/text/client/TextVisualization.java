@@ -225,7 +225,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
         }
 
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem resourceItem : callback.getViewItems()) {
+            for (VisualItem resourceItem : callback.getVisualItems()) {
                 TextItem textItem = (TextItem) resourceItem.getDisplayObject();
                 textItem.updateContent();
             }

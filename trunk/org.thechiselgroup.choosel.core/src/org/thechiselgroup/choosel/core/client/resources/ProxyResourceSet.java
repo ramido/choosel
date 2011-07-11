@@ -54,8 +54,15 @@ public class ProxyResourceSet extends DelegatingResourceSet implements
     private HandlerRegistration delegateResourcesChangedHandlerRegistration;
 
     public ProxyResourceSet() {
-        super(NullResourceSet.NULL_RESOURCE_SET);
+        this(NullResourceSet.NULL_RESOURCE_SET);
+    }
+
+    public ProxyResourceSet(ResourceSet delegate) {
+        super(delegate);
+
         eventBus = new HandlerManager(this);
+
+        addEventHandlersToDelegate();
     }
 
     @Override
