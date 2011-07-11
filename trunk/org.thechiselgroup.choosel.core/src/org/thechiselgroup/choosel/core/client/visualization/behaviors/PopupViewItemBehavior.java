@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
+import org.thechiselgroup.choosel.core.shared.util.ForTest;
 
 import com.google.gwt.dom.client.NativeEvent;
 
@@ -53,7 +54,7 @@ public class PopupViewItemBehavior implements VisualItemBehavior {
         this.popupManagerFactory = popupManagerFactory;
     }
 
-    // for test
+    @ForTest
     protected PopupManager createPopupManager(final VisualItem viewItem) {
         return popupManagerFactory.createPopupManager(detailsWidgetHelper
                 .createDetailsWidget(viewItem));
@@ -99,26 +100,26 @@ public class PopupViewItemBehavior implements VisualItemBehavior {
 
     @Override
     public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
-        for (VisualItem viewItem : event.getDelta().getAddedElements()) {
-            onViewItemCreated(viewItem);
+        for (VisualItem visualItem : event.getDelta().getAddedElements()) {
+            onViewItemCreated(visualItem);
         }
         for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
             onViewItemRemoved(viewItem);
         }
     }
 
-    public void onViewItemCreated(VisualItem viewItem) {
-        assert viewItem != null;
-        assert !popupManagers.containsKey(viewItem.getId());
+    public void onViewItemCreated(VisualItem visualItem) {
+        assert visualItem != null;
+        assert !popupManagers.containsKey(visualItem.getId());
 
-        popupManagers.put(viewItem.getId(), createPopupManager(viewItem));
+        popupManagers.put(visualItem.getId(), createPopupManager(visualItem));
     }
 
-    public void onViewItemRemoved(VisualItem viewItem) {
-        assert viewItem != null;
-        assert popupManagers.containsKey(viewItem.getId());
+    public void onViewItemRemoved(VisualItem visualItem) {
+        assert visualItem != null;
+        assert popupManagers.containsKey(visualItem.getId());
 
-        popupManagers.remove(viewItem.getId());
+        popupManagers.remove(visualItem.getId());
     }
 
 }

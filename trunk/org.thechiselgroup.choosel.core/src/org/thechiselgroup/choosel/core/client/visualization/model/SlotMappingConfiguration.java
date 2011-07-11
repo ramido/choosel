@@ -42,12 +42,6 @@ public interface SlotMappingConfiguration extends
     Slot getSlotById(String slotId);
 
     /**
-     * @return {@link Slot}s that need to be configured.
-     */
-    // TODO change return type to LightweightCollection<Slot>
-    Slot[] getSlots();
-
-    /**
      * @return {@link Slot}s from {@link #getSlots()} for which no
      *         {@link VisualItemValueResolver} are configured.
      * 

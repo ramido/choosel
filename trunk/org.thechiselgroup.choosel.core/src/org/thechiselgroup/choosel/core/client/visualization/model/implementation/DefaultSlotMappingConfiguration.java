@@ -28,9 +28,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingResolutionException;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -124,25 +122,6 @@ public class DefaultSlotMappingConfiguration implements
         assert slot != null;
 
         return slotsToResolvers.containsKey(slot);
-    }
-
-    /**
-     * @throws SlotMappingResolutionException
-     *             Exception occurred while trying to resolve slot value
-     */
-    /*
-     * TODO add semantic meta-information as parameter, e.g. expected return
-     * type or context (semantic description of slot?)
-     */
-    public Object resolve(Slot slot, VisualItem viewItem)
-            throws SlotMappingResolutionException {
-
-        try {
-            assert getResolver(slot) != null;
-            return getResolver(slot).resolve(viewItem, this);
-        } catch (Exception ex) {
-            throw new SlotMappingResolutionException(slot, viewItem, ex);
-        }
     }
 
     @Override
