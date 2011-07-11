@@ -67,7 +67,7 @@ public class SwitchSelectionOnClickViewItemBehavior implements
     public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
     }
 
-    private void switchSelection(VisualItem viewItem) {
+    protected void switchSelection(VisualItem viewItem) {
         commandManager.execute(new SwitchSelectionCommand(viewItem
                 .getResources(), getSelectionModel()));
     }
