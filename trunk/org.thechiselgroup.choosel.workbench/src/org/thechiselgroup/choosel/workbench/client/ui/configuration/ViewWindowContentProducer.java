@@ -40,10 +40,10 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.CommandDrivenSwitchSelectionOnClickViewItemBehaviour;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeVisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
@@ -217,9 +217,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
         viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(
                 detailsWidgetHelper, popupManagerFactory, hoverModel));
-        viewItemBehaviors
-                .add(new CommandDrivenSwitchSelectionOnClickViewItemBehaviour(
-                        selectionModel, commandManager));
+        viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel, commandManager));
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
 

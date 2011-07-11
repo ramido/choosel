@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.behaviors;
 
+import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.resources.command.SwitchSelectionCommand;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
@@ -23,15 +25,25 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Sel
 
 /**
  * Manages {@link VisualItem} highlighting in a single view.
+ * 
+ * @author Lars Grammel
+ * @author Del Myers
  */
-public class SwitchSelectionOnClickViewItemBehavior implements VisualItemBehavior {
+public class SwitchSelectionOnClickViewItemBehavior implements
+        VisualItemBehavior {
 
     private SelectionModel selectionModel;
 
-    public SwitchSelectionOnClickViewItemBehavior(SelectionModel selectionModel) {
+    private CommandManager commandManager;
+
+    public SwitchSelectionOnClickViewItemBehavior(
+            SelectionModel selectionModel, CommandManager commandManager) {
+
         assert selectionModel != null;
+        assert commandManager != null : "CommandManager must not be null";
 
         this.selectionModel = selectionModel;
+        this.commandManager = commandManager;
     }
 
     protected SelectionModel getSelectionModel() {
@@ -39,7 +51,8 @@ public class SwitchSelectionOnClickViewItemBehavior implements VisualItemBehavio
     }
 
     @Override
-    public void onInteraction(VisualItem viewItem, VisualItemInteraction interaction) {
+    public void onInteraction(VisualItem viewItem,
+            VisualItemInteraction interaction) {
         assert viewItem != null;
         assert interaction != null;
 
@@ -54,8 +67,9 @@ public class SwitchSelectionOnClickViewItemBehavior implements VisualItemBehavio
     public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
     }
 
-    protected void switchSelection(VisualItem viewItem) {
-        selectionModel.switchSelection(viewItem.getResources());
+    private void switchSelection(VisualItem viewItem) {
+        commandManager.execute(new SwitchSelectionCommand(viewItem
+                .getResources(), getSelectionModel()));
     }
 
 }
