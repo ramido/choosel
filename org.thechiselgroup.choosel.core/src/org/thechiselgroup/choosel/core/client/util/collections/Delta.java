@@ -36,6 +36,14 @@ public class Delta<T> {
                 LightweightCollections.<T> emptyCollection());
     }
 
+    public static <T> Delta<T> createAddedRemovedDelta(
+            LightweightCollection<T> addedElements,
+            LightweightCollection<T> removedElements) {
+
+        return new Delta<T>(addedElements,
+                LightweightCollections.<T> emptyCollection(), removedElements);
+    }
+
     public static <T> Delta<T> createDelta(
             LightweightCollection<T> addedElements,
             LightweightCollection<T> updatedElements,
