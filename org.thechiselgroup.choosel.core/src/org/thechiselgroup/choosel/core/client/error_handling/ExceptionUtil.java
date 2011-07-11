@@ -15,18 +15,37 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.thechiselgroup.choosel.core.client.util.collections.SingleItemCollection;
+
 import com.google.gwt.event.shared.UmbrellaException;
 
 public final class ExceptionUtil {
 
-    private ExceptionUtil() {
+    /**
+     * Recursively unwrap and add all exceptions from {@link UmbrellaException}.
+     */
+    private static Collection<Throwable> getCauses(Collection<Throwable> errors) {
+        HashSet<Throwable> unwrappedErrors = new HashSet<Throwable>();
+        for (Throwable error : errors) {
+            if (error instanceof UmbrellaException) {
+                Set<Throwable> causes = ((UmbrellaException) error).getCauses();
+                unwrappedErrors.addAll(getCauses(causes));
+            } else {
+                unwrappedErrors.add(error);
+            }
+        }
+        return unwrappedErrors;
     }
 
-    public static Throwable unwrapCause(Throwable error) {
-        while (error instanceof UmbrellaException) {
-            error = ((UmbrellaException) error).getCause();
-        }
-        return error;
+    public static Collection<Throwable> getCauses(Throwable error) {
+        return getCauses(new SingleItemCollection<Throwable>(error));
+    }
+
+    private ExceptionUtil() {
     }
 
 }

@@ -20,12 +20,14 @@ import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class ViewWindowContent implements WindowContent, Persistable {
+public class ViewWindowContent implements WindowContent, Persistable,
+        Disposable {
 
     private View view;
 
@@ -36,6 +38,11 @@ public class ViewWindowContent implements WindowContent, Persistable {
     @Override
     public Widget asWidget() {
         return view.asWidget();
+    }
+
+    @Override
+    public void dispose() {
+        view.dispose();
     }
 
     @Override

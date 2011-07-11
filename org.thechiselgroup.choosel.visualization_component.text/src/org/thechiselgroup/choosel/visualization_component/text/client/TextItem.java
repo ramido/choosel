@@ -34,7 +34,7 @@ public class TextItem {
 
     private TextItemLabel label;
 
-    private VisualItem viewItem;
+    private VisualItem visualItem;
 
     /**
      * Flag that marks if the label of this text item has already been added to
@@ -47,18 +47,18 @@ public class TextItem {
 
     private String cachedDescription;
 
-    public TextItem(VisualItem viewItem) {
-        assert viewItem != null;
+    public TextItem(VisualItem visualItem) {
+        assert visualItem != null;
 
-        this.viewItem = viewItem;
+        this.visualItem = visualItem;
     }
 
-    public String getDescriptionValue() {
-        return (String) viewItem.getValue(TextVisualization.LABEL_SLOT);
+    public String getLabelValue() {
+        return (String) visualItem.getValue(TextVisualization.LABEL_SLOT);
     }
 
     public double getFontSizeValue() {
-        return ((Number) viewItem
+        return ((Number) visualItem
                 .getValue(TextVisualization.FONT_SIZE_SLOT)).doubleValue();
     }
 
@@ -67,7 +67,7 @@ public class TextItem {
     }
 
     public VisualItem getResourceItem() {
-        return viewItem;
+        return visualItem;
     }
 
     public void init(TextItemLabel label) {
@@ -76,7 +76,7 @@ public class TextItem {
         label.registerHandler(new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                viewItem.reportInteraction(new VisualItemInteraction(event));
+                visualItem.reportInteraction(new VisualItemInteraction(event));
             }
         });
         label.addStyleName(CSS_LIST);
@@ -124,7 +124,7 @@ public class TextItem {
          * elements when there is a change. This makes a huge difference with
          * several thousand text items.
          */
-        String description = getDescriptionValue();
+        String description = getLabelValue();
 
         if (cachedDescription == null || !cachedDescription.equals(description)) {
             label.setText(description);
@@ -133,7 +133,7 @@ public class TextItem {
     }
 
     public void updateStatusStyling() {
-        switch (viewItem.getStatus(Subset.HIGHLIGHTED)) {
+        switch (visualItem.getStatus(Subset.HIGHLIGHTED)) {
         case FULL: {
             label.addStyleName(CSS_HIGHLIGHTED);
             label.removeStyleName(CSS_PARTIALLY_HIGHLIGHTED);
@@ -151,7 +151,7 @@ public class TextItem {
             break;
         }
 
-        switch (viewItem.getStatus(Subset.SELECTED)) {
+        switch (visualItem.getStatus(Subset.SELECTED)) {
         case FULL: {
             label.addStyleName(CSS_SELECTED);
         }

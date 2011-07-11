@@ -38,8 +38,8 @@ public class DefaultDropTargetCapabilityChecker implements
 
     @Override
     public boolean isValidDrop(Slot[] slots, ResourceSet resourceSet) {
-        assert resourceSet != null;
-        assert slots != null;
+        assert slots != null : "slots must not be null";
+        assert resourceSet != null : "resourceSet must not be null";
 
         List<DataType> dataTypes = getDataTypes(slots);
 

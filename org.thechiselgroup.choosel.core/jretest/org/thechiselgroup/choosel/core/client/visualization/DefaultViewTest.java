@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
@@ -35,7 +36,8 @@ import org.thechiselgroup.choosel.core.client.visualization.ui.VisualMappingsCon
 
 public class DefaultViewTest {
 
-    public static interface DisposableVisualizationModel extends VisualizationModel, Disposable {
+    public static interface DisposableVisualizationModel extends
+            VisualizationModel, Disposable {
     }
 
     private DefaultView underTest;
@@ -79,6 +81,6 @@ public class DefaultViewTest {
                 mock(VisualMappingsControl.class),
                 LightweightCollections.<SidePanelSection> emptyCollection(),
                 viewModel, mock(ResourceModel.class),
-                mock(SelectionModel.class));
+                mock(SelectionModel.class), mock(ErrorHandler.class));
     }
 }

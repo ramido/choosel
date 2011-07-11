@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TEXT_PROPERTY_1;
@@ -31,11 +32,10 @@ import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUt
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemTestUtils.containsVisualItemsForExactResourceSets;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
-import java.util.logging.Logger;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
@@ -78,7 +78,7 @@ public class DefaultVisualizationModelTest {
         DefaultVisualizationModel model = new DefaultVisualizationModel(
                 helper.getViewContentDisplay(), new DefaultResourceSet(),
                 new DefaultResourceSet(), new CompositeVisualItemBehavior(),
-                Logger.getAnonymousLogger(), new DefaultResourceSetFactory(),
+                mock(ErrorHandler.class), new DefaultResourceSetFactory(),
                 new ResourceByUriMultiCategorizer());
 
         Resource r1 = createResource(1);

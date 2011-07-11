@@ -15,8 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization;
 
-import java.util.logging.Logger;
-
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
@@ -47,14 +46,14 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
 
     public VisualizationWidget(T contentDisplay, ResourceSet selectedResource,
             ResourceSet highlightedResources,
-            VisualItemBehavior viewItemBehavior) {
+            VisualItemBehavior viewItemBehavior, ErrorHandler errorHandler) {
 
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
         this.viewModel = new DefaultVisualizationModel(contentDisplay,
                 selectedResource, highlightedResources, viewItemBehavior,
-                Logger.getLogger(""), new DefaultResourceSetFactory(),
+                errorHandler, new DefaultResourceSetFactory(),
                 new ResourceByUriMultiCategorizer());
 
         setWidget(contentDisplay.asWidget());

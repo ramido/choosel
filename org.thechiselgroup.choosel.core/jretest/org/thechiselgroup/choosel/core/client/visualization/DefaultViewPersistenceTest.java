@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
@@ -80,7 +81,8 @@ public class DefaultViewPersistenceTest {
                 "label", "contentType", mock(Presenter.class),
                 mock(Presenter.class), mock(VisualMappingsControl.class),
                 LightweightCollections.<SidePanelSection> emptyCollection(),
-                viewModel, resourceModel, selectionModel) {
+                viewModel, resourceModel, selectionModel,
+                mock(ErrorHandler.class)) {
             @Override
             protected void initUI() {
             };

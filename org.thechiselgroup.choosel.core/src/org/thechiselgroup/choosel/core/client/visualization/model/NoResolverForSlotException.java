@@ -24,7 +24,7 @@ public class NoResolverForSlotException extends RuntimeException {
     public NoResolverForSlotException(Slot slot,
             Map<Slot, VisualItemValueResolver> slotsToResolvers) {
 
-        super("no resolver registered for slot" + slot
+        super("no resolver registered for " + slot
                 + " (resolvers registered for slots: " + slotsToResolvers + ")");
     }
 

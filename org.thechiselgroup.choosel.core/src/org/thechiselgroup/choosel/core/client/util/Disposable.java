@@ -18,9 +18,16 @@ package org.thechiselgroup.choosel.core.client.util;
 public interface Disposable {
 
     /**
+     * <p>
      * Dispose disposable objects and remove references to break cycles (garbage
      * collection in browsers might not remove objects that have reference
      * cycles).
+     * </p>
+     * <p>
+     * Should use {@link DisposeUtil} to safely dispose referenced objects.
+     * </p>
+     * 
+     * @see DisposeUtil
      */
     void dispose();
 

@@ -25,13 +25,13 @@ import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.C
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
@@ -64,7 +64,8 @@ public class SlotMappingIntegrationTest {
     @Mock
     private VisualItemBehavior viewItemBehavior;
 
-    private Logger logger = Logger.getLogger("");
+    @Mock
+    private ErrorHandler errorHandler;
 
     private static final String resolverId1 = "resolver-id-1";
 
@@ -188,7 +189,7 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = new DefaultVisualizationModel(
                 helper.getViewContentDisplay(), new DefaultResourceSet(),
-                new DefaultResourceSet(), viewItemBehavior, logger,
+                new DefaultResourceSet(), viewItemBehavior, errorHandler,
                 new DefaultResourceSetFactory(), categorizer);
         new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, model, model);

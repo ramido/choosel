@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.core.client.visualization.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
@@ -143,8 +144,12 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     private boolean isValidDrop(ResourceSetAvatar avatar) {
         View view = viewAccessor.findView(getDropTarget());
+        assert view != null;
 
-        return capabilityChecker.isValidDrop(view.getModel().getSlots(),
+        VisualizationModel model = view.getModel();
+        assert model != null;
+
+        return capabilityChecker.isValidDrop(model.getSlots(),
                 avatar.getResourceSet());
     }
 
@@ -157,9 +162,9 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
                 if (!hasCommandBeenExecuted()) {
                     executeCommand(createCommand(context));
                 }
-                
-                //add the command to the command stack, and make
-                //the manager fire an event.
+
+                // add the command to the command stack, and make
+                // the manager fire an event.
                 commandManager.execute(executedCommand);
                 executedCommand = null; // prevent undo from later onLeave
             }
