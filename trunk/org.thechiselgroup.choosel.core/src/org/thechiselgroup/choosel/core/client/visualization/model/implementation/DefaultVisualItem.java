@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
@@ -45,7 +45,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
  * 
  * @author Lars Grammel
  */
-// TODO separate out resource item controller part
 public class DefaultVisualItem implements Disposable, VisualItem {
 
     private final class CacheUpdateOnResourceSetChange implements
@@ -58,8 +57,50 @@ public class DefaultVisualItem implements Disposable, VisualItem {
 
         @Override
         public void onResourceSetChanged(ResourceSetChangedEvent event) {
-            cache.clear();
+            valueCache.clear();
         }
+    }
+
+    private final class SubsetContainer {
+
+        private ResourceSet resources = new DefaultResourceSet();
+
+        private Status cachedStatus;
+
+        private Status calculateSubsetStatus() {
+            if (resources.isEmpty()) {
+                return Status.NONE;
+            }
+
+            if (resources.containsEqualResources(content)) {
+                return Status.FULL;
+            }
+
+            return Status.PARTIAL;
+        }
+
+        public void clearStatusCache() {
+            cachedStatus = null;
+        }
+
+        public Status getStatus() {
+            if (cachedStatus == null) {
+                cachedStatus = calculateSubsetStatus();
+            }
+
+            return cachedStatus;
+        }
+
+        public void update(
+                LightweightCollection<Resource> addedSubsetResources,
+                LightweightCollection<Resource> removedSubsetResources) {
+
+            clearStatusCache();
+            resources.addAll(content.getIntersection(addedSubsetResources));
+            resources
+                    .removeAll(content.getIntersection(removedSubsetResources));
+        }
+
     }
 
     private String id;
@@ -77,11 +118,8 @@ public class DefaultVisualItem implements Disposable, VisualItem {
     // TODO dispose
     private Object displayObject;
 
-    private ResourceSet highlightedResources;
-
-    private ResourceSet selectedResources;
-
-    private Map<Subset, Status> cachedStatus = new HashMap<VisualItem.Subset, VisualItem.Status>();
+    private Map<Subset, SubsetContainer> subsets = new EnumMap<Subset, SubsetContainer>(
+            Subset.class);
 
     /**
      * PERFORMANCE: Cache for the resolved slot values of ALL subset. Maps the
@@ -89,7 +127,8 @@ public class DefaultVisualItem implements Disposable, VisualItem {
      * 
      * @see #clearValueCache(Slot)
      */
-    private Map<String, Object> cache = CollectionFactory.createStringMap();
+    private Map<String, Object> valueCache = CollectionFactory
+            .createStringMap();
 
     private final VisualItemInteractionHandler interactionHandler;
 
@@ -107,8 +146,8 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         this.valueResolverContext = valueResolverContext;
         this.interactionHandler = interactionHandler;
 
-        this.highlightedResources = new DefaultResourceSet();
-        this.selectedResources = new DefaultResourceSet();
+        this.subsets.put(Subset.SELECTED, new SubsetContainer());
+        this.subsets.put(Subset.HIGHLIGHTED, new SubsetContainer());
 
         this.content.addEventHandler(new CacheUpdateOnResourceSetChange());
         this.content.addEventHandler(new ResourceSetChangedEventHandler() {
@@ -117,8 +156,8 @@ public class DefaultVisualItem implements Disposable, VisualItem {
                 LightweightCollection<Resource> removedResources = event
                         .getRemovedResources();
 
-                highlightedResources.removeAll(removedResources);
-                selectedResources.removeAll(removedResources);
+                getResources(Subset.HIGHLIGHTED).removeAll(removedResources);
+                getResources(Subset.SELECTED).removeAll(removedResources);
             }
         });
     }
@@ -137,7 +176,7 @@ public class DefaultVisualItem implements Disposable, VisualItem {
      * </p>
      */
     public void clearValueCache(Slot slot) {
-        cache.remove(slot.getId());
+        valueCache.remove(slot.getId());
     }
 
     @Override
@@ -165,16 +204,16 @@ public class DefaultVisualItem implements Disposable, VisualItem {
     @Override
     public ResourceSet getResources(Subset subset) {
         assert subset != null;
+
         switch (subset) {
         case ALL:
             return getResources();
         case HIGHLIGHTED:
-            return highlightedResources;
         case SELECTED:
-            return selectedResources;
-        default:
-            throw new RuntimeException("should not be reached");
+            return getSubsetContainer(subset).resources;
         }
+
+        throw new RuntimeException("invalid subset: " + subset);
     }
 
     // TODO move, refactor
@@ -186,36 +225,21 @@ public class DefaultVisualItem implements Disposable, VisualItem {
     @Override
     public Status getStatus(Subset subset) {
         assert subset != null;
+
         switch (subset) {
         case ALL:
             // always containing all contained resources
             return Status.FULL;
         case HIGHLIGHTED:
         case SELECTED:
-            return getStatus(subset, getResources(subset));
-        default:
-            throw new RuntimeException("should not be reached");
+            return getSubsetContainer(subset).getStatus();
         }
+
+        throw new RuntimeException("invalid subset: " + subset);
     }
 
-    private Status getStatus(Subset subset, ResourceSet subsetResources) {
-        if (!cachedStatus.containsKey(subset)) {
-            cachedStatus.put(subset, getSubsetStatus(subsetResources));
-        }
-
-        return cachedStatus.get(subset);
-    }
-
-    private Status getSubsetStatus(ResourceSet subset) {
-        if (subset.isEmpty()) {
-            return Status.NONE;
-        }
-
-        if (subset.containsEqualResources(content)) {
-            return Status.FULL;
-        }
-
-        return Status.PARTIAL;
+    private SubsetContainer getSubsetContainer(Subset subset) {
+        return subsets.get(subset);
     }
 
     @SuppressWarnings("unchecked")
@@ -224,15 +248,15 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         assert slot != null : "slot must not be null";
 
         String slotId = slot.getId();
-        if (cache.containsKey(slotId)) {
-            return (T) cache.get(slotId);
+        if (valueCache.containsKey(slotId)) {
+            return (T) valueCache.get(slotId);
         }
 
         try {
             Object value = valueResolverContext.getResolver(slot).resolve(this,
                     valueResolverContext);
 
-            cache.put(slotId, value);
+            valueCache.put(slotId, value);
 
             return (T) value;
         } catch (NoResolverForSlotException ex) {
@@ -282,13 +306,9 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         assert addedSubsetResources != null;
         assert removedSubsetResources != null;
 
-        cachedStatus.remove(subset);
-        cache.clear();
-
-        getResources(subset).addAll(
-                content.getIntersection(addedSubsetResources));
-        getResources(subset).removeAll(
-                content.getIntersection(removedSubsetResources));
+        valueCache.clear();
+        getSubsetContainer(subset).update(addedSubsetResources,
+                removedSubsetResources);
     }
 
 }
