@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
@@ -45,20 +46,20 @@ public class FirstResourcePropertyResolverFactory extends
         if (!slot.getDataType().equals(dataType)) {
             return false;
         }
-
-        // for now, all resolvers should be applicable when there are no view
-        // items
+        // resolvers are always valid if there are no view items
         if (viewItems.isEmpty()) {
             return true;
         }
 
-        return !getSharedProperties(viewItems).isEmpty();
+        return !ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+                getValidDataType()).isEmpty();
     }
 
     @Override
     public ManagedVisualItemValueResolver create(
             LightweightCollection<VisualItem> viewItems) {
-        List<String> properties = getSharedProperties(viewItems);
+        List<String> properties = ResourceSetUtils
+                .getSharedPropertiesOfDataType(viewItems, getValidDataType());
         assert !properties.isEmpty();
 
         return create(properties.get(0));
@@ -81,6 +82,11 @@ public class FirstResourcePropertyResolverFactory extends
     @Override
     public String getLabel() {
         return "Property Selector";
+    }
+
+    @Override
+    public DataType getValidDataType() {
+        return dataType;
     }
 
 }

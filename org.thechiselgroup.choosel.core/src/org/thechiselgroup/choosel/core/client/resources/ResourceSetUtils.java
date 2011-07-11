@@ -22,7 +22,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.DataType;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 public final class ResourceSetUtils {
 
@@ -120,12 +123,57 @@ public final class ResourceSetUtils {
                 }
             }
                 break;
+            case COLOR: {
+                if (entry.getValue() instanceof Color) {
+                    properties.add(entry.getKey());
+                }
             }
 
+            case SHAPE: {
+                if (entry.getValue() instanceof String
+                        && isShape(entry.getValue())) {
+                    properties.add(entry.getKey());
+                }
+            }
+            }
+        }
+        return properties;
+    }
+
+    public static List<String> getSharedPropertiesOfDataType(
+            LightweightCollection<VisualItem> viewItems, DataType dataType) {
+
+        List<String> properties = new ArrayList<String>();
+
+        if (viewItems.isEmpty()) {
+            return properties;
         }
 
-        return properties;
+        // get all valid properties from the first viewItem
+        properties.addAll(ResourceSetUtils.getPropertiesByDataType(
+                viewItems.getFirstElement().getResources()).get(dataType));
 
+        // only keep properties that are shared by all of the resource
+        for (VisualItem viewItem : viewItems) {
+            ResourceSet resources = viewItem.getResources();
+            properties.retainAll(ResourceSetUtils.getPropertiesByDataType(
+                    resources).get(dataType));
+        }
+        return properties;
+    }
+
+    // XXX this method is a duplication of PVShape. We should probably extract
+    // these variables into core at some point
+    private static boolean isShape(Object value) {
+        if (!(value instanceof String)) {
+            return false;
+        }
+        // TODO these things are dependent on the Protovis stuff, and they
+        // should be extracted into core, and implemented in Protovis
+        return value.equals("cross") || value.equals("triangle")
+                || value.equals("diamond") || value.equals("square")
+                || value.equals("circle") || value.equals("tick")
+                || value.equals("bar");
     }
 
     public static String[] toResourceIds(ResourceSet resources) {

@@ -15,17 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
+import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
@@ -35,28 +35,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class PropertyListBoxResolverUIController implements
         ViewItemValueResolverUIController {
-
-    /**
-     * This method will return the properties that it would be ok to select from
-     * the view items. All of the resources must contain that same property
-     */
-    private static List<String> getSharedPropertiesFromViewItems(
-            LightweightCollection<VisualItem> viewItems) {
-        List<String> properties = new ArrayList<String>();
-
-        // intialize properties to be the ones in the first resource
-        VisualItem firstItem = viewItems.getFirstElement();
-        Resource firstResource = firstItem.getResources().iterator().next();
-        properties.addAll(firstResource.getProperties().keySet());
-
-        // only keep properties that are shared by all of the resource
-        for (VisualItem viewItem : viewItems) {
-            for (Resource resource : viewItem.getResources()) {
-                properties.retainAll(resource.getProperties().keySet());
-            }
-        }
-        return properties;
-    }
 
     private final PropertyDependantVisualItemValueResolverFactory resolverFactory;
 
@@ -86,7 +64,8 @@ public abstract class PropertyListBoxResolverUIController implements
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
         this(resolverFactory, uiModel, viewItems,
-                getSharedPropertiesFromViewItems(viewItems).get(0));
+                ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+                resolverFactory.getValidDataType()).get(0));
     }
 
     public PropertyListBoxResolverUIController(
@@ -100,7 +79,8 @@ public abstract class PropertyListBoxResolverUIController implements
                 new NullTransformer<String>());
         selector.setChangeHandler(propertySelectChangeHandler);
 
-        setProperties(getSharedPropertiesFromViewItems(viewItems));
+        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+        resolverFactory.getValidDataType()));
         selector.setSelectedValue(property);
     }
 
@@ -147,7 +127,8 @@ public abstract class PropertyListBoxResolverUIController implements
      */
     @Override
     public void update(LightweightCollection<VisualItem> viewItems) {
-        setProperties(getSharedPropertiesFromViewItems(viewItems));
+        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+        resolverFactory.getValidDataType()));
 
         // the new view items can not be resolved by the current resolver, and
         // the property field should be set to something that is valid

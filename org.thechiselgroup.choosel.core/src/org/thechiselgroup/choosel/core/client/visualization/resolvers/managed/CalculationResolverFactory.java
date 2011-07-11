@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -48,7 +49,8 @@ public class CalculationResolverFactory extends
             return false;
         }
 
-        return !getSharedProperties(viewItems).isEmpty();
+        return !ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+                getValidDataType()).isEmpty();
     }
 
     /**
@@ -60,7 +62,8 @@ public class CalculationResolverFactory extends
     public ManagedVisualItemValueResolver create(
             LightweightCollection<VisualItem> viewItems) {
 
-        List<String> properties = getSharedProperties(viewItems);
+        List<String> properties = ResourceSetUtils
+                .getSharedPropertiesOfDataType(viewItems, getValidDataType());
         assert !properties.isEmpty();
         return create(properties.get(0));
     }
@@ -80,4 +83,10 @@ public class CalculationResolverFactory extends
     public String getLabel() {
         return calculation.toString();
     }
+
+    @Override
+    public DataType getValidDataType() {
+        return DataType.NUMBER;
+    }
+
 }
