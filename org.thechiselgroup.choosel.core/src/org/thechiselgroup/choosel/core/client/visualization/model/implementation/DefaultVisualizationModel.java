@@ -832,7 +832,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
 
         try {
-            // TODO switch to delta in view content display interface
             contentDisplay.update(delta, changedSlots);
         } catch (Throwable ex) {
             errorHandler.handleError(ex);

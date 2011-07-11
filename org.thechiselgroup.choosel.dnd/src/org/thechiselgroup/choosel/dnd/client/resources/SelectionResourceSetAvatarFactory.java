@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.resources;
 
+import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.command.ReplaceSelectionCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.DelegatingResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
@@ -28,12 +30,17 @@ import com.google.gwt.event.dom.client.ClickHandler;
 public class SelectionResourceSetAvatarFactory extends
         DelegatingResourceSetAvatarFactory {
 
+    private CommandManager commandManager;
+
     private ViewAccessor viewAccessor;
 
     public SelectionResourceSetAvatarFactory(ResourceSetAvatarFactory delegate,
-            ViewAccessor viewAccessor) {
+            ViewAccessor viewAccessor, CommandManager commandManager) {
+
         super(delegate);
+
         this.viewAccessor = viewAccessor;
+        this.commandManager = commandManager;
     }
 
     @Override
@@ -51,13 +58,15 @@ public class SelectionResourceSetAvatarFactory extends
 
         return avatar;
     }
-    
-    protected void setSelection(SelectionModel selectionModel, ResourceSet resourceSet) {
-        if (resourceSet.equals(
-                selectionModel.getSelection())) {
-            selectionModel.setSelection(null);
-        } else {
-            selectionModel.setSelection(resourceSet);
+
+    protected void setSelection(SelectionModel selectionModel,
+            ResourceSet resourceSet) {
+
+        ResourceSet result = resourceSet;
+        if (resourceSet.equals(selectionModel.getSelection())) {
+            result = null;
         }
+        commandManager.execute(new ReplaceSelectionCommand(selectionModel,
+                result));
     }
 }
