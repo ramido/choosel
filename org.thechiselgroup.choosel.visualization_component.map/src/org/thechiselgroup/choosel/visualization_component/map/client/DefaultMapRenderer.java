@@ -104,7 +104,7 @@ public class DefaultMapRenderer implements MapRenderer {
 
         // TODO refactor
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem viewItem : callback.getViewItems()) {
+            for (VisualItem viewItem : callback.getVisualItems()) {
                 DefaultMapItem mapItem = (DefaultMapItem) viewItem
                         .getDisplayObject();
                 for (Slot slot : updatedSlots) {

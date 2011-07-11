@@ -265,7 +265,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
                         visualMappingsControl
                                 .updateConfigurationForChangedViewItems(event
-                                        .getContainer().getViewItems());
+                                        .getContainer().getVisualItems());
                     }
                 });
 

@@ -42,7 +42,7 @@ public interface VisualItemResolutionErrorModel {
      * @return {@link VisualItem}s for which there are resolution problems for
      *         at least one {@link Slot}.
      */
-    LightweightCollection<VisualItem> getViewItemsWithErrors();
+    LightweightCollection<VisualItem> getVisualItemsWithErrors();
 
     /**
      * @return {@link ViewItems}s that could not be resolved for {@code slot}.

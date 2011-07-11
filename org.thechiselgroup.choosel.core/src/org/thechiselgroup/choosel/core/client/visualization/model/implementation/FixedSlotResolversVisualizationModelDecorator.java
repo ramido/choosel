@@ -78,8 +78,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
-    public boolean containsViewItem(String viewItemId) {
-        return delegate.containsViewItem(viewItemId);
+    public boolean containsVisualItem(String viewItemId) {
+        return delegate.containsVisualItem(viewItemId);
     }
 
     @Override
@@ -138,24 +138,24 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
-    public VisualItem getViewItem(String viewItemId) {
-        return delegate.getViewItem(viewItemId);
+    public VisualItem getVisualItem(String viewItemId) {
+        return delegate.getVisualItem(viewItemId);
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItems() {
-        return delegate.getViewItems();
+    public LightweightCollection<VisualItem> getVisualItems() {
+        return delegate.getVisualItems();
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItems(
+    public LightweightCollection<VisualItem> getVisualItems(
             Iterable<Resource> resources) {
-        return delegate.getViewItems(resources);
+        return delegate.getVisualItems(resources);
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItemsWithErrors() {
-        return delegate.getViewItemsWithErrors();
+    public LightweightCollection<VisualItem> getVisualItemsWithErrors() {
+        return delegate.getVisualItemsWithErrors();
     }
 
     @Override

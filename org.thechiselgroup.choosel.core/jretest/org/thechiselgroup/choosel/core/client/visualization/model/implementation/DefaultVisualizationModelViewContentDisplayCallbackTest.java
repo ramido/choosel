@@ -70,7 +70,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         assertThat(
-                callback.containsViewItem(underTest.getViewItems()
+                callback.containsVisualItem(underTest.getVisualItems()
                         .getFirstElement().getId()), is(false));
     }
 
@@ -82,7 +82,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         assertThat(
-                callback.containsViewItem(underTest.getViewItems()
+                callback.containsVisualItem(underTest.getVisualItems()
                         .getFirstElement().getId()), is(true));
     }
 
@@ -97,7 +97,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
                 .createLightweightList();
 
         // get view items that are in the content display
-        viewItems.add(callback.getViewItem(underTest.getViewItems()
+        viewItems.add(callback.getVisualItem(underTest.getVisualItems()
                 .getFirstElement().getId()));
 
         assertThat(viewItems,
@@ -112,7 +112,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
         helper.addToContainedResources(resources);
 
-        callback.getViewItem(underTest.getViewItems().getFirstElement().getId());
+        callback.getVisualItem(underTest.getVisualItems().getFirstElement().getId());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         helper.addToContainedResources(resources);
 
-        assertTrue(callback.getViewItems(resources).isEmpty());
+        assertTrue(callback.getVisualItems(resources).isEmpty());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         helper.addToContainedResources(allResources);
 
-        assertThat(callback.getViewItems(allResources),
+        assertThat(callback.getVisualItems(allResources),
                 VisualItemTestUtils
                         .containsViewItemsForExactResourceSets(resources1));
     }
@@ -153,7 +153,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
 
         helper.addToContainedResources(resources);
 
-        assertThat(callback.getViewItems(resources),
+        assertThat(callback.getVisualItems(resources),
                 VisualItemTestUtils
                         .containsViewItemsForExactResourceSets(resources));
     }
@@ -166,7 +166,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         setCanResolverIfContainsResourceExactlyResolver(resources1);
         helper.addToContainedResources(ResourceSetTestUtils.toResourceSet(resources1, resources2));
 
-        assertThat(callback.getViewItems(),
+        assertThat(callback.getVisualItems(),
                 VisualItemTestUtils
                         .containsViewItemsForExactResourceSets(resources1));
     }
@@ -178,7 +178,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         underTest.setResolver(slot, mockResolverThatCanAlwaysResolve());
         helper.addToContainedResources(resources);
 
-        assertThat(callback.getViewItems(),
+        assertThat(callback.getVisualItems(),
                 VisualItemTestUtils
                         .containsViewItemsForExactResourceSets(resources));
     }

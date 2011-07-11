@@ -181,7 +181,7 @@ public class ArcItemContainer implements Persistable {
 
     private void update(VisualItem viewItem) {
         assert viewItem != null;
-        assert context.containsViewItem(viewItem.getId());
+        assert context.containsVisualItem(viewItem.getId());
         assert graphDisplay.containsNode(viewItem.getId());
 
         for (Arc arc : arcType.getArcs(viewItem, context)) {

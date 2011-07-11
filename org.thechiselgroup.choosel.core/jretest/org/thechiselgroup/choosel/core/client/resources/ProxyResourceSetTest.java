@@ -23,6 +23,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.captureOnResourceSetChanged;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResources;
+import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -134,7 +136,8 @@ public class ProxyResourceSetTest {
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getAddedResources().toList(),
-                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(3, 4)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils
+                        .createResources(3, 4)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -150,7 +153,25 @@ public class ProxyResourceSetTest {
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getAddedResources().toList(),
-                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils
+                        .createResources(4, 5)));
+        assertSame(underTest, firedEvent.getTarget());
+    }
+
+    @Test
+    public void fireResourcesAddedEventWhenAddingToCustomDelegate() {
+        DefaultResourceSet delegate = new DefaultResourceSet();
+
+        underTest = new ProxyResourceSet(delegate);
+
+        underTest.addEventHandler(resourcesChangedHandler);
+        delegate.addAll(createResources(3, 4));
+
+        ResourceSetChangedEvent firedEvent = captureOnResourceSetChanged(1,
+                resourcesChangedHandler).getValue();
+
+        assertThat(firedEvent.getAddedResources(),
+                containsExactly(createResources(3, 4)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -165,9 +186,11 @@ public class ProxyResourceSetTest {
                 resourcesChangedHandler).getValue();
 
         assertThat(event.getAddedResources().toList(),
-                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(4, 5)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils
+                        .createResources(4, 5)));
         assertThat(event.getRemovedResources().toList(),
-                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(1, 2)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils
+                        .createResources(1, 2)));
 
         assertSame(underTest, event.getTarget());
     }
@@ -183,7 +206,8 @@ public class ProxyResourceSetTest {
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getRemovedResources().toList(),
-                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(1, 2)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils
+                        .createResources(1, 2)));
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -199,7 +223,8 @@ public class ProxyResourceSetTest {
                 resourcesChangedHandler).getValue();
 
         assertThat(firedEvent.getRemovedResources().toList(),
-                CollectionMatchers.containsExactly(ResourceSetTestUtils.createResources(2, 3)));
+                CollectionMatchers.containsExactly(ResourceSetTestUtils
+                        .createResources(2, 3)));
         assertSame(underTest, firedEvent.getTarget());
     }
 

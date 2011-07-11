@@ -75,7 +75,7 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(numberSlot));
 
-        List<VisualItem> viewItems = underTest.getViewItems().toList();
+        List<VisualItem> viewItems = underTest.getVisualItems().toList();
         assertEquals(1, viewItems.size());
         VisualItem viewItem = viewItems.get(0);
 
@@ -95,7 +95,7 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(textSlot));
 
-        List<VisualItem> viewItems = underTest.getViewItems().toList();
+        List<VisualItem> viewItems = underTest.getVisualItems().toList();
         assertEquals(1, viewItems.size());
         VisualItem viewItem = viewItems.get(0);
 

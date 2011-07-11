@@ -62,7 +62,7 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
     private final ResourceSetFactory resourceSetFactory;
 
-    private ProxyResourceSet allResources = new ProxyResourceSet();
+    private ProxyResourceSet allResources;
 
     private ResourceSet uncategorizableResources;
 
@@ -76,6 +76,8 @@ public class ResourceGrouping implements HasResourceCategorizer,
         this.multiCategorizer = multiCategorizer;
         this.resourceSetFactory = resourceSetFactory;
         this.uncategorizableResources = resourceSetFactory.createResourceSet();
+        this.allResources = new ProxyResourceSet(
+                resourceSetFactory.createResourceSet());
 
         eventBus = new HandlerManager(this);
 
@@ -146,7 +148,8 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
         ResourcesCategorization categorization = categorize(resources);
         Map<String, LightweightList<Resource>> resourcesPerCategory = categorization.resourceMapping;
-        uncategorizableResources.addAll(categorization.uncategorizableResources);
+        uncategorizableResources
+                .addAll(categorization.uncategorizableResources);
 
         this.uncategorizableResources.addAll(uncategorizableResources);
 
@@ -350,8 +353,9 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
         ResourcesCategorization categorization = categorize(resources);
         Map<String, LightweightList<Resource>> resourcesPerCategory = categorization.resourceMapping;
-        uncategorizableResources.addAll(categorization.uncategorizableResources);
-        
+        uncategorizableResources
+                .addAll(categorization.uncategorizableResources);
+
         this.uncategorizableResources.removeAll(uncategorizableResources);
 
         for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory

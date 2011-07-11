@@ -505,7 +505,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         helper.addToContainedResources(ResourceSetTestUtils.createResource(
                 ResourceSetTestUtils.TYPE_1, 1));
 
-        final VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        final VisualItem viewItem = underTest.getVisualItems().getFirstElement();
         viewItem.getValue(slot); // caches values
 
         // needs to be done before changing slot
@@ -534,7 +534,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         resource1.putValue(propertyName, 1d);
         helper.addToContainedResources(resource1);
 
-        final VisualItem viewItem = underTest.getViewItems().getFirstElement();
+        final VisualItem viewItem = underTest.getVisualItems().getFirstElement();
         viewItem.getValue(slot); // caches values
 
         // needs to be done before adding

@@ -118,116 +118,22 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        DefaultResourceSet resources = new DefaultResourceSet();
-        Resource resource = ResourceSetTestUtils.createResource(1);
+        Resource resource = createResource(1);
         resource.putValue(property1, 1);
         resource.putValue(property2, 2);
-        resources.add(resource);
-
-        model.setContentResourceSet(resources);
+        model.getContentResourceSet().add(resource);
 
         VisualItemValueResolver resolver2 = new ManagedVisualItemValueResolverDecorator(
                 resolverId1, new FirstResourcePropertyResolver(property2,
                         DataType.NUMBER));
         model.setResolver(requiredSlots[0], resolver2);
 
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
 
         assertEquals(viewItems.size(), 1);
         Iterator<VisualItem> iterator = viewItems.iterator();
         VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 2);
-    }
-
-    /**
-     * <h3>Changing Data changes Resolver and Resolution</h3>
-     * 
-     * Resolvers: 2 Resolvers, resolver1: first resources => 1 resolver2: second
-     * resources => 2 (specified by initializer) <br>
-     * Slots: one slot, val1 => Number <br>
-     * Grouping: each resource is grouped alone <br>
-     * Data: 2 resources<br>
-     * 
-     * Expected Output: [1] with first one => [] after removal => [2] after new
-     * add<br>
-     * 
-     * <p>
-     * We create the view with the resolver and slots as above. We then add the
-     * first resource above. We then set the resolver to a resolver which can
-     * not resolve the last resource, and the first two are resolved to 1. We
-     * then remove the data, and the resolver should not change. We then add new
-     * data, which the current resolver can not resolve, and it should
-     * automatically switch to the resolver specified by the initializer, which
-     * should resolve both to 2.
-     * </p>
-     */
-    // XXX this is no longer the required functionality. Because we made the
-    // decision to only reset unconfigured slots, and not invalid ones, and
-    // since that slot has in fact been configured.
-    @Ignore("No longer specified funcionality")
-    @Test
-    public void changeToUnresolvableDataChangesToResolverSpecifiedByInitializer() {
-        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
-        when(helper.getViewContentDisplay().getSlots()).thenReturn(
-                requiredSlots);
-
-        // TODO factories should be mocked, they arent even the same type hah
-        resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
-
-        resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId2));
-
-        /* define initialization mapping */
-        final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
-        initialSlotMapping.put(requiredSlots[0],
-                new ManagedVisualItemValueResolverDecorator(resolverId1,
-                        new FirstResourcePropertyResolver(property1,
-                                DataType.NUMBER)));
-
-        slotMappingInitializer = new TestSlotMappingInitializer(
-                initialSlotMapping);
-
-        DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
-
-        DefaultResourceSet resources = new DefaultResourceSet();
-        Resource resource1 = ResourceSetTestUtils.createResource(1);
-        resource1.putValue(property1, 1);
-        resource1.putValue(property2, 2);
-        resources.add(resource1);
-
-        model.setContentResourceSet(resources);
-
-        /* Should have 1 View Item with Value 1 */
-        model.setResolver(requiredSlots[0],
-                new ManagedVisualItemValueResolverDecorator(resolverId2,
-                        new FirstResourcePropertyResolver(property2,
-                                DataType.NUMBER)));
-
-        /* Should have 1 View Item with Value 2 */
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
-        assertTrue(viewItems.size() == 1);
-        VisualItem item = viewItems.iterator().next();
-        assertEquals(2, item.getValue(requiredSlots[0]));
-
-        model.setContentResourceSet(resources);
-
-        /* Now should be empty View Items */
-        viewItems = model.getViewItems();
-        assertTrue(viewItems.size() == 0);
-
-        Resource resource2 = ResourceSetTestUtils.createResource(2);
-        resource2.putValue(property1, 1);
-
-        model.getContentResourceSet().add(resource2);
-
-        /* Now the current resolver should switch and resolve to 1 */
-        viewItems = model.getViewItems();
-        assertTrue(viewItems.size() == 1);
-        item = viewItems.iterator().next();
-        assertEquals(1, item.getValue(requiredSlots[0]));
     }
 
     @Test
@@ -271,7 +177,7 @@ public class SlotMappingIntegrationTest {
                                 DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
         assertTrue(viewItems.size() == 1);
         VisualItem item = viewItems.iterator().next();
         assertEquals(2, item.getValue(requiredSlots[0]));
@@ -338,8 +244,7 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        model.setContentResourceSet(new DefaultResourceSet());
-        Resource resource = ResourceSetTestUtils.createResource(1);
+        Resource resource = createResource(1);
         resource.putValue(property1, 1);
         // unresolvable by either resolvers
         resource.putValue(property2, "a");
@@ -348,8 +253,6 @@ public class SlotMappingIntegrationTest {
         assertTrue(model.hasErrors());
         assertThat(model.getSlotsWithErrors(),
                 containsExactly(requiredSlots[1]));
-        // assertThat()
-
     }
 
     /**
@@ -367,7 +270,6 @@ public class SlotMappingIntegrationTest {
      * data, and because there are no applicable resolvers, an error should be
      * thrown to show that the data cannot be shown.
      * </p>
-     * 
      */
     public void errorStateSetWhenResolvingOneUnresolvableResource()
             throws Throwable {
@@ -392,10 +294,7 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        model.setContentResourceSet(new DefaultResourceSet());
-        Resource resource = ResourceSetTestUtils.createResource(1);
-
-        model.getContentResourceSet().add(resource);
+        model.getContentResourceSet().add(createResource(1));
 
         assertTrue(model.hasErrors());
         assertThat(model.getSlotsWithErrors(),
@@ -455,14 +354,13 @@ public class SlotMappingIntegrationTest {
 
         model.setResolver(requiredSlots[0], resolver);
 
-        model.setContentResourceSet(new DefaultResourceSet());
         Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 2);
         model.getContentResourceSet().add(resource);
 
         // resolver.setProperty(property2);
 
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
 
         assertEquals(viewItems.size(), 1);
         Iterator<VisualItem> iterator = viewItems.iterator();
@@ -534,19 +432,16 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        DefaultResourceSet resources = new DefaultResourceSet();
+        Resource resource = createResource(1);
+        resource.putValue(property1, 1);
+        resource.putValue(property2, 2);
 
-        Resource resource1 = createResource(1);
-        resource1.putValue(property1, 1);
-        resource1.putValue(property2, 2);
-        resources.add(resource1);
-
-        model.setContentResourceSet(resources);
+        model.getContentResourceSet().add(resource);
 
         /* Should have 1 View Item with Value 1 */
         model.setContentResourceSet(new DefaultResourceSet());
 
-        assertEquals(model.getViewItems().size(), 0);
+        assertEquals(model.getVisualItems().size(), 0);
     }
 
     /**
@@ -589,12 +484,11 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        model.setContentResourceSet(new DefaultResourceSet());
         Resource resource = ResourceSetTestUtils.createResource(1);
         resource.putValue(property1, 1);
         model.getContentResourceSet().add(resource);
 
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
 
         assertEquals(viewItems.size(), 1);
 
@@ -652,7 +546,6 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        model.setContentResourceSet(new DefaultResourceSet());
         Resource resource1 = ResourceSetTestUtils.createResource(1);
         resource1.putValue(property1, 1);
         resource1.putValue(property2, "a");
@@ -660,7 +553,7 @@ public class SlotMappingIntegrationTest {
         model.getContentResourceSet().add(resource1);
 
         /* Test results */
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
         assertTrue(viewItems.size() == 1);
 
         Iterator<VisualItem> iterator = viewItems.iterator();
@@ -716,11 +609,10 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
 
-        model.setContentResourceSet(new DefaultResourceSet());
         model.getContentResourceSet().add(createResource(1));
 
         /* Test results */
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
         assertTrue(viewItems.size() == 1);
 
         VisualItem item = viewItems.iterator().next();
@@ -755,13 +647,12 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         DefaultVisualizationModel model = createViewModel(new ResourceByUriMultiCategorizer());
-        model.setContentResourceSet(new DefaultResourceSet());
 
-        Resource resource = ResourceSetTestUtils.createResource(1);
+        Resource resource = createResource(1);
         resource.putValue(property1, 1);
         model.getContentResourceSet().add(resource);
 
-        LightweightCollection<VisualItem> viewItems = model.getViewItems();
+        LightweightCollection<VisualItem> viewItems = model.getVisualItems();
 
         assertEquals(1, viewItems.size());
         Iterator<VisualItem> iterator = viewItems.iterator();

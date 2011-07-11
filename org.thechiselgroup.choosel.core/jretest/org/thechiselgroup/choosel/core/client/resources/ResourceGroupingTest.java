@@ -79,7 +79,7 @@ public class ResourceGroupingTest {
 
     private ResourceGrouping underTest;
 
-    private DefaultResourceSet testResources;
+    private ResourceSet testResources;
 
     @Test
     public void addAndRemoveUncategorizableAndCategorizableResourcesEventsFired() {
@@ -958,8 +958,7 @@ public class ResourceGroupingTest {
         underTest = new ResourceGrouping(categorizer1,
                 new DefaultResourceSetFactory());
 
-        testResources = new DefaultResourceSet();
-        underTest.setResourceSet(testResources);
+        testResources = underTest.getResourceSet();
 
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_1);
@@ -974,7 +973,6 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer2, 5, GROUP_2_4);
 
         setUpNullCategorizer(categorizer3);
-
     }
 
     private void setUpCategory(ResourceMultiCategorizer categorizer,

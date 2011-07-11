@@ -263,7 +263,7 @@ public class ManagedSlotMappingConfigurationTest {
 
         VisualItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
 
-        when(viewModel.getViewItems()).thenReturn(
+        when(viewModel.getVisualItems()).thenReturn(
                 CollectionFactory.<VisualItem> createLightweightList());
 
         LightweightList<Slot> badSlots = CollectionFactory
