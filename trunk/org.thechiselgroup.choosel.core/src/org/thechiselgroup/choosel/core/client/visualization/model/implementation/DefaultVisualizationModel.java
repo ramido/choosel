@@ -16,12 +16,8 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
-import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedRemovedDelta;
-import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
-import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
-import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.copy;
-import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
-import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.*;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.*;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -703,6 +699,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
      * directly after the resolver has been set, because this keeps the
      * algorithm simpler (compared to an event based approach, which would
      * require prioritizing event handlers etc.)
+     * 
+     * TODO this can cause problems, if you actively try to set a fixed resolver
      */
     @Override
     public void setResolver(Slot slot, VisualItemValueResolver resolver) {
@@ -773,6 +771,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getResolver(slot);
 
         for (VisualItem visualItem : visualItems) {
+            // TODO subset delegating resolvers have to be done last, because
+            // their errors are dependant on the other resolvers being set
             if (!resolver.canResolve(visualItem, this)) {
                 /*
                  * TODO potential optimization: only change error model if state

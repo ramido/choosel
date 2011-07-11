@@ -132,6 +132,9 @@ public class ManagedSlotMappingConfiguration {
     public void handleResolverChange(Slot slot,
             VisualItemValueResolver oldResolver,
             VisualItemValueResolver resolver) {
+
+        assert viewContainsSlot(slot) : "Trying to set a slot that is not a part of the viewModel (Check if it is fixed)";
+
         slotsToSlotMappings.get(slot).currentResolverWasSet(oldResolver,
                 resolver, visualizationModel.getVisualItems());
     }
@@ -213,5 +216,16 @@ public class ManagedSlotMappingConfiguration {
             resetMappingsFromInitializer(slots, viewItems);
         }
         // TODO assert that all of the slots now have valid resolvers
+    }
+
+    public boolean viewContainsSlot(Slot slot) {
+        boolean found = false;
+        Slot[] viewSlots = visualizationModel.getSlots();
+        for (Slot viewSlot : viewSlots) {
+            if (viewSlot.equals(slot)) {
+                found = true;
+            }
+        }
+        return found;
     }
 }

@@ -49,18 +49,6 @@ public interface SlotMappingConfiguration extends
      */
     LightweightCollection<Slot> getUnconfiguredSlots();
 
-    /**
-     * Checks if a {@link VisualItemValueResolver} has been set for a
-     * {@link Slot} . This does not mean that the value resolver actually
-     * resolves to valid values. This would be reported in the
-     * {@link VisualItemResolutionErrorModel}.
-     * 
-     * @return {code true}, if a {@link VisualItemValueResolver} is configured
-     *         for {code slot}.
-     */
-    // TODO throws InvalidSlotException
-    boolean isConfigured(Slot slot);
-
     // TODO document
     // TODO throws InvalidSlotException
     void setResolver(Slot slot, VisualItemValueResolver resolver);

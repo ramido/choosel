@@ -141,6 +141,7 @@ public class DefaultSlotMappingConfiguration implements
         handlerManager.fireEvent(new SlotMappingChangedEvent(slot, oldResolver,
                 resolver));
 
+        // TODO this stuff down here breaks with fixed delegating resolvers
         // fire events for delegating resolvers that reference this slot
         for (Entry<Slot, VisualItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
@@ -154,6 +155,9 @@ public class DefaultSlotMappingConfiguration implements
                 if (targetSlot.equals(slot)) {
                     // TODO I'm not sure if this is how target resolvers work,
                     // ask lars
+
+                    // TODO if the target resolver is fixed we probably DO NOT
+                    // want to fire an event
                     handlerManager.fireEvent(new SlotMappingChangedEvent(entry
                             .getKey(), oldResolver, resolver));
                 }
@@ -162,4 +166,5 @@ public class DefaultSlotMappingConfiguration implements
 
         assertInvariants();
     }
+
 }

@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 public class SubsetDelegatingValueResolver implements VisualItemValueResolver {
 
@@ -41,6 +41,12 @@ public class SubsetDelegatingValueResolver implements VisualItemValueResolver {
     @Override
     public boolean canResolve(VisualItem viewItem,
             VisualItemValueResolverContext context) {
+
+        if (!context.isConfigured(slot)) {
+            return false;
+        }
+
+        assert context.getResolver(slot) != null;
 
         return context.getResolver(slot).canResolve(viewItem, context);
     }
