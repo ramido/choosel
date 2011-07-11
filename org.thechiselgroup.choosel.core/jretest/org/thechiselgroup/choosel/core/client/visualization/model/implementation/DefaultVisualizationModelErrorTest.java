@@ -17,6 +17,9 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TYPE_2;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResource;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
@@ -26,7 +29,6 @@ import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.C
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
@@ -119,9 +121,6 @@ public class DefaultVisualizationModelErrorTest {
 
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[0]));
-
-        ResourceSet resources = new DefaultResourceSet();
-        resources.add(resource2);
         assertThat(underTest.getVisualItemsWithErrors(),
                 containsEqualResources(resource2));
     }
@@ -136,8 +135,8 @@ public class DefaultVisualizationModelErrorTest {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestViewModel();
 
-        getResourceSetFromUnderTest().add(
-                ResourceSetTestUtils.createResource(1));
+        getResourceSetFromUnderTest().add(createResource(1));
+
         /*
          * Model currently in a error state as per
          * slotWithoutResolverCausesError test
@@ -153,8 +152,9 @@ public class DefaultVisualizationModelErrorTest {
         MockitoAnnotations.initMocks(this);
 
         helper = new DefaultVisualizationModelTestHelper();
-        resource1 = ResourceSetTestUtils.createResource("type1", 1);
-        resource2 = ResourceSetTestUtils.createResource("type2", 2);
+
+        resource1 = createResource(TYPE_1, 1);
+        resource2 = createResource(TYPE_2, 2);
     }
 
     @Test
@@ -170,15 +170,16 @@ public class DefaultVisualizationModelErrorTest {
     }
 
     @Test
-    public void someSlotsNotConfiguredReturnsError() {
+    public void unconfiguredSlotsHaveErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT, DataType.NUMBER);
 
         underTest = helper.createTestViewModel();
 
-        getResourceSetFromUnderTest().add(
-                ResourceSetTestUtils.createResource(1));
+        getResourceSetFromUnderTest().add(createResource(1));
 
         underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
+
+        assertThat(underTest.getUnconfiguredSlots(), containsExactly(slots[1]));
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[1]));
     }

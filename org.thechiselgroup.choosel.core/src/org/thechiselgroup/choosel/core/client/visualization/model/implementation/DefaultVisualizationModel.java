@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -166,6 +167,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 handler);
     }
 
+    private void assertWithoutErrors(
+            LightweightCollection<VisualItem> visualItems) {
+
+        for (VisualItem visualItem : visualItems) {
+            assert !hasErrors(visualItem) : visualItem + " has errors";
+        }
+    }
+
     private Delta<VisualItem> calculateDeltaThatConsidersErrors(
             Delta<VisualItem> delta,
             LightweightCollection<VisualItem> visualItemsThatHadErrors) {
@@ -220,12 +229,12 @@ public class DefaultVisualizationModel implements VisualizationModel,
         for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
             visualItem.clearValueCache(slot);
         }
-    }
+    };
 
     @Override
     public boolean containsVisualItem(String groupId) {
         return visualItemsByGroupId.containsKey(groupId);
-    };
+    }
 
     private DefaultVisualItem createVisualItem(String groupID,
             ResourceSet resources,
@@ -369,6 +378,13 @@ public class DefaultVisualizationModel implements VisualizationModel,
         return visualItemsThatWereValid;
     }
 
+    private LightweightCollection<VisualItem> getValidVisualItems(
+            Iterable<Resource> resources) {
+
+        return getRelativeComplement(getVisualItems(resources),
+                getVisualItemsWithErrors());
+    }
+
     @Override
     public ViewContentDisplay getViewContentDisplay() {
         return contentDisplay;
@@ -488,16 +504,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
             @Override
             public LightweightCollection<VisualItem> getVisualItems() {
-                return getValidVisualItems();
+                return DefaultVisualizationModel.this.getValidVisualItems();
             }
 
             @Override
             public LightweightCollection<VisualItem> getVisualItems(
                     Iterable<Resource> resources) {
-                return LightweightCollections.getRelativeComplement(
-                        DefaultVisualizationModel.this
-                                .getVisualItems(resources),
-                        getVisualItemsWithErrors());
+                return DefaultVisualizationModel.this
+                        .getValidVisualItems(resources);
             }
         });
     }
@@ -620,6 +634,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 delta, visualItemsThatHadErrors);
         updateViewContentDisplay(deltaThatConsidersErrors,
                 LightweightCollections.<Slot> emptyCollection());
+
         fireVisualItemContainerChangeEvent(delta);
     }
 
@@ -759,6 +774,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
+    /*
+     * TODO refactor: updateSelection is similar (and the whole highlighting vs
+     * selection in visualitem)
+     */
     private void updateHighlighting(
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
@@ -774,7 +793,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             return;
         }
 
-        LightweightList<VisualItem> affectedVisualItems = getVisualItems(new CombinedIterable<Resource>(
+        LightweightCollection<VisualItem> affectedVisualItems = getValidVisualItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
         for (VisualItem visualItem : affectedVisualItems) {
@@ -805,7 +824,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             return;
         }
 
-        LightweightList<VisualItem> affectedVisualItems = getVisualItems(new CombinedIterable<Resource>(
+        LightweightCollection<VisualItem> affectedVisualItems = getValidVisualItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
         for (VisualItem visualItem : affectedVisualItems) {
@@ -830,6 +849,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
         if (delta.isEmpty() && changedSlots.isEmpty()) {
             return;
         }
+
+        assertWithoutErrors(delta.getAddedElements());
+        assertWithoutErrors(delta.getUpdatedElements());
 
         try {
             contentDisplay.update(delta, changedSlots);

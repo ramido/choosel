@@ -304,7 +304,6 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
                 .setResolver(slot, new FixedValueResolver(1d, DataType.NUMBER));
     }
 
-    // TODO check highlighted resources in resource item
     @Test
     public void updateCalledWhenHighlightingChanges() {
         ResourceSet resources = createResources(1);
@@ -539,4 +538,29 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
                         (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 
+    @Test
+    public void viewItemsWithErrorsAreExcludedOnHighlightingUpdate() {
+        ResourceSet resources = createResources(1);
+
+        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
+
+        helper.getContainedResources().addAll(resources);
+        helper.getHighlightedResources().addAll(resources);
+
+        verify(helper.getViewContentDisplay(), never()).update(
+                argThat(any(Delta.class)), argThat(isEmpty(Slot.class)));
+    }
+
+    @Test
+    public void viewItemsWithErrorsAreExcludedOnSelectionUpdate() {
+        ResourceSet resources = createResources(1);
+
+        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
+
+        helper.getContainedResources().addAll(resources);
+        helper.getSelectedResources().addAll(resources);
+
+        verify(helper.getViewContentDisplay(), never()).update(
+                argThat(any(Delta.class)), argThat(isEmpty(Slot.class)));
+    }
 }
