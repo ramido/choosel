@@ -16,9 +16,12 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.copy;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -26,7 +29,7 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange;
-import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.DeltaType;
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.ChangeType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
@@ -76,6 +79,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /*
  * TODO introduce VisualItemContainer decorator that is filtered to the valid
  * view items from the error model
+ * 
+ * TODO remove highlighted / selected code duplication (similar to
+ * DefaultVisualItem)
  */
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
@@ -547,7 +553,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
-                processResourceGroupingUpdate(e);
+                processResourceGroupingChange(e);
             }
         });
     }
@@ -575,7 +581,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
      * Processes the added resource groups when the grouping changes.
      */
     private LightweightCollection<VisualItem> processAddChanges(
-            LightweightList<CategorizableResourceGroupingChange> changes) {
+            LightweightCollection<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
             return LightweightCollections.emptyCollection();
@@ -598,7 +604,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getIntersection(this.selectedResources);
 
         for (CategorizableResourceGroupingChange change : changes) {
-            assert change.getDelta() == DeltaType.GROUP_CREATED;
+            assert change.getDelta() == ChangeType.GROUP_CREATED;
 
             addedVisualItems.add(createVisualItem(change.getGroupID(),
                     change.getResourceSet(), highlightedResources,
@@ -609,7 +615,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     private LightweightCollection<VisualItem> processRemoveChanges(
-            LightweightList<CategorizableResourceGroupingChange> changes) {
+            LightweightCollection<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
             return LightweightCollections.emptyCollection();
@@ -618,26 +624,28 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightList<VisualItem> removedVisualItems = CollectionFactory
                 .createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
-            assert change.getDelta() == DeltaType.GROUP_REMOVED;
+            assert change.getDelta() == ChangeType.GROUP_REMOVED;
 
-            // XXX dispose should be done after method call...
+            // XXX dispose should be done after method call / event firing etc.
             removedVisualItems.add(removeVisualItem(change.getGroupID()));
         }
         return removedVisualItems;
     }
 
-    private void processResourceGroupingUpdate(
+    private void processResourceGroupingChange(
             ResourceGroupingChangedEvent event) {
 
         assert event != null;
 
-        Delta<VisualItem> delta = updateVisualItemsOnModelChange(event);
-        // create a copy of the view items with errors
-        LightweightCollection<VisualItem> visualItemsThatHadErrors = LightweightCollections
-                .copy(errorModel.getVisualItemsWithErrors());
+        LightweightCollection<VisualItem> visualItemsThatHadErrors = copy(getVisualItemsWithErrors());
+
+        Delta<VisualItem> delta = updateVisualItemsOnGroupingChange(event);
+
         updateErrorModel(delta);
+
         Delta<VisualItem> deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
                 delta, visualItemsThatHadErrors);
+
         updateViewContentDisplay(deltaThatConsidersErrors,
                 LightweightCollections.<Slot> emptyCollection());
 
@@ -645,7 +653,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     private LightweightCollection<VisualItem> processUpdates(
-            LightweightList<CategorizableResourceGroupingChange> changes) {
+            LightweightCollection<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
             return LightweightCollections.emptyCollection();
@@ -654,7 +662,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightList<VisualItem> updatedVisualItems = CollectionFactory
                 .createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
-            assert change.getDelta() == DeltaType.GROUP_CHANGED;
+            assert change.getDelta() == ChangeType.GROUP_CHANGED;
             DefaultVisualItem visualItem = visualItemsByGroupId.get(change
                     .getGroupID());
 
@@ -702,10 +710,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert resolver != null;
 
         // keep information (currently valid / invalid stuff)
-        LightweightCollection<VisualItem> visualItemsThatHadErrors = LightweightCollections
-                .copy(getVisualItemsWithErrors());
-        LightweightCollection<VisualItem> visualItemsThatWereValid = LightweightCollections
-                .copy(getValidVisualItems());
+        LightweightCollection<VisualItem> visualItemsThatHadErrors = copy(getVisualItemsWithErrors());
+        LightweightCollection<VisualItem> visualItemsThatWereValid = copy(getValidVisualItems());
 
         clearVisualItemValueCache(slot);
 
@@ -714,20 +720,17 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         updateErrorModel(slot);
 
-        // CASE 1: stuff gets removed
-        // valid --> invalid (for view items)
-        LightweightCollection<VisualItem> visualItemsToAdd = LightweightCollections
-                .getRelativeComplement(visualItemsThatHadErrors,
-                        getVisualItemsWithErrors());
-        // CASE 2: stuff gets added
-        // invalid --> valid (for view items)
-        LightweightCollection<VisualItem> visualItemsToRemove = LightweightCollections
-                .getRelativeComplement(visualItemsThatWereValid,
-                        getValidVisualItems());
+        // CASE 1: VisualItems that went from invalid to valid get added
+        LightweightCollection<VisualItem> visualItemsToAdd = getRelativeComplement(
+                visualItemsThatHadErrors, getVisualItemsWithErrors());
 
-        updateViewContentDisplay(Delta.createDelta(visualItemsToAdd,
-                LightweightCollections.<VisualItem> emptyCollection(),
-                visualItemsToRemove), LightweightCollections.toCollection(slot));
+        // CASE 2: VisualItems that went from valid to invalid get removed
+        LightweightCollection<VisualItem> visualItemsToRemove = getRelativeComplement(
+                visualItemsThatWereValid, getValidVisualItems());
+
+        updateViewContentDisplay(
+                createAddedRemovedDelta(visualItemsToAdd, visualItemsToRemove),
+                toCollection(slot));
     }
 
     private void updateErrorModel(Delta<VisualItem> delta) {
@@ -834,6 +837,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
+    // TODO refactor: updateVisualItemSelectionSet
     private void updateVisualItemHighlightingSet(DefaultVisualItem visualItem,
             CategorizableResourceGroupingChange change) {
 
@@ -848,6 +852,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
+    // TODO refactor: updateVisualItemHighlightingSet
     private void updateVisualItemSelectionSet(
             CategorizableResourceGroupingChange change,
             DefaultVisualItem visualItem) {
@@ -863,7 +868,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
-    private Delta<VisualItem> updateVisualItemsOnModelChange(
+    private Delta<VisualItem> updateVisualItemsOnGroupingChange(
             ResourceGroupingChangedEvent event) {
 
         assert event != null;
@@ -873,11 +878,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
          * conflicts, i.e. groups with the same id)
          */
         LightweightCollection<VisualItem> removedVisualItems = processRemoveChanges(event
-                .getChanges(DeltaType.GROUP_REMOVED));
+                .getChanges(ChangeType.GROUP_REMOVED));
         LightweightCollection<VisualItem> addedVisualItems = processAddChanges(event
-                .getChanges(DeltaType.GROUP_CREATED));
+                .getChanges(ChangeType.GROUP_CREATED));
         LightweightCollection<VisualItem> updatedVisualItems = processUpdates(event
-                .getChanges(DeltaType.GROUP_CHANGED));
+                .getChanges(ChangeType.GROUP_CHANGED));
 
         return createDelta(addedVisualItems, updatedVisualItems,
                 removedVisualItems);

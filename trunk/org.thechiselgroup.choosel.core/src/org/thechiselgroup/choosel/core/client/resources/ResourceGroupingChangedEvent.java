@@ -17,8 +17,9 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.DeltaType;
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.ChangeType;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -56,7 +57,7 @@ public class ResourceGroupingChangedEvent extends
 
         this.uncategorizableChanges = uncategorizableChanges;
 
-        for (DeltaType deltaType : DeltaType.values()) {
+        for (ChangeType deltaType : ChangeType.values()) {
             changesByDeltaType
                     .put(deltaType.name(),
                             CollectionFactory
@@ -85,10 +86,10 @@ public class ResourceGroupingChangedEvent extends
     }
 
     /**
-     * Return the changes for the given {@link DeltaType}.
+     * Return the changes for the given {@link ChangeType}.
      */
-    public LightweightList<CategorizableResourceGroupingChange> getChanges(
-            DeltaType deltaType) {
+    public LightweightCollection<CategorizableResourceGroupingChange> getChanges(
+            ChangeType deltaType) {
         return changesByDeltaType.get(deltaType.name());
     }
 
