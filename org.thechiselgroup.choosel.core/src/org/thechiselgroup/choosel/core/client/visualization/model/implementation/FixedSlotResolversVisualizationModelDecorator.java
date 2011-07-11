@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -34,6 +35,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemCont
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -53,6 +55,11 @@ public class FixedSlotResolversVisualizationModelDecorator implements
 
     private Slot[] slots;
 
+    private HandlerManager slotMappingChangedHandlerManager = new HandlerManager(
+            this);
+
+    private HandlerRegistration handlerRegistration;
+
     public FixedSlotResolversVisualizationModelDecorator(
             VisualizationModel delegate,
             Map<Slot, VisualItemValueResolver> fixedSlotResolvers) {
@@ -65,11 +72,13 @@ public class FixedSlotResolversVisualizationModelDecorator implements
 
         initFixedSlots();
         initAvailableSlots(delegate, fixedSlotResolvers);
+        initDelegateHandlers();
     }
 
     @Override
     public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
-        return delegate.addHandler(handler);
+        return slotMappingChangedHandlerManager.addHandler(
+                SlotMappingChangedEvent.TYPE, handler);
     }
 
     @Override
@@ -86,6 +95,9 @@ public class FixedSlotResolversVisualizationModelDecorator implements
 
     @Override
     public void dispose() {
+        handlerRegistration.removeHandler();
+        handlerRegistration = null;
+
         DisposeUtil.dispose(delegate);
     }
 
@@ -196,6 +208,18 @@ public class FixedSlotResolversVisualizationModelDecorator implements
         slotList.addAll(Arrays.asList(delegate.getSlots()));
         slotList.removeAll(fixedSlotResolvers.keySet());
         this.slots = slotList.toArray(new Slot[slotList.size()]);
+    }
+
+    public void initDelegateHandlers() {
+        handlerRegistration = this.delegate
+                .addHandler(new SlotMappingChangedHandler() {
+                    @Override
+                    public void onSlotMappingChanged(SlotMappingChangedEvent e) {
+                        if (!fixedSlotResolvers.containsKey(e.getSlot())) {
+                            slotMappingChangedHandlerManager.fireEvent(e);
+                        }
+                    }
+                });
     }
 
     private void initFixedSlots() {
