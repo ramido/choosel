@@ -32,11 +32,11 @@ public interface VisualItemResolutionErrorModel {
     LightweightCollection<Slot> getSlotsWithErrors();
 
     /**
-     * @return {@link Slot}s that could not be resolved for {@code viewItem}. If
-     *         all slots can be resolved for the view item, an empty list is
-     *         returned.
+     * @return {@link Slot}s that could not be resolved for {@code visualItem}.
+     *         If all slots can be resolved for the visual item, an empty list
+     *         is returned.
      */
-    LightweightCollection<Slot> getSlotsWithErrors(VisualItem viewItem);
+    LightweightCollection<Slot> getSlotsWithErrors(VisualItem visualItem);
 
     /**
      * @return {@link VisualItem}s for which there are resolution problems for
@@ -49,7 +49,7 @@ public interface VisualItemResolutionErrorModel {
      *         If all {@link VisualItem}s can be resolved for the slot, an empty
      *         list is returned.
      */
-    LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot);
+    LightweightCollection<VisualItem> getVisualItemsWithErrors(Slot slot);
 
     /**
      * @return <code>true</code>, if there are any resolution problems.
@@ -64,8 +64,8 @@ public interface VisualItemResolutionErrorModel {
 
     /**
      * @return <code>true</code>, if there are any resolution problems for
-     *         {@code viewItem}.
+     *         {@code visualItem}.
      */
-    boolean hasErrors(VisualItem viewItem);
+    boolean hasErrors(VisualItem visualItem);
 
 }

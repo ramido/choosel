@@ -100,7 +100,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
         underTest.reportError(slot1, viewItem2);
         underTest.clearErrors(viewItem1);
 
-        assertThat(underTest.getViewItemsWithErrors(slot1),
+        assertThat(underTest.getVisualItemsWithErrors(slot1),
                 containsExactly(viewItem2));
     }
 
@@ -119,7 +119,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
 
     @Test
     public void getViewItemsWithErrorsReturnEmptyListIfSlotIsErrorFree() {
-        assertThat(underTest.getViewItemsWithErrors(slot1).isEmpty(), is(true));
+        assertThat(underTest.getVisualItemsWithErrors(slot1).isEmpty(), is(true));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
         underTest.reportError(slot1, viewItem2);
         underTest.removeError(slot1, viewItem1);
 
-        assertThat(underTest.getViewItemsWithErrors(slot1),
+        assertThat(underTest.getVisualItemsWithErrors(slot1),
                 containsExactly(viewItem2));
     }
 
@@ -216,7 +216,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
     public void reportErrorAddsViewItemToErrorViewItems() {
         underTest.reportError(slot1, viewItem1);
 
-        assertThat(underTest.getViewItemsWithErrors(slot1),
+        assertThat(underTest.getVisualItemsWithErrors(slot1),
                 containsExactly(viewItem1));
     }
 
@@ -271,7 +271,7 @@ public class DefaultVisualItemResolutionErrorModelTest {
         underTest.reportError(slot1, viewItem1);
         underTest.reportError(slot1, viewItem1);
 
-        assertThat(underTest.getViewItemsWithErrors(slot1),
+        assertThat(underTest.getVisualItemsWithErrors(slot1),
                 containsExactly(viewItem1));
     }
 

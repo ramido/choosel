@@ -205,7 +205,7 @@ public class DefaultVisualItemResolutionErrorModel implements
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot) {
+    public LightweightCollection<VisualItem> getVisualItemsWithErrors(Slot slot) {
         assert slot != null;
 
         if (!hasErrors(slot)) {
