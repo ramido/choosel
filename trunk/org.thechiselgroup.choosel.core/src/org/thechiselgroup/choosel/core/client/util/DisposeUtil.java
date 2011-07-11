@@ -15,11 +15,61 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util;
 
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+
+/**
+ * <p>
+ * Utility class for disposing objects.
+ * </p>
+ * 
+ * @see Disposable
+ * 
+ * @author Lars Grammel
+ */
 public final class DisposeUtil {
 
-    public static void dispose(Object o) {
+    /**
+     * <p>
+     * Disposes {@code o}, if {@code o} is {@link Disposable}.
+     * </p>
+     * *
+     * <p>
+     * Usage example for {@link #dispose(Object)} :
+     * {@code someField = DisposeUtil.dispose(someField);}
+     * </p>
+     * 
+     * @return {@code null}. Can be used to assign the dispose result to the
+     *         field as in {@code someField = DisposeUtil.dispose(someField);}.
+     */
+    public static <T> T dispose(T o) throws RuntimeException {
         if (o != null && o instanceof Disposable) {
             ((Disposable) o).dispose();
+        }
+
+        return null;
+    }
+
+    /**
+     * <p>
+     * Safely disposes {@code o}, if {@code o} is {@link Disposable}. Any
+     * {@link Throwable} is report to the {@link ErrorHandler}.
+     * </p>
+     * <p>
+     * Example:
+     * {@code someField = DisposeUtil.safelyDispose(someField, errorHandler);}
+     * </p>
+     * 
+     * @return {@code null}. Can be used to assign the dispose result to the
+     *         field as in
+     *         {@code someField = DisposeUtil.safelyDispose(someField, errorHandler);}
+     *         .
+     */
+    public static <T> T safelyDispose(T o, ErrorHandler errorHandler) {
+        try {
+            return dispose(o);
+        } catch (Throwable ex) {
+            errorHandler.handleError(ex);
+            return null;
         }
     }
 

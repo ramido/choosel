@@ -15,14 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
+import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange;
 import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.DeltaType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
@@ -37,7 +37,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -102,15 +101,22 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
-    private final Logger logger;
+    private final ErrorHandler errorHandler;
 
     private DefaultVisualItemResolutionErrorModel errorModel = new DefaultVisualItemResolutionErrorModel();
 
     private transient PrioritizedHandlerManager handlerManager;
 
+    /**
+     * @param errorHandler
+     *            Exceptions that occur in other modules, e.g.
+     *            {@link ViewContentDisplay}s or
+     *            {@link VisualItemContainerChangeEventHandler}s are caught and
+     *            reported to this {@link ErrorHandler}.
+     */
     public DefaultVisualizationModel(ViewContentDisplay contentDisplay,
             ResourceSet selectedResources, ResourceSet highlightedResources,
-            VisualItemBehavior visualItemBehavior, Logger logger,
+            VisualItemBehavior visualItemBehavior, ErrorHandler errorHandler,
             ResourceSetFactory resourceSetFactory,
             ResourceMultiCategorizer multiCategorizer) {
 
@@ -118,13 +124,15 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert selectedResources != null;
         assert highlightedResources != null;
         assert visualItemBehavior != null;
-        assert logger != null;
+        assert errorHandler != null;
+        assert resourceSetFactory != null;
+        assert multiCategorizer != null;
 
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
         this.highlightedResources = highlightedResources;
         this.visualItemBehavior = visualItemBehavior;
-        this.logger = logger;
+        this.errorHandler = errorHandler;
 
         this.resourceGrouping = new ResourceGrouping(multiCategorizer,
                 resourceSetFactory);
@@ -250,7 +258,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     LightweightCollections.<VisualItem> emptyCollection(),
                     getVisualItems()));
 
-            visualItem.dispose();
+            safelyDispose(visualItem, errorHandler);
         }
 
         /*
@@ -258,27 +266,28 @@ public class DefaultVisualizationModel implements VisualizationModel,
          * handlers should get removed and references should be set to null.
          */
 
-        DisposeUtil.dispose(selectedResources);
-        selectedResources = null;
-
-        DisposeUtil.dispose(resourceGrouping);
-        resourceGrouping = null;
-
-        contentDisplay.dispose();
-        contentDisplay = null;
+        selectedResources = safelyDispose(selectedResources, errorHandler);
+        resourceGrouping = safelyDispose(resourceGrouping, errorHandler);
+        contentDisplay = safelyDispose(contentDisplay, errorHandler);
 
         highlightedResources = null;
 
-        handlerRegistrations.dispose();
-        handlerRegistrations = null;
+        handlerRegistrations = safelyDispose(handlerRegistrations, errorHandler);
     }
 
     private void fireVisualItemContainerChangeEvent(Delta<VisualItem> delta) {
         assert delta != null;
 
-        // TODO check that delta does contain actual changes (method on delta)
-        handlerManager
-                .fireEvent(new VisualItemContainerChangeEvent(this, delta));
+        if (delta.isEmpty()) {
+            return;
+        }
+
+        try {
+            handlerManager.fireEvent(new VisualItemContainerChangeEvent(this,
+                    delta));
+        } catch (Throwable ex) {
+            errorHandler.handleError(ex);
+        }
     }
 
     @Override
@@ -391,7 +400,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .createLightweightList();
         Set<String> groupIds = resourceGrouping.getGroupIds(resources);
         for (String groupId : groupIds) {
-            assert visualItemsByGroupId.containsKey(groupId) : "view item with id "
+            assert visualItemsByGroupId.containsKey(groupId) : "VisualItem with id "
                     + groupId + " not found";
             result.add(visualItemsByGroupId.get(groupId));
         }
@@ -813,7 +822,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     /**
-     * NOTE: Exceptions are logged and not thrown to ensure robustness.
+     * NOTE: Exceptions are reported and not thrown to ensure robustness.
      */
     private void updateViewContentDisplay(Delta<VisualItem> delta,
             LightweightCollection<Slot> changedSlots) {
@@ -825,8 +834,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         try {
             // TODO switch to delta in view content display interface
             contentDisplay.update(delta, changedSlots);
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "ViewContentDisplay.update failed", ex);
+        } catch (Throwable ex) {
+            errorHandler.handleError(ex);
         }
     }
 

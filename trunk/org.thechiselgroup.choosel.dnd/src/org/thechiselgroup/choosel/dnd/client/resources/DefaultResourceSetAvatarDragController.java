@@ -280,8 +280,18 @@ public class DefaultResourceSetAvatarDragController extends
         List<ResourceSetAvatarDropController> availableControllers = new ArrayList<ResourceSetAvatarDropController>();
         for (ResourceSetAvatarDropController dropController : dropControllers
                 .values()) {
-            if (canDropOn(dropController)) {
-                availableControllers.add(dropController);
+
+            /*
+             * We use an error handler to make sure exception in the drop
+             * controllers are recorded, but do not affect the overall drag
+             * operation.
+             */
+            try {
+                if (canDropOn(dropController)) {
+                    availableControllers.add(dropController);
+                }
+            } catch (Throwable ex) {
+                errorHandler.handleError(ex);
             }
         }
         return availableControllers;

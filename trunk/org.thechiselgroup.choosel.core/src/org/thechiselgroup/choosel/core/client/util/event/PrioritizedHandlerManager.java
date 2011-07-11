@@ -15,11 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.event;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.UmbrellaException;
 
 /**
  * <p>
@@ -86,12 +90,38 @@ public class PrioritizedHandlerManager {
         throw new IllegalArgumentException("unsupported priority: " + priority);
     }
 
+    private Set<Throwable> doFire(HandlerManager handlers, GwtEvent<?> event,
+            Set<Throwable> causes) {
+
+        try {
+            handlers.fireEvent(event);
+        } catch (Exception e) {
+            if (causes == null) {
+                causes = new HashSet<Throwable>();
+            }
+
+            if (e instanceof UmbrellaException) {
+                causes.addAll(((UmbrellaException) e).getCauses());
+            } else {
+                causes.add(e);
+            }
+        }
+
+        return causes;
+    }
+
     public void fireEvent(GwtEvent<?> event) {
         assert event != null;
 
-        firstPriorityHandlers.fireEvent(event);
-        normalPriorityHandlers.fireEvent(event);
-        lastPriorityHandlers.fireEvent(event);
+        Set<Throwable> causes = null;
+
+        causes = doFire(firstPriorityHandlers, event, causes);
+        causes = doFire(normalPriorityHandlers, event, causes);
+        causes = doFire(lastPriorityHandlers, event, causes);
+
+        if (causes != null) {
+            throw new UmbrellaException(causes);
+        }
     }
 
     /**

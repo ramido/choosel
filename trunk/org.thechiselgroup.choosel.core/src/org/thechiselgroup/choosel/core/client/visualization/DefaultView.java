@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization;
 
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
@@ -108,7 +109,7 @@ public class DefaultView implements View {
 
     private ViewContentDisplay contentDisplay;
 
-    private VisualizationModel model;
+    private VisualizationModel visualizationModel;
 
     private ResourceModel resourceModel;
 
@@ -117,6 +118,8 @@ public class DefaultView implements View {
     private boolean isInitialized;
 
     private String contentType;
+
+    private ErrorHandler errorHandler;
 
     private String label;
 
@@ -137,8 +140,8 @@ public class DefaultView implements View {
             Presenter resourceModelPresenter,
             VisualMappingsControl visualMappingsControl,
             LightweightCollection<SidePanelSection> sidePanelSections,
-            VisualizationModel viewModel, ResourceModel resourceModel,
-            SelectionModel selectionModel) {
+            VisualizationModel visualizationModel, ResourceModel resourceModel,
+            SelectionModel selectionModel, ErrorHandler errorHandler) {
 
         assert label != null;
         assert contentType != null;
@@ -146,9 +149,10 @@ public class DefaultView implements View {
         assert selectionModelPresenter != null;
         assert resourceModelPresenter != null;
         assert sidePanelSections != null;
-        assert viewModel != null;
+        assert visualizationModel != null;
         assert resourceModel != null;
         assert selectionModel != null;
+        assert errorHandler != null;
 
         this.label = label;
         this.contentType = contentType;
@@ -156,9 +160,10 @@ public class DefaultView implements View {
         this.selectionModelPresenter = selectionModelPresenter;
         this.resourceModelPresenter = resourceModelPresenter;
         this.sidePanelSections = sidePanelSections;
-        this.model = viewModel;
+        this.visualizationModel = visualizationModel;
         this.selectionModel = selectionModel;
         this.resourceModel = resourceModel;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -173,14 +178,12 @@ public class DefaultView implements View {
 
     @Override
     public void dispose() {
-        resourceModelPresenter.dispose();
-        resourceModelPresenter = null;
-
-        selectionModelPresenter.dispose();
-        selectionModelPresenter = null;
-
-        DisposeUtil.dispose(model);
-        model = null;
+        resourceModelPresenter = DisposeUtil.safelyDispose(
+                resourceModelPresenter, errorHandler);
+        selectionModelPresenter = DisposeUtil.safelyDispose(
+                selectionModelPresenter, errorHandler);
+        visualizationModel = DisposeUtil.safelyDispose(visualizationModel,
+                errorHandler);
     }
 
     // protected for test access
@@ -201,8 +204,9 @@ public class DefaultView implements View {
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
                 restorationService, accessor);
 
-        restore(new SlotMappingConfigurationPersistableAdapter(model), state,
-                MEMENTO_SLOT_MAPPINGS, restorationService, accessor);
+        restore(new SlotMappingConfigurationPersistableAdapter(
+                visualizationModel), state, MEMENTO_SLOT_MAPPINGS,
+                restorationService, accessor);
 
         contentDisplay.endRestore();
     }
@@ -219,7 +223,8 @@ public class DefaultView implements View {
 
     @Override
     public VisualizationModel getModel() {
-        return model;
+        assert visualizationModel != null : "view has been disposed";
+        return visualizationModel;
     }
 
     protected String getModuleBase() {
@@ -378,10 +383,12 @@ public class DefaultView implements View {
 
         if ("byProperty".equals(categorizerType)) {
             String property = (String) groupingMemento.getValue("property");
-            model.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                    property));
+            visualizationModel
+                    .setCategorizer(new ResourceByPropertyMultiCategorizer(
+                            property));
         } else if ("byUri".equals(categorizerType)) {
-            model.setCategorizer(new ResourceByUriMultiCategorizer());
+            visualizationModel
+                    .setCategorizer(new ResourceByUriMultiCategorizer());
         }
     }
 
@@ -405,8 +412,8 @@ public class DefaultView implements View {
                 resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY,
                 contentDisplay.save(resourceSetCollector));
-        save(new SlotMappingConfigurationPersistableAdapter(model), memento,
-                MEMENTO_SLOT_MAPPINGS, resourceSetCollector);
+        save(new SlotMappingConfigurationPersistableAdapter(visualizationModel),
+                memento, MEMENTO_SLOT_MAPPINGS, resourceSetCollector);
 
         return memento;
     }
@@ -415,7 +422,8 @@ public class DefaultView implements View {
     private void saveGrouping(Memento memento) {
         Memento groupingMemento = new Memento();
 
-        ResourceMultiCategorizer categorizer = model.getCategorizer();
+        ResourceMultiCategorizer categorizer = visualizationModel
+                .getCategorizer();
         if (categorizer instanceof ResourceByPropertyMultiCategorizer) {
             groupingMemento.setValue("type", "byProperty");
             groupingMemento.setValue("property",

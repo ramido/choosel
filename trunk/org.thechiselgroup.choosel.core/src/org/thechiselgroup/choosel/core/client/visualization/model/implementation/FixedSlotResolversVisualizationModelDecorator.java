@@ -23,6 +23,8 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.util.Disposable;
+import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
@@ -43,7 +45,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 // TODO needs more tests & features, e.g. for the error model decoration
 public class FixedSlotResolversVisualizationModelDecorator implements
-        VisualizationModel {
+        VisualizationModel, Disposable {
 
     private VisualizationModel delegate;
 
@@ -80,6 +82,11 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     @Override
     public boolean containsVisualItem(String viewItemId) {
         return delegate.containsVisualItem(viewItemId);
+    }
+
+    @Override
+    public void dispose() {
+        DisposeUtil.dispose(delegate);
     }
 
     @Override

@@ -62,9 +62,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     @Override
     public void dispose() {
         callback = null;
-
-        DisposeUtil.dispose(widget);
-        widget = null;
+        widget = DisposeUtil.dispose(widget);
     }
 
     @Override

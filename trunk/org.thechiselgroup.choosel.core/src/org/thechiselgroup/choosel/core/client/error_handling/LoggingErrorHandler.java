@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +35,10 @@ public class LoggingErrorHandler implements ErrorHandler {
     public void handleError(Throwable error) {
         assert error != null;
 
-        error = ExceptionUtil.unwrapCause(error);
+        Collection<Throwable> causes = ExceptionUtil.getCauses(error);
+        for (Throwable cause : causes) {
+            logger.log(Level.SEVERE, cause.getMessage(), cause);
+        }
 
-        logger.log(Level.SEVERE, error.getMessage(), error);
     }
 }

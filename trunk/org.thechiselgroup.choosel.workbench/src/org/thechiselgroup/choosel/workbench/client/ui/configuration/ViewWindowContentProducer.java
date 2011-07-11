@@ -23,10 +23,9 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
-import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
@@ -133,9 +132,10 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     private CommandManager commandManager;
 
     @Inject
-    private VisualItemValueResolverFactoryProvider resolverFactoryProvider;
+    private ErrorHandler errorHandler;
 
-    private Logger logger;
+    @Inject
+    private VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
     // XXX remove
     protected LightweightList<SidePanelSection> createSidePanelSections(
@@ -226,8 +226,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         VisualizationModel visualizationModel = new FixedSlotResolversVisualizationModelDecorator(
                 new DefaultVisualizationModel(contentDisplay,
                         selectionModel.getSelectionProxy(),
-                        hoverModel.getResources(), viewItemBehaviors, logger,
-                        new DefaultResourceSetFactory(),
+                        hoverModel.getResources(), viewItemBehaviors,
+                        errorHandler, new DefaultResourceSetFactory(),
                         new ResourceByUriMultiCategorizer()),
                 fixedSlotResolvers);
 
@@ -298,19 +298,13 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         DefaultView view = new DefaultView(contentDisplay, label, contentType,
                 selectionModelPresenter, resourceModelPresenter,
                 visualMappingsControl, sidePanelSections, visualizationModel,
-                resourceModel, selectionModel);
+                resourceModel, selectionModel, errorHandler);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);
         }
 
         return new ViewWindowContent(view);
-    }
-
-    @SuppressWarnings("unused")
-    @Inject
-    private void injectLogger(LoggerProvider logger) {
-        this.logger = logger.getLogger();
     }
 
 }

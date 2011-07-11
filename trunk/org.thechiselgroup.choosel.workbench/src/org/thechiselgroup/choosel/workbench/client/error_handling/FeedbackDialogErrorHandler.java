@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.workbench.client.error_handling;
 
 import static org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingConstants.LOG;
 
+import java.util.Collection;
+
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.error_handling.ExceptionUtil;
@@ -57,7 +59,10 @@ public class FeedbackDialogErrorHandler implements ErrorHandler {
     public void handleError(Throwable error) {
         assert error != null;
 
-        dialogManager.show(new FeedbackDialog(ExceptionUtil.unwrapCause(error),
-                executor, feedbackService));
+        Collection<Throwable> causes = ExceptionUtil.getCauses(error);
+        for (Throwable cause : causes) {
+            dialogManager.show(new FeedbackDialog(cause, executor,
+                    feedbackService));
+        }
     }
 }

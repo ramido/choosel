@@ -122,9 +122,9 @@ public class DefaultMapRenderer implements MapRenderer {
         updateStatusStyling(delta.getUpdatedElements());
     }
 
-    private void updateStatusStyling(LightweightCollection<VisualItem> viewItems) {
-        for (VisualItem viewItem : viewItems) {
-            ((DefaultMapItem) viewItem.getDisplayObject()).setStatusStyling();
+    private void updateStatusStyling(LightweightCollection<VisualItem> visualItems) {
+        for (VisualItem visualItem : visualItems) {
+            ((DefaultMapItem) visualItem.getDisplayObject()).setStatusStyling();
         }
     }
 

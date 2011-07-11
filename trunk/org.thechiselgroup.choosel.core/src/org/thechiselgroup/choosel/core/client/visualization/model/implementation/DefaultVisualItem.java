@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.NoResolverForSlotException;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingResolutionException;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -244,6 +245,8 @@ public class DefaultVisualItem implements Disposable, VisualItem {
             cache.put(slotId, value);
 
             return (T) value;
+        } catch (NoResolverForSlotException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new SlotMappingResolutionException(slot, this, ex);
         }
