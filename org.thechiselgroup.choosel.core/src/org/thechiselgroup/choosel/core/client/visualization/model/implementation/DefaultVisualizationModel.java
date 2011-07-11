@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
 
 import java.util.Map;
@@ -52,6 +53,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingCha
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
@@ -247,10 +249,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
         DefaultVisualItem visualItem = new DefaultVisualItem(groupID,
                 resources, slotMappingConfiguration, visualItemBehavior);
 
-        visualItem.updateHighlightedResources(highlightedResources,
+        visualItem.updateSubset(Subset.HIGHLIGHTED, highlightedResources,
                 LightweightCollections.<Resource> emptyCollection());
 
-        visualItem.updateSelectedResources(selectedResources,
+        visualItem.updateSubset(Subset.SELECTED, selectedResources,
                 LightweightCollections.<Resource> emptyCollection());
 
         visualItemsByGroupId.put(groupID, visualItem);
@@ -532,7 +534,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     @Override
                     public void onResourceSetChanged(
                             ResourceSetChangedEvent event) {
-                        updateHighlighting(event.getAddedResources(),
+
+                        updateSubset(Subset.HIGHLIGHTED,
+                                event.getAddedResources(),
                                 event.getRemovedResources());
                     }
                 }));
@@ -554,7 +558,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     @Override
                     public void onResourceSetChanged(
                             ResourceSetChangedEvent event) {
-                        updateSelection(event.getAddedResources(),
+
+                        updateSubset(Subset.SELECTED,
+                                event.getAddedResources(),
                                 event.getRemovedResources());
                     }
                 }));
@@ -775,44 +781,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     /*
-     * TODO refactor: updateSelection is similar (and the whole highlighting vs
-     * selection in visualitem)
+     * TODO introduce Delta/Change object with added/removed --> just use full
+     * delta?
      */
-    private void updateHighlighting(
-            LightweightCollection<Resource> addedResources,
-            LightweightCollection<Resource> removedResources) {
-
-        assert addedResources != null;
-        assert removedResources != null;
-
-        ResourceSet addedResourcesInThisView = getIntersectionWithVisualizationResources(addedResources);
-        ResourceSet removedResourcesInThisView = getIntersectionWithVisualizationResources(removedResources);
-
-        if (addedResourcesInThisView.isEmpty()
-                && removedResourcesInThisView.isEmpty()) {
-            return;
-        }
-
-        LightweightCollection<VisualItem> affectedVisualItems = getValidVisualItems(new CombinedIterable<Resource>(
-                addedResources, removedResources));
-
-        for (VisualItem visualItem : affectedVisualItems) {
-            ((DefaultVisualItem) visualItem).updateHighlightedResources(
-                    addedResourcesInThisView, removedResourcesInThisView);
-        }
-
-        updateViewContentDisplay(Delta.createDelta(
-                LightweightCollections.<VisualItem> emptyCollection(),
-                affectedVisualItems,
-                LightweightCollections.<VisualItem> emptyCollection()),
-                LightweightCollections.<Slot> emptyCollection());
-    }
-
-    /*
-     * TODO refactor: updateHighlighting is similar (and the whole highlighting
-     * vs selection in visualitem)
-     */
-    private void updateSelection(
+    private void updateSubset(Subset subset,
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
 
@@ -824,19 +796,21 @@ public class DefaultVisualizationModel implements VisualizationModel,
             return;
         }
 
+        /*
+         * XXX What if VisualItem subsets are not updated and then it becomes
+         * valid again?
+         */
+
         LightweightCollection<VisualItem> affectedVisualItems = getValidVisualItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
         for (VisualItem visualItem : affectedVisualItems) {
-            ((DefaultVisualItem) visualItem).updateSelectedResources(
+            ((DefaultVisualItem) visualItem).updateSubset(subset,
                     addedResourcesInThisVisualization,
                     removedResourcesInThisVisualization);
         }
 
-        updateViewContentDisplay(Delta.createDelta(
-                LightweightCollections.<VisualItem> emptyCollection(),
-                affectedVisualItems,
-                LightweightCollections.<VisualItem> emptyCollection()),
+        updateViewContentDisplay(createUpdatedDelta(affectedVisualItems),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -869,7 +843,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getIntersection(change.getRemovedResources());
 
         if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
-            visualItem.updateHighlightedResources(highlightedAdded,
+            visualItem.updateSubset(Subset.HIGHLIGHTED, highlightedAdded,
                     highlightedRemoved);
         }
     }
@@ -884,7 +858,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getIntersection(change.getRemovedResources());
 
         if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
-            visualItem.updateSelectedResources(selectedAdded, selectedRemoved);
+            visualItem.updateSubset(Subset.SELECTED, selectedAdded,
+                    selectedRemoved);
         }
     }
 

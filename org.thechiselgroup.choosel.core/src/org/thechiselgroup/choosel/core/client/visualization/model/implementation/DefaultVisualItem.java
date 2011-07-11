@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
@@ -80,9 +81,7 @@ public class DefaultVisualItem implements Disposable, VisualItem {
 
     private ResourceSet selectedResources;
 
-    private Status cachedHighlightStatus = null;
-
-    private Status cachedSelectedStatus = null;
+    private Map<Subset, Status> cachedStatus = new HashMap<VisualItem.Subset, VisualItem.Status>();
 
     /**
      * PERFORMANCE: Cache for the resolved slot values of ALL subset. Maps the
@@ -153,14 +152,6 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         return displayObject;
     }
 
-    private Status getHighlightStatus() {
-        if (cachedHighlightStatus == null) {
-            cachedHighlightStatus = getSubsetStatus(highlightedResources);
-        }
-
-        return cachedHighlightStatus;
-    }
-
     @Override
     public String getId() {
         return id;
@@ -186,14 +177,6 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         }
     }
 
-    private Status getSelectionStatus() {
-        if (cachedSelectedStatus == null) {
-            cachedSelectedStatus = getSubsetStatus(selectedResources);
-        }
-
-        return cachedSelectedStatus;
-    }
-
     // TODO move, refactor
     @Override
     public Slot[] getSlots() {
@@ -208,12 +191,19 @@ public class DefaultVisualItem implements Disposable, VisualItem {
             // always containing all contained resources
             return Status.FULL;
         case HIGHLIGHTED:
-            return getHighlightStatus();
         case SELECTED:
-            return getSelectionStatus();
+            return getStatus(subset, getResources(subset));
         default:
             throw new RuntimeException("should not be reached");
         }
+    }
+
+    private Status getStatus(Subset subset, ResourceSet subsetResources) {
+        if (!cachedStatus.containsKey(subset)) {
+            cachedStatus.put(subset, getSubsetStatus(subsetResources));
+        }
+
+        return cachedStatus.get(subset);
     }
 
     private Status getSubsetStatus(ResourceSet subset) {
@@ -285,36 +275,20 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         return "VisualItem[" + content.toString() + "]";
     }
 
-    public void updateHighlightedResources(
-            LightweightCollection<Resource> addedHighlightedResources,
-            LightweightCollection<Resource> removedHighlightedResources) {
+    public void updateSubset(Subset subset,
+            LightweightCollection<Resource> addedSubsetResources,
+            LightweightCollection<Resource> removedSubsetResources) {
 
-        assert addedHighlightedResources != null;
-        assert removedHighlightedResources != null;
+        assert addedSubsetResources != null;
+        assert removedSubsetResources != null;
 
-        cachedHighlightStatus = null;
+        cachedStatus.remove(subset);
         cache.clear();
 
-        highlightedResources.addAll(content
-                .getIntersection(addedHighlightedResources));
-        highlightedResources.removeAll(content
-                .getIntersection(removedHighlightedResources));
-    }
-
-    public void updateSelectedResources(
-            LightweightCollection<Resource> addedSelectedResources,
-            LightweightCollection<Resource> removedSelectedResources) {
-
-        assert addedSelectedResources != null;
-        assert removedSelectedResources != null;
-
-        cachedSelectedStatus = null;
-        cache.clear();
-
-        selectedResources.addAll(content
-                .getIntersection(addedSelectedResources));
-        selectedResources.removeAll(content
-                .getIntersection(removedSelectedResources));
+        getResources(subset).addAll(
+                content.getIntersection(addedSubsetResources));
+        getResources(subset).removeAll(
+                content.getIntersection(removedSubsetResources));
     }
 
 }
