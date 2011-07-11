@@ -246,13 +246,6 @@ public class FixedSlotResolversVisualizationModelDecorator implements
 
     @Override
     public void setResolver(Slot slot, VisualItemValueResolver resolver) {
-
-        // TODO maybe this should throw an error?
-        if (fixedSlotResolvers.keySet().contains(slot)) {
-            throw new RuntimeException(
-                    "Tried to set a fixed resolver.  You can not change fixed resolvers");
-        }
-
         delegate.setResolver(slot, resolver);
     }
 

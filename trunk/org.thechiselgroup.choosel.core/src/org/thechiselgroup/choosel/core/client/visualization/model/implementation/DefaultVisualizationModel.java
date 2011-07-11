@@ -731,7 +731,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 toCollection(slot));
     }
 
-    private void updateErrorModel(Delta<VisualItem> delta) {
+    protected void updateErrorModel(Delta<VisualItem> delta) {
         assert delta != null;
 
         updateErrorModel(delta.getAddedElements());
@@ -771,14 +771,22 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getResolver(slot);
 
         for (VisualItem visualItem : visualItems) {
-            // TODO subset delegating resolvers have to be done last, because
-            // their errors are dependant on the other resolvers being set
             if (!resolver.canResolve(visualItem, this)) {
                 /*
                  * TODO potential optimization: only change error model if state
                  * for view item has changed (delta update).
                  */
                 errorModel.reportError(slot, visualItem);
+            }
+        }
+
+        // TODO now check the target slots and remove errors for that slot as
+        // well
+        for (Slot viewSlot : getSlots()) {
+            if (isConfigured(viewSlot)
+                    && slotMappingConfiguration.getResolver(viewSlot)
+                            .getTargetSlots().contains(slot)) {
+                updateErrorModel(viewSlot);
             }
         }
     }
