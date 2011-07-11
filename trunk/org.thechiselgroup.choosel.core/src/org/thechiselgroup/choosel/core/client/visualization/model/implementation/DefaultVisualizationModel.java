@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
@@ -71,8 +73,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author Patrick Gorman
  */
 /*
- * TODO introduce ViewItemContainer decorator that is filtered to the valid view
- * items from the error model
+ * TODO introduce VisualItemContainer decorator that is filtered to the valid
+ * view items from the error model
  */
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
@@ -139,7 +141,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         initResourceGrouping();
         initHighlightingModel();
         initContentDisplay();
-        initViewItems();
+        initVisualItems();
     }
 
     @Override
@@ -158,13 +160,13 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     private Delta<VisualItem> calculateDeltaThatConsidersErrors(
             Delta<VisualItem> delta,
-            LightweightCollection<VisualItem> viewItemsThatHadErrors) {
+            LightweightCollection<VisualItem> visualItemsThatHadErrors) {
 
-        LightweightList<VisualItem> addedViewItems = CollectionFactory
+        LightweightList<VisualItem> addedVisualItems = CollectionFactory
                 .createLightweightList();
-        LightweightList<VisualItem> removedViewItems = CollectionFactory
+        LightweightList<VisualItem> removedVisualItems = CollectionFactory
                 .createLightweightList();
-        LightweightList<VisualItem> updatedViewItems = CollectionFactory
+        LightweightList<VisualItem> updatedVisualItems = CollectionFactory
                 .createLightweightList();
 
         // check if added view items should be added or ignored
@@ -172,16 +174,17 @@ public class DefaultVisualizationModel implements VisualizationModel,
             boolean hasErrorsNow = errorModel.hasErrors(added);
 
             if (!hasErrorsNow) {
-                addedViewItems.add(added);
+                addedVisualItems.add(added);
             }
         }
 
         // check if removed resources should to be removed or ignored
         for (VisualItem removed : delta.getRemovedElements()) {
-            boolean hadErrorsBefore = viewItemsThatHadErrors.contains(removed);
+            boolean hadErrorsBefore = visualItemsThatHadErrors
+                    .contains(removed);
 
             if (!hadErrorsBefore) {
-                removedViewItems.add(removed);
+                removedVisualItems.add(removed);
             }
         }
 
@@ -189,24 +192,25 @@ public class DefaultVisualizationModel implements VisualizationModel,
         // ignored
         for (VisualItem updated : delta.getUpdatedElements()) {
             boolean hasErrorsNow = errorModel.hasErrors(updated);
-            boolean hadErrorsBefore = viewItemsThatHadErrors.contains(updated);
+            boolean hadErrorsBefore = visualItemsThatHadErrors
+                    .contains(updated);
 
             if (!hasErrorsNow && !hadErrorsBefore) {
-                updatedViewItems.add(updated);
+                updatedVisualItems.add(updated);
             } else if (!hasErrorsNow && hadErrorsBefore) {
-                addedViewItems.add(updated);
+                addedVisualItems.add(updated);
             } else if (!hadErrorsBefore && hasErrorsNow) {
-                removedViewItems.add(updated);
+                removedVisualItems.add(updated);
             }
         }
 
-        return Delta.createDelta(addedViewItems, updatedViewItems,
-                removedViewItems);
+        return createDelta(addedVisualItems, updatedVisualItems,
+                removedVisualItems);
     }
 
-    private void clearViewItemValueCache(Slot slot) {
-        for (DefaultVisualItem viewItem : visualItemsByGroupId.values()) {
-            viewItem.clearValueCache(slot);
+    private void clearVisualItemValueCache(Slot slot) {
+        for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
+            visualItem.clearValueCache(slot);
         }
     }
 
@@ -239,14 +243,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     @Override
     public void dispose() {
-        for (DefaultVisualItem viewItem : visualItemsByGroupId.values()) {
+        for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
             // fire event that all view items were removed
             fireVisualItemContainerChangeEvent(Delta.createDelta(
                     LightweightCollections.<VisualItem> emptyCollection(),
                     LightweightCollections.<VisualItem> emptyCollection(),
                     getVisualItems()));
 
-            viewItem.dispose();
+            visualItem.dispose();
         }
 
         /*
@@ -300,7 +304,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
      * in DefaultResourceItem.
      * </p>
      */
-    private ResourceSet getIntersectionWithViewResources(
+    private ResourceSet getIntersectionWithVisualizationResources(
             LightweightCollection<Resource> resources) {
 
         ResourceSet resourcesInThisView = new DefaultResourceSet();
@@ -335,8 +339,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     @Override
-    public LightweightCollection<Slot> getSlotsWithErrors(VisualItem viewItem) {
-        return errorModel.getSlotsWithErrors(viewItem);
+    public LightweightCollection<Slot> getSlotsWithErrors(VisualItem visualItem) {
+        return errorModel.getSlotsWithErrors(visualItem);
     }
 
     @Override
@@ -345,15 +349,15 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     // TODO cache
-    private LightweightCollection<VisualItem> getValidViewItems() {
-        LightweightList<VisualItem> viewItemsThatWereValid = CollectionFactory
+    private LightweightCollection<VisualItem> getValidVisualItems() {
+        LightweightList<VisualItem> visualItemsThatWereValid = CollectionFactory
                 .createLightweightList();
-        for (VisualItem viewItem : getVisualItems()) {
-            if (!hasErrors(viewItem)) {
-                viewItemsThatWereValid.add(viewItem);
+        for (VisualItem visualItem : getVisualItems()) {
+            if (!hasErrors(visualItem)) {
+                visualItemsThatWereValid.add(visualItem);
             }
         }
-        return viewItemsThatWereValid;
+        return visualItemsThatWereValid;
     }
 
     @Override
@@ -362,13 +366,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot) {
-        return errorModel.getViewItemsWithErrors(slot);
-    }
-
-    @Override
-    public VisualItem getVisualItem(String viewItemId) {
-        return visualItemsByGroupId.get(viewItemId);
+    public VisualItem getVisualItem(String visualItemId) {
+        return visualItemsByGroupId.get(visualItemId);
     }
 
     // TODO these view items should be cached & the cache should be updated
@@ -385,6 +384,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
     @Override
     public LightweightList<VisualItem> getVisualItems(
             Iterable<Resource> resources) {
+
         assert resources != null;
 
         LightweightList<VisualItem> result = CollectionFactory
@@ -404,6 +404,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     @Override
+    public LightweightCollection<VisualItem> getVisualItemsWithErrors(Slot slot) {
+        return errorModel.getVisualItemsWithErrors(slot);
+    }
+
+    @Override
     public boolean hasErrors() {
         return errorModel.hasErrors();
     }
@@ -414,8 +419,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     @Override
-    public boolean hasErrors(VisualItem viewItem) {
-        return errorModel.hasErrors(viewItem);
+    public boolean hasErrors(VisualItem visualItem) {
+        return errorModel.hasErrors(visualItem);
     }
 
     private void init(Object target) {
@@ -434,10 +439,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             }
 
             @Override
-            public boolean containsVisualItem(String viewItemId) {
+            public boolean containsVisualItem(String visualItemId) {
                 return DefaultVisualizationModel.this
-                        .containsVisualItem(viewItemId)
-                        && !hasErrors(visualItemsByGroupId.get(viewItemId));
+                        .containsVisualItem(visualItemId)
+                        && !hasErrors(visualItemsByGroupId.get(visualItemId));
             }
 
             @Override
@@ -455,26 +460,26 @@ public class DefaultVisualizationModel implements VisualizationModel,
             }
 
             @Override
-            public VisualItem getVisualItem(String viewItemId) {
+            public VisualItem getVisualItem(String visualItemId) {
 
-                VisualItem viewItem = DefaultVisualizationModel.this
-                        .getVisualItem(viewItemId);
+                VisualItem visualItem = DefaultVisualizationModel.this
+                        .getVisualItem(visualItemId);
 
-                if (viewItem == null) {
-                    throw new NoSuchElementException("View Item with id "
-                            + viewItemId + " is not contained.");
+                if (visualItem == null) {
+                    throw new NoSuchElementException("VisualItem with id "
+                            + visualItemId + " is not contained.");
                 }
-                if (DefaultVisualizationModel.this.hasErrors(viewItem)) {
-                    throw new NoSuchElementException("View Item with id "
-                            + viewItemId
+                if (DefaultVisualizationModel.this.hasErrors(visualItem)) {
+                    throw new NoSuchElementException("VisualItem with id "
+                            + visualItemId
                             + " contains errors and cannot be retrieved.");
                 }
-                return viewItem;
+                return visualItem;
             }
 
             @Override
             public LightweightCollection<VisualItem> getVisualItems() {
-                return getValidViewItems();
+                return getValidVisualItems();
             }
 
             @Override
@@ -533,7 +538,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     // XXX needs extension
-    private void initViewItems() {
+    private void initVisualItems() {
         // TODO large add operation
         // TODO use error model... --> test case
         LightweightList<VisualItem> addedVisualItems = CollectionFactory
@@ -568,7 +573,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             return LightweightCollections.emptyCollection();
         }
 
-        LightweightList<VisualItem> addedViewItems = CollectionFactory
+        LightweightList<VisualItem> addedVisualItems = CollectionFactory
                 .createLightweightList();
 
         /*
@@ -587,12 +592,12 @@ public class DefaultVisualizationModel implements VisualizationModel,
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == DeltaType.GROUP_CREATED;
 
-            addedViewItems.add(createVisualItem(change.getGroupID(),
+            addedVisualItems.add(createVisualItem(change.getGroupID(),
                     change.getResourceSet(), highlightedResources,
                     selectedResources));
         }
 
-        return addedViewItems;
+        return addedVisualItems;
     }
 
     private LightweightCollection<VisualItem> processRemoveChanges(
@@ -602,15 +607,15 @@ public class DefaultVisualizationModel implements VisualizationModel,
             return LightweightCollections.emptyCollection();
         }
 
-        LightweightList<VisualItem> removedViewItems = CollectionFactory
+        LightweightList<VisualItem> removedVisualItems = CollectionFactory
                 .createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == DeltaType.GROUP_REMOVED;
 
             // XXX dispose should be done after method call...
-            removedViewItems.add(removeViewItem(change.getGroupID()));
+            removedVisualItems.add(removeVisualItem(change.getGroupID()));
         }
-        return removedViewItems;
+        return removedVisualItems;
     }
 
     private void processResourceGroupingUpdate(
@@ -637,33 +642,33 @@ public class DefaultVisualizationModel implements VisualizationModel,
             return LightweightCollections.emptyCollection();
         }
 
-        LightweightList<VisualItem> updatedViewItems = CollectionFactory
+        LightweightList<VisualItem> updatedVisualItems = CollectionFactory
                 .createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == DeltaType.GROUP_CHANGED;
-            DefaultVisualItem viewItem = visualItemsByGroupId.get(change
+            DefaultVisualItem visualItem = visualItemsByGroupId.get(change
                     .getGroupID());
 
-            updateViewItemHighlightingSet(viewItem, change);
-            updateViewItemSelectionSet(change, viewItem);
+            updateVisualItemHighlightingSet(visualItem, change);
+            updateVisualItemSelectionSet(change, visualItem);
 
-            updatedViewItems.add(viewItem);
+            updatedVisualItems.add(visualItem);
         }
 
-        return updatedViewItems;
+        return updatedVisualItems;
     }
 
-    private DefaultVisualItem removeViewItem(String groupID) {
+    private DefaultVisualItem removeVisualItem(String groupID) {
         assert groupID != null : "groupIDs must not be null";
-        assert visualItemsByGroupId.containsKey(groupID) : "no view item for "
+        assert visualItemsByGroupId.containsKey(groupID) : "no VisualItem for "
                 + groupID;
 
-        DefaultVisualItem viewItem = visualItemsByGroupId.remove(groupID);
-        viewItem.dispose();
+        DefaultVisualItem visualItem = visualItemsByGroupId.remove(groupID);
+        visualItem.dispose();
 
         assert !visualItemsByGroupId.containsKey(groupID);
 
-        return viewItem;
+        return visualItem;
     }
 
     @Override
@@ -688,12 +693,12 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert resolver != null;
 
         // keep information (currently valid / invalid stuff)
-        LightweightCollection<VisualItem> viewItemsThatHadErrors = LightweightCollections
+        LightweightCollection<VisualItem> visualItemsThatHadErrors = LightweightCollections
                 .copy(getVisualItemsWithErrors());
-        LightweightCollection<VisualItem> viewItemsThatWereValid = LightweightCollections
-                .copy(getValidViewItems());
+        LightweightCollection<VisualItem> visualItemsThatWereValid = LightweightCollections
+                .copy(getValidVisualItems());
 
-        clearViewItemValueCache(slot);
+        clearVisualItemValueCache(slot);
 
         // actually change the slot mapping
         slotMappingConfiguration.setResolver(slot, resolver);
@@ -702,18 +707,18 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         // CASE 1: stuff gets removed
         // valid --> invalid (for view items)
-        LightweightCollection<VisualItem> viewItemsToAdd = LightweightCollections
-                .getRelativeComplement(viewItemsThatHadErrors,
+        LightweightCollection<VisualItem> visualItemsToAdd = LightweightCollections
+                .getRelativeComplement(visualItemsThatHadErrors,
                         getVisualItemsWithErrors());
         // CASE 2: stuff gets added
         // invalid --> valid (for view items)
-        LightweightCollection<VisualItem> viewItemsToRemove = LightweightCollections
-                .getRelativeComplement(viewItemsThatWereValid,
-                        getValidViewItems());
+        LightweightCollection<VisualItem> visualItemsToRemove = LightweightCollections
+                .getRelativeComplement(visualItemsThatWereValid,
+                        getValidVisualItems());
 
-        updateViewContentDisplay(Delta.createDelta(viewItemsToAdd,
+        updateViewContentDisplay(Delta.createDelta(visualItemsToAdd,
                 LightweightCollections.<VisualItem> emptyCollection(),
-                viewItemsToRemove), LightweightCollections.toCollection(slot));
+                visualItemsToRemove), LightweightCollections.toCollection(slot));
     }
 
     private void updateErrorModel(Delta<VisualItem> delta) {
@@ -724,12 +729,12 @@ public class DefaultVisualizationModel implements VisualizationModel,
         errorModel.clearErrors(delta.getRemovedElements());
     }
 
-    private void updateErrorModel(LightweightCollection<VisualItem> viewItems) {
-        assert viewItems != null;
+    private void updateErrorModel(LightweightCollection<VisualItem> visualItems) {
+        assert visualItems != null;
 
-        errorModel.clearErrors(viewItems);
+        errorModel.clearErrors(visualItems);
         for (Slot slot : getSlots()) {
-            updateErrorModel(slot, viewItems);
+            updateErrorModel(slot, visualItems);
         }
     }
 
@@ -741,27 +746,27 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     private void updateErrorModel(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         if (!slotMappingConfiguration.isConfigured(slot)) {
             /*
              * TODO potential optimization: have all invalid state for slot in
              * error model (would return errors for all view items)
              */
-            errorModel.reportErrors(slot, viewItems);
+            errorModel.reportErrors(slot, visualItems);
             return;
         }
 
         VisualItemValueResolver resolver = slotMappingConfiguration
                 .getResolver(slot);
 
-        for (VisualItem viewItem : viewItems) {
-            if (!resolver.canResolve(viewItem, this)) {
+        for (VisualItem visualItem : visualItems) {
+            if (!resolver.canResolve(visualItem, this)) {
                 /*
                  * TODO potential optimization: only change error model if state
                  * for view item has changed (delta update).
                  */
-                errorModel.reportError(slot, viewItem);
+                errorModel.reportError(slot, visualItem);
             }
         }
     }
@@ -773,56 +778,57 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert addedResources != null;
         assert removedResources != null;
 
-        ResourceSet addedResourcesInThisView = getIntersectionWithViewResources(addedResources);
-        ResourceSet removedResourcesInThisView = getIntersectionWithViewResources(removedResources);
+        ResourceSet addedResourcesInThisView = getIntersectionWithVisualizationResources(addedResources);
+        ResourceSet removedResourcesInThisView = getIntersectionWithVisualizationResources(removedResources);
 
         if (addedResourcesInThisView.isEmpty()
                 && removedResourcesInThisView.isEmpty()) {
             return;
         }
 
-        LightweightList<VisualItem> affectedViewItems = getVisualItems(new CombinedIterable<Resource>(
+        LightweightList<VisualItem> affectedVisualItems = getVisualItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
-        for (VisualItem viewItem : affectedViewItems) {
-            ((DefaultVisualItem) viewItem).updateHighlightedResources(
+        for (VisualItem visualItem : affectedVisualItems) {
+            ((DefaultVisualItem) visualItem).updateHighlightedResources(
                     addedResourcesInThisView, removedResourcesInThisView);
         }
 
         updateViewContentDisplay(Delta.createDelta(
                 LightweightCollections.<VisualItem> emptyCollection(),
-                affectedViewItems,
+                affectedVisualItems,
                 LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
     /*
      * TODO refactor: updateHighlighting is similar (and the whole highlighting
-     * vs selection in ViewItem)
+     * vs selection in visualitem)
      */
     private void updateSelection(
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
 
-        ResourceSet addedResourcesInThisView = getIntersectionWithViewResources(addedResources);
-        ResourceSet removedResourcesInThisView = getIntersectionWithViewResources(removedResources);
+        ResourceSet addedResourcesInThisVisualization = getIntersectionWithVisualizationResources(addedResources);
+        ResourceSet removedResourcesInThisVisualization = getIntersectionWithVisualizationResources(removedResources);
 
-        if (addedResourcesInThisView.isEmpty()
-                && removedResourcesInThisView.isEmpty()) {
+        if (addedResourcesInThisVisualization.isEmpty()
+                && removedResourcesInThisVisualization.isEmpty()) {
             return;
         }
 
-        LightweightList<VisualItem> affectedViewItems = getVisualItems(new CombinedIterable<Resource>(
+        LightweightList<VisualItem> affectedVisualItems = getVisualItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
-        for (VisualItem viewItem : affectedViewItems) {
-            ((DefaultVisualItem) viewItem).updateSelectedResources(
-                    addedResourcesInThisView, removedResourcesInThisView);
+        for (VisualItem visualItem : affectedVisualItems) {
+            ((DefaultVisualItem) visualItem).updateSelectedResources(
+                    addedResourcesInThisVisualization,
+                    removedResourcesInThisVisualization);
         }
 
         updateViewContentDisplay(Delta.createDelta(
                 LightweightCollections.<VisualItem> emptyCollection(),
-                affectedViewItems,
+                affectedVisualItems,
                 LightweightCollections.<VisualItem> emptyCollection()),
                 LightweightCollections.<Slot> emptyCollection());
     }
@@ -845,7 +851,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
-    private void updateViewItemHighlightingSet(DefaultVisualItem viewItem,
+    private void updateVisualItemHighlightingSet(DefaultVisualItem visualItem,
             CategorizableResourceGroupingChange change) {
 
         LightweightList<Resource> highlightedAdded = highlightedResources
@@ -854,14 +860,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getIntersection(change.getRemovedResources());
 
         if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
-            viewItem.updateHighlightedResources(highlightedAdded,
+            visualItem.updateHighlightedResources(highlightedAdded,
                     highlightedRemoved);
         }
     }
 
-    private void updateViewItemSelectionSet(
+    private void updateVisualItemSelectionSet(
             CategorizableResourceGroupingChange change,
-            DefaultVisualItem viewItem) {
+            DefaultVisualItem visualItem) {
 
         LightweightList<Resource> selectedAdded = selectedResources
                 .getIntersection(change.getAddedResources());
@@ -869,7 +875,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .getIntersection(change.getRemovedResources());
 
         if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
-            viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
+            visualItem.updateSelectedResources(selectedAdded, selectedRemoved);
         }
     }
 
@@ -882,15 +888,15 @@ public class DefaultVisualizationModel implements VisualizationModel,
          * IMPORTANT: remove old items before adding new once (there might be
          * conflicts, i.e. groups with the same id)
          */
-        LightweightCollection<VisualItem> removedViewItems = processRemoveChanges(event
+        LightweightCollection<VisualItem> removedVisualItems = processRemoveChanges(event
                 .getChanges(DeltaType.GROUP_REMOVED));
-        LightweightCollection<VisualItem> addedViewItems = processAddChanges(event
+        LightweightCollection<VisualItem> addedVisualItems = processAddChanges(event
                 .getChanges(DeltaType.GROUP_CREATED));
-        LightweightCollection<VisualItem> updatedViewItems = processUpdates(event
+        LightweightCollection<VisualItem> updatedVisualItems = processUpdates(event
                 .getChanges(DeltaType.GROUP_CHANGED));
 
-        return Delta.createDelta(addedViewItems, updatedViewItems,
-                removedViewItems);
+        return createDelta(addedVisualItems, updatedVisualItems,
+                removedVisualItems);
     }
 
 }

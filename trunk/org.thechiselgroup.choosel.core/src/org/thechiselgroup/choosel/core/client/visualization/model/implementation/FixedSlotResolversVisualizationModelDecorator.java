@@ -159,8 +159,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
-    public LightweightCollection<VisualItem> getViewItemsWithErrors(Slot slot) {
-        return delegate.getViewItemsWithErrors(slot);
+    public LightweightCollection<VisualItem> getVisualItemsWithErrors(Slot slot) {
+        return delegate.getVisualItemsWithErrors(slot);
     }
 
     @Override
