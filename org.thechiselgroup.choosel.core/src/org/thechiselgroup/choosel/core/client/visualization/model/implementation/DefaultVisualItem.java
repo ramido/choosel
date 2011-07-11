@@ -28,9 +28,11 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingResolutionException;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteractionHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 /**
  * Default implementation of {@link VisualItem}.
@@ -61,9 +63,9 @@ public class DefaultVisualItem implements Disposable, VisualItem {
     private String id;
 
     // TODO update & paint on changes in resources!!!
-    private final ResourceSet resources;
+    private final ResourceSet content;
 
-    private final DefaultSlotMappingConfiguration slotMappingConfiguration;
+    private final VisualItemValueResolverContext valueResolverContext;
 
     /**
      * The representation of this resource item in the specific display. This is
@@ -91,25 +93,25 @@ public class DefaultVisualItem implements Disposable, VisualItem {
 
     private final VisualItemInteractionHandler interactionHandler;
 
-    public DefaultVisualItem(String id, ResourceSet resources,
-            DefaultSlotMappingConfiguration slotMappingConfiguration,
+    public DefaultVisualItem(String id, ResourceSet content,
+            VisualItemValueResolverContext valueResolverContext,
             VisualItemInteractionHandler interactionHandler) {
 
         assert id != null;
-        assert resources != null;
-        assert slotMappingConfiguration != null;
+        assert content != null;
+        assert valueResolverContext != null;
         assert interactionHandler != null;
 
         this.id = id;
-        this.resources = resources;
-        this.slotMappingConfiguration = slotMappingConfiguration;
+        this.content = content;
+        this.valueResolverContext = valueResolverContext;
         this.interactionHandler = interactionHandler;
 
-        highlightedResources = new DefaultResourceSet();
-        selectedResources = new DefaultResourceSet();
+        this.highlightedResources = new DefaultResourceSet();
+        this.selectedResources = new DefaultResourceSet();
 
-        resources.addEventHandler(new CacheUpdateOnResourceSetChange());
-        resources.addEventHandler(new ResourceSetChangedEventHandler() {
+        this.content.addEventHandler(new CacheUpdateOnResourceSetChange());
+        this.content.addEventHandler(new ResourceSetChangedEventHandler() {
             @Override
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
                 LightweightCollection<Resource> removedResources = event
@@ -165,7 +167,7 @@ public class DefaultVisualItem implements Disposable, VisualItem {
 
     @Override
     public ResourceSet getResources() {
-        return resources;
+        return content;
     }
 
     @Override
@@ -194,7 +196,7 @@ public class DefaultVisualItem implements Disposable, VisualItem {
     // TODO move, refactor
     @Override
     public Slot[] getSlots() {
-        return slotMappingConfiguration.getSlots();
+        return valueResolverContext.getSlots();
     }
 
     @Override
@@ -218,13 +220,14 @@ public class DefaultVisualItem implements Disposable, VisualItem {
             return Status.NONE;
         }
 
-        if (subset.containsEqualResources(resources)) {
+        if (subset.containsEqualResources(content)) {
             return Status.FULL;
         }
 
         return Status.PARTIAL;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getValue(Slot slot) {
         assert slot != null : "slot must not be null";
@@ -234,11 +237,16 @@ public class DefaultVisualItem implements Disposable, VisualItem {
             return (T) cache.get(slotId);
         }
 
-        Object value = slotMappingConfiguration.resolve(slot, this);
+        try {
+            Object value = valueResolverContext.getResolver(slot).resolve(this,
+                    valueResolverContext);
 
-        cache.put(slotId, value);
+            cache.put(slotId, value);
 
-        return (T) value;
+            return (T) value;
+        } catch (Exception ex) {
+            throw new SlotMappingResolutionException(slot, this, ex);
+        }
     }
 
     @Override
@@ -271,7 +279,7 @@ public class DefaultVisualItem implements Disposable, VisualItem {
 
     @Override
     public String toString() {
-        return "VisualItem[" + resources.toString() + "]";
+        return "VisualItem[" + content.toString() + "]";
     }
 
     public void updateHighlightedResources(
@@ -284,9 +292,9 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         cachedHighlightStatus = null;
         cache.clear();
 
-        highlightedResources.addAll(resources
+        highlightedResources.addAll(content
                 .getIntersection(addedHighlightedResources));
-        highlightedResources.removeAll(resources
+        highlightedResources.removeAll(content
                 .getIntersection(removedHighlightedResources));
     }
 
@@ -300,9 +308,9 @@ public class DefaultVisualItem implements Disposable, VisualItem {
         cachedSelectedStatus = null;
         cache.clear();
 
-        selectedResources.addAll(resources
+        selectedResources.addAll(content
                 .getIntersection(addedSelectedResources));
-        selectedResources.removeAll(resources
+        selectedResources.removeAll(content
                 .getIntersection(removedSelectedResources));
     }
 

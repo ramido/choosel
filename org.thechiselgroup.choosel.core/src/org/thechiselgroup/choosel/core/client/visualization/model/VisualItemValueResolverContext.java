@@ -27,4 +27,13 @@ public interface VisualItemValueResolverContext {
     // TODO exception
     VisualItemValueResolver getResolver(Slot slot);
 
+    /**
+     * {@link Slot}s that are available in this
+     * {@link VisualItemValueResolverContext}.
+     * 
+     * @return {@link Slot}s that need to be configured.
+     */
+    // TODO change return type to LightweightCollection<Slot>
+    Slot[] getSlots();
+
 }
