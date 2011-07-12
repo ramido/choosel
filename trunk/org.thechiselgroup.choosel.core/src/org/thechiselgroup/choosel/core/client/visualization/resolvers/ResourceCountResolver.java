@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 
 // TODO DataType.NUMBER
-public class ResourceCountResolver extends SubsetViewItemValueResolver {
+public class ResourceCountResolver extends SubsetVisualItemValueResolver {
 
     public ResourceCountResolver() {
         this(Subset.ALL);

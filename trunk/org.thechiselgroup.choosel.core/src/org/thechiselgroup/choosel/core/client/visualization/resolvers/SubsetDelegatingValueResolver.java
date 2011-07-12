@@ -15,31 +15,35 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
+
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 
 public class SubsetDelegatingValueResolver implements VisualItemValueResolver {
 
     private Slot slot;
 
-    private LightweightCollection<Slot> slots;
+    private LightweightCollection<Slot> targetSlots;
 
     private Subset subset;
 
     public SubsetDelegatingValueResolver(Slot slot, Subset subset) {
+        assert slot != null;
+        assert subset != null;
+
         this.slot = slot;
         this.subset = subset;
-
-        this.slots = LightweightCollections.toCollection(slot);
+        this.targetSlots = toCollection(slot);
     }
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
         if (!context.isConfigured(slot)) {
@@ -48,25 +52,38 @@ public class SubsetDelegatingValueResolver implements VisualItemValueResolver {
 
         assert context.getResolver(slot) != null;
 
-        return context.getResolver(slot).canResolve(viewItem, context);
+        return context.getResolver(slot).canResolve(visualItem, context);
     }
 
     @Override
     public LightweightCollection<Slot> getTargetSlots() {
-        return slots;
+        return targetSlots;
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
         VisualItemValueResolver delegate = context.getResolver(slot);
 
-        if (delegate instanceof SubsetViewItemValueResolver) {
-            return ((SubsetViewItemValueResolver) delegate).resolve(viewItem,
-                    context, subset);
+        assert delegate != null;
+
+        /*
+         * XXX Explicitly checking for ManagedVisualItemValueResolverDecorator
+         * and unwrapping the delegate is not an elegant solution, but it works
+         * for now. Once the requirements for the value resolvers are clearer
+         * and the managed layer is well tested, this should be changed.
+         */
+        if (delegate instanceof ManagedVisualItemValueResolverDecorator) {
+            delegate = ((ManagedVisualItemValueResolverDecorator) delegate)
+                    .getDelegate();
         }
 
-        return delegate.resolve(viewItem, context);
+        if (delegate instanceof SubsetVisualItemValueResolver) {
+            return ((SubsetVisualItemValueResolver) delegate).resolve(
+                    visualItem, context, subset);
+        }
+
+        return delegate.resolve(visualItem, context);
     }
 }
