@@ -40,7 +40,7 @@ public class VisualItemContainerChangeEvent extends
 
     @Override
     protected void dispatch(VisualItemContainerChangeEventHandler handler) {
-        handler.onViewItemContainerChanged(this);
+        handler.onVisualItemContainerChanged(this);
     }
 
     @Override

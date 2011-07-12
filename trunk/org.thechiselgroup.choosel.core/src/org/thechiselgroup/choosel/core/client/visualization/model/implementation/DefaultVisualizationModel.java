@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.copy;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
@@ -268,13 +269,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     @Override
     public void dispose() {
-        for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
-            // fire event that all view items were removed
-            fireVisualItemContainerChangeEvent(Delta.createDelta(
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    getVisualItems()));
+        // fire event that all view items were removed
+        fireVisualItemContainerChangeEvent(createRemovedDelta(getVisualItems()));
 
+        for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
             safelyDispose(visualItem, errorHandler);
         }
 

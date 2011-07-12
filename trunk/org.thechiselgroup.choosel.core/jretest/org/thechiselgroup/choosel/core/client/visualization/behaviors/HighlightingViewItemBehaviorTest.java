@@ -50,10 +50,10 @@ public class HighlightingViewItemBehaviorTest {
      */
     @Test
     public void disposeRemovesHighlighting() {
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
-        underTest.onViewItemRemoved(viewItem);
+        underTest.onVisualItemRemoved(viewItem);
 
         assertThat(hoverModel.getResources(),
                 containsExactly(ResourceSetTestUtils.createResources()));
@@ -64,7 +64,7 @@ public class HighlightingViewItemBehaviorTest {
      */
     @Test
     public void dragEndRemovesHighlighting() {
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         underTest.onInteraction(viewItem, new VisualItemInteraction(
@@ -78,7 +78,7 @@ public class HighlightingViewItemBehaviorTest {
 
     @Test
     public void mouseOverAddsResourcesToHoverModel() {
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         assertThat(hoverModel.getResources(),

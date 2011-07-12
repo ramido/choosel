@@ -19,6 +19,6 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface VisualItemContainerChangeEventHandler extends EventHandler {
 
-    void onViewItemContainerChanged(VisualItemContainerChangeEvent event);
+    void onVisualItemContainerChanged(VisualItemContainerChangeEvent event);
 
 }
