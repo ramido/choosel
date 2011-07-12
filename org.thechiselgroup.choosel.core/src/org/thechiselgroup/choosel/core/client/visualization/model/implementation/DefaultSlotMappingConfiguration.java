@@ -32,7 +32,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-// TODO rename to DefaultSlotMappingConfiguration
 public class DefaultSlotMappingConfiguration implements
         SlotMappingConfiguration {
 
@@ -71,6 +70,43 @@ public class DefaultSlotMappingConfiguration implements
 
     private void assertInvariants() {
         assertNoNullValues(slotsToResolvers);
+    }
+
+    /**
+     * @return {@link Slot}s that have {@link VisualItemValueResolver}s that
+     *         have {@code slot} as one of their target slots.
+     * 
+     * @see VisualItemValueResolver#getTargetSlots()
+     */
+    /*
+     * XXX find deeper dependencies (several levels, use breadth/depth first
+     * search)
+     * 
+     * XXX make sure slots are only found once (string set, test case)
+     * 
+     * XXX depth-first search must consider unconfigured slots
+     */
+    public LightweightList<Slot> getDependentSlots(Slot slot) {
+        LightweightList<Slot> dependentSlots = CollectionFactory
+                .createLightweightList();
+        for (Entry<Slot, VisualItemValueResolver> entry : slotsToResolvers
+                .entrySet()) {
+
+            VisualItemValueResolver otherResolver = entry.getValue();
+            LightweightCollection<Slot> targetSlots = otherResolver
+                    .getTargetSlots();
+
+            assert targetSlots != null : "getTargetSlots() for resolver "
+                    + otherResolver.getClass() + " must not be null";
+
+            for (Slot targetSlot : targetSlots) {
+                if (targetSlot.equals(slot)) {
+                    dependentSlots.add(entry.getKey());
+                    break;
+                }
+            }
+        }
+        return dependentSlots;
     }
 
     @Override
@@ -141,27 +177,11 @@ public class DefaultSlotMappingConfiguration implements
         handlerManager.fireEvent(new SlotMappingChangedEvent(slot, oldResolver,
                 resolver));
 
-        // TODO this stuff down here breaks with fixed delegating resolvers
-        // fire events for delegating resolvers that reference this slot
-        for (Entry<Slot, VisualItemValueResolver> entry : slotsToResolvers
-                .entrySet()) {
-            LightweightCollection<Slot> targetSlots = entry.getValue()
-                    .getTargetSlots();
+        LightweightList<Slot> dependentSlots = getDependentSlots(slot);
 
-            assert targetSlots != null : "getTargetSlots() for resolver "
-                    + entry.getValue().getClass() + " must not be null";
-
-            for (Slot targetSlot : targetSlots) {
-                if (targetSlot.equals(slot)) {
-                    // TODO I'm not sure if this is how target resolvers work,
-                    // ask lars
-
-                    // TODO if the target resolver is fixed we probably DO NOT
-                    // want to fire an event
-                    handlerManager.fireEvent(new SlotMappingChangedEvent(entry
-                            .getKey(), oldResolver, resolver));
-                }
-            }
+        for (Slot dependentSlot : dependentSlots) {
+            handlerManager.fireEvent(new SlotMappingChangedEvent(dependentSlot,
+                    oldResolver, resolver));
         }
 
         assertInvariants();

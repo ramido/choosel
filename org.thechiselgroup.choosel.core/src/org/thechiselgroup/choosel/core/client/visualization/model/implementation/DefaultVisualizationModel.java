@@ -234,9 +234,21 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 removedVisualItems);
     }
 
+    /**
+     * Clears the cached {@link VisualItem} values for {@code slot} and all
+     * dependent slots.
+     */
     private void clearVisualItemValueCache(Slot slot) {
+        assert slot != null;
+
+        LightweightList<Slot> dependentSlots = slotMappingConfiguration
+                .getDependentSlots(slot);
+
         for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
             visualItem.clearValueCache(slot);
+            for (Slot dependentSlot : dependentSlots) {
+                visualItem.clearValueCache(dependentSlot);
+            }
         }
     };
 
@@ -713,6 +725,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightCollection<VisualItem> visualItemsThatHadErrors = copy(getVisualItemsWithErrors());
         LightweightCollection<VisualItem> visualItemsThatWereValid = copy(getValidVisualItems());
 
+        /*
+         * XXX need to clear value cache for dependent slots (aka those that
+         * delegate to this one...
+         */
         clearVisualItemValueCache(slot);
 
         // actually change the slot mapping
@@ -794,14 +810,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
             }
         }
 
-        // check the delegating slots and remove errors for those slot
-        for (Slot allSlots : getSlots()) {
-            // TODO extract conditional?
-            if (isConfigured(allSlots)
-                    && slotMappingConfiguration.getResolver(allSlots)
-                            .getTargetSlots().contains(slot)) {
-                updateErrorModel(allSlots);
-            }
+        // update error model for delegating slots
+        for (Slot delegatingSlot : slotMappingConfiguration
+                .getDependentSlots(slot)) {
+
+            updateErrorModel(delegatingSlot);
         }
     }
 

@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 public class ManagedVisualItemValueResolverDecorator implements
@@ -59,6 +59,11 @@ public class ManagedVisualItemValueResolverDecorator implements
     public Object resolve(VisualItem viewItem,
             VisualItemValueResolverContext context) {
         return delegate.resolve(viewItem, context);
+    }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
     }
 
 }

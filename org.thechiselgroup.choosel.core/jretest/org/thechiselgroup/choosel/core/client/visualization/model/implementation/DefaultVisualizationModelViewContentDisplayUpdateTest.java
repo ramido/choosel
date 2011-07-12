@@ -538,6 +538,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
                         (LightweightCollection<Slot>) argThat(containsExactly(slot)));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void viewItemsWithErrorsAreExcludedOnHighlightingUpdate() {
         ResourceSet resources = createResources(1);
@@ -551,6 +552,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
                 argThat(any(Delta.class)), argThat(isEmpty(Slot.class)));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void viewItemsWithErrorsAreExcludedOnSelectionUpdate() {
         ResourceSet resources = createResources(1);

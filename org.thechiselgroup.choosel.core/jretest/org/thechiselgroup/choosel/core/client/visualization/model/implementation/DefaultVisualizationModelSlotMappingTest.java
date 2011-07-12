@@ -15,10 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.NUMBER_PROPERTY_1;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TEXT_PROPERTY_1;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TEXT_PROPERTY_2;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockDelegatingResolver;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
 
 import java.util.List;
 
@@ -27,7 +35,6 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -36,6 +43,8 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
 
@@ -55,30 +64,12 @@ public class DefaultVisualizationModelSlotMappingTest {
     }
 
     @Test
-    public void changeSlotMapping() {
-        underTest.setResolver(numberSlot, new CalculationResolver("property1",
-                new SumCalculation()));
-
-        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
-        assertEquals(1, resourceItems.size());
-        VisualItem resourceItem = resourceItems.get(0);
-        resourceItem.getValue(numberSlot);
-
-        underTest.setResolver(numberSlot, new CalculationResolver("property1",
-                new MaxCalculation()));
-
-        assertEquals(8d, resourceItem.getValue(numberSlot));
-    }
-
-    @Test
-    public void changingSlotMappingUpdatesVisualItemValue() {
+    public void changingSlotMappingUpdatesVisualItemValue1() {
         helper = new DefaultVisualizationModelTestHelper();
-        helper.setSlots(textSlot, numberSlot);
+        helper.setSlots(textSlot);
         underTest = helper.createTestViewModel();
 
         Resource resource = createResource(1);
-        resource.putValue(TEXT_PROPERTY_1, "t1");
-        resource.putValue(TEXT_PROPERTY_2, "t2");
 
         underTest.setResolver(textSlot, new FirstResourcePropertyResolver(
                 TEXT_PROPERTY_1, DataType.TEXT));
@@ -86,7 +77,44 @@ public class DefaultVisualizationModelSlotMappingTest {
         underTest.setResolver(textSlot, new FirstResourcePropertyResolver(
                 TEXT_PROPERTY_2, DataType.TEXT));
 
-        assertEquals("t2", getFirstVisualItem().getValue(textSlot));
+        assertEquals(resource.getValue(TEXT_PROPERTY_2), getFirstVisualItem()
+                .getValue(textSlot));
+    }
+
+    @Test
+    public void changingSlotMappingUpdatesVisualItemValue2() {
+        underTest.setResolver(numberSlot, new CalculationResolver(
+                NUMBER_PROPERTY_1, new SumCalculation()));
+        getFirstVisualItem().getValue(numberSlot);
+        underTest.setResolver(numberSlot, new CalculationResolver(
+                NUMBER_PROPERTY_1, new MaxCalculation()));
+
+        assertEquals(8d, getFirstVisualItem().getValue(numberSlot));
+    }
+
+    @Test
+    public void changingSlotMappingUpdatesVisualItemValuesOfDependentSlots() {
+        helper = new DefaultVisualizationModelTestHelper();
+        Slot[] slots = helper.createSlots(DataType.TEXT, DataType.TEXT);
+        underTest = helper.createTestViewModel();
+
+        Resource resource = createResource(1);
+
+        VisualItemValueResolver delegatingResolver = mockDelegatingResolver(slots[1]);
+        when(
+                delegatingResolver.resolve(any(VisualItem.class),
+                        any(VisualItemValueResolverContext.class))).thenReturn(
+                "a1", "a2");
+
+        underTest.setResolver(slots[0], delegatingResolver);
+        underTest.setResolver(slots[1], mockResolverThatCanAlwaysResolve());
+
+        underTest.getContentResourceSet().add(resource);
+        getFirstVisualItem().getValue(slots[0]);
+
+        underTest.setResolver(slots[1], mockResolverThatCanAlwaysResolve());
+
+        assertThat(getFirstVisualItem().getValue(slots[0]), is((Object) "a2"));
     }
 
     private VisualItem getFirstVisualItem() {
@@ -107,29 +135,28 @@ public class DefaultVisualizationModelSlotMappingTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
-        numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
-
         helper = new DefaultVisualizationModelTestHelper();
-        helper.setSlots(textSlot, numberSlot);
+        helper.createSlots(DataType.TEXT, DataType.NUMBER);
         underTest = helper.createTestViewModel();
 
-        Resource r1 = new Resource("test:1");
-        r1.putValue("property1", new Double(0));
-        r1.putValue("property2", "value2");
+        textSlot = helper.getSlots()[0];
+        numberSlot = helper.getSlots()[1];
 
-        Resource r2 = new Resource("test:2");
-        r2.putValue("property1", new Double(4));
-        r2.putValue("property2", "value2");
+        Resource r1 = createResource(1);
+        r1.putValue(NUMBER_PROPERTY_1, new Double(0));
+        r1.putValue(TEXT_PROPERTY_1, "value2");
 
-        Resource r3 = new Resource("test:3");
-        r3.putValue("property1", new Double(8));
-        r3.putValue("property2", "value2");
+        Resource r2 = createResource(2);
+        r2.putValue(NUMBER_PROPERTY_1, new Double(4));
+        r2.putValue(TEXT_PROPERTY_1, "value2");
 
-        helper.getContainedResources().addAll(
-                ResourceSetTestUtils.toResourceSet(r1, r2, r3));
+        Resource r3 = createResource(3);
+        r3.putValue(NUMBER_PROPERTY_1, new Double(8));
+        r3.putValue(TEXT_PROPERTY_1, "value2");
+
+        helper.getContainedResources().addAll(toResourceSet(r1, r2, r3));
         underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                "property2"));
+                TEXT_PROPERTY_1));
     }
 
     @Test
@@ -140,13 +167,12 @@ public class DefaultVisualizationModelSlotMappingTest {
     private void testCalculationOverGroup(double expectedResult,
             Calculation calculation) {
 
-        underTest.setResolver(numberSlot, new CalculationResolver("property1",
-                calculation));
+        underTest.setResolver(numberSlot, new CalculationResolver(
+                NUMBER_PROPERTY_1, calculation));
 
         List<VisualItem> resourceItems = underTest.getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));
     }
-
 }
