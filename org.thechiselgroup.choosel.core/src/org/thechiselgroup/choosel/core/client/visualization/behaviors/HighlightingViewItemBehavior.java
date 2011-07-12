@@ -66,34 +66,37 @@ public class HighlightingViewItemBehavior implements VisualItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
-        for (VisualItem viewItem : event.getDelta().getAddedElements()) {
-            onViewItemCreated(viewItem);
+    public void onVisualItemContainerChanged(
+            VisualItemContainerChangeEvent event) {
+        for (VisualItem item : event.getDelta().getAddedElements()) {
+            onVisualItemCreated(item);
         }
-        for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
-            onViewItemRemoved(viewItem);
+        for (VisualItem item : event.getDelta().getRemovedElements()) {
+            onVisualItemRemoved(item);
         }
     }
 
-    public void onViewItemCreated(VisualItem viewItem) {
-        assert viewItem != null;
-        assert !highlightingManagers.containsKey(viewItem.getId());
+    public void onVisualItemCreated(VisualItem visualItem) {
+        assert visualItem != null;
+        assert !highlightingManagers.containsKey(visualItem.getId());
 
-        highlightingManagers.put(viewItem.getId(), new HighlightingManager(
-                highlightingModel, viewItem.getResources()));
+        highlightingManagers.put(visualItem.getId(), new HighlightingManager(
+                highlightingModel, visualItem.getResources()));
     }
 
-    public void onViewItemRemoved(VisualItem viewItem) {
-        assert viewItem != null;
-        assert highlightingManagers.containsKey(viewItem.getId());
+    public void onVisualItemRemoved(VisualItem visualItem) {
+        assert visualItem != null;
+        assert highlightingManagers.containsKey(visualItem.getId()) : "no highlighting manager for visual item "
+                + visualItem.getId();
 
-        HighlightingManager manager = highlightingManagers.remove(viewItem
+        HighlightingManager manager = highlightingManagers.remove(visualItem
                 .getId());
         manager.dispose();
     }
 
-    protected void setHighlighting(VisualItem viewItem, boolean shouldHighlight) {
-        getHighlightingManager(viewItem).setHighlighting(shouldHighlight);
+    protected void setHighlighting(VisualItem visualItem,
+            boolean shouldHighlight) {
+        getHighlightingManager(visualItem).setHighlighting(shouldHighlight);
     }
 
 }

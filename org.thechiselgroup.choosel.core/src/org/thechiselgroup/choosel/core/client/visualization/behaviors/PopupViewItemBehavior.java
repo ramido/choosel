@@ -99,7 +99,7 @@ public class PopupViewItemBehavior implements VisualItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+    public void onVisualItemContainerChanged(VisualItemContainerChangeEvent event) {
         for (VisualItem visualItem : event.getDelta().getAddedElements()) {
             onViewItemCreated(visualItem);
         }

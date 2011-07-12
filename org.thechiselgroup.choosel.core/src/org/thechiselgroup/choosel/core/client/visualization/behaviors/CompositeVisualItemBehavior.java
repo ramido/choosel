@@ -39,9 +39,9 @@ public class CompositeVisualItemBehavior implements VisualItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+    public void onVisualItemContainerChanged(VisualItemContainerChangeEvent event) {
         for (VisualItemBehavior behavior : behaviors) {
-            behavior.onViewItemContainerChanged(event);
+            behavior.onVisualItemContainerChanged(event);
         }
     }
 

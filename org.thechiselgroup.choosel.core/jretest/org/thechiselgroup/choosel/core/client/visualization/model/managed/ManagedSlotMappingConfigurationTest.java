@@ -273,7 +273,7 @@ public class ManagedSlotMappingConfigurationTest {
         // XXX right now underTest does not care what the event is, but it may
         // in the future, feel free to implement the event in this test in the
         // future
-        handler.onViewItemContainerChanged(null);
+        handler.onVisualItemContainerChanged(null);
 
         // verify that we set the viewModel
         verify(viewModel, times(1)).setResolver(slots[0], resolver1);

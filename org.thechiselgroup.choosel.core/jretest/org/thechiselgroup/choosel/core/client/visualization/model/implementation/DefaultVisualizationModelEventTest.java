@@ -46,7 +46,7 @@ public class DefaultVisualizationModelEventTest {
             VisualItemContainerChangeEventHandler handler) {
         ArgumentCaptor<VisualItemContainerChangeEvent> captor = ArgumentCaptor
                 .forClass(VisualItemContainerChangeEvent.class);
-        verify(handler, times(1)).onViewItemContainerChanged(captor.capture());
+        verify(handler, times(1)).onVisualItemContainerChanged(captor.capture());
         return captor.getValue();
     }
 

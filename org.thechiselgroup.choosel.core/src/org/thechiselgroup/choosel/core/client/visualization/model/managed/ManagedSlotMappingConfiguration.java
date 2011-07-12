@@ -45,7 +45,7 @@ public class ManagedSlotMappingConfiguration {
         }
 
         @Override
-        public void onViewItemContainerChanged(
+        public void onVisualItemContainerChanged(
                 VisualItemContainerChangeEvent event) {
 
             updateVisualMappings();
