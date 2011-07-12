@@ -16,6 +16,9 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.junit.Assert.assertEquals;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TEXT_PROPERTY_1;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TEXT_PROPERTY_2;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResource;
 
 import java.util.List;
 
@@ -34,6 +37,7 @@ import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.CalculationResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
 
 public class DefaultVisualizationModelSlotMappingTest {
 
@@ -64,6 +68,29 @@ public class DefaultVisualizationModelSlotMappingTest {
                 new MaxCalculation()));
 
         assertEquals(8d, resourceItem.getValue(numberSlot));
+    }
+
+    @Test
+    public void changingSlotMappingUpdatesVisualItemValue() {
+        helper = new DefaultVisualizationModelTestHelper();
+        helper.setSlots(textSlot, numberSlot);
+        underTest = helper.createTestViewModel();
+
+        Resource resource = createResource(1);
+        resource.putValue(TEXT_PROPERTY_1, "t1");
+        resource.putValue(TEXT_PROPERTY_2, "t2");
+
+        underTest.setResolver(textSlot, new FirstResourcePropertyResolver(
+                TEXT_PROPERTY_1, DataType.TEXT));
+        helper.getContainedResources().add(resource);
+        underTest.setResolver(textSlot, new FirstResourcePropertyResolver(
+                TEXT_PROPERTY_2, DataType.TEXT));
+
+        assertEquals("t2", getFirstVisualItem().getValue(textSlot));
+    }
+
+    private VisualItem getFirstVisualItem() {
+        return underTest.getVisualItems().getFirstElement();
     }
 
     @Test
