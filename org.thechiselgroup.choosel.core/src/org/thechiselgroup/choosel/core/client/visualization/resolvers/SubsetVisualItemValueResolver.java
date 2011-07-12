@@ -28,27 +28,27 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Sub
  * 
  * @author Lars Grammel
  */
-public abstract class SubsetViewItemValueResolver extends
+public abstract class SubsetVisualItemValueResolver extends
         AbstractBasicVisualItemValueResolver {
 
     private final Subset subset;
 
-    public SubsetViewItemValueResolver(Subset subset) {
+    public SubsetVisualItemValueResolver(Subset subset) {
         assert subset != null;
         this.subset = subset;
     }
 
     @Override
-    public final Object resolve(VisualItem viewItem,
+    public final Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
-        return resolve(viewItem, context, subset);
+        return resolve(visualItem, context, subset);
     }
 
     /**
      * Resolves the view item value for the specified subset.
      */
-    public abstract Object resolve(VisualItem viewItem,
+    public abstract Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context, Subset subset);
 
 }

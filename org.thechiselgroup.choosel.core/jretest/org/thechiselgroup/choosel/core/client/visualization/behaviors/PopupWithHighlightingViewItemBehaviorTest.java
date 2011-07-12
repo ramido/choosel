@@ -68,11 +68,11 @@ public class PopupWithHighlightingViewItemBehaviorTest {
      */
     @Test
     public void disposeRemovesPopupHighlighting() {
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
-        underTest.onViewItemRemoved(viewItem);
+        underTest.onVisualItemRemoved(viewItem);
 
         assertThat(hoverModel.getResources(),
                 containsExactly(ResourceSetTestUtils.createResources()));
@@ -80,7 +80,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
 
     @Test
     public void mouseOverPopupAddsResourcesToHoverModel() {
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
@@ -89,7 +89,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
 
     @Test
     public void popupClosedOnDragStart() {
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
@@ -104,7 +104,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         int clientX = 10;
         int clientY = 20;
 
-        underTest.onViewItemCreated(viewItem);
+        underTest.onVisualItemCreated(viewItem);
         underTest.onInteraction(viewItem, new VisualItemInteraction(
                 Type.MOUSE_OVER, clientX, clientY));
 

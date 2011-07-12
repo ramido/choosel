@@ -101,21 +101,21 @@ public class PopupVisualItemBehavior implements VisualItemBehavior {
     @Override
     public void onVisualItemContainerChanged(VisualItemContainerChangeEvent event) {
         for (VisualItem visualItem : event.getDelta().getAddedElements()) {
-            onViewItemCreated(visualItem);
+            onVisualItemCreated(visualItem);
         }
         for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
-            onViewItemRemoved(viewItem);
+            onVisualItemRemoved(viewItem);
         }
     }
 
-    public void onViewItemCreated(VisualItem visualItem) {
+    public void onVisualItemCreated(VisualItem visualItem) {
         assert visualItem != null;
         assert !popupManagers.containsKey(visualItem.getId());
 
         popupManagers.put(visualItem.getId(), createPopupManager(visualItem));
     }
 
-    public void onViewItemRemoved(VisualItem visualItem) {
+    public void onVisualItemRemoved(VisualItem visualItem) {
         assert visualItem != null;
         assert popupManagers.containsKey(visualItem.getId());
 

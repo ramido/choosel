@@ -53,8 +53,8 @@ public class PopupWithHighlightingVisualItemBehavior extends
     }
 
     @Override
-    public void onViewItemCreated(VisualItem viewItem) {
-        super.onViewItemCreated(viewItem);
+    public void onVisualItemCreated(VisualItem viewItem) {
+        super.onVisualItemCreated(viewItem);
 
         assert !highlightingManagers.containsKey(viewItem.getId());
 
@@ -88,8 +88,8 @@ public class PopupWithHighlightingVisualItemBehavior extends
     }
 
     @Override
-    public void onViewItemRemoved(VisualItem viewItem) {
-        super.onViewItemRemoved(viewItem);
+    public void onVisualItemRemoved(VisualItem viewItem) {
+        super.onVisualItemRemoved(viewItem);
 
         assert highlightingManagers.containsKey(viewItem.getId());
 
