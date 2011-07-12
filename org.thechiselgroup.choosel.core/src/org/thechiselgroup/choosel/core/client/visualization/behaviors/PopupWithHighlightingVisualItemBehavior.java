@@ -32,8 +32,8 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-public class PopupWithHighlightingViewItemBehavior extends
-        PopupViewItemBehavior {
+public class PopupWithHighlightingVisualItemBehavior extends
+        PopupVisualItemBehavior {
 
     /**
      * Maps view item ids to popup highlighting managers.
@@ -43,7 +43,7 @@ public class PopupWithHighlightingViewItemBehavior extends
 
     private HighlightingModel hoverModel;
 
-    public PopupWithHighlightingViewItemBehavior(
+    public PopupWithHighlightingVisualItemBehavior(
             DetailsWidgetHelper detailsWidgetHelper,
             PopupManagerFactory popupManagerFactory, HighlightingModel hoverModel) {
 

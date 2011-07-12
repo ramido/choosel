@@ -32,7 +32,7 @@ import com.google.gwt.dom.client.NativeEvent;
 /**
  * Manages {@link VisualItem} popups in a single view.
  */
-public class PopupViewItemBehavior implements VisualItemBehavior {
+public class PopupVisualItemBehavior implements VisualItemBehavior {
 
     /**
      * Maps view item ids to popup managers.
@@ -44,7 +44,7 @@ public class PopupViewItemBehavior implements VisualItemBehavior {
 
     private PopupManagerFactory popupManagerFactory;
 
-    public PopupViewItemBehavior(DetailsWidgetHelper detailsWidgetHelper,
+    public PopupVisualItemBehavior(DetailsWidgetHelper detailsWidgetHelper,
             PopupManagerFactory popupManagerFactory) {
 
         assert detailsWidgetHelper != null;

@@ -40,7 +40,7 @@ public class HighlightingViewItemBehaviorTest {
     @Mock
     private VisualItem viewItem;
 
-    private HighlightingViewItemBehavior underTest;
+    private HighlightingVisualItemBehavior underTest;
 
     private ResourceSet resources;
 
@@ -95,6 +95,6 @@ public class HighlightingViewItemBehaviorTest {
         when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
         when(viewItem.getResources()).thenReturn(resources);
 
-        underTest = new HighlightingViewItemBehavior(hoverModel);
+        underTest = new HighlightingVisualItemBehavior(hoverModel);
     }
 }

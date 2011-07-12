@@ -22,11 +22,11 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBeha
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 
-public class ViewInteractionLogger implements VisualItemBehavior {
+public class VisualItemInteractionLogger implements VisualItemBehavior {
 
     private Logger logger;
 
-    public ViewInteractionLogger(Logger logger) {
+    public VisualItemInteractionLogger(Logger logger) {
         this.logger = logger;
     }
 
