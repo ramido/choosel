@@ -41,9 +41,9 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeVisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.behaviors.SwitchSelectionOnClickViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingVisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingVisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.SwitchSelectionOnClickVisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
@@ -71,7 +71,7 @@ import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultSelectionM
 import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultVisualMappingsControl;
 import org.thechiselgroup.choosel.core.client.visualization.ui.VisualMappingsControl;
 import org.thechiselgroup.choosel.dnd.client.resources.DragEnablerFactory;
-import org.thechiselgroup.choosel.dnd.client.resources.DragViewItemBehavior;
+import org.thechiselgroup.choosel.dnd.client.resources.DragVisualItemBehavior;
 import org.thechiselgroup.choosel.dnd.client.resources.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
@@ -213,11 +213,11 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         CompositeVisualItemBehavior viewItemBehaviors = new CompositeVisualItemBehavior();
 
         // viewItemBehaviors.add(new ViewInteractionLogger(logger));
-        viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
-        viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
-        viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+        viewItemBehaviors.add(new HighlightingVisualItemBehavior(hoverModel));
+        viewItemBehaviors.add(new DragVisualItemBehavior(dragEnablerFactory));
+        viewItemBehaviors.add(new PopupWithHighlightingVisualItemBehavior(
                 detailsWidgetHelper, popupManagerFactory, hoverModel));
-        viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
+        viewItemBehaviors.add(new SwitchSelectionOnClickVisualItemBehavior(
                 selectionModel, commandManager));
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
@@ -259,7 +259,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         visualizationModel
                 .addHandler(new VisualItemContainerChangeEventHandler() {
                     @Override
-                    public void onViewItemContainerChanged(
+                    public void onVisualItemContainerChanged(
                             VisualItemContainerChangeEvent event) {
 
                         visualMappingsControl

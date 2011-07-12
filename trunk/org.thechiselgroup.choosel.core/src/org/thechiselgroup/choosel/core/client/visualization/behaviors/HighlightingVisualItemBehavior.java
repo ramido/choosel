@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Hig
 /**
  * Manages {@link VisualItem} highlighting in a single view.
  */
-public class HighlightingViewItemBehavior implements VisualItemBehavior {
+public class HighlightingVisualItemBehavior implements VisualItemBehavior {
 
     /**
      * Maps view item ids to highlighting managers.
@@ -37,7 +37,7 @@ public class HighlightingViewItemBehavior implements VisualItemBehavior {
 
     private HighlightingModel highlightingModel;
 
-    public HighlightingViewItemBehavior(HighlightingModel highlightingModel) {
+    public HighlightingVisualItemBehavior(HighlightingModel highlightingModel) {
         assert highlightingModel != null;
 
         this.highlightingModel = highlightingModel;

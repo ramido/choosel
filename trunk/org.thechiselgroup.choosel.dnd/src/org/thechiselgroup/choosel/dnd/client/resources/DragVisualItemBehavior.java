@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInte
 /**
  * Manages dragging of {@link VisualItem}.
  */
-public class DragViewItemBehavior implements VisualItemBehavior {
+public class DragVisualItemBehavior implements VisualItemBehavior {
 
     /**
      * Maps view item ids to drag enablers.
@@ -36,7 +36,7 @@ public class DragViewItemBehavior implements VisualItemBehavior {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public DragViewItemBehavior(DragEnablerFactory dragEnablerFactory) {
+    public DragVisualItemBehavior(DragEnablerFactory dragEnablerFactory) {
         assert dragEnablerFactory != null;
 
         this.dragEnablerFactory = dragEnablerFactory;
@@ -75,7 +75,7 @@ public class DragViewItemBehavior implements VisualItemBehavior {
     }
 
     @Override
-    public void onViewItemContainerChanged(VisualItemContainerChangeEvent event) {
+    public void onVisualItemContainerChanged(VisualItemContainerChangeEvent event) {
         for (VisualItem viewItem : event.getDelta().getAddedElements()) {
             onViewItemCreated(viewItem);
         }

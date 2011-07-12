@@ -29,14 +29,14 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Sel
  * @author Lars Grammel
  * @author Del Myers
  */
-public class SwitchSelectionOnClickViewItemBehavior implements
+public class SwitchSelectionOnClickVisualItemBehavior implements
         VisualItemBehavior {
 
     private SelectionModel selectionModel;
 
     private CommandManager commandManager;
 
-    public SwitchSelectionOnClickViewItemBehavior(
+    public SwitchSelectionOnClickVisualItemBehavior(
             SelectionModel selectionModel, CommandManager commandManager) {
 
         assert selectionModel != null;
