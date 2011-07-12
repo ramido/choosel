@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -44,6 +45,13 @@ public final class VisualItemValueResolverTestUtils {
             slots[i] = new Slot("slot" + i, "Slot " + i, dataTypes[i]);
         }
         return slots;
+    }
+
+    public static VisualItemValueResolver mockDelegatingResolver(Slot... slots) {
+        VisualItemValueResolver delegatingResolver = mockResolverThatCanAlwaysResolve();
+        when(delegatingResolver.getTargetSlots()).thenReturn(
+                toCollection(slots));
+        return delegatingResolver;
     }
 
     public static ManagedVisualItemValueResolver mockManagedResolver(String id) {
@@ -131,5 +139,4 @@ public final class VisualItemValueResolverTestUtils {
 
     private VisualItemValueResolverTestUtils() {
     }
-
 }

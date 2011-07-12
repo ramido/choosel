@@ -17,13 +17,15 @@ package org.thechiselgroup.choosel.core.client.visualization.model.implementatio
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.*;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.TYPE_2;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResource;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
+import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockDelegatingResolver;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemWithResourcesMatcher.containsEqualResources;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
-
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,15 +34,10 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemResolutionErrorModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.SubsetDelegatingValueResolver;
-
-import com.google.gwt.dev.util.collect.HashMap;
 
 /**
  * Tests the error model {@link VisualItemResolutionErrorModel} of the
@@ -78,46 +75,32 @@ public class DefaultVisualizationModelErrorTest {
     }
 
     @Test
-    public void fixedDelegatingResolverHasErrorWhenDelegateUnconfigured() {
+    public void delegatingResolverHasErrorWhenDelegateUnconfigured() {
         Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
         underTest = helper.createTestViewModel();
 
-        SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
-                slots[1], Subset.HIGHLIGHTED);
+        VisualItemValueResolver delegatingResolver = mockDelegatingResolver(slots[1]);
 
-        Map<Slot, VisualItemValueResolver> fixedSlotResolvers = new HashMap<Slot, VisualItemValueResolver>();
-        fixedSlotResolvers.put(slots[0], delegatingResolver);
+        underTest.setResolver(slots[0], delegatingResolver);
 
-        FixedSlotResolversVisualizationModelDecorator fixedUnderTest = new FixedSlotResolversVisualizationModelDecorator(
-                underTest, fixedSlotResolvers);
-        fixedUnderTest.getContentResourceSet().add(
-                ResourceSetTestUtils.createResource(1));
+        underTest.getContentResourceSet().add(createResource(1));
 
-        assertThat(fixedUnderTest.getSlotsWithErrors(), containsExactly(slots));
+        assertThat(underTest.getSlotsWithErrors(), containsExactly(slots));
     }
 
     @Test
-    public void fixedDelegatingResolverLosesErrorWhenDelegateConfigured() {
+    public void delegatingResolverLosesErrorWhenDelegateConfigured() {
         Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
         underTest = helper.createTestViewModel();
 
-        SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
-                slots[1], Subset.HIGHLIGHTED);
+        VisualItemValueResolver delegatingResolver = mockDelegatingResolver(slots[1]);
 
-        Map<Slot, VisualItemValueResolver> fixedSlotResolvers = new HashMap<Slot, VisualItemValueResolver>();
-        fixedSlotResolvers.put(slots[0], delegatingResolver);
+        underTest.setResolver(slots[0], delegatingResolver);
+        underTest.getContentResourceSet().add(createResource(1));
 
-        FixedSlotResolversVisualizationModelDecorator fixedUnderTest = new FixedSlotResolversVisualizationModelDecorator(
-                underTest, fixedSlotResolvers);
-        fixedUnderTest.getContentResourceSet().add(
-                ResourceSetTestUtils.createResource(1));
+        underTest.setResolver(slots[1], mockResolverThatCanAlwaysResolve());
 
-        fixedUnderTest
-                .setResolver(slots[1], mockResolverThatCanAlwaysResolve());
-
-        assertThat(fixedUnderTest.getSlotsWithErrors(),
-                containsExactly(CollectionFactory
-                        .<Slot> createLightweightList()));
+        assertThat(underTest.hasErrors(), is(false));
     }
 
     private ResourceSet getResourceSetFromUnderTest() {

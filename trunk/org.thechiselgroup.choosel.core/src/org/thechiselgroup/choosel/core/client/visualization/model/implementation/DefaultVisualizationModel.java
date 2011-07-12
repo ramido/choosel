@@ -16,8 +16,12 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
-import static org.thechiselgroup.choosel.core.client.util.collections.Delta.*;
-import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.*;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedRemovedDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.copy;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -764,11 +768,23 @@ public class DefaultVisualizationModel implements VisualizationModel,
              * error model (would return errors for all view items)
              */
             errorModel.reportErrors(slot, visualItems);
+            // XXX update calling delegates
             return;
         }
 
         VisualItemValueResolver resolver = slotMappingConfiguration
                 .getResolver(slot);
+
+        // check if target slots are configured & can resolve
+        for (Slot targetSlot : resolver.getTargetSlots()) {
+            if (!slotMappingConfiguration.isConfigured(targetSlot)) {
+                errorModel.reportErrors(slot, visualItems);
+                // XXX update calling delegates
+                return;
+            }
+
+            // XXX also need to check if delegate can resolve...
+        }
 
         for (VisualItem visualItem : visualItems) {
             if (!resolver.canResolve(visualItem, this)) {
@@ -780,13 +796,13 @@ public class DefaultVisualizationModel implements VisualizationModel,
             }
         }
 
-        // TODO now check the target slots and remove errors for that slot as
-        // well
-        for (Slot viewSlot : getSlots()) {
-            if (isConfigured(viewSlot)
-                    && slotMappingConfiguration.getResolver(viewSlot)
+        // check the delegating slots and remove errors for those slot
+        for (Slot allSlots : getSlots()) {
+            // TODO extract conditional?
+            if (isConfigured(allSlots)
+                    && slotMappingConfiguration.getResolver(allSlots)
                             .getTargetSlots().contains(slot)) {
-                updateErrorModel(viewSlot);
+                updateErrorModel(allSlots);
             }
         }
     }
