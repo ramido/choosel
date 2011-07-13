@@ -88,15 +88,40 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
 
-    private static class SubsetContainer {
+    private class SubsetContainer implements Disposable {
 
         private Subset subset;
 
         private ResourceSet resources;
 
+        private HandlerRegistration handlerRegistration;
+
         public SubsetContainer(Subset subset, ResourceSet resources) {
             this.subset = subset;
             this.resources = resources;
+
+            initResourceSetChangeHandler();
+        }
+
+        @Override
+        public void dispose() {
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
+
+            resources = null;
+        }
+
+        private void initResourceSetChangeHandler() {
+            handlerRegistration = resources
+                    .addEventHandler(new ResourceSetChangedEventHandler() {
+                        @Override
+                        public void onResourceSetChanged(
+                                ResourceSetChangedEvent event) {
+
+                            updateSubset(subset, event.getAddedResources(),
+                                    event.getRemovedResources());
+                        }
+                    });
         }
 
         private void updateVisualItemOnResourcesChange(
@@ -184,7 +209,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         addHandler(visualItemBehavior);
 
         init(selectedResources);
-        initSelectionModelEventHandlers();
+
         initResourceGrouping();
         initHighlightingModel();
         initContentDisplay();
@@ -330,9 +355,12 @@ public class DefaultVisualizationModel implements VisualizationModel,
         resourceGrouping = safelyDispose(resourceGrouping, errorHandler);
         contentDisplay = safelyDispose(contentDisplay, errorHandler);
 
-        subsets = null;
-
         handlerRegistrations = safelyDispose(handlerRegistrations, errorHandler);
+
+        for (SubsetContainer subsetContainer : subsets.values()) {
+            subsetContainer.dispose();
+        }
+        subsets = null;
     }
 
     private void fireVisualItemContainerChangeEvent(Delta<VisualItem> delta) {
@@ -582,19 +610,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 .addResourceSet(getContentResourceSet());
         highlightedResourcesIntersection
                 .addResourceSet(getSubset(Subset.HIGHLIGHTED).resources);
-
-        handlerRegistrations
-                .addHandlerRegistration(getSubset(Subset.HIGHLIGHTED).resources
-                        .addEventHandler(new ResourceSetChangedEventHandler() {
-                            @Override
-                            public void onResourceSetChanged(
-                                    ResourceSetChangedEvent event) {
-
-                                updateSubset(Subset.HIGHLIGHTED,
-                                        event.getAddedResources(),
-                                        event.getRemovedResources());
-                            }
-                        }));
     }
 
     private void initResourceGrouping() {
@@ -605,21 +620,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 processResourceGroupingChange(e);
             }
         });
-    }
-
-    private void initSelectionModelEventHandlers() {
-        handlerRegistrations
-                .addHandlerRegistration(getSubset(Subset.SELECTED).resources
-                        .addEventHandler(new ResourceSetChangedEventHandler() {
-                            @Override
-                            public void onResourceSetChanged(
-                                    ResourceSetChangedEvent event) {
-
-                                updateSubset(Subset.SELECTED,
-                                        event.getAddedResources(),
-                                        event.getRemovedResources());
-                            }
-                        }));
     }
 
     @Override
