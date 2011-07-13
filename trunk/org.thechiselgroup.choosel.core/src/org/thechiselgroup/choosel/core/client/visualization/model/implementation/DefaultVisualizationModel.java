@@ -24,6 +24,7 @@ import static org.thechiselgroup.choosel.core.client.util.collections.Lightweigh
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -87,6 +88,35 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
 
+    private static class SubsetContainer {
+
+        private Subset subset;
+
+        private ResourceSet resources;
+
+        public SubsetContainer(Subset subset, ResourceSet resources) {
+            this.subset = subset;
+            this.resources = resources;
+        }
+
+        private void updateVisualItemOnResourcesChange(
+                DefaultVisualItem visualItem,
+                CategorizableResourceGroupingChange change) {
+
+            LightweightList<Resource> addedResourcesInSubset = resources
+                    .getIntersection(change.getAddedResources());
+            LightweightList<Resource> removedResourcesInSubset = resources
+                    .getIntersection(change.getRemovedResources());
+
+            if (!addedResourcesInSubset.isEmpty()
+                    || !removedResourcesInSubset.isEmpty()) {
+                visualItem.updateSubset(subset, addedResourcesInSubset,
+                        removedResourcesInSubset);
+            }
+        }
+
+    }
+
     /**
      * Maps group ids (representing the resource sets that are calculated by the
      * resource grouping, also used as view item ids) to the
@@ -101,10 +131,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     private ResourceGrouping resourceGrouping;
 
-    private ResourceSet selectedResources;
-
-    private ResourceSet highlightedResources;
-
     private IntersectionResourceSet highlightedResourcesIntersection;
 
     private final VisualItemBehavior visualItemBehavior;
@@ -116,6 +142,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
     private DefaultVisualItemResolutionErrorModel errorModel = new DefaultVisualItemResolutionErrorModel();
 
     private transient PrioritizedHandlerManager handlerManager;
+
+    private Map<Subset, SubsetContainer> subsets = new EnumMap<Subset, SubsetContainer>(
+            Subset.class);
 
     /**
      * @param errorHandler
@@ -139,8 +168,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert multiCategorizer != null;
 
         this.contentDisplay = contentDisplay;
-        this.selectedResources = selectedResources;
-        this.highlightedResources = highlightedResources;
         this.visualItemBehavior = visualItemBehavior;
         this.errorHandler = errorHandler;
 
@@ -149,6 +176,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
         this.slotMappingConfiguration = new DefaultSlotMappingConfiguration(
                 contentDisplay.getSlots());
         this.handlerManager = new PrioritizedHandlerManager(this);
+
+        addSubset(Subset.SELECTED, selectedResources);
+        addSubset(Subset.HIGHLIGHTED, highlightedResources);
 
         // TODO should be external...
         addHandler(visualItemBehavior);
@@ -174,6 +204,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert handler != null;
         return handlerManager.addHandler(VisualItemContainerChangeEvent.TYPE,
                 handler);
+    }
+
+    private void addSubset(Subset subset, ResourceSet resources) {
+        this.subsets.put(subset, new SubsetContainer(subset, resources));
     }
 
     private void assertWithoutErrors(
@@ -281,6 +315,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     @Override
     public void dispose() {
+        /*
+         * NOTE Shared objects should not be disposed. Instead, our event
+         * handlers should get removed and references should be set to null.
+         */
+
         // fire event that all view items were removed
         fireVisualItemContainerChangeEvent(createRemovedDelta(getVisualItems()));
 
@@ -288,16 +327,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             safelyDispose(visualItem, errorHandler);
         }
 
-        /*
-         * XXX Shared objects should not be disposed. Instead, our event
-         * handlers should get removed and references should be set to null.
-         */
-
-        selectedResources = safelyDispose(selectedResources, errorHandler);
         resourceGrouping = safelyDispose(resourceGrouping, errorHandler);
         contentDisplay = safelyDispose(contentDisplay, errorHandler);
 
-        highlightedResources = null;
+        subsets = null;
 
         handlerRegistrations = safelyDispose(handlerRegistrations, errorHandler);
     }
@@ -329,7 +362,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     @Override
     public ResourceSet getHighlightedResources() {
-        return highlightedResources;
+        return getSubset(Subset.HIGHLIGHTED).resources;
     }
 
     /**
@@ -356,7 +389,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     @Override
     public ResourceSet getSelectedResources() {
-        return selectedResources;
+        return getSubset(Subset.SELECTED).resources;
     }
 
     @Override
@@ -377,6 +410,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
     @Override
     public LightweightCollection<Slot> getSlotsWithErrors(VisualItem visualItem) {
         return errorModel.getSlotsWithErrors(visualItem);
+    }
+
+    private SubsetContainer getSubset(Subset subset) {
+        return subsets.get(subset);
     }
 
     @Override
@@ -543,19 +580,21 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 new DefaultResourceSet());
         highlightedResourcesIntersection
                 .addResourceSet(getContentResourceSet());
-        highlightedResourcesIntersection.addResourceSet(highlightedResources);
+        highlightedResourcesIntersection
+                .addResourceSet(getSubset(Subset.HIGHLIGHTED).resources);
 
-        handlerRegistrations.addHandlerRegistration(highlightedResources
-                .addEventHandler(new ResourceSetChangedEventHandler() {
-                    @Override
-                    public void onResourceSetChanged(
-                            ResourceSetChangedEvent event) {
+        handlerRegistrations
+                .addHandlerRegistration(getSubset(Subset.HIGHLIGHTED).resources
+                        .addEventHandler(new ResourceSetChangedEventHandler() {
+                            @Override
+                            public void onResourceSetChanged(
+                                    ResourceSetChangedEvent event) {
 
-                        updateSubset(Subset.HIGHLIGHTED,
-                                event.getAddedResources(),
-                                event.getRemovedResources());
-                    }
-                }));
+                                updateSubset(Subset.HIGHLIGHTED,
+                                        event.getAddedResources(),
+                                        event.getRemovedResources());
+                            }
+                        }));
     }
 
     private void initResourceGrouping() {
@@ -569,17 +608,18 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     private void initSelectionModelEventHandlers() {
-        handlerRegistrations.addHandlerRegistration(selectedResources
-                .addEventHandler(new ResourceSetChangedEventHandler() {
-                    @Override
-                    public void onResourceSetChanged(
-                            ResourceSetChangedEvent event) {
+        handlerRegistrations
+                .addHandlerRegistration(getSubset(Subset.SELECTED).resources
+                        .addEventHandler(new ResourceSetChangedEventHandler() {
+                            @Override
+                            public void onResourceSetChanged(
+                                    ResourceSetChangedEvent event) {
 
-                        updateSubset(Subset.SELECTED,
-                                event.getAddedResources(),
-                                event.getRemovedResources());
-                    }
-                }));
+                                updateSubset(Subset.SELECTED,
+                                        event.getAddedResources(),
+                                        event.getRemovedResources());
+                            }
+                        }));
     }
 
     @Override
@@ -609,9 +649,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
          * TODO extract
          */
         LightweightList<Resource> highlightedResources = getContentResourceSet()
-                .getIntersection(this.highlightedResources);
+                .getIntersection(getSubset(Subset.HIGHLIGHTED).resources);
         LightweightList<Resource> selectedResources = getContentResourceSet()
-                .getIntersection(this.selectedResources);
+                .getIntersection(getSubset(Subset.SELECTED).resources);
 
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == ChangeType.GROUP_CREATED;
@@ -676,8 +716,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             DefaultVisualItem visualItem = visualItemsByGroupId.get(change
                     .getGroupID());
 
-            updateVisualItemHighlightingSet(visualItem, change);
-            updateVisualItemSelectionSet(change, visualItem);
+            getSubset(Subset.HIGHLIGHTED).updateVisualItemOnResourcesChange(
+                    visualItem, change);
+            getSubset(Subset.SELECTED).updateVisualItemOnResourcesChange(
+                    visualItem, change);
 
             updatedVisualItems.add(visualItem);
         }
@@ -869,37 +911,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
             contentDisplay.update(delta, changedSlots);
         } catch (Throwable ex) {
             errorHandler.handleError(ex);
-        }
-    }
-
-    // TODO refactor: updateVisualItemSelectionSet
-    private void updateVisualItemHighlightingSet(DefaultVisualItem visualItem,
-            CategorizableResourceGroupingChange change) {
-
-        LightweightList<Resource> highlightedAdded = highlightedResources
-                .getIntersection(change.getAddedResources());
-        LightweightList<Resource> highlightedRemoved = highlightedResources
-                .getIntersection(change.getRemovedResources());
-
-        if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
-            visualItem.updateSubset(Subset.HIGHLIGHTED, highlightedAdded,
-                    highlightedRemoved);
-        }
-    }
-
-    // TODO refactor: updateVisualItemHighlightingSet
-    private void updateVisualItemSelectionSet(
-            CategorizableResourceGroupingChange change,
-            DefaultVisualItem visualItem) {
-
-        LightweightList<Resource> selectedAdded = selectedResources
-                .getIntersection(change.getAddedResources());
-        LightweightList<Resource> selectedRemoved = selectedResources
-                .getIntersection(change.getRemovedResources());
-
-        if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
-            visualItem.updateSubset(Subset.SELECTED, selectedAdded,
-                    selectedRemoved);
         }
     }
 
