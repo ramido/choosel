@@ -15,14 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModelTestHelper.stubHandlerRegistration;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -56,14 +59,25 @@ public class DefaultVisualizationModelDisposeTest {
     }
 
     @Test
-    public void disposeHighlightedResourcesEventHandler() {
-        verify(highlightedResourcesHandlerRegistration, times(1))
-                .removeHandler();
+    public void removesAllRegisteredHighlightedResourcesEventHandlersOnDispose() {
+        ArgumentCaptor<ResourceSetChangedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourceSetChangedEventHandler.class);
+        verify(helper.getHighlightedResources(), atLeastOnce())
+                .addEventHandler(captor.capture());
+
+        verify(highlightedResourcesHandlerRegistration,
+                times(captor.getAllValues().size())).removeHandler();
     }
 
     @Test
-    public void disposeSelectedResourcesEventHandler() {
-        verify(selectedResourcesHandlerRegistration, times(1)).removeHandler();
+    public void removesAllRegisteredSelectedResourcesEventHandlersOnDispose() {
+        ArgumentCaptor<ResourceSetChangedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourceSetChangedEventHandler.class);
+        verify(helper.getSelectedResources(), atLeastOnce()).addEventHandler(
+                captor.capture());
+
+        verify(selectedResourcesHandlerRegistration,
+                times(captor.getAllValues().size())).removeHandler();
     }
 
     @Before

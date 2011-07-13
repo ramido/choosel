@@ -329,7 +329,7 @@ public class DefaultVisualizationModelTest {
     }
 
     @Test
-    public void visualItemSelectionSetContainsREsourcesThatAreAddedToVisualizationSelectionSet() {
+    public void visualItemSelectionSetContainsResourcesThatAreAddedToVisualizationSelectionSet() {
         helper.getContainedResources().add(createResource(1));
 
         helper.getSelectedResources().add(createResource(1));

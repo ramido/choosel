@@ -33,7 +33,6 @@ import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange;
 import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.ChangeType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
@@ -88,6 +87,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
 
+    /*
+     * TODO cache intersection with content, minimize intersection updates.
+     * Using an IntersectionResourceSet does not work out of the box because of
+     * the event notification order. The intersection updates need to be
+     * triggered manually in the correct order (e.g. before creating visual
+     * items).
+     */
     private class SubsetContainer implements Disposable {
 
         private Subset subset;
@@ -96,22 +102,13 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         private HandlerRegistration handlerRegistration;
 
-        public SubsetContainer(Subset subset, ResourceSet resources) {
+        public SubsetContainer(final Subset subset, ResourceSet resources) {
+            assert subset != null;
+            assert resources != null;
+
             this.subset = subset;
             this.resources = resources;
 
-            initResourceSetChangeHandler();
-        }
-
-        @Override
-        public void dispose() {
-            handlerRegistration.removeHandler();
-            handlerRegistration = null;
-
-            resources = null;
-        }
-
-        private void initResourceSetChangeHandler() {
             handlerRegistration = resources
                     .addEventHandler(new ResourceSetChangedEventHandler() {
                         @Override
@@ -122,6 +119,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
                                     event.getRemovedResources());
                         }
                     });
+        }
+
+        @Override
+        public void dispose() {
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
+
+            resources = null;
         }
 
         private void updateVisualItemOnResourcesChange(
@@ -155,8 +160,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
     private ViewContentDisplay contentDisplay;
 
     private ResourceGrouping resourceGrouping;
-
-    private IntersectionResourceSet highlightedResourcesIntersection;
 
     private final VisualItemBehavior visualItemBehavior;
 
@@ -211,7 +214,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
         init(selectedResources);
 
         initResourceGrouping();
-        initHighlightingModel();
         initContentDisplay();
 
         assert getContentResourceSet().isEmpty();
@@ -599,19 +601,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
         });
     }
 
-    /**
-     * Creates an intersection of contained resources with highlighted resources
-     * and registers for changes.
-     */
-    private void initHighlightingModel() {
-        highlightedResourcesIntersection = new IntersectionResourceSet(
-                new DefaultResourceSet());
-        highlightedResourcesIntersection
-                .addResourceSet(getContentResourceSet());
-        highlightedResourcesIntersection
-                .addResourceSet(getSubset(Subset.HIGHLIGHTED).resources);
-    }
-
     private void initResourceGrouping() {
         resourceGrouping.addHandler(new ResourceGroupingChangedHandler() {
             @Override
@@ -868,6 +857,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
 
+        // TODO not required any more -- intersection set takes care of this
         ResourceSet addedResourcesInThisVisualization = getIntersectionWithVisualizationResources(addedResources);
         ResourceSet removedResourcesInThisVisualization = getIntersectionWithVisualizationResources(removedResources);
 
