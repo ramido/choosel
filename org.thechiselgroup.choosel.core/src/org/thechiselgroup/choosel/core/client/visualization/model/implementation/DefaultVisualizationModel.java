@@ -705,10 +705,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             DefaultVisualItem visualItem = visualItemsByGroupId.get(change
                     .getGroupID());
 
-            getSubset(Subset.HIGHLIGHTED).updateVisualItemOnResourcesChange(
-                    visualItem, change);
-            getSubset(Subset.SELECTED).updateVisualItemOnResourcesChange(
-                    visualItem, change);
+            for (SubsetContainer subsetContainer : subsets.values()) {
+                subsetContainer.updateVisualItemOnResourcesChange(visualItem,
+                        change);
+            }
 
             updatedVisualItems.add(visualItem);
         }
