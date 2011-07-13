@@ -16,11 +16,13 @@
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
 import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDispose;
+import static org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory.createLightweightList;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.copy;
+import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.emptyCollection;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
@@ -453,8 +455,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     // TODO cache
     private LightweightCollection<VisualItem> getValidVisualItems() {
-        LightweightList<VisualItem> visualItemsThatWereValid = CollectionFactory
-                .createLightweightList();
+        LightweightList<VisualItem> visualItemsThatWereValid = createLightweightList();
         for (VisualItem visualItem : getVisualItems()) {
             if (!hasErrors(visualItem)) {
                 visualItemsThatWereValid.add(visualItem);
@@ -623,11 +624,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
-            return LightweightCollections.emptyCollection();
+            return emptyCollection();
         }
 
-        LightweightList<VisualItem> addedVisualItems = CollectionFactory
-                .createLightweightList();
+        LightweightList<VisualItem> addedVisualItems = createLightweightList();
 
         /*
          * PERFORMANCE: cache highlighted resources and use resource set to
@@ -657,11 +657,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
-            return LightweightCollections.emptyCollection();
+            return emptyCollection();
         }
 
-        LightweightList<VisualItem> removedVisualItems = CollectionFactory
-                .createLightweightList();
+        LightweightList<VisualItem> removedVisualItems = createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == ChangeType.GROUP_REMOVED;
 
@@ -695,11 +694,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
-            return LightweightCollections.emptyCollection();
+            return emptyCollection();
         }
 
-        LightweightList<VisualItem> updatedVisualItems = CollectionFactory
-                .createLightweightList();
+        LightweightList<VisualItem> updatedVisualItems = createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == ChangeType.GROUP_CHANGED;
             DefaultVisualItem visualItem = visualItemsByGroupId.get(change
@@ -857,7 +855,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
 
-        // TODO not required any more -- intersection set takes care of this
+        // TODO remove once subset intersection sets are availabel
         ResourceSet addedResourcesInThisVisualization = getIntersectionWithVisualizationResources(addedResources);
         ResourceSet removedResourcesInThisVisualization = getIntersectionWithVisualizationResources(removedResources);
 
@@ -910,7 +908,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         assert event != null;
 
         /*
-         * IMPORTANT: remove old items before adding new once (there might be
+         * IMPORTANT: remove old items before adding new ones (there might be
          * conflicts, i.e. groups with the same id)
          */
         LightweightCollection<VisualItem> removedVisualItems = processRemoveChanges(event
