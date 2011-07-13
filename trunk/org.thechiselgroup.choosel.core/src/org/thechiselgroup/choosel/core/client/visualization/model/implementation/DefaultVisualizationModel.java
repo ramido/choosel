@@ -855,7 +855,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
 
-        // TODO remove once subset intersection sets are availabel
+        // TODO remove once subset intersection sets are available
         ResourceSet addedResourcesInThisVisualization = getIntersectionWithVisualizationResources(addedResources);
         ResourceSet removedResourcesInThisVisualization = getIntersectionWithVisualizationResources(removedResources);
 
