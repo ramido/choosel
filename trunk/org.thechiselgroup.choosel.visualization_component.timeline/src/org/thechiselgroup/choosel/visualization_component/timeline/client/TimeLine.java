@@ -65,10 +65,10 @@ public class TimeLine extends AbstractViewContentDisplay {
     }
 
     private void createTimeLineItems(
-            LightweightCollection<VisualItem> addedResourceItems) {
+            LightweightCollection<VisualItem> addedVisualItems) {
 
-        for (VisualItem resourceItem : addedResourceItems) {
-            resourceItem.setDisplayObject(new TimeLineItem(resourceItem, this));
+        for (VisualItem visualItem : addedVisualItems) {
+            visualItem.setDisplayObject(new TimeLineItem(visualItem, this));
         }
     }
 
