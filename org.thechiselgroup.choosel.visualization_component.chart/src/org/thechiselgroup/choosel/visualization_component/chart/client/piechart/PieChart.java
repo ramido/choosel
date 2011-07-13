@@ -34,6 +34,8 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.functions
 
 public class PieChart extends ChartViewContentDisplay {
 
+    private static final String WEDGE_LABEL_COLOR = "#000000";
+
     private static final String RGBA_TRANSPARENT = "rgba(0,0,0,0)";
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
@@ -225,7 +227,7 @@ public class PieChart extends ChartViewContentDisplay {
 
         labelWedge.anchor("start").add(PV.Label)
                 .text(new ViewItemStringSlotAccessor(LABEL))
-                .textStyle(new ViewItemColorSlotAccessor(BORDER_COLOR));
+                .textStyle(WEDGE_LABEL_COLOR);
 
     }
 
