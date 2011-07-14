@@ -754,10 +754,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightCollection<VisualItem> visualItemsThatHadErrors = copy(getVisualItemsWithErrors());
         LightweightCollection<VisualItem> visualItemsThatWereValid = copy(getValidVisualItems());
 
-        /*
-         * XXX need to clear value cache for dependent slots (aka those that
-         * delegate to this one...
-         */
         clearVisualItemValueCache(slot);
 
         // actually change the slot mapping

@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.CalculationResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
 
 public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
@@ -43,6 +42,12 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         assert factoryProvider != null;
 
         this.factoryProvider = factoryProvider;
+    }
+
+    private VisualItemValueResolver getFallbackResolver(DataType dataType) {
+        assert defaultDataTypeResolvers.containsKey(dataType) : "no fallback resolver for "
+                + dataType;
+        return defaultDataTypeResolvers.get(dataType);
     }
 
     @Override
@@ -67,7 +72,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
         // fallback to default values if there are no corresponding slots
         if (properties.isEmpty()) {
-            return defaultDataTypeResolvers.get(dataType);
+            return getFallbackResolver(dataType);
         }
 
         assert !properties.isEmpty();
@@ -77,23 +82,32 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
         switch (dataType) {
         case TEXT:
-            FirstResourcePropertyResolverFactory firstPropertyResolverFactory = (FirstResourcePropertyResolverFactory) factoryProvider
+            FirstResourcePropertyResolverFactory textResolverFactory = (FirstResourcePropertyResolverFactory) factoryProvider
                     .getFactoryById(TEXT_PROPERTY_RESOLVER_FACTORY_ID);
-
-            return firstPropertyResolverFactory.create(firstProperty);
+            ManagedVisualItemValueResolver textResolver = textResolverFactory
+                    .create(firstProperty);
+            assert textResolver != null;
+            return textResolver;
         case NUMBER:
 
-            CalculationResolverFactory sumResolverFactory = (CalculationResolverFactory) factoryProvider
+            FirstResourcePropertyResolverFactory sumResolverFactory = (FirstResourcePropertyResolverFactory) factoryProvider
                     .getFactoryById(SUM_RESOLVER_FACTORY_ID);
-
-            return sumResolverFactory.create(firstProperty);
+            ManagedVisualItemValueResolver sumResolver = sumResolverFactory
+                    .create(firstProperty);
+            assert sumResolver != null;
+            return sumResolver;
         }
 
+        // this is for date, location
         return new FirstResourcePropertyResolver(firstProperty, dataType);
     }
 
     public void putDefaultDataTypeValues(DataType dataType,
             VisualItemValueResolver resolver) {
+
+        assert dataType != null;
+        assert resolver != null;
+
         defaultDataTypeResolvers.put(dataType, resolver);
     }
 }

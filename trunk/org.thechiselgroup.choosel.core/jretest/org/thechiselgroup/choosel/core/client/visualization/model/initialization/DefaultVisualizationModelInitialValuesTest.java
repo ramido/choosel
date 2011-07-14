@@ -20,20 +20,17 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
 
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.DataType;
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -41,12 +38,11 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemReso
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModelTestHelper;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
 
 // TODO migrate to change default slot mapping initializer
 public class DefaultVisualizationModelInitialValuesTest {
@@ -62,9 +58,6 @@ public class DefaultVisualizationModelInitialValuesTest {
     @Mock
     private VisualItemResolutionErrorModel errorModel;
 
-    @Ignore("these tests need to be reactivated and moved, more of an integration test")
-    // TODO This Behavior has changed
-    // TODO this changes need to be migrated
     @Test
     public void initialSlotValueForNumberSlotIfNoNumberIsAvailable() {
         Resource resource = new Resource("test:1");
@@ -82,9 +75,6 @@ public class DefaultVisualizationModelInitialValuesTest {
         assertEquals(new Double(0), viewItem.getValue(numberSlot));
     }
 
-    @Ignore("these tests need to be reactivated and moved, more of an integration test")
-    // TODO This Behavior has changed
-    // TODO this changes need to be migrated
     @Test
     public void initialSlotValueForTextSlot() {
         Resource resource = new Resource("test:1");
@@ -106,9 +96,6 @@ public class DefaultVisualizationModelInitialValuesTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        // TODO use correct factories...
-        ManagedSlotMapping.TESTING = true;
-
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
@@ -117,59 +104,51 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         underTest = helper.createTestViewModel();
 
-        VisualItemValueResolverFactoryProvider resolverProvider = mock(VisualItemValueResolverFactoryProvider.class);
-        final LightweightList<VisualItemValueResolverFactory> resolverFactories = CollectionFactory
-                .createLightweightList();
-
-        when(resolverProvider.getFactoryById(any(String.class))).thenAnswer(
-                new Answer<VisualItemValueResolverFactory>() {
-                    @Override
-                    public VisualItemValueResolverFactory answer(
-                            InvocationOnMock invocation) throws Throwable {
-
-                        VisualItemValueResolverFactory resolverFactory = mock(VisualItemValueResolverFactory.class);
-                        when(
-                                resolverFactory.canCreateApplicableResolver(
-                                        any(Slot.class),
-                                        any(LightweightList.class)))
-                                .thenReturn(true);
-                        when(resolverFactory.getId()).thenReturn(
-                                (String) invocation.getArguments()[0]);
-
-                        resolverFactories.add(resolverFactory);
-
-                        return resolverFactory;
-                    }
-                });
+        DefaultVisualItemResolverFactoryProvider resolverProvider = new DefaultVisualItemResolverFactoryProvider();
 
         DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer(
                 resolverProvider));
-        initializer
-                .putDefaultDataTypeValues(DataType.NUMBER,
-                        new ManagedVisualItemValueResolverDecorator("Fixed-0",
-                                new FixedValueResolver(new Double(0),
-                                        DataType.NUMBER)));
         {
 
-            VisualItemValueResolverFactory resolverFactory = mock(VisualItemValueResolverFactory.class);
+            ManagedVisualItemValueResolverDecorator numberResolver = new ManagedVisualItemValueResolverDecorator(
+                    SUM_RESOLVER_FACTORY_ID, new FixedValueResolver(new Double(
+                            0), DataType.NUMBER));
+            initializer.putDefaultDataTypeValues(DataType.NUMBER,
+                    numberResolver);
+
+            FirstResourcePropertyResolverFactory resolverFactory = mock(FirstResourcePropertyResolverFactory.class);
+            when(resolverFactory.getId()).thenReturn(SUM_RESOLVER_FACTORY_ID);
             when(
                     resolverFactory.canCreateApplicableResolver(
                             any(Slot.class), any(LightweightList.class)))
                     .thenReturn(true);
-            when(resolverFactory.getId()).thenReturn("Fixed-0");
+            when(resolverFactory.create(any(String.class))).thenReturn(
+                    numberResolver);
 
-            resolverFactories.add(resolverFactory);
+            resolverProvider.registerFactory(resolverFactory);
         }
+        {
 
-        when(resolverProvider.getResolverFactories()).thenReturn(
-                resolverFactories);
+            ManagedVisualItemValueResolverDecorator textResolver = new ManagedVisualItemValueResolverDecorator(
+                    TEXT_PROPERTY_RESOLVER_FACTORY_ID, new FixedValueResolver(
+                            "t1", DataType.TEXT));
+            initializer.putDefaultDataTypeValues(DataType.TEXT, textResolver);
+
+            FirstResourcePropertyResolverFactory resolverFactory = mock(FirstResourcePropertyResolverFactory.class);
+            when(resolverFactory.getId()).thenReturn(
+                    TEXT_PROPERTY_RESOLVER_FACTORY_ID);
+            when(
+                    resolverFactory.canCreateApplicableResolver(
+                            any(Slot.class), any(LightweightList.class)))
+                    .thenReturn(true);
+            when(resolverFactory.create(any(String.class))).thenReturn(
+                    textResolver);
+
+            resolverProvider.registerFactory(resolverFactory);
+        }
 
         new ManagedSlotMappingConfiguration(resolverProvider, initializer,
                 underTest, errorModel);
     }
 
-    @After
-    public void tearDown() {
-        ManagedSlotMapping.TESTING = false;
-    }
 }
