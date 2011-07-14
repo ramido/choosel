@@ -179,10 +179,10 @@ public class BarChart extends ChartViewContentDisplay {
     }
 
     // TODO move to protovis (events)
-    private static final String ALL = "all";
+    public static final String ALL = "all";
 
     // TODO move to protovis (cursor)
-    private static final String POINTER = "pointer";
+    public static final String POINTER = "pointer";
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.BarChart";
 
