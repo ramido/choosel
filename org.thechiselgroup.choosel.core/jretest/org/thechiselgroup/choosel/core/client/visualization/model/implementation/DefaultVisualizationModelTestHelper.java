@@ -20,7 +20,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
@@ -97,7 +96,7 @@ public final class DefaultVisualizationModelTestHelper {
 
         DefaultVisualizationModel visualizationModel = spy(new DefaultVisualizationModel(
                 viewContentDisplay, selectedResources, highlightedResources,
-                mock(VisualItemBehavior.class), mock(ErrorHandler.class),
+                mock(VisualItemBehavior.class), new TestErrorHandler(),
                 new DefaultResourceSetFactory(),
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer())));

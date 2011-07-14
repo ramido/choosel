@@ -25,9 +25,9 @@ import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemResolutionErrorModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -66,12 +66,6 @@ public class ManagedSlotMapping {
             super(message);
         }
     }
-
-    /*
-     * XXX hack for test cases, remove once slot mapping UI model is separated
-     * from SlotModelConfiguration.
-     */
-    public static boolean TESTING = false;
 
     private final Slot slot;
 
@@ -194,14 +188,6 @@ public class ManagedSlotMapping {
 
         ManagedVisualItemValueResolver managedResolver = (ManagedVisualItemValueResolver) resolver;
         assert managedResolver.getResolverId() != null;
-
-        /*
-         * XXX hack for test cases, remove once slot mapping UI model is
-         * separated from SlotModelConfiguration.
-         */
-        if (TESTING) {
-            return true;
-        }
 
         if (!allowableResolverFactories.containsKey(managedResolver
                 .getResolverId())) {

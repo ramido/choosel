@@ -164,6 +164,8 @@ public class ManagedSlotMappingConfiguration {
             Slot slot = entry.getKey();
             VisualItemValueResolver resolver = entry.getValue();
 
+            assert resolver != null;
+
             if (getManagedSlotMapping(slot).isAllowableResolver(resolver,
                     viewItems)) {
                 visualizationModel.setResolver(slot, resolver);
