@@ -25,10 +25,13 @@ public class LoggingErrorHandler implements ErrorHandler {
 
     private final Logger logger;
 
+    public LoggingErrorHandler(Logger logger) {
+        this.logger = logger;
+    }
+
     @Inject
     public LoggingErrorHandler(LoggerProvider logger) {
-        assert logger != null;
-        this.logger = logger.getLogger();
+        this(logger.getLogger());
     }
 
     @Override

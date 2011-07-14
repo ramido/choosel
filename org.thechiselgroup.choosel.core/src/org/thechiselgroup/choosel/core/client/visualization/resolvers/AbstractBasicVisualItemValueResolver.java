@@ -18,7 +18,9 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 /**
  * Convenience superclass for {@link VisualItemValueResolver}s that do not
@@ -28,6 +30,19 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
  */
 public abstract class AbstractBasicVisualItemValueResolver implements
         VisualItemValueResolver {
+
+    /**
+     * Hook implementation always returning {@code true}. Override for different
+     * behavior.
+     * 
+     * @see VisualItemValueResolver#canResolve(VisualItem,
+     *      VisualItemValueResolverContext)
+     */
+    @Override
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
+        return true;
+    }
 
     @Override
     public final LightweightCollection<Slot> getTargetSlots() {
