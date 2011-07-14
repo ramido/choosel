@@ -15,12 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.configuration;
 
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.*;
 
 import java.util.Map;
 
@@ -30,6 +25,7 @@ import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
@@ -137,6 +133,11 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     @Inject
     private VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
+    protected ResourceMultiCategorizer createDefaultCategorizer(
+            String contentType) {
+        return new ResourceByUriMultiCategorizer();
+    }
+
     // XXX remove
     protected LightweightList<SidePanelSection> createSidePanelSections(
             String contentType, ViewContentDisplay contentDisplay,
@@ -222,19 +223,21 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
 
+        ResourceMultiCategorizer categorizer = createDefaultCategorizer(contentType);
+
         VisualizationModel visualizationModel = new FixedSlotResolversVisualizationModelDecorator(
                 new DefaultVisualizationModel(contentDisplay,
                         selectionModel.getSelectionProxy(),
                         hoverModel.getResources(), viewItemBehaviors,
                         errorHandler, new DefaultResourceSetFactory(),
-                        new ResourceByUriMultiCategorizer()),
-                fixedSlotResolvers);
+                        categorizer), fixedSlotResolvers);
 
         visualizationModel.setContentResourceSet(resourceModel.getResources());
 
         ManagedSlotMappingConfiguration uiModel = new ManagedSlotMappingConfiguration(
                 resolverFactoryProvider, slotMappingInitializer,
                 visualizationModel, visualizationModel);
+
         /**
          * Visual Mappings Control is what sets up the side panel section that
          * handles mapping the slot to its resolvers.
