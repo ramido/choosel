@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
@@ -27,7 +26,7 @@ public class TextViewContentDisplayFactory implements ViewContentDisplayFactory 
     }
 
     @Override
-    public ViewContentDisplay createViewContentDisplay() {
+    public TextVisualization createViewContentDisplay() {
         return new TextVisualization();
     }
 
