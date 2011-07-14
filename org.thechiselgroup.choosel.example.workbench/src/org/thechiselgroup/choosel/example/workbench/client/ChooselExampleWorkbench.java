@@ -19,7 +19,9 @@ import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.ui.Action;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
+import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
+import org.thechiselgroup.choosel.visualization_component.graph.client.Graph;
 import org.thechiselgroup.choosel.visualization_component.map.client.Map;
 import org.thechiselgroup.choosel.visualization_component.text.client.TextVisualization;
 import org.thechiselgroup.choosel.visualization_component.timeline.client.TimeLine;
@@ -62,16 +64,16 @@ public class ChooselExampleWorkbench extends WorkbenchInitializer {
         // asyncCommandExecutor));
 
         if (runsInDevelopmentMode()) {
-            // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph",
-            // Graph.ID);
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph",
+                    Graph.ID);
             // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL,
             // "Circular Bar", TYPE_CIRCULAR_BAR);
             // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Time",
             // TYPE_TIME);
             // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Dot",
             // TYPE_DOT);
-            // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Pie Chart",
-            // PieChart.ID);
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Pie Chart",
+                    PieChart.ID);
         }
 
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
