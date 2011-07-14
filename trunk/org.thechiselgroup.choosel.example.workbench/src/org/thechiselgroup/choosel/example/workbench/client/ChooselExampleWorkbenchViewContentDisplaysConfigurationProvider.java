@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemSt
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
+import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.map.client.Map;
@@ -49,6 +51,7 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 BarChart.BAR_COLOR,
                 new ViewItemStatusResolver(Colors.STEELBLUE_C, StatusRule
                         .fullOrPartial(Colors.ORANGE_C, Subset.SELECTED)));
+
         configuration.setSlotResolver(BarChart.BAR_BORDER_COLOR,
                 new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
 
@@ -85,6 +88,34 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 DataType.NUMBER));
 
         add(configuration);
+    }
+
+    @SuppressWarnings("unused")
+    @Inject
+    private void pieChart(PieChartViewContentDisplayFactory originalFactory) {
+        ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
+                originalFactory);
+
+        configuration.setSlotResolver(
+                PieChart.COLOR,
+                new ViewItemStatusResolver(Colors.STEELBLUE_C, StatusRule
+                        .fullOrPartial(Colors.ORANGE_C, Subset.SELECTED)));
+        configuration.setSlotResolver(PieChart.BORDER_COLOR,
+        // TODO use brighter() instead of alpha
+                new FixedValueResolver(Colors.STEELBLUE_C.alpha(.4),
+                        DataType.COLOR));
+
+        configuration.setSlotResolver(PieChart.PARTIAL_VALUE,
+                new SubsetDelegatingValueResolver(PieChart.VALUE,
+                        Subset.HIGHLIGHTED));
+
+        configuration.setSlotResolver(PieChart.PARTIAL_COLOR,
+                new FixedValueResolver(Colors.YELLOW_C, DataType.COLOR));
+
+        configuration.setSlotResolver(PieChart.PARTIAL_BORDER_COLOR,
+                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
+
+        viewContentDisplayConfigurations.add(configuration);
     }
 
     @SuppressWarnings("unused")
