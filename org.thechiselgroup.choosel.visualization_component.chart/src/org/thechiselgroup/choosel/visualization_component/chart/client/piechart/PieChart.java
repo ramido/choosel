@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemPredicateJsBooleanFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
@@ -96,9 +97,9 @@ public class PieChart extends ChartViewContentDisplay {
     };
 
     /**
-     * For each {@link VisualItem} index, it return the sum of the current and all
-     * previous view items. This is required to calculate the start angle, which
-     * we need for the partial wedges (because Protovis only automatically
+     * For each {@link VisualItem} index, it return the sum of the current and
+     * all previous view items. This is required to calculate the start angle,
+     * which we need for the partial wedges (because Protovis only automatically
      * calculates the correct start index if the sibling wedges are visible,
      * which is not the case for the partial wedges).
      */
@@ -181,6 +182,8 @@ public class PieChart extends ChartViewContentDisplay {
 
     private PVWedge labelWedge;
 
+    private PVWedge invisibleInteractionWedge;
+
     @Override
     protected void beforeRender() {
         super.beforeRender();
@@ -229,6 +232,19 @@ public class PieChart extends ChartViewContentDisplay {
                 .text(new ViewItemStringSlotAccessor(LABEL))
                 .textStyle(WEDGE_LABEL_COLOR);
 
+        /*
+         * XXX we use alpha 0.0001 because Protovis removes the invisible
+         * interaction wedge if alpha is 0. This should be changed when using
+         * something other than Protovis for the rendering. (o")9
+         */
+        invisibleInteractionWedge = getChart().add(PV.Wedge)
+                .data(viewItemsJsArray).left(wedgeLeft).bottom(wedgeBottom)
+                .startAngle(startAngle).innerRadius(0)
+                .outerRadius(outerRadiusFunction).angle(wedgeAngle)
+                .cursor(BarChart.POINTER).events(BarChart.ALL)
+                .fillStyle(PV.rgb(255, 255, 255).alpha(0.00001))
+                .strokeStyle(PV.rgb(255, 255, 255).alpha(0.00001));
+
     }
 
     private void calculateAggregatedValues() {
@@ -263,8 +279,7 @@ public class PieChart extends ChartViewContentDisplay {
 
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
-        mainWedge.event(eventType, handler);
-        partialWedge.event(eventType, handler);
+        invisibleInteractionWedge.event(eventType, handler);
     }
 
 }
