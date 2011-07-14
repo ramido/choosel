@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 // XXX order does not update when description property changes
 public class TextVisualization extends AbstractViewContentDisplay {
 
+    // TODO move back into factory
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.Text";
 
     public final static Slot LABEL_SLOT = new Slot("label", "Label",
