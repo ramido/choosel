@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemIdResolverFactory;
 
 import com.google.inject.Inject;
 
@@ -57,6 +58,9 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
     @Inject
     public void registerFactories() {
         factories = new HashMap<String, VisualItemValueResolverFactory>();
+
+        registerFactory(new ViewItemIdResolverFactory());
+
         registerFactory(new ResourceCountResolverFactory());
         registerFactory(new CalculationResolverFactory(SUM_RESOLVER_FACTORY_ID,
                 new SumCalculation()));
