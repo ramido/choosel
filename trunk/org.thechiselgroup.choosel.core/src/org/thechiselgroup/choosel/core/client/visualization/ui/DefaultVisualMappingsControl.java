@@ -15,13 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.ui.ConfigurationPanel;
@@ -32,8 +35,8 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIController;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactory;
@@ -60,6 +63,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
     private final VisualItemValueResolverUIControllerFactoryProvider uiProvider;
+
+    private static final String GROUP_BY_URI_LABEL = "No Grouping";
 
     public DefaultVisualMappingsControl(
             ManagedSlotMappingConfiguration slotMappingConfigurationUIModel,
@@ -100,6 +105,13 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return visualMappingPanel;
     }
 
+    private List<String> calculateGroupingBoxOptions(
+            DataTypeToListMap<String> propertiesByDataType) {
+        List<String> values = propertiesByDataType.get(DataType.TEXT);
+        values.add(GROUP_BY_URI_LABEL);
+        return values;
+    }
+
     private ViewItemValueResolverUIController createUIControllerFromResolver(
             Slot slot, ManagedVisualItemValueResolver currentResolver) {
         ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
@@ -132,13 +144,24 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         groupingBox = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
 
+        List<String> values = new ArrayList<String>();
+        values.add(GROUP_BY_URI_LABEL);
+        groupingBox.setValues(values);
+        groupingBox.setSelectedValue(GROUP_BY_URI_LABEL);
+
         groupingBox.setChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
                 String property = groupingBox.getSelectedValue();
-                resourceGrouping
-                        .setCategorizer(new ResourceByPropertyMultiCategorizer(
-                                property));
+
+                if (GROUP_BY_URI_LABEL.equals(property)) {
+                    resourceGrouping
+                            .setCategorizer(new ResourceByUriMultiCategorizer());
+                } else {
+                    resourceGrouping
+                            .setCategorizer(new ResourceByPropertyMultiCategorizer(
+                                    property));
+                }
             }
         });
 
@@ -219,10 +242,11 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private void updateGroupingBox(
             DataTypeToListMap<String> propertiesByDataType) {
-
-        groupingBox.setValues(propertiesByDataType.get(DataType.TEXT));
+        groupingBox
+                .setValues(calculateGroupingBoxOptions(propertiesByDataType));
         if (groupingBox.getSelectedValue() == null
                 && resourceGrouping.getCategorizer() instanceof ResourceByPropertyMultiCategorizer) {
+
             String property = ((ResourceByPropertyMultiCategorizer) resourceGrouping
                     .getCategorizer()).getProperty();
             groupingBox.setSelectedValue(property);
