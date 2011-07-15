@@ -23,7 +23,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
  * 
  * @author Lars Grammel
  */
-// TODO DataType.TEXT
 public class ViewItemIdResolver extends AbstractBasicVisualItemValueResolver {
 
     @Override
