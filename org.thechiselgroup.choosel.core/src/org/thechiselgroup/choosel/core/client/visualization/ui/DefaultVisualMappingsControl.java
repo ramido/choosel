@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,11 +143,6 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         groupingBox = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
 
-        List<String> values = new ArrayList<String>();
-        values.add(GROUP_BY_URI_LABEL);
-        groupingBox.setValues(values);
-        groupingBox.setSelectedValue(GROUP_BY_URI_LABEL);
-
         groupingBox.setChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
@@ -240,6 +234,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         updateSlotControls(viewItems);
     }
 
+    // TODO with tag cloud visualization, the property should be set to
+    // tagContent automatically
     private void updateGroupingBox(
             DataTypeToListMap<String> propertiesByDataType) {
         groupingBox
@@ -250,6 +246,9 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             String property = ((ResourceByPropertyMultiCategorizer) resourceGrouping
                     .getCategorizer()).getProperty();
             groupingBox.setSelectedValue(property);
+        } else if (groupingBox.getSelectedValue() == null
+                && resourceGrouping.getCategorizer() instanceof ResourceByUriMultiCategorizer) {
+            groupingBox.setSelectedValue(GROUP_BY_URI_LABEL);
         }
     }
 
