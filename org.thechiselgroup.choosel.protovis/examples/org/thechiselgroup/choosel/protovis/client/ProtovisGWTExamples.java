@@ -43,9 +43,6 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
-        // Protovis extensions
-        examples.add(new EllipseExample());
-
         // networks
         examples.add(new ArcDiagramExample());
         examples.add(new ArcDiagramExample2());
@@ -90,6 +87,9 @@ public class ProtovisGWTExamples implements EntryPoint {
 
         // statistics
         examples.add(new BoxAndWhiskerPlotExample());
+
+        // Protovis extensions
+        examples.add(new EllipseExample());
     }
 
     private void initProtovisExampleLink() {
