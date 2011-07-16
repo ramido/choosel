@@ -1,0 +1,40 @@
+
+<html> 
+  <head> 
+    <title>Ellipse Mark Type Test</title> 
+    <script type="text/javascript" src="protovis-d3.2.js"></script> 
+  </head> 
+  <body>
+  INFO: Works only if protovis-d3.2-orig.js.EllipseMarkTypeWithRotation.patch is 
+  applied to protovis-d3.2.js. 
+  <div id="center"><div id="fig"> 
+    <script type="text/javascript+protovis"> 
+var ellipses = 
+	[[200, 100, 25, 25, 0],[200, 250, 50, 25, 45],
+	[400, 250, 25, 50, 0],[400, 100, 20, 40, 175],
+	[400, 120, 70, 35, 0]];
+
+var colors = pv.Colors.category10();
+
+var vis = new pv.Panel()
+    .width(600)
+    .height(400)
+    .fillStyle("white");
+ 
+vis.add(pv.Panel)
+    .data(ellipses)
+    .add(pv.Ellipse)
+    .left(function(d) d[0])
+	.top(function(d) d[1])
+	.horizontalRadius(function(d) d[2])
+	.verticalRadius(function(d) d[3])
+	.angle(function(d) d[4] * Math.PI / 180.0)
+	.fillStyle(function(d) colors(d).alpha(0.6))
+	.strokeStyle("#222")
+    .lineWidth(0.5);
+ 
+vis.render();
+ 
+    </script> 
+  </div></div></body> 
+</html> 
