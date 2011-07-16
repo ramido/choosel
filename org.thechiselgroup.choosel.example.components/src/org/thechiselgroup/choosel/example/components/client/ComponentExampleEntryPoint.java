@@ -21,9 +21,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.core.client.development.BenchmarkResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
@@ -34,29 +36,30 @@ import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
-import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
-import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
-import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.SubsetDelegatingValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
-import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemStringSlotComparator;
+import org.thechiselgroup.choosel.core.client.visualization.VisualizationWidget;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.CompositeVisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.HighlightingVisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.PopupWithHighlightingVisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.behaviors.SwitchSelectionOnClickVisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.visualization.model.comparators.VisualItemDoubleComparator;
+import org.thechiselgroup.choosel.core.client.visualization.model.comparators.VisualItemTextSlotComparator;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.DefaultSelectionModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.AbstractBasicVisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.CalculationResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ResourceCountResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.SubsetDelegatingValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemStatusResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
@@ -89,10 +92,10 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
     private static final Color COLOR_HIGHLIGHTED_BORDER = new Color(166, 163, 0);
 
-    private static final ViewItemStatusResolver COLOR_RESOLVER = new ViewItemStatusResolver(
-            "color_resolver", COLOR_DEFAULT, StatusRule.fullOrPartial(
-                    COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
-            StatusRule.fullOrPartial(COLOR_SELECTION, Subset.SELECTED));
+    private static final VisualItemStatusResolver COLOR_RESOLVER = new VisualItemStatusResolver(
+            COLOR_DEFAULT, StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
+                    Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
+                    COLOR_SELECTION, Subset.SELECTED));
 
     private VisualizationWidget<BarChart> barChart;
 
@@ -102,15 +105,24 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
     private VisualizationWidget<ScatterPlot> scatterPlot;
 
+    private ErrorHandler errorHandler = new ErrorHandler() {
+        @Override
+        public void handleError(Throwable error) {
+            handle(error);
+        }
+    };
+
+    private CommandManager commandManager = new DefaultCommandManager();
+
     private void createScatterPlot(ResourceSet resourceSet,
             HighlightingModel hoverModel, SelectionModel selectionModel) {
 
         // behaviors: how the view reacts to user interactions
-        CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
-        barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
-        barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
-                selectionModel));
-        barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+        CompositeVisualItemBehavior barChartBehaviors = new CompositeVisualItemBehavior();
+        barChartBehaviors.add(new HighlightingVisualItemBehavior(hoverModel));
+        barChartBehaviors.add(new SwitchSelectionOnClickVisualItemBehavior(
+                selectionModel, commandManager));
+        barChartBehaviors.add(new PopupWithHighlightingVisualItemBehavior(
                 new SimpleDetailsWidgetHelper(),
                 new DefaultPopupManagerFactory(new DefaultPopupFactory()),
                 hoverModel));
@@ -118,20 +130,18 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // create visualization
         scatterPlot = new VisualizationWidget<ScatterPlot>(new ScatterPlot(),
                 selectionModel.getSelectionProxy(), hoverModel.getResources(),
-                barChartBehaviors);
+                barChartBehaviors, errorHandler);
 
         // configure visual mappings
         scatterPlot.setResolver(
                 ScatterPlot.COLOR,
-                new ViewItemStatusResolver("color_resolver_2",
-                        Color.TRANSPARENT, StatusRule.fullOrPartial(
-                                COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+                new VisualItemStatusResolver(Color.TRANSPARENT, StatusRule
+                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
                         StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
         scatterPlot.setResolver(
                 ScatterPlot.BORDER_COLOR,
-                new ViewItemStatusResolver("color_resolver_3",
-                        COLOR_DEFAULT_BORDER, StatusRule.full(
-                                COLOR_SELECTION_BORDER, Subset.SELECTED),
+                new VisualItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
+                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
                                 Subset.HIGHLIGHTED)));
         scatterPlot.setResolver(ScatterPlot.X_POSITION,
@@ -140,37 +150,35 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         scatterPlot.setResolver(ScatterPlot.Y_POSITION,
                 new CalculationResolver(BenchmarkResourceSetFactory.NUMBER_1,
                         new SumCalculation()));
-        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(20));
-        scatterPlot.setResolver(ScatterPlot.SHAPE, new ViewItemValueResolver() {
-            @Override
-            public String getResolverId() {
-                return "shape_resolver";
-            }
+        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(20,
+                DataType.NUMBER));
+        scatterPlot.setResolver(ScatterPlot.SHAPE,
+                new AbstractBasicVisualItemValueResolver() {
+                    public Object resolve(VisualItem viewItem,
+                            VisualItemValueResolverContext context) {
 
-            public Object resolve(ViewItem viewItem,
-                    ViewItemValueResolverContext context) {
+                        // assuming 1 resource per viewItem
+                        Resource resource = viewItem.getResources()
+                                .getFirstElement();
+                        String category = (String) resource
+                                .getValue(BenchmarkResourceSetFactory.TEXT_2);
 
-                // assuming 1 resource per viewItem
-                Resource resource = viewItem.getResources().getFirstResource();
-                String category = (String) resource
-                        .getValue(BenchmarkResourceSetFactory.TEXT_2);
+                        // see PVShape for more shapes
+                        if ("category-0".equals(category)) {
+                            return PVShape.DIAMOND;
+                        }
+                        if ("category-1".equals(category)) {
+                            return PVShape.SQUARE;
+                        }
 
-                // see PVShape for more shapes
-                if ("category-0".equals(category)) {
-                    return PVShape.DIAMOND;
-                }
-                if ("category-1".equals(category)) {
-                    return PVShape.SQUARE;
-                }
+                        return PVShape.CIRCLE;
+                    }
 
-                return PVShape.CIRCLE;
-            }
-
-            @Override
-            public String toString() {
-                return "Categories";
-            }
-        });
+                    @Override
+                    public String toString() {
+                        return "Categories";
+                    }
+                });
 
         // set resources
         scatterPlot.setContentResourceSet(resourceSet);
@@ -188,11 +196,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             HighlightingModel hoverModel, SelectionModel selectionModel) {
 
         // behaviors: how the view reacts to user interactions
-        CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
-        barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
-        barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
-                selectionModel));
-        barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+        CompositeVisualItemBehavior barChartBehaviors = new CompositeVisualItemBehavior();
+        barChartBehaviors.add(new HighlightingVisualItemBehavior(hoverModel));
+        barChartBehaviors.add(new SwitchSelectionOnClickVisualItemBehavior(
+                selectionModel, commandManager));
+        barChartBehaviors.add(new PopupWithHighlightingVisualItemBehavior(
                 new SimpleDetailsWidgetHelper(),
                 new DefaultPopupManagerFactory(new DefaultPopupFactory()),
                 hoverModel));
@@ -200,30 +208,28 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // create visualization
         pieChart = new VisualizationWidget<PieChart>(new PieChart(),
                 selectionModel.getSelectionProxy(), hoverModel.getResources(),
-                barChartBehaviors);
+                barChartBehaviors, errorHandler);
 
         // configure visual mappings
         pieChart.setResolver(
                 PieChart.COLOR,
-                new ViewItemStatusResolver("color_resolver", COLOR_DEFAULT,
-                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
-                                Subset.HIGHLIGHTED), StatusRule.full(
-                                COLOR_SELECTION, Subset.SELECTED)));
+                new VisualItemStatusResolver(COLOR_DEFAULT, StatusRule
+                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
         pieChart.setResolver(
                 PieChart.BORDER_COLOR,
-                new ViewItemStatusResolver("color_resolver_2",
-                        COLOR_DEFAULT_BORDER, StatusRule.full(
-                                COLOR_SELECTION_BORDER, Subset.SELECTED),
+                new VisualItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
+                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
                                 Subset.HIGHLIGHTED)));
         pieChart.setResolver(PieChart.VALUE, new CalculationResolver(
                 BenchmarkResourceSetFactory.NUMBER_2, new SumCalculation()));
         pieChart.setResolver(PieChart.PARTIAL_VALUE,
-                new SubsetDelegatingValueResolver("delegating_resolver",
-                        PieChart.VALUE, Subset.SELECTED));
+                new SubsetDelegatingValueResolver(PieChart.VALUE,
+                        Subset.SELECTED));
         pieChart.setResolver(PieChart.PARTIAL_COLOR, COLOR_RESOLVER);
         pieChart.setResolver(PieChart.PARTIAL_BORDER_COLOR,
-                new FixedValueResolver(COLOR_SELECTION_BORDER));
+                new FixedValueResolver(COLOR_SELECTION_BORDER, DataType.COLOR));
         pieChart.setResolver(PieChart.LABEL, new FirstResourcePropertyResolver(
                 BenchmarkResourceSetFactory.TEXT_1, DataType.TEXT));
 
@@ -235,11 +241,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             HighlightingModel hoverModel, SelectionModel selectionModel) {
 
         // behaviors: how the view reacts to user interactions
-        CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
-        barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
-        barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
-                selectionModel));
-        barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+        CompositeVisualItemBehavior barChartBehaviors = new CompositeVisualItemBehavior();
+        barChartBehaviors.add(new HighlightingVisualItemBehavior(hoverModel));
+        barChartBehaviors.add(new SwitchSelectionOnClickVisualItemBehavior(
+                selectionModel, commandManager));
+        barChartBehaviors.add(new PopupWithHighlightingVisualItemBehavior(
                 new SimpleDetailsWidgetHelper(),
                 new DefaultPopupManagerFactory(new DefaultPopupFactory()),
                 hoverModel));
@@ -247,28 +253,26 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // create visualization
         barChart = new VisualizationWidget<BarChart>(new BarChart(),
                 selectionModel.getSelectionProxy(), hoverModel.getResources(),
-                barChartBehaviors);
+                barChartBehaviors, errorHandler);
 
         // configure visual mappings
         barChart.setResolver(
                 BarChart.BAR_COLOR,
-                new ViewItemStatusResolver("color_resolver_1", COLOR_DEFAULT,
-                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
-                                Subset.HIGHLIGHTED), StatusRule.full(
-                                COLOR_SELECTION, Subset.SELECTED)));
+                new VisualItemStatusResolver(COLOR_DEFAULT, StatusRule
+                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
         barChart.setResolver(
                 BarChart.BAR_BORDER_COLOR,
-                new ViewItemStatusResolver("color_resolver_2",
-                        COLOR_DEFAULT_BORDER, StatusRule.full(
-                                COLOR_SELECTION_BORDER, Subset.SELECTED),
+                new VisualItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
+                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
                                 Subset.HIGHLIGHTED)));
         barChart.setResolver(BarChart.PARTIAL_BAR_LENGTH,
-                new SubsetDelegatingValueResolver("delegating_resolver",
-                        BarChart.BAR_LENGTH, Subset.SELECTED));
+                new SubsetDelegatingValueResolver(BarChart.BAR_LENGTH,
+                        Subset.SELECTED));
         barChart.setResolver(BarChart.PARTIAL_BAR_COLOR, COLOR_RESOLVER);
         barChart.setResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
-                new FixedValueResolver(COLOR_SELECTION_BORDER));
+                new FixedValueResolver(COLOR_SELECTION_BORDER, DataType.COLOR));
 
         // default settings
         doNotGroupBarChart();
@@ -331,8 +335,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // grouping
         barChart.setCategorizer(new ResourceByUriMultiCategorizer());
         // sorting by value
-        barChart.getContentDisplay().setViewItemComparator(
-                new ViewItemDoubleComparator(BarChart.BAR_LENGTH));
+        barChart.getContentDisplay().setVisualItemComparator(
+                new VisualItemDoubleComparator(BarChart.BAR_LENGTH));
         // mappings
         barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
@@ -369,8 +373,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             }
         });
         // sorting by label
-        barChart.getContentDisplay().setViewItemComparator(
-                new ViewItemStringSlotComparator(BarChart.BAR_LABEL));
+        barChart.getContentDisplay().setVisualItemComparator(
+                new VisualItemTextSlotComparator(BarChart.BAR_LABEL));
         // slot mappings
         barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
