@@ -4,10 +4,10 @@
     <format property="buildtime" pattern="yyyyMMddHHmmss" />
   </tstamp>
 
-  <!--
   <property name="version" value="b${buildtime}" />
-  -->
+  <!--
   <property name="version" value="0.4.1" />
+  -->
   	
   <property name="dist" location="bin/dist"/>
   <property name="src" location="src"/>

@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.chart"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.map"/>
@@ -10,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.timeline"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.workbench"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.graph"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER/gwt-2.3.0"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
