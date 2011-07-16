@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='ProtovisGWT'>
-	<inherits name='com.google.gwt.user.User'/>
-	<source path='client'/>
-	<script src="js/protovis-3.2-PATCHED/protovis-d3.2-PATCHED-COMPRESSED.js"/>
-</module>
