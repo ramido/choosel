@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Sta
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.predicates.VisualItemPredicate;
 
-public class ViewItemStatusResolver extends AbstractBasicVisualItemValueResolver {
+public class VisualItemStatusResolver extends AbstractBasicVisualItemValueResolver {
 
     public static class StatusRule implements VisualItemPredicate {
 
@@ -61,7 +61,7 @@ public class ViewItemStatusResolver extends AbstractBasicVisualItemValueResolver
 
     private final StatusRule[] rules;
 
-    public ViewItemStatusResolver(Object defaultValue, StatusRule... rules) {
+    public VisualItemStatusResolver(Object defaultValue, StatusRule... rules) {
         assert defaultValue != null;
         assert rules != null;
 
