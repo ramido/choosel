@@ -29,6 +29,7 @@
     	<exclude name="org.thechiselgroup.choosel.protovis/tomcat/**"/>
     	<exclude name="org.thechiselgroup.choosel.protovis/war/ProtovisGWT_Examples/**"/>
     	<exclude name="org.thechiselgroup.choosel.protovis/war/WEB-INF/classes/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/war/WEB-INF/deploy/**"/>
       </fileset>
     </zip> 
   </target>	
