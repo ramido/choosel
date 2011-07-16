@@ -22,8 +22,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Sub
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplayConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.SubsetDelegatingValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemStatusResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemStatusResolver.StatusRule;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemStatusResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
@@ -49,7 +49,7 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         configuration.setSlotResolver(
                 BarChart.BAR_COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C, StatusRule
+                new VisualItemStatusResolver(Colors.STEELBLUE_C, StatusRule
                         .fullOrPartial(Colors.ORANGE_C, Subset.SELECTED)));
 
         configuration.setSlotResolver(BarChart.BAR_BORDER_COLOR,
@@ -74,7 +74,7 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         configuration.setSlotResolver(
                 Map.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
+                new VisualItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
                         StatusRule.fullOrPartial(Colors.YELLOW_C,
                                 Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
                                 Colors.ORANGE_C, Subset.SELECTED)));
@@ -98,7 +98,7 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         configuration.setSlotResolver(
                 PieChart.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C, StatusRule
+                new VisualItemStatusResolver(Colors.STEELBLUE_C, StatusRule
                         .fullOrPartial(Colors.ORANGE_C, Subset.SELECTED)));
         configuration.setSlotResolver(PieChart.BORDER_COLOR,
         // TODO use brighter() instead of alpha
@@ -130,7 +130,7 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
         configuration.setSlotResolver(
                 ScatterPlot.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
+                new VisualItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
                         StatusRule.fullOrPartial(Colors.YELLOW_C,
                                 Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
                                 Colors.ORANGE_C, Subset.SELECTED)));
@@ -154,7 +154,7 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
         configuration.setSlotResolver(
                 TimeLine.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
+                new VisualItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
                         StatusRule.fullOrPartial(Colors.YELLOW_C,
                                 Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
                                 Colors.ORANGE_C, Subset.SELECTED)));

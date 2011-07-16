@@ -408,7 +408,7 @@ public class BarChart extends ChartViewContentDisplay {
 
     private boolean barSpacing = true;
 
-    private Comparator<VisualItem> viewItemComparator = new VisualItemDoubleComparator(
+    private Comparator<VisualItem> visualItemComparator = new VisualItemDoubleComparator(
             BAR_LENGTH);
 
     private PVLabel barLabel;
@@ -433,7 +433,7 @@ public class BarChart extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        viewItemsJsArray.sortStable(getViewItemComparator());
+        viewItemsJsArray.sortStable(getVisualItemComparator());
 
         calculateMaximumChartItemValue();
 
@@ -806,8 +806,8 @@ public class BarChart extends ChartViewContentDisplay {
         return valueLabelVisibility;
     }
 
-    public Comparator<VisualItem> getViewItemComparator() {
-        return viewItemComparator;
+    public Comparator<VisualItem> getVisualItemComparator() {
+        return visualItemComparator;
     }
 
     @Override
@@ -849,12 +849,12 @@ public class BarChart extends ChartViewContentDisplay {
         updateChart(true);
     }
 
-    public void setViewItemComparator(Comparator<VisualItem> viewItemComparator) {
-        if (this.viewItemComparator == viewItemComparator) {
+    public void setVisualItemComparator(Comparator<VisualItem> visualItemComparator) {
+        if (this.visualItemComparator == visualItemComparator) {
             return;
         }
 
-        this.viewItemComparator = viewItemComparator;
+        this.visualItemComparator = visualItemComparator;
         updateChart(true);
     }
 
