@@ -20,7 +20,6 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
-import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -63,9 +62,9 @@ public abstract class PropertyListBoxResolverUIController implements
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
-        this(resolverFactory, uiModel, viewItems,
-                ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
-                resolverFactory.getValidDataType()).get(0));
+        this(resolverFactory, uiModel, viewItems, ResourceSetUtils
+                .getSharedPropertiesOfDataType(viewItems,
+                        resolverFactory.getValidDataType()).get(0));
     }
 
     public PropertyListBoxResolverUIController(
@@ -80,7 +79,7 @@ public abstract class PropertyListBoxResolverUIController implements
         selector.setChangeHandler(propertySelectChangeHandler);
 
         setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
-        resolverFactory.getValidDataType()));
+                resolverFactory.getValidDataType()));
         selector.setSelectedValue(property);
     }
 
@@ -128,7 +127,7 @@ public abstract class PropertyListBoxResolverUIController implements
     @Override
     public void update(LightweightCollection<VisualItem> viewItems) {
         setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
-        resolverFactory.getValidDataType()));
+                resolverFactory.getValidDataType()));
 
         // the new view items can not be resolved by the current resolver, and
         // the property field should be set to something that is valid

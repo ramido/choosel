@@ -42,7 +42,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Defaul
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
 // TODO migrate to change default slot mapping initializer
 public class DefaultVisualizationModelInitialValuesTest {
@@ -116,7 +116,7 @@ public class DefaultVisualizationModelInitialValuesTest {
             initializer.putDefaultDataTypeValues(DataType.NUMBER,
                     numberResolver);
 
-            FirstResourcePropertyResolverFactory resolverFactory = mock(FirstResourcePropertyResolverFactory.class);
+            PropertyDependantVisualItemValueResolverFactory resolverFactory = mock(PropertyDependantVisualItemValueResolverFactory.class);
             when(resolverFactory.getId()).thenReturn(SUM_RESOLVER_FACTORY_ID);
             when(
                     resolverFactory.canCreateApplicableResolver(
@@ -134,7 +134,7 @@ public class DefaultVisualizationModelInitialValuesTest {
                             "t1", DataType.TEXT));
             initializer.putDefaultDataTypeValues(DataType.TEXT, textResolver);
 
-            FirstResourcePropertyResolverFactory resolverFactory = mock(FirstResourcePropertyResolverFactory.class);
+            PropertyDependantVisualItemValueResolverFactory resolverFactory = mock(PropertyDependantVisualItemValueResolverFactory.class);
             when(resolverFactory.getId()).thenReturn(
                     TEXT_PROPERTY_RESOLVER_FACTORY_ID);
             when(
