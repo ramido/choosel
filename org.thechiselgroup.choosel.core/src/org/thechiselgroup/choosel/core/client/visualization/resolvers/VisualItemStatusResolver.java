@@ -15,13 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 
+import java.util.Arrays;
+
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.predicates.VisualItemPredicate;
 
-public class VisualItemStatusResolver extends AbstractBasicVisualItemValueResolver {
+public class VisualItemStatusResolver extends
+        AbstractBasicVisualItemValueResolver {
 
     public static class StatusRule implements VisualItemPredicate {
 
@@ -53,6 +56,11 @@ public class VisualItemStatusResolver extends AbstractBasicVisualItemValueResolv
         @Override
         public boolean matches(VisualItem viewItem) {
             return viewItem.isStatus(subset, status);
+        }
+
+        @Override
+        public String toString() {
+            return subset + "=" + Arrays.toString(status) + "-->" + value;
         }
 
     }
@@ -88,5 +96,10 @@ public class VisualItemStatusResolver extends AbstractBasicVisualItemValueResolv
         }
 
         return defaultValue;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(rules) + ", default-->" + defaultValue;
     }
 }
