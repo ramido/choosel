@@ -1,0 +1,99 @@
+<project name="org.thechiselgroup.choosel.example.workbench" default="production" basedir=".">
+
+	<property name="root.dir" value="../.." />
+	<property name="src.dir" value="../src" />
+	<property name="build.dir" value="../war" />
+
+	<!--
+	  requires local-settings.properties file with
+	  gae.sdk.dir=c:\\opt\\appengine-java-sdk-1.4.2
+	  gwt.sdk.dir=c:\\opt\\gwt-2.3.0
+	-->
+	<property file="local-settings.properties" />
+
+	<import file="${gae.sdk.dir}/config/user/ant-macros.xml" />
+
+	<path id="compile.classpath">
+		
+		<fileset dir="${gwt.sdk.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+
+		<pathelement location="${src.dir}" />
+		<pathelement location="${build.dir}/WEB-INF/classes" />
+		<fileset dir="${build.dir}/WEB-INF/lib">
+			<include name="**/*.jar" />
+			<include name="**/*.xml" />
+		</fileset>
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.core/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.core/war/WEB-INF/classes" />
+		<fileset dir="${root.dir}/org.thechiselgroup.choosel.core">
+			<include name="lib/*.jar" />
+		</fileset>
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.dnd/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.dnd/war/WEB-INF/classes" />
+		<fileset dir="${root.dir}/org.thechiselgroup.choosel.dnd">
+			<include name="lib/*.jar" />
+		</fileset>
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.protovis/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.protovis/war/WEB-INF/classes" />
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/war/WEB-INF/classes" />
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/war/WEB-INF/classes" />
+		<fileset dir="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph">
+			<include name="lib/*.jar" />
+		</fileset>
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/war/WEB-INF/classes" />
+		<fileset dir="${root.dir}/org.thechiselgroup.choosel.visualization_component.map">
+			<include name="lib/*.jar" />
+		</fileset>
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/war/WEB-INF/classes" />
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/war/WEB-INF/classes" />
+		
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.workbench/src" />
+		<pathelement location="${root.dir}/org.thechiselgroup.choosel.workbench/war/WEB-INF/classes" />
+		<fileset dir="${root.dir}/org.thechiselgroup.choosel.workbench">
+			<include name="lib/*.jar" />
+		</fileset>
+		
+	</path>
+
+	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
+	<target name="draft">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+			<arg line="-draftCompile -optimize 0 -ea -logLevel INFO -style DETAILED -localWorkers 3 -war ${build.dir}" />
+			<arg value="org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbenchDevCompile" />
+			<jvmarg value="-Xmx2048m" />
+			<jvmarg value="-Xss20m" />
+		</java>
+	</target>
+
+	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
+	<target name="production">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+			<arg line="-XdisableCastChecking -XdisableClassMetadata -optimize 9 -logLevel INFO -style OBFUSCATED -localWorkers 3 -war ${build.dir}" />
+			<arg value="org.thechiselgroup.choosel.example.earthquake.EarthquakeExample" />
+			<jvmarg value="-Xmx2048m" />
+			<jvmarg value="-Xss20m" />
+		</java>
+	</target>
+
+</project>
