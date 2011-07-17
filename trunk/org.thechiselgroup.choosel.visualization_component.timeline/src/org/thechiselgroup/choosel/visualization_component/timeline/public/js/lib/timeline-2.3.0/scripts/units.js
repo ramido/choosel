@@ -22,12 +22,12 @@ Timeline.NativeDateUnit.getParser = function(format) {
         format = format.toLowerCase();
     }
     return (format == "iso8601" || format == "iso 8601") ?
-        Timeline.DateTime.parseIso8601DateTime : 
-        Timeline.DateTime.parseGregorianDateTime;
+    	SimileAjax.DateTime.parseIso8601DateTime : 
+        SimileAjax.DateTime.parseGregorianDateTime;
 };
 
 Timeline.NativeDateUnit.parseFromObject = function(o) {
-    return Timeline.DateTime.parseGregorianDateTime(o);
+    return SimileAjax.DateTime.parseGregorianDateTime(o);
 };
 
 Timeline.NativeDateUnit.toNumber = function(v) {
