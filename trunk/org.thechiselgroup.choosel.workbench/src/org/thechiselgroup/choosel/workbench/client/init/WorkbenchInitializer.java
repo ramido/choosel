@@ -20,8 +20,8 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
-import org.thechiselgroup.choosel.core.client.development.DevelopmentSettings;
 import org.thechiselgroup.choosel.core.client.development.CreateBenchmarkResourcesCommand;
+import org.thechiselgroup.choosel.core.client.development.DevelopmentSettings;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.importer.Importer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -83,6 +83,8 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public abstract class WorkbenchInitializer implements ApplicationInitializer {
+
+    public static final String CSS_MAIN_PANEL = "choosel-MainPanel";
 
     public static final String WINDOW_CONTENT_HELP = "help";
 
@@ -252,6 +254,7 @@ public abstract class WorkbenchInitializer implements ApplicationInitializer {
 
     private DockPanel createMainPanel() {
         DockPanel mainPanel = new DockPanel();
+        mainPanel.addStyleName(CSS_MAIN_PANEL);
         RootPanel.get().add(mainPanel);
         return mainPanel;
     }
