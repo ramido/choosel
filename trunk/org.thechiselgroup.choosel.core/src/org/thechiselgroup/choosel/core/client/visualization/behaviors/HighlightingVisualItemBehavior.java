@@ -43,24 +43,26 @@ public class HighlightingVisualItemBehavior implements VisualItemBehavior {
         this.highlightingModel = highlightingModel;
     }
 
-    protected HighlightingManager getHighlightingManager(VisualItem viewItem) {
-        return highlightingManagers.get(viewItem.getId());
+    protected HighlightingManager getHighlightingManager(VisualItem visualItem) {
+        return highlightingManagers.get(visualItem.getId());
     }
 
     @Override
-    public void onInteraction(VisualItem viewItem,
+    public void onInteraction(VisualItem visualItem,
             VisualItemInteraction interaction) {
-        assert viewItem != null;
-        assert highlightingManagers.containsKey(viewItem.getId());
+
+        assert visualItem != null;
+        assert highlightingManagers.containsKey(visualItem.getId()) : "no manager for visual item with id "
+                + visualItem.getId();
         assert interaction != null;
 
         switch (interaction.getEventType()) {
         case DRAG_END:
         case MOUSE_OUT:
-            setHighlighting(viewItem, false);
+            setHighlighting(visualItem, false);
             break;
         case MOUSE_OVER:
-            setHighlighting(viewItem, true);
+            setHighlighting(visualItem, true);
             break;
         }
     }
