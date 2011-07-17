@@ -15,15 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
-import java.util.List;
-
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.CalculationResolver;
 
 public class CalculationResolverFactory extends
@@ -31,62 +24,21 @@ public class CalculationResolverFactory extends
 
     private final Calculation calculation;
 
-    private final String id;
-
     public CalculationResolverFactory(String id, Calculation calculation) {
-        assert calculation != null;
-        assert id != null;
+        super(id, DataType.NUMBER);
 
-        this.id = id;
+        assert calculation != null;
         this.calculation = calculation;
     }
 
     @Override
-    public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
-
-        if (!slot.getDataType().equals(DataType.NUMBER)) {
-            return false;
-        }
-
-        return !ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
-                getValidDataType()).isEmpty();
-    }
-
-    /**
-     * This can fail if you do not first check to see if this factory is
-     * applicable. Checking if the factory can create a resolver will set an
-     * initial property for the resolver to use
-     */
-    @Override
-    public ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems) {
-
-        List<String> properties = ResourceSetUtils
-                .getSharedPropertiesOfDataType(viewItems, getValidDataType());
-        assert !properties.isEmpty();
-        return create(properties.get(0));
-    }
-
-    @Override
-    public ManagedVisualItemValueResolver create(String property) {
-        return new PropertyDependantManagedVisualItemValueResolverDecorator(id,
-                new CalculationResolver(property, calculation));
-    }
-
-    @Override
-    public String getId() {
-        return id;
+    protected CalculationResolver createUnmanagedResolver(String property) {
+        return new CalculationResolver(property, calculation);
     }
 
     @Override
     public String getLabel() {
         return calculation.toString();
-    }
-
-    @Override
-    public DataType getValidDataType() {
-        return DataType.NUMBER;
     }
 
 }

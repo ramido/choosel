@@ -15,78 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
-import java.util.List;
-
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
 
 public class FirstResourcePropertyResolverFactory extends
         PropertyDependantVisualItemValueResolverFactory {
 
-    private final DataType dataType;
-
-    private final String resolverID;
-
     public FirstResourcePropertyResolverFactory(DataType dataType,
             String resolverID) {
-
-        this.dataType = dataType;
-        this.resolverID = resolverID;
+        super(resolverID, dataType);
     }
 
     @Override
-    public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
-
-        if (!slot.getDataType().equals(dataType)) {
-            return false;
-        }
-        // resolvers are always valid if there are no view items
-        if (viewItems.isEmpty()) {
-            return true;
-        }
-
-        return !ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
-                getValidDataType()).isEmpty();
-    }
-
-    @Override
-    public ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems) {
-        List<String> properties = ResourceSetUtils
-                .getSharedPropertiesOfDataType(viewItems, getValidDataType());
-        assert !properties.isEmpty();
-
-        return create(properties.get(0));
-
-    }
-
-    @Override
-    public ManagedVisualItemValueResolver create(String property) {
-        return new PropertyDependantManagedVisualItemValueResolverDecorator(
-                resolverID, new FirstResourcePropertyResolver(property,
-                        dataType));
-    }
-
-    @Override
-    public String getId() {
-        return resolverID;
+    protected FirstResourcePropertyResolver createUnmanagedResolver(String property) {
+        return new FirstResourcePropertyResolver(property, getValidDataType());
     }
 
     // TODO Perhaps a better value for this
     @Override
     public String getLabel() {
         return "Property Selector";
-    }
-
-    @Override
-    public DataType getValidDataType() {
-        return dataType;
     }
 
 }

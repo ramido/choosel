@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
 public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
@@ -82,7 +82,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
         switch (dataType) {
         case TEXT:
-            FirstResourcePropertyResolverFactory textResolverFactory = (FirstResourcePropertyResolverFactory) factoryProvider
+            PropertyDependantVisualItemValueResolverFactory textResolverFactory = (PropertyDependantVisualItemValueResolverFactory) factoryProvider
                     .getFactoryById(TEXT_PROPERTY_RESOLVER_FACTORY_ID);
             ManagedVisualItemValueResolver textResolver = textResolverFactory
                     .create(firstProperty);
@@ -90,7 +90,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
             return textResolver;
         case NUMBER:
 
-            FirstResourcePropertyResolverFactory sumResolverFactory = (FirstResourcePropertyResolverFactory) factoryProvider
+            PropertyDependantVisualItemValueResolverFactory sumResolverFactory = (PropertyDependantVisualItemValueResolverFactory) factoryProvider
                     .getFactoryById(SUM_RESOLVER_FACTORY_ID);
             ManagedVisualItemValueResolver sumResolver = sumResolverFactory
                     .create(firstProperty);
@@ -98,7 +98,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
             return sumResolver;
         }
 
-        // this is for date, location
+        // this is for date, location -- XXX needs factory...
         return new FirstResourcePropertyResolver(firstProperty, dataType);
     }
 
