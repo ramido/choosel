@@ -1,0 +1,153 @@
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/cs/labellers.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/cs/labellers.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/cs/labellers.js	(working copy)
+@@ -15,11 +15,11 @@
+     var text;
+     var emphasized = false;
+ 
+-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
++    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
+     
+     switch(intervalUnit) {
+-    case Timeline.DateTime.DAY:
+-    case Timeline.DateTime.WEEK:
++    case SimileAjax.DateTime.DAY:
++    case SimileAjax.DateTime.WEEK:
+         text = date2.getUTCDate() + ". " + (date2.getUTCMonth() + 1) + ".";
+         break;
+     default:
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/zh/labellers.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/zh/labellers.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/zh/labellers.js	(working copy)
+@@ -11,11 +11,11 @@
+     var text;
+     var emphasized = false;
+     
+-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
++    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
+     
+     switch(intervalUnit) {
+-    case Timeline.DateTime.DAY:
+-    case Timeline.DateTime.WEEK:
++    case SimileAjax.DateTime.DAY:
++    case SimileAjax.DateTime.WEEK:
+         text = Timeline.GregorianDateLabeller.getMonthName(date2.getUTCMonth(), this._locale) + 
+             date2.getUTCDate() + "日";
+         break;
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/de/labellers.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/de/labellers.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/de/labellers.js	(working copy)
+@@ -11,11 +11,11 @@
+     var text;
+     var emphasized = false;
+     
+-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
++    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
+     
+     switch(intervalUnit) {
+-    case Timeline.DateTime.DAY:
+-    case Timeline.DateTime.WEEK:
++    case SimileAjax.DateTime.DAY:
++    case SimileAjax.DateTime.WEEK:
+         text = date2.getUTCDate() + ". " +
+             Timeline.GregorianDateLabeller.getMonthName(date2.getUTCMonth(), this._locale);
+         break;
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/vi/labellers.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/vi/labellers.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/l10n/vi/labellers.js	(working copy)
+@@ -11,11 +11,11 @@
+     var text;
+     var emphasized = false;
+     
+-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
++    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
+     
+     switch(intervalUnit) {
+-    case Timeline.DateTime.DAY:
+-    case Timeline.DateTime.WEEK:
++    case SimileAjax.DateTime.DAY:
++    case SimileAjax.DateTime.WEEK:
+         text = date2.getUTCDate() + "/" + (date2.getUTCMonth() + 1);
+         break;
+     default:
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/units.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/units.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/units.js	(working copy)
+@@ -22,12 +22,12 @@
+         format = format.toLowerCase();
+     }
+     return (format == "iso8601" || format == "iso 8601") ?
+-        Timeline.DateTime.parseIso8601DateTime : 
+-        Timeline.DateTime.parseGregorianDateTime;
++    	SimileAjax.DateTime.parseIso8601DateTime : 
++        SimileAjax.DateTime.parseGregorianDateTime;
+ };
+ 
+ Timeline.NativeDateUnit.parseFromObject = function(o) {
+-    return Timeline.DateTime.parseGregorianDateTime(o);
++    return SimileAjax.DateTime.parseGregorianDateTime(o);
+ };
+ 
+ Timeline.NativeDateUnit.toNumber = function(v) {
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/ext/japanese-eras.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/ext/japanese-eras.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/ext/japanese-eras.js	(working copy)
+@@ -17,13 +17,13 @@
+     var text;
+     var emphasized = false;
+     
+-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
++    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
+     
+     switch(intervalUnit) {
+-    case Timeline.DateTime.YEAR:
+-    case Timeline.DateTime.DECADE:
+-    case Timeline.DateTime.CENTURY:
+-    case Timeline.DateTime.MILLENNIUM:
++    case SimileAjax.DateTime.YEAR:
++    case SimileAjax.DateTime.DECADE:
++    case SimileAjax.DateTime.CENTURY:
++    case SimileAjax.DateTime.MILLENNIUM:
+         var y = date2.getUTCFullYear();
+         if (y >= Timeline.JapaneseEraDateLabeller._eras.elementAt(0).startingYear) {
+             var eraIndex = Timeline.JapaneseEraDateLabeller._eras.find(function(era) {
+@@ -40,7 +40,7 @@
+             }
+             
+             text = (this._useRomanizedName ? era.romanizedName : era.japaneseName) + " " + (y - era.startingYear + 1);
+-            emphasized = intervalUnit == Timeline.DateTime.YEAR && y == era.startingYear;
++            emphasized = intervalUnit == SimileAjax.DateTime.YEAR && y == era.startingYear;
+             break;
+         } // else, fall through
+     default:
+@@ -129,7 +129,7 @@
+         };
+         
+         this._intervalMarkerLayout.createIntervalMarker(
+-            d, labeller, Timeline.DateTime.YEAR, this._markerLayer, this._lineLayer);
++            d, labeller, SimileAjax.DateTime.YEAR, this._markerLayer, this._lineLayer);
+     }
+     this._markerLayer.style.display = "block";
+     this._lineLayer.style.display = "block";
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/timeline-bundle.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/timeline-bundle.js	(revision 1717)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/timeline-bundle.js	(working copy)
+@@ -2812,9 +2812,9 @@
+ Timeline.NativeDateUnit.cloneValue=function(A){return new Date(A.getTime());
+ };
+ Timeline.NativeDateUnit.getParser=function(A){if(typeof A=="string"){A=A.toLowerCase();
+-}return(A=="iso8601"||A=="iso 8601")?Timeline.DateTime.parseIso8601DateTime:Timeline.DateTime.parseGregorianDateTime;
++}return(A=="iso8601"||A=="iso 8601")?SimileAjax.DateTime.parseIso8601DateTime:SimileAjax.DateTime.parseGregorianDateTime;
+ };
+-Timeline.NativeDateUnit.parseFromObject=function(A){return Timeline.DateTime.parseGregorianDateTime(A);
++Timeline.NativeDateUnit.parseFromObject=function(A){return SimileAjax.DateTime.parseGregorianDateTime(A);
+ };
+ Timeline.NativeDateUnit.toNumber=function(A){return A.getTime();
+ };

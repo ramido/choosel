@@ -17,13 +17,13 @@ Timeline.JapaneseEraDateLabeller._labelInterval = function(date, intervalUnit) {
     var text;
     var emphasized = false;
     
-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
+    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
     
     switch(intervalUnit) {
-    case Timeline.DateTime.YEAR:
-    case Timeline.DateTime.DECADE:
-    case Timeline.DateTime.CENTURY:
-    case Timeline.DateTime.MILLENNIUM:
+    case SimileAjax.DateTime.YEAR:
+    case SimileAjax.DateTime.DECADE:
+    case SimileAjax.DateTime.CENTURY:
+    case SimileAjax.DateTime.MILLENNIUM:
         var y = date2.getUTCFullYear();
         if (y >= Timeline.JapaneseEraDateLabeller._eras.elementAt(0).startingYear) {
             var eraIndex = Timeline.JapaneseEraDateLabeller._eras.find(function(era) {
@@ -40,7 +40,7 @@ Timeline.JapaneseEraDateLabeller._labelInterval = function(date, intervalUnit) {
             }
             
             text = (this._useRomanizedName ? era.romanizedName : era.japaneseName) + " " + (y - era.startingYear + 1);
-            emphasized = intervalUnit == Timeline.DateTime.YEAR && y == era.startingYear;
+            emphasized = intervalUnit == SimileAjax.DateTime.YEAR && y == era.startingYear;
             break;
         } // else, fall through
     default:
@@ -129,7 +129,7 @@ Timeline.JapaneseEraEtherPainter.prototype.paint = function() {
         };
         
         this._intervalMarkerLayout.createIntervalMarker(
-            d, labeller, Timeline.DateTime.YEAR, this._markerLayer, this._lineLayer);
+            d, labeller, SimileAjax.DateTime.YEAR, this._markerLayer, this._lineLayer);
     }
     this._markerLayer.style.display = "block";
     this._lineLayer.style.display = "block";

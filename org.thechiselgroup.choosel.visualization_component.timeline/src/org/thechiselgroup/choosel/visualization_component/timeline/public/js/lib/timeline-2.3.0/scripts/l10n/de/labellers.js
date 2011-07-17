@@ -11,11 +11,11 @@ Timeline.GregorianDateLabeller.labelIntervalFunctions["de"] = function(date, int
     var text;
     var emphasized = false;
     
-    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
+    var date2 = SimileAjax.DateTime.removeTimeZoneOffset(date, this._timeZone);
     
     switch(intervalUnit) {
-    case Timeline.DateTime.DAY:
-    case Timeline.DateTime.WEEK:
+    case SimileAjax.DateTime.DAY:
+    case SimileAjax.DateTime.WEEK:
         text = date2.getUTCDate() + ". " +
             Timeline.GregorianDateLabeller.getMonthName(date2.getUTCMonth(), this._locale);
         break;
