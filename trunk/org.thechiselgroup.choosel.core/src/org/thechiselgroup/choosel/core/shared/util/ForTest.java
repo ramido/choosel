@@ -15,6 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.shared.util;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ * Indicates that the annoted API element is intended for test usage only. It
+ * should not be used in production code.
+ * 
+ * @author Lars Grammel
+ */
+@Retention(RetentionPolicy.SOURCE)
 public @interface ForTest {
 
 }
