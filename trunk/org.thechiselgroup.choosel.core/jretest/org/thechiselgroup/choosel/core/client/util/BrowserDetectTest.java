@@ -83,13 +83,8 @@ public class BrowserDetectTest {
                 + "Gecko/20100101 Firefox/4.0b6"));
     }
 
-    @Before
-    public void setUp() {
-        this.underTest = new BrowserDetect();
-    }
-
     @Test
-    public void testInternetExplorer8() {
+    public void ie8() {
         assertEquals(false, underTest.isValidBrowser("Mozilla/4.0 "
                 + "(compatible; MSIE 8.0; Windows NT 5.1; "
                 + "Trident/4.0; .NET CLR 1.1.4322; "
@@ -98,13 +93,23 @@ public class BrowserDetectTest {
     }
 
     @Test
-    public void testOpera9() {
+    public void ie9() {
+        assertEquals(true, underTest.isValidBrowser("Mozilla/5.0 "
+                + "(compatible; MSIE 9.0; Windows NT 6.1; "
+                + "WOW64; Trident/5.0; SLCC2; "
+                + ".NET CLR 2.0.50727; .NET CLR 3.5.30729; "
+                + ".NET CLR 3.0.30729; Media Center PC 6.0"
+                + "; MAAU; .NET4.0C; Alexa Toolbar; InfoPath.3)"));
+    }
+
+    @Test
+    public void opera9() {
         assertEquals(false, underTest.isValidBrowser("Opera/9.50 "
                 + "(Windows NT 5.1; U; en)"));
     }
 
     @Test
-    public void testSafari4() {
+    public void safari4() {
         assertEquals(false, underTest.isValidBrowser("Mozilla/5.0 "
                 + "(Windows; U; Windows NT 5.1; en-US) "
                 + "AppleWebKit/531.21.8 (KHTML, like Gecko) "
@@ -112,10 +117,15 @@ public class BrowserDetectTest {
     }
 
     @Test
-    public void testSafari5() {
+    public void safari5() {
         assertEquals(true, underTest.isValidBrowser("Mozilla/5.0 "
                 + "(Windows; U; Windows NT 6.1; en-US) "
                 + "AppleWebKit/533.18.1 (KHTML, like Gecko) "
                 + "Version/5.0.2 Safari/533.18.5"));
+    }
+
+    @Before
+    public void setUp() {
+        this.underTest = new BrowserDetect();
     }
 }

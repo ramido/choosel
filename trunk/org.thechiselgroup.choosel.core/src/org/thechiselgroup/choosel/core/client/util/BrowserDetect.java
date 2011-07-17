@@ -90,6 +90,20 @@ public class BrowserDetect {
                 return true;
             }
 
+            if (userAgent.contains("msie")) {
+                int index = userAgent.indexOf("msie") + "msie ".length();
+                int firstDot = userAgent.indexOf(".", index);
+
+                int major = Integer.parseInt(userAgent.substring(index,
+                        firstDot));
+
+                if (major <= 8) {
+                    return false;
+                }
+
+                return true;
+            }
+
             return false;
         } catch (Exception ex) {
             return false;
