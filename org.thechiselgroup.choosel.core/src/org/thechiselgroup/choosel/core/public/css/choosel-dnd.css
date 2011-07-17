@@ -11,8 +11,10 @@
 .avatar {
     color: black;
 
+    border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
+    
     padding: 2px 6px;
 
     border-width: 1px;
