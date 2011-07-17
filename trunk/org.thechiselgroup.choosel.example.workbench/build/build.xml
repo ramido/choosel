@@ -1,8 +1,20 @@
+<!-- TODO refactor using ant import target, move stuff into workbench or core -->
 <project name="org.thechiselgroup.choosel.example.workbench" default="production" basedir=".">
 
+	<tstamp>
+		<format property="buildtime" pattern="yyyyMMddHHmmss" />
+	</tstamp>
+
+	<property name="version" value="b${buildtime}" />
+	<!--
+	  <property name="version" value="0.1" />
+	-->
+
 	<property name="root.dir" value="../.." />
-	<property name="src.dir" value="../src" />
-	<property name="build.dir" value="../war" />
+	<property name="application.dir" value="${root.dir}/org.thechiselgroup.choosel.example.workbench" />
+	<property name="src.dir" value="${application.dir}/src" />
+	<property name="build.dir" value="${application.dir}/war" />
+	<property name="build.temp.dir" value="${application.dir}/bin/build" />
 
 	<!--
 	  requires local-settings.properties file with
@@ -14,64 +26,96 @@
 	<import file="${gae.sdk.dir}/config/user/ant-macros.xml" />
 
 	<path id="compile.classpath">
-		
+
 		<fileset dir="${gwt.sdk.dir}">
 			<include name="**/*.jar" />
 		</fileset>
 
 		<pathelement location="${src.dir}" />
 		<pathelement location="${build.dir}/WEB-INF/classes" />
-		<fileset dir="${build.dir}/WEB-INF/lib">
-			<include name="**/*.jar" />
-			<include name="**/*.xml" />
-		</fileset>
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.core/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.core/war/WEB-INF/classes" />
 		<fileset dir="${root.dir}/org.thechiselgroup.choosel.core">
 			<include name="lib/*.jar" />
 		</fileset>
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.dnd/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.dnd/war/WEB-INF/classes" />
 		<fileset dir="${root.dir}/org.thechiselgroup.choosel.dnd">
 			<include name="lib/*.jar" />
 		</fileset>
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.protovis/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.protovis/war/WEB-INF/classes" />
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/war/WEB-INF/classes" />
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/war/WEB-INF/classes" />
 		<fileset dir="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph">
 			<include name="lib/*.jar" />
 		</fileset>
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/war/WEB-INF/classes" />
 		<fileset dir="${root.dir}/org.thechiselgroup.choosel.visualization_component.map">
 			<include name="lib/*.jar" />
 		</fileset>
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/war/WEB-INF/classes" />
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/war/WEB-INF/classes" />
-		
+
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.workbench/src" />
 		<pathelement location="${root.dir}/org.thechiselgroup.choosel.workbench/war/WEB-INF/classes" />
 		<fileset dir="${root.dir}/org.thechiselgroup.choosel.workbench">
 			<include name="lib/*.jar" />
 		</fileset>
-		
+
 	</path>
 
+	<target name="draft" depends="copy-choosel-jars,draft-gwt-compile" />
+
+	<target name="copy-choosel-jars" depends="prepare">
+		<antcall target="choosel-core" />
+		<antcall target="choosel-workbench" />
+
+		<copy todir="${build.dir}/WEB-INF/lib">
+			<fileset dir="${build.temp.dir}/lib" includes="*.jar" />
+		</copy>
+	</target>
+
+	<target name="prepare" depends="clean">
+		<mkdir dir="${build.temp.dir}/lib" />
+	</target>
+
+	<target name="choosel-workbench">
+		<ant antfile="build/build.xml" dir="${root.dir}/org.thechiselgroup.choosel.workbench" target="create-jar">
+			<property name="dist" value="choosel/${build.temp.dir}/lib" />
+		</ant>
+	</target>
+
+	<target name="choosel-core">
+		<ant antfile="build/build.xml" dir="${root.dir}/org.thechiselgroup.choosel.core" target="create-jar">
+			<property name="dist" value="choosel/${build.temp.dir}/lib" />
+		</ant>
+	</target>
+
+	<target name="clean" description="remove automatically generated build files">
+		<delete dir="${build.temp.dir}" />
+		<delete dir="${build.dir}/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench" />
+		<delete dir="${build.dir}/WEB-INF/deploy" />
+		<delete>
+			<fileset dir="${build.dir}/WEB-INF/lib" includes="choosel.*.jar" />
+		</delete>
+	</target>
+
 	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
-	<target name="draft">
+	<target name="draft-gwt-compile">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
 				<path refid="compile.classpath" />
@@ -84,7 +128,8 @@
 	</target>
 
 	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
-	<target name="production">
+	<!-- TODO pull out gwt compilation subtask -->
+	<target name="production" depends="copy-choosel-jars">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
 				<path refid="compile.classpath" />
