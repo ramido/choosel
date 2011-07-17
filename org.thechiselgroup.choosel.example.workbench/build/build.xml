@@ -127,15 +127,16 @@
 		</java>
 	</target>
 
+	<target name="production" depends="copy-choosel-jars,production-gwt-compile" />
+	
 	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
-	<!-- TODO pull out gwt compilation subtask -->
-	<target name="production" depends="copy-choosel-jars">
+	<target name="production-gwt-compile">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
 			<arg line="-XdisableCastChecking -XdisableClassMetadata -optimize 9 -logLevel INFO -style OBFUSCATED -localWorkers 3 -war ${build.dir}" />
-			<arg value="org.thechiselgroup.choosel.example.earthquake.EarthquakeExample" />
+			<arg value="org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench" />
 			<jvmarg value="-Xmx2048m" />
 			<jvmarg value="-Xss20m" />
 		</java>
