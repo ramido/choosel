@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
+package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 
-public class ViewItemDoubleSlotAccessor implements JsDoubleFunction {
+public interface VisualItemValueResolverUIController extends WidgetAdaptable {
 
-    private Slot slot;
-
-    public ViewItemDoubleSlotAccessor(Slot slot) {
-        assert slot != null;
-
-        this.slot = slot;
-    }
-
-    @Override
-    public double f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        return viewItem.getValueAsDouble(slot);
-    }
+    void update(LightweightCollection<VisualItem> viewItems);
 
 }

@@ -22,10 +22,10 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Visual
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.ResourceCountResolverFactory;
 
 public class ResourceCountResolverUIControllerFactory implements
-        ViewItemValueResolverUIControllerFactory {
+        VisualItemValueResolverUIControllerFactory {
 
     @Override
-    public ViewItemValueResolverUIController create(
+    public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
         return new EmptyWidgetUIController();

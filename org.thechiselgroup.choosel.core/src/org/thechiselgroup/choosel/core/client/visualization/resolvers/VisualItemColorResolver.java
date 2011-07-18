@@ -19,13 +19,13 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
 // TODO DataType.Color
-public class ViewItemColorResolver extends AbstractBasicVisualItemValueResolver {
+public class VisualItemColorResolver extends
+        AbstractBasicVisualItemValueResolver {
 
     private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
             "#A9C0B1" };
@@ -35,7 +35,7 @@ public class ViewItemColorResolver extends AbstractBasicVisualItemValueResolver 
     private Map<String, String> resourceTypeToColor = CollectionFactory
             .createStringMap();
 
-    public ViewItemColorResolver(ResourceCategorizer categorizer) {
+    public VisualItemColorResolver(ResourceCategorizer categorizer) {
         this.categorizer = categorizer;
     }
 
@@ -54,8 +54,7 @@ public class ViewItemColorResolver extends AbstractBasicVisualItemValueResolver 
             return COLORS[0]; // XXX we need something better
         }
 
-        Resource resource = viewItem
-        .getResources().getFirstElement();
+        Resource resource = viewItem.getResources().getFirstElement();
         String resourceType = categorizer.getCategory(resource);
 
         if (!resourceTypeToColor.containsKey(resourceType)) {

@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -33,7 +33,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class PropertyListBoxResolverUIController implements
-        ViewItemValueResolverUIController {
+        VisualItemValueResolverUIController {
 
     private final PropertyDependantVisualItemValueResolverFactory resolverFactory;
 
@@ -91,7 +91,7 @@ public abstract class PropertyListBoxResolverUIController implements
 
         // if properties is not set, then this UI does not make sense
         // the resolver should be unapplicable, and this should never get called
-        PropertyDependantViewItemValueResolver resolver = getCurrentResolverFromUIModel();
+        PropertyDependantVisualItemValueResolver resolver = getCurrentResolverFromUIModel();
         assert properties.contains(resolver.getProperty());
 
         selector.setValues(properties);
@@ -99,14 +99,14 @@ public abstract class PropertyListBoxResolverUIController implements
         return selector.asWidget();
     }
 
-    private PropertyDependantViewItemValueResolver getCurrentResolverFromUIModel() {
+    private PropertyDependantVisualItemValueResolver getCurrentResolverFromUIModel() {
         ManagedVisualItemValueResolver currentResolver = uiModel
                 .getCurrentResolver();
 
         // XXX cannot cast because it is actually the Decorator that we are
         // getting, and the delegate is the thing that is PropertyDependant
-        assert currentResolver instanceof PropertyDependantViewItemValueResolver;
-        return (PropertyDependantViewItemValueResolver) currentResolver;
+        assert currentResolver instanceof PropertyDependantVisualItemValueResolver;
+        return (PropertyDependantVisualItemValueResolver) currentResolver;
     }
 
     /**

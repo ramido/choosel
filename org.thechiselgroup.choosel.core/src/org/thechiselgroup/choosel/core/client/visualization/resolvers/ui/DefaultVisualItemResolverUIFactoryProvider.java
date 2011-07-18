@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 public class DefaultVisualItemResolverUIFactoryProvider implements
         VisualItemValueResolverUIControllerFactoryProvider {
 
-    protected Map<String, ViewItemValueResolverUIControllerFactory> idToFactoryMap;
+    protected Map<String, VisualItemValueResolverUIControllerFactory> idToFactoryMap;
 
     @Inject
     public DefaultVisualItemResolverUIFactoryProvider() {
@@ -30,7 +30,7 @@ public class DefaultVisualItemResolverUIFactoryProvider implements
     }
 
     @Override
-    public void add(ViewItemValueResolverUIControllerFactory factory) {
+    public void add(VisualItemValueResolverUIControllerFactory factory) {
         assert factory != null;
         assert !idToFactoryMap.containsKey(factory.getId()) : "Factory for id "
                 + factory.getId() + " is already registered";
@@ -38,7 +38,7 @@ public class DefaultVisualItemResolverUIFactoryProvider implements
     }
 
     @Override
-    public ViewItemValueResolverUIControllerFactory getFactoryById(String id) {
+    public VisualItemValueResolverUIControllerFactory getFactoryById(String id) {
         assert idToFactoryMap.containsKey(id) : "Factory with id " + id
                 + " not available";
         return idToFactoryMap.get(id);

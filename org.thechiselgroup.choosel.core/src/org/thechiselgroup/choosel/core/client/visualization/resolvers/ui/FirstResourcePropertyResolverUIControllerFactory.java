@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Visual
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
 
 public class FirstResourcePropertyResolverUIControllerFactory implements
-        ViewItemValueResolverUIControllerFactory {
+        VisualItemValueResolverUIControllerFactory {
 
     private final String id;
 
@@ -32,7 +32,7 @@ public class FirstResourcePropertyResolverUIControllerFactory implements
     }
 
     @Override
-    public ViewItemValueResolverUIController create(
+    public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
 

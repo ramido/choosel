@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationM
 
 public class ManagedSlotMappingConfiguration {
 
-    private final class VisualMappingUpdaterForViewItemChanges implements
+    private final class VisualMappingUpdaterForVisualItemChanges implements
             VisualItemContainerChangeEventHandler, PrioritizedEventHandler {
 
         @Override
@@ -89,7 +89,7 @@ public class ManagedSlotMappingConfiguration {
             }
         });
         visualizationModel.getFullVisualItemContainer().addHandler(
-                new VisualMappingUpdaterForViewItemChanges());
+                new VisualMappingUpdaterForVisualItemChanges());
     }
 
     public ManagedVisualItemValueResolver getCurrentResolver(Slot slot) {

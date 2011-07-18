@@ -20,15 +20,25 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 
-public interface ViewItemValueResolverUIControllerFactory {
+public class FixedValueVisualItemResolverUIControllerFactory implements
+        VisualItemValueResolverUIControllerFactory {
 
-    // XXX I'm not convinced that the SlotMappingUIModel should be passed in
-    // here. However, there must be a target specified somehow.
-    // TODO refactor
-    ViewItemValueResolverUIController create(
-            VisualItemValueResolverFactory factory, ManagedSlotMapping managedMapping,
-            LightweightCollection<VisualItem> viewItems);
+    private final String id;
 
-    String getId();
+    public FixedValueVisualItemResolverUIControllerFactory(String id) {
+        this.id = id;
+    }
 
+    @Override
+    public VisualItemValueResolverUIController create(
+            VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
+            LightweightCollection<VisualItem> viewItem) {
+        return new EmptyWidgetUIController();
+    }
+
+    @Override
+    public String getId() {
+        return id;
+
+    }
 }

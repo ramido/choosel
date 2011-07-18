@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 
 public class FirstResourcePropertyResolver extends SubsetVisualItemValueResolver
-        implements PropertyDependantViewItemValueResolver {
+        implements PropertyDependantVisualItemValueResolver {
 
     protected final String property;
 

@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantVisualItemValueResolver;
 
 /**
  * This class is a specific type of ManagedResolverDecorator for Resolvers that
@@ -27,17 +27,17 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDe
  */
 public class PropertyDependantManagedVisualItemValueResolverDecorator extends
         ManagedVisualItemValueResolverDecorator implements
-        PropertyDependantViewItemValueResolver {
+        PropertyDependantVisualItemValueResolver {
 
     public PropertyDependantManagedVisualItemValueResolverDecorator(
-            String resolverId, PropertyDependantViewItemValueResolver delegate) {
+            String resolverId, PropertyDependantVisualItemValueResolver delegate) {
 
         super(resolverId, delegate);
     }
 
     @Override
     public String getProperty() {
-        return ((PropertyDependantViewItemValueResolver) delegate)
+        return ((PropertyDependantVisualItemValueResolver) delegate)
                 .getProperty();
     }
 

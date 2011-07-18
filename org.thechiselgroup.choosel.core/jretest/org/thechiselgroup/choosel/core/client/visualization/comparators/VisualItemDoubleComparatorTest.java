@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
+package org.thechiselgroup.choosel.core.client.visualization.comparators;
 
-import org.thechiselgroup.choosel.core.client.ui.Color;
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import static org.junit.Assert.assertEquals;
 
-public class ViewItemColorSlotAccessor implements JsStringFunction {
+import org.junit.Test;
+import org.thechiselgroup.choosel.core.client.visualization.model.comparators.VisualItemDoubleComparator;
 
-    private Slot slot;
+public class VisualItemDoubleComparatorTest {
 
-    public ViewItemColorSlotAccessor(Slot slot) {
-        assert slot != null;
-        this.slot = slot;
+    @Test
+    public void greater() {
+        assertEquals(1, VisualItemDoubleComparator.compare(3, 1));
     }
 
-    @Override
-    public String f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        return viewItem.<Color> getValue(slot).toRGBa();
+    @Test
+    public void less() {
+        assertEquals(-1, VisualItemDoubleComparator.compare(-1, 2));
+    }
+
+    @Test
+    public void orderIsStable1() {
+        assertEquals(0, VisualItemDoubleComparator.compare(-1, -1));
+    }
+
+    @Test
+    public void orderIsStable2() {
+        assertEquals(0, VisualItemDoubleComparator.compare(1, 1));
     }
 
 }

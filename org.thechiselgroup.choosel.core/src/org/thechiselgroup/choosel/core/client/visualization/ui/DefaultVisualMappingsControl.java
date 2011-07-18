@@ -37,8 +37,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIController;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIControllerFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIController;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -111,15 +111,15 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return values;
     }
 
-    private ViewItemValueResolverUIController createUIControllerFromResolver(
+    private VisualItemValueResolverUIController createUIControllerFromResolver(
             Slot slot, ManagedVisualItemValueResolver currentResolver) {
-        ViewItemValueResolverUIControllerFactory uiFactory = uiProvider
+        VisualItemValueResolverUIControllerFactory uiFactory = uiProvider
                 .getFactoryById(currentResolver.getResolverId());
 
         assert uiFactory != null;
 
         // TODO maybe refactor this, probably some null checks would be great
-        ViewItemValueResolverUIController resolverUI = uiFactory.create(
+        VisualItemValueResolverUIController resolverUI = uiFactory.create(
                 resolverFactoryProvider.getFactoryById(currentResolver
                         .getResolverId()), slotMappingConfigurationUIModel
                         .getManagedSlotMapping(slot),
@@ -164,7 +164,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     }
 
     private SlotControl initSlotControl(Slot slot,
-            ViewItemValueResolverUIController resolverUI,
+            VisualItemValueResolverUIController resolverUI,
             SlotControl currentSlotControl) {
 
         DefaultSlotControl slotControl = new DefaultSlotControl(slot,
@@ -188,7 +188,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             ManagedVisualItemValueResolver oldResolver,
             ManagedVisualItemValueResolver currentResolver) {
 
-        ViewItemValueResolverUIController resolverUI = createUIControllerFromResolver(
+        VisualItemValueResolverUIController resolverUI = createUIControllerFromResolver(
                 slot, currentResolver);
 
         SlotControl currentSlotControl = this.slotToSlotControls.get(slot);
