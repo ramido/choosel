@@ -15,18 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
+import org.thechiselgroup.choosel.core.client.ui.CSS;
+import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
+import org.thechiselgroup.choosel.protovis.client.ProtovisWidget;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
@@ -42,7 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Lars Grammel
  */
 public abstract class ChartViewContentDisplay extends
-        AbstractViewContentDisplay implements ChartWidgetCallback {
+        AbstractViewContentDisplay {
 
     // TODO wrapper for jsarraygeneric that implements java.util.List
     protected JsArrayGeneric<VisualItem> viewItemsJsArray = JsUtils
@@ -65,7 +68,7 @@ public abstract class ChartViewContentDisplay extends
      */
     protected boolean isRendering;
 
-    protected ChartWidget chartWidget;
+    protected ProtovisWidget chartWidget;
 
     protected int width;
 
@@ -119,8 +122,8 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public final Widget createWidget() {
-        chartWidget = new ChartWidget();
-        chartWidget.setCallback(this);
+        chartWidget = new ProtovisWidget();
+        CSS.setBackgroundColor(chartWidget, Colors.WHITE);
         return chartWidget;
     }
 
@@ -149,6 +152,8 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void onAttach() {
+        super.onAttach();
+
         checkResize();
     }
 

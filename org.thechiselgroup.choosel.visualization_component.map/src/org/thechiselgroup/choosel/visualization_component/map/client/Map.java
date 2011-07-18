@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
-import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedDelta;
-
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
@@ -26,7 +24,6 @@ import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -129,7 +126,7 @@ public class Map extends AbstractViewContentDisplay {
             }
         });
 
-        renderer.init(map, callback);
+        renderer.init(map, this);
 
         return map;
     }
@@ -197,28 +194,18 @@ public class Map extends AbstractViewContentDisplay {
         return map.getZoomLevel();
     }
 
-    // TODO pull up
+    @Override
     protected void onAttach() {
         renderer.onAttach();
 
-        // add all view items
-        update(createAddedDelta(callback.getVisualItems()),
-                LightweightCollections.<Slot> emptyCollection());
+        super.onAttach();
     }
 
-    // TODO pull up
+    @Override
     protected void onDetach() {
         renderer.onDetach();
 
-        // might have been disposed (then callback would be null)
-        // XXX broken, TODO reactivate -- what is this for?
-        // if (callback != null) {
-        // // remove all view items
-        // update(LightweightCollections.<ViewItem> emptyCollection(),
-        // LightweightCollections.<ViewItem> emptyCollection(),
-        // callback.getViewItems(),
-        // LightweightCollections.<Slot> emptyCollection());
-        // }
+        super.onDetach();
     }
 
     @Override

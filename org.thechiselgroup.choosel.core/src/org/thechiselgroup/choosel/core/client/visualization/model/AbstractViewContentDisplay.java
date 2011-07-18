@@ -15,21 +15,31 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model;
 
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedDelta;
+import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createRemovedDelta;
+
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
-
+public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
+        VisualItemContainer {
     protected ViewContentDisplayCallback callback;
 
     private boolean restoring = false;
@@ -39,15 +49,34 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     private final Map<String, ViewContentDisplayProperty<?>> properties = CollectionFactory
             .createStringMap();
 
+    private VisualItemContainer container;
+
     @Override
     public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
         throw new NoSuchAdapterException(this, clazz);
     }
 
     @Override
+    public HandlerRegistration addHandler(
+            VisualItemContainerChangeEventHandler handler) {
+        return container.addHandler(handler);
+    }
+
+    @Override
     public Widget asWidget() {
         if (widget == null) {
             widget = createWidget();
+
+            widget.addAttachHandler(new Handler() {
+                @Override
+                public void onAttachOrDetach(AttachEvent event) {
+                    if (event.isAttached()) {
+                        onAttach();
+                    } else {
+                        onDetach();
+                    }
+                }
+            });
         }
 
         return widget;
@@ -57,21 +86,31 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
+    @Override
+    public boolean containsVisualItem(String viewItemId) {
+        return container.containsVisualItem(viewItemId);
+    }
+
     protected abstract Widget createWidget();
 
     @Override
     public void dispose() {
         callback = null;
+        container = null;
         widget = DisposeUtil.dispose(widget);
     }
 
     @Override
     public void endRestore() {
         restoring = false;
-    };
+    }
 
     public ViewContentDisplayCallback getCallback() {
         return callback;
+    };
+
+    public VisualItemContainer getContainer() {
+        return container;
     }
 
     @SuppressWarnings("unchecked")
@@ -96,9 +135,31 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void init(ViewContentDisplayCallback callback) {
+    public VisualItem getVisualItem(String viewItemId)
+            throws NoSuchElementException {
+        return container.getVisualItem(viewItemId);
+    }
+
+    @Override
+    public LightweightCollection<VisualItem> getVisualItems() {
+        return container.getVisualItems();
+    }
+
+    @Override
+    public LightweightCollection<VisualItem> getVisualItems(
+            Iterable<Resource> resources) {
+        return container.getVisualItems(resources);
+    }
+
+    @Override
+    public void init(VisualItemContainer container,
+            ViewContentDisplayCallback callback) {
+
+        assert container != null;
         assert callback != null;
+
         this.callback = callback;
+        this.container = container;
     }
 
     @Override
@@ -113,6 +174,32 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     public boolean isRestoring() {
         return restoring;
+    }
+
+    protected void onAttach() {
+        assert container != null;
+        assert callback != null;
+
+        if (!getVisualItems().isEmpty()) {
+            /*
+             * XXX the lifecycle should be exposed and the visualization model
+             * should respect the lifecycle (this should be removed)
+             */
+            update(createAddedDelta(getVisualItems()),
+                    LightweightCollections.<Slot> emptyCollection());
+        }
+    }
+
+    protected void onDetach() {
+        // might have been disposed (then callback would be null)
+        if (container != null && !getVisualItems().isEmpty()) {
+            /*
+             * XXX this might be problematic, because view items are removed
+             * when the visualization model is disposed.
+             */
+            update(createRemovedDelta(getVisualItems()),
+                    LightweightCollections.<Slot> emptyCollection());
+        }
     }
 
     /**

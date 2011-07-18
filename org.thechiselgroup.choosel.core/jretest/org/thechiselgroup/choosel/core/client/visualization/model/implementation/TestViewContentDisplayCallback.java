@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
+// TODO split...
 // TODO extract resource item manager?
 public class TestViewContentDisplayCallback implements
         ViewContentDisplayCallback, VisualItemContainer {

@@ -36,21 +36,21 @@ public class NodeItem {
 
     private Node node;
 
-    private final VisualItem viewItem;
+    private final VisualItem visualItem;
 
     public NodeItem(VisualItem viewItem, String type, GraphDisplay display) {
         assert viewItem != null;
         assert type != null;
         assert display != null;
 
-        this.viewItem = viewItem;
+        this.visualItem = viewItem;
         this.display = display;
 
         node = new Node(viewItem.getId(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
-        return viewItem.getValue(Graph.NODE_LABEL_SLOT);
+        return visualItem.getValue(Graph.NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
@@ -58,15 +58,15 @@ public class NodeItem {
     }
 
     public Color getNodeBackgroundColor() {
-        return viewItem.getValue(Graph.NODE_BACKGROUND_COLOR);
+        return visualItem.getValue(Graph.NODE_BACKGROUND_COLOR);
     }
 
     public Color getNodeBorderColor() {
-        return viewItem.getValue(Graph.NODE_BORDER_COLOR);
+        return visualItem.getValue(Graph.NODE_BORDER_COLOR);
     }
 
     public VisualItem getViewItem() {
-        return viewItem;
+        return visualItem;
     }
 
     /**
@@ -75,8 +75,8 @@ public class NodeItem {
      */
     // TODO expose border color, node color, font weight, font color as slots
     public void updateNode() {
-        Status highlighStatus = viewItem.getStatus(Subset.HIGHLIGHTED);
-        Status selectionStatus = viewItem.getStatus(Subset.SELECTED);
+        Status highlighStatus = visualItem.getStatus(Subset.HIGHLIGHTED);
+        Status selectionStatus = visualItem.getStatus(Subset.SELECTED);
 
         boolean isHighlighted = Status.PARTIAL == highlighStatus
                 || Status.FULL == highlighStatus;

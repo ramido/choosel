@@ -67,7 +67,10 @@ public interface ViewContentDisplay extends VisualItemRenderer,
      */
     Slot[] getSlots();
 
-    void init(ViewContentDisplayCallback callback);
+    /**
+     * Sets callback objects.
+     */
+    void init(VisualItemContainer container, ViewContentDisplayCallback callback);
 
     boolean isReady();
 

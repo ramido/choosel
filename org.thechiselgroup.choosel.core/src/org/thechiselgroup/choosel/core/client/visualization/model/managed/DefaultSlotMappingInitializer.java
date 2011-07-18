@@ -28,12 +28,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
 public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
-    private Map<DataType, VisualItemValueResolver> defaultDataTypeResolvers = new HashMap<DataType, VisualItemValueResolver>();
+    private Map<DataType, VisualItemValueResolver> fixedResolversByDataType = new HashMap<DataType, VisualItemValueResolver>();
 
     private VisualItemValueResolverFactoryProvider factoryProvider;
 
@@ -44,10 +43,10 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         this.factoryProvider = factoryProvider;
     }
 
-    private VisualItemValueResolver getFallbackResolver(DataType dataType) {
-        assert defaultDataTypeResolvers.containsKey(dataType) : "no fallback resolver for "
+    private VisualItemValueResolver getFixedResolver(DataType dataType) {
+        assert fixedResolversByDataType.containsKey(dataType) : "no fixed resolver for "
                 + dataType;
-        return defaultDataTypeResolvers.get(dataType);
+        return fixedResolversByDataType.get(dataType);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
         // fallback to default values if there are no corresponding slots
         if (properties.isEmpty()) {
-            return getFallbackResolver(dataType);
+            return getFixedResolver(dataType);
         }
 
         assert !properties.isEmpty();
@@ -98,8 +97,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
             return sumResolver;
         }
 
-        // this is for date, location -- XXX needs factory...
-        return new FirstResourcePropertyResolver(firstProperty, dataType);
+        throw new UnableToInitializeSlotException(slot);
     }
 
     public void putDefaultDataTypeValues(DataType dataType,
@@ -108,6 +106,6 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         assert dataType != null;
         assert resolver != null;
 
-        defaultDataTypeResolvers.put(dataType, resolver);
+        fixedResolversByDataType.put(dataType, resolver);
     }
 }

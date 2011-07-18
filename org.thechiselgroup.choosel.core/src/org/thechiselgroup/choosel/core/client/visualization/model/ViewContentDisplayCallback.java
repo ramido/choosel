@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,12 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model;
 
-// TODO inline interface into ViewContentDisplay
-// TODO we need to expose a filtered, more limited version of the ViewItemContainer
-// --> create new superinterface?
-public interface ViewContentDisplayCallback extends VisualItemContainer {
+// TODO create new interface that contains slot resolution relevant for view content display 
+public interface ViewContentDisplayCallback {
 
-    // TODO is this part of another interface?
     VisualItemValueResolver getResolver(Slot slot);
 
     String getSlotResolverDescription(Slot slot);
