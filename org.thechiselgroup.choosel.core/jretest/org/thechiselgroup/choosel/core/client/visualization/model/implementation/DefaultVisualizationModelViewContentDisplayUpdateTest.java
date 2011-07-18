@@ -479,7 +479,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
     public void viewItemsReturnCorrectValuesOnViewContentDisplayUpdateAfterClearingSlotCache() {
         helper.addToContainedResources(createResource(TYPE_1, 1));
 
-        final VisualItem viewItem = underTest.getVisualItems()
+        final VisualItem viewItem = underTest.getFullVisualItemContainer().getVisualItems()
                 .getFirstElement();
         viewItem.getValue(slot); // caches values
 
@@ -508,7 +508,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
         resource1.putValue(propertyName, 1d);
         helper.addToContainedResources(resource1);
 
-        final VisualItem viewItem = underTest.getVisualItems()
+        final VisualItem viewItem = underTest.getFullVisualItemContainer().getVisualItems()
                 .getFirstElement();
         viewItem.getValue(slot); // caches values
 

@@ -46,7 +46,8 @@ public class DefaultVisualizationModelEventTest {
             VisualItemContainerChangeEventHandler handler) {
         ArgumentCaptor<VisualItemContainerChangeEvent> captor = ArgumentCaptor
                 .forClass(VisualItemContainerChangeEvent.class);
-        verify(handler, times(1)).onVisualItemContainerChanged(captor.capture());
+        verify(handler, times(1))
+                .onVisualItemContainerChanged(captor.capture());
         return captor.getValue();
     }
 
@@ -54,7 +55,7 @@ public class DefaultVisualizationModelEventTest {
     public void fireViewItemContainerChangeEventWhenViewItemIsAdded() {
         VisualItemContainerChangeEventHandler handler = mock(VisualItemContainerChangeEventHandler.class);
 
-        underTest.addHandler(handler);
+        underTest.getFullVisualItemContainer().addHandler(handler);
 
         Resource resource = ResourceSetTestUtils.createResource(1);
         helper.getContainedResources().add(resource);
@@ -74,7 +75,8 @@ public class DefaultVisualizationModelEventTest {
     public void fireViewItemContainerChangeEventWhenViewItemIsRemoved() {
         VisualItemContainerChangeEventHandler handler = mock(VisualItemContainerChangeEventHandler.class);
 
-        HandlerRegistration registration = underTest.addHandler(handler);
+        HandlerRegistration registration = underTest
+                .getFullVisualItemContainer().addHandler(handler);
 
         Resource resource = ResourceSetTestUtils.createResource(1);
         helper.getContainedResources().add(resource);
@@ -85,7 +87,7 @@ public class DefaultVisualizationModelEventTest {
         VisualItemContainerChangeEventHandler handler2 = mock(VisualItemContainerChangeEventHandler.class);
 
         registration.removeHandler();
-        underTest.addHandler(handler2);
+        underTest.getFullVisualItemContainer().addHandler(handler2);
 
         helper.getContainedResources().remove(resource);
 

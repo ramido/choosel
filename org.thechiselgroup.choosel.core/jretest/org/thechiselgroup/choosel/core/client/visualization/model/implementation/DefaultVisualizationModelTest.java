@@ -77,12 +77,12 @@ public class DefaultVisualizationModelTest {
         model.setCategorizer(new ResourceByPropertyMultiCategorizer(
                 TEXT_PROPERTY_2));
 
-        assertThat(model.getVisualItems().getFirstElement().getResources(),
+        assertThat(model.getFullVisualItemContainer().getVisualItems().getFirstElement().getResources(),
                 containsExactly(r1, r2));
     }
 
     private VisualItem getFirstVisualItem() {
-        return underTest.getVisualItems().getFirstElement();
+        return underTest.getFullVisualItemContainer().getVisualItems().getFirstElement();
     }
 
     @Test
@@ -324,7 +324,7 @@ public class DefaultVisualizationModelTest {
         helper.addToContainedResources(resources1);
         helper.addToContainedResources(resources2);
 
-        assertThat(underTest.getVisualItems(),
+        assertThat(underTest.getFullVisualItemContainer().getVisualItems(),
                 containsVisualItemsForExactResourceSets(resources1, resources2));
     }
 

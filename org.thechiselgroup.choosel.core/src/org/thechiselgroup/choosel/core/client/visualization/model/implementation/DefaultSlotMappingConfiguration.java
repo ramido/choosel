@@ -35,14 +35,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultSlotMappingConfiguration implements
         SlotMappingConfiguration {
 
-    // TODO move
-    private static <S, T> void assertNoNullValues(Map<S, T> map) {
-        for (Entry<S, T> entry : map.entrySet()) {
-            assert entry.getValue() != null : "map entry for " + entry.getKey()
-                    + " must not be null";
-        }
-    }
-
     private transient PrioritizedHandlerManager handlerManager;
 
     /**
@@ -75,9 +67,21 @@ public class DefaultSlotMappingConfiguration implements
     }
 
     private void assertInvariants() {
-        assertNoNullValues(slotsToResolvers);
+        assertNoNullSlotMappings();
+        assertAllResolversAreValid();
+    }
+
+    private void assertAllResolversAreValid() {
         for (VisualItemValueResolver resolver : slotsToResolvers.values()) {
             assertValidResolver(resolver);
+        }
+    }
+
+    private void assertNoNullSlotMappings() {
+        for (Entry<Slot, VisualItemValueResolver> entry : slotsToResolvers
+                .entrySet()) {
+            assert entry.getValue() != null : "resolver for slot "
+                    + entry.getKey() + " must not be null";
         }
     }
 

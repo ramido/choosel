@@ -118,7 +118,7 @@ public class DefaultVisualizationModelSlotMappingTest {
     }
 
     private VisualItem getFirstVisualItem() {
-        return underTest.getVisualItems().getFirstElement();
+        return underTest.getFullVisualItemContainer().getVisualItems().getFirstElement();
     }
 
     @Test
@@ -170,7 +170,7 @@ public class DefaultVisualizationModelSlotMappingTest {
         underTest.setResolver(numberSlot, new CalculationResolver(
                 NUMBER_PROPERTY_1, calculation));
 
-        List<VisualItem> resourceItems = underTest.getVisualItems().toList();
+        List<VisualItem> resourceItems = underTest.getFullVisualItemContainer().getVisualItems().toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getValue(numberSlot));

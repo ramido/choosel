@@ -118,7 +118,7 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<VisualItem> resourceItems = restoredViewModel.getVisualItems()
+        List<VisualItem> resourceItems = restoredViewModel.getFullVisualItemContainer().getVisualItems()
                 .toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);
@@ -161,7 +161,7 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<VisualItem> resourceItems = restoredViewModel.getVisualItems()
+        List<VisualItem> resourceItems = restoredViewModel.getFullVisualItemContainer().getVisualItems()
                 .toList();
         assertEquals(1, resourceItems.size());
         ResourceSet resourceItemResources = resourceItems.get(0).getResources();
@@ -201,7 +201,7 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<VisualItem> resourceItems = restoredViewModel.getVisualItems()
+        List<VisualItem> resourceItems = restoredViewModel.getFullVisualItemContainer().getVisualItems()
                 .toList();
         assertEquals(2, resourceItems.size());
     }
@@ -278,7 +278,7 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<VisualItem> resourceItems = restoredViewModel.getVisualItems()
+        List<VisualItem> resourceItems = restoredViewModel.getFullVisualItemContainer().getVisualItems()
                 .toList();
         assertEquals(1, resourceItems.size());
         VisualItem resourceItem = resourceItems.get(0);

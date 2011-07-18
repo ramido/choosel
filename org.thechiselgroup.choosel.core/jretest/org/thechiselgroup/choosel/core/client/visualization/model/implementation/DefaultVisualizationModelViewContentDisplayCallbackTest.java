@@ -75,7 +75,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         assertThat(
-                container.containsVisualItem(underTest.getVisualItems()
+                container.containsVisualItem(underTest.getFullVisualItemContainer().getVisualItems()
                         .getFirstElement().getId()), is(false));
     }
 
@@ -88,7 +88,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         assertThat(
-                container.containsVisualItem(underTest.getVisualItems()
+                container.containsVisualItem(underTest.getFullVisualItemContainer().getVisualItems()
                         .getFirstElement().getId()), is(true));
     }
 
@@ -104,7 +104,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
                 .createLightweightList();
 
         // get view items that are in the content display
-        viewItems.add(container.getVisualItem(underTest.getVisualItems()
+        viewItems.add(container.getVisualItem(underTest.getFullVisualItemContainer().getVisualItems()
                 .getFirstElement().getId()));
 
         assertThat(viewItems,
@@ -120,7 +120,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
         helper.addToContainedResources(resources);
 
-        container.getVisualItem(underTest.getVisualItems().getFirstElement()
+        container.getVisualItem(underTest.getFullVisualItemContainer().getVisualItems().getFirstElement()
                 .getId());
     }
 
