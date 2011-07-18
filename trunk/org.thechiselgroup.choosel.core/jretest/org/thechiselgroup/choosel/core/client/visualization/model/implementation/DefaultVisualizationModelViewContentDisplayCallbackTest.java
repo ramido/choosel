@@ -113,18 +113,6 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
                         .containsVisualItemsForExactResourceSets(resources));
     }
 
-    @Test(expected = AssertionError.class)
-    public void getByIDThrowsExceptionIfViewItemHasErrors() {
-        ResourceSet resources = ResourceSetTestUtils.createResources(
-                ResourceSetTestUtils.TYPE_1, 1);
-
-        underTest.setResolver(slot, mockResolverThatCanNeverResolve());
-        helper.addToContainedResources(resources);
-
-        container.getVisualItem(underTest.getFullVisualItemContainer()
-                .getVisualItems().getFirstElement().getId());
-    }
-
     @Test
     public void getByResourcesIsEmptyForResourceInvalid() {
         ResourceSet resources = ResourceSetTestUtils.createResources(
