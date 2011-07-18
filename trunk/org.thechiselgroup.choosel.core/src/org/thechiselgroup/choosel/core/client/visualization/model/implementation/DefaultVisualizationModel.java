@@ -19,13 +19,13 @@ import static org.thechiselgroup.choosel.core.client.util.DisposeUtil.safelyDisp
 import static org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory.createLightweightList;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createAddedRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createDelta;
-import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.Delta.createUpdatedDelta;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.copy;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.emptyCollection;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.getRelativeComplement;
 import static org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections.toCollection;
 
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -90,8 +90,32 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
 
-    private final class DefaultVisualItemContainer implements
-            VisualItemContainer {
+    final class DefaultVisualItemContainer implements VisualItemContainer,
+            Disposable {
+
+        private transient PrioritizedHandlerManager handlerManager;
+
+        /**
+         * Maps ids (representing the resource sets that are calculated by the
+         * resource grouping, also used as view item ids) to the
+         * {@link DefaultVisualItem}s that display the resource sets in the
+         * view.
+         */
+        private Map<String, DefaultVisualItem> visualItemsById = CollectionFactory
+                .createStringMap();
+
+        public DefaultVisualItemContainer() {
+            this.handlerManager = new PrioritizedHandlerManager(this);
+        }
+
+        public void addDefaultVisualItem(DefaultVisualItem visualItem) {
+            assert !containsVisualItem(visualItem.getId()) : "visual item with id "
+                    + visualItem.getId()
+                    + " is already contained in "
+                    + visualItemsById;
+
+            visualItemsById.put(visualItem.getId(), visualItem);
+        }
 
         @Override
         public HandlerRegistration addHandler(
@@ -104,26 +128,59 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         @Override
         public boolean containsVisualItem(String visualItemId) {
-            return visualItemsByGroupId.containsKey(visualItemId);
+            return visualItemsById.containsKey(visualItemId);
+        }
+
+        @Override
+        public void dispose() {
+            // fire event that all view items were removed
+            fireVisualItemContainerChangeEvent(Delta
+                    .createRemovedDelta(getVisualItems()));
+            for (DefaultVisualItem visualItem : getDefaultVisualItems()) {
+                safelyDispose(visualItem, errorHandler);
+            }
+        }
+
+        public void fireVisualItemContainerChangeEvent(Delta<VisualItem> delta) {
+            assert delta != null;
+
+            if (delta.isEmpty()) {
+                return;
+            }
+
+            try {
+                handlerManager.fireEvent(new VisualItemContainerChangeEvent(
+                        this, delta));
+            } catch (Throwable ex) {
+                errorHandler.handleError(ex);
+            }
+        }
+
+        public DefaultVisualItem getDefaultVisualItem(String id) {
+            return visualItemsById.get(id);
+        }
+
+        public Collection<DefaultVisualItem> getDefaultVisualItems() {
+            return visualItemsById.values();
         }
 
         @Override
         public VisualItem getVisualItem(String visualItemId) {
             assert visualItemId != null;
 
-            if (!visualItemsByGroupId.containsKey(visualItemId)) {
+            if (!visualItemsById.containsKey(visualItemId)) {
                 throw new NoSuchElementException("VisualItem with id "
                         + visualItemId + " is not contained.");
             }
 
-            return visualItemsByGroupId.get(visualItemId);
+            return getDefaultVisualItem(visualItemId);
         }
 
         // TODO these view items should be cached & the cache should be updated
         @Override
         public LightweightCollection<VisualItem> getVisualItems() {
             return LightweightCollections
-                    .<VisualItem> toCollection(visualItemsByGroupId.values());
+                    .<VisualItem> toCollection(visualItemsById.values());
         }
 
         /**
@@ -140,11 +197,22 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     .createLightweightList();
             Set<String> groupIds = resourceGrouping.getGroupIds(resources);
             for (String groupId : groupIds) {
-                assert visualItemsByGroupId.containsKey(groupId) : "VisualItem with id "
+                assert visualItemsById.containsKey(groupId) : "VisualItem with id "
                         + groupId + " not found";
-                result.add(visualItemsByGroupId.get(groupId));
+                result.add(visualItemsById.get(groupId));
             }
             return result;
+        }
+
+        public DefaultVisualItem removeDefaultVisualItem(String id) {
+            assert id != null : "id must not be null";
+            assert containsVisualItem(id) : "no VisualItem for " + id;
+
+            DefaultVisualItem visualItem = visualItemsById.remove(id);
+
+            assert !containsVisualItem(id);
+
+            return visualItem;
         }
     }
 
@@ -164,7 +232,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         @Override
         public boolean containsVisualItem(String visualItemId) {
             return fullVisualItemContainer.containsVisualItem(visualItemId)
-                    && !hasErrors(visualItemsByGroupId.get(visualItemId));
+                    && !hasErrors(fullVisualItemContainer
+                            .getVisualItem(visualItemId));
         }
 
         @Override
@@ -263,14 +332,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
     }
 
-    /**
-     * Maps group ids (representing the resource sets that are calculated by the
-     * resource grouping, also used as view item ids) to the
-     * {@link DefaultVisualItem}s that display the resource sets in the view.
-     */
-    private Map<String, DefaultVisualItem> visualItemsByGroupId = CollectionFactory
-            .createStringMap();
-
     private DefaultSlotMappingConfiguration slotMappingConfiguration;
 
     private ViewContentDisplay contentDisplay;
@@ -284,8 +345,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
     private final ErrorHandler errorHandler;
 
     private DefaultVisualItemResolutionErrorModel errorModel = new DefaultVisualItemResolutionErrorModel();
-
-    private transient PrioritizedHandlerManager handlerManager;
 
     private Map<Subset, SubsetContainer> subsets = new EnumMap<Subset, SubsetContainer>(
             Subset.class);
@@ -323,7 +382,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 resourceSetFactory);
         this.slotMappingConfiguration = new DefaultSlotMappingConfiguration(
                 contentDisplay.getSlots());
-        this.handlerManager = new PrioritizedHandlerManager(this);
 
         addSubset(Subset.SELECTED, selectedResources);
         addSubset(Subset.HIGHLIGHTED, highlightedResources);
@@ -416,7 +474,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightList<Slot> dependentSlots = slotMappingConfiguration
                 .getDependentSlots(slot);
 
-        for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
+        for (DefaultVisualItem visualItem : fullVisualItemContainer
+                .getDefaultVisualItems()) {
             visualItem.clearValueCache(slot);
             for (Slot dependentSlot : dependentSlots) {
                 visualItem.clearValueCache(dependentSlot);
@@ -434,9 +493,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<Resource> highlightedResources,
             LightweightCollection<Resource> selectedResources) {
 
-        assert !visualItemsByGroupId.containsKey(groupID) : "visualItemsByGroupId ( "
-                + visualItemsByGroupId + " ) already contains " + groupID;
-
         DefaultVisualItem visualItem = new DefaultVisualItem(groupID,
                 resources, slotMappingConfiguration, visualItemBehavior);
 
@@ -446,7 +502,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         visualItem.updateSubset(Subset.SELECTED, selectedResources,
                 LightweightCollections.<Resource> emptyCollection());
 
-        visualItemsByGroupId.put(groupID, visualItem);
+        fullVisualItemContainer.addDefaultVisualItem(visualItem);
 
         return visualItem;
     }
@@ -458,13 +514,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
          * handlers should get removed and references should be set to null.
          */
 
-        // fire event that all view items were removed
-        fireVisualItemContainerChangeEvent(createRemovedDelta(fullVisualItemContainer
-                .getVisualItems()));
-
-        for (DefaultVisualItem visualItem : visualItemsByGroupId.values()) {
-            safelyDispose(visualItem, errorHandler);
-        }
+        fullVisualItemContainer = safelyDispose(fullVisualItemContainer,
+                errorHandler);
 
         resourceGrouping = safelyDispose(resourceGrouping, errorHandler);
         contentDisplay = safelyDispose(contentDisplay, errorHandler);
@@ -475,21 +526,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
             subsetContainer.dispose();
         }
         subsets = null;
-    }
-
-    private void fireVisualItemContainerChangeEvent(Delta<VisualItem> delta) {
-        assert delta != null;
-
-        if (delta.isEmpty()) {
-            return;
-        }
-
-        try {
-            handlerManager.fireEvent(new VisualItemContainerChangeEvent(
-                    fullVisualItemContainer, delta));
-        } catch (Throwable ex) {
-            errorHandler.handleError(ex);
-        }
     }
 
     @Override
@@ -686,8 +722,13 @@ public class DefaultVisualizationModel implements VisualizationModel,
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == ChangeType.GROUP_REMOVED;
 
+            DefaultVisualItem visualItem = fullVisualItemContainer
+                    .removeDefaultVisualItem(change.getGroupID());
+
             // XXX dispose should be done after method call / event firing etc.
-            removedVisualItems.add(removeVisualItem(change.getGroupID()));
+            visualItem.dispose();
+
+            removedVisualItems.add(visualItem);
         }
         return removedVisualItems;
     }
@@ -709,7 +750,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         updateViewContentDisplay(deltaThatConsidersErrors,
                 LightweightCollections.<Slot> emptyCollection());
 
-        fireVisualItemContainerChangeEvent(delta);
+        fullVisualItemContainer.fireVisualItemContainerChangeEvent(delta);
     }
 
     private LightweightCollection<VisualItem> processUpdates(
@@ -722,9 +763,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         LightweightList<VisualItem> updatedVisualItems = createLightweightList();
         for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == ChangeType.GROUP_CHANGED;
-            DefaultVisualItem visualItem = visualItemsByGroupId.get(change
-                    .getGroupID());
-
+            DefaultVisualItem visualItem = fullVisualItemContainer
+                    .getDefaultVisualItem(change.getGroupID());
             for (SubsetContainer subsetContainer : subsets.values()) {
                 subsetContainer.updateVisualItemOnResourcesChange(visualItem,
                         change);
@@ -734,19 +774,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
 
         return updatedVisualItems;
-    }
-
-    private DefaultVisualItem removeVisualItem(String groupID) {
-        assert groupID != null : "groupIDs must not be null";
-        assert visualItemsByGroupId.containsKey(groupID) : "no VisualItem for "
-                + groupID;
-
-        DefaultVisualItem visualItem = visualItemsByGroupId.remove(groupID);
-        visualItem.dispose();
-
-        assert !visualItemsByGroupId.containsKey(groupID);
-
-        return visualItem;
     }
 
     @Override
