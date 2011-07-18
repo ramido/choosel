@@ -25,17 +25,23 @@ public interface VisualizationModel extends HasResourceCategorizer,
         SlotMappingConfiguration, VisualItemResolutionErrorModel {
 
     /**
-     * @return {@link VisualItemContainer} that contains all {@link VisualItem}s
-     *         (including the ones that have errors).
-     */
-    VisualItemContainer getFullVisualItemContainer();
-
-    /**
      * @return {@link ResourceSet} of the {@link Resource}s that are visualized
      *         in this {@link VisualizationModel}.
      */
     // TODO rename
     ResourceSet getContentResourceSet();
+
+    /**
+     * @return {@link VisualItemContainer} that contains {@link VisualItem}s
+     *         without errors.
+     */
+    VisualItemContainer getErrorFreeVisualItemContainer();
+
+    /**
+     * @return {@link VisualItemContainer} that contains all {@link VisualItem}s
+     *         (including the ones that have errors).
+     */
+    VisualItemContainer getFullVisualItemContainer();
 
     // TODO set
     // TODO ReadableResourcesSet

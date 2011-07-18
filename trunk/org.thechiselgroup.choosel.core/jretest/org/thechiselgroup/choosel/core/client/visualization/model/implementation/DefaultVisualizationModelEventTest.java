@@ -104,7 +104,7 @@ public class DefaultVisualizationModelEventTest {
 
         helper = new DefaultVisualizationModelTestHelper();
         helper.createSlots();
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
     }
 
 }

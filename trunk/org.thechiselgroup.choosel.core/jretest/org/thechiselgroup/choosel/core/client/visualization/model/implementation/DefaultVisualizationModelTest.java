@@ -145,7 +145,7 @@ public class DefaultVisualizationModelTest {
 
         helper = new DefaultVisualizationModelTestHelper();
         helper.setSlots(slot);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
         underTest.setResolver(slot, new FixedValueResolver("a", DataType.TEXT));
     }
 

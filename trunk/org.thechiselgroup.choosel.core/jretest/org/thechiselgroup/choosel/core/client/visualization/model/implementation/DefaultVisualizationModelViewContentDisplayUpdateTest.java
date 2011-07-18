@@ -298,7 +298,7 @@ public class DefaultVisualizationModelViewContentDisplayUpdateTest {
 
         helper = new DefaultVisualizationModelTestHelper();
         slot = helper.createSlots(DataType.NUMBER)[0];
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         underTest
                 .setResolver(slot, new FixedValueResolver(1d, DataType.NUMBER));

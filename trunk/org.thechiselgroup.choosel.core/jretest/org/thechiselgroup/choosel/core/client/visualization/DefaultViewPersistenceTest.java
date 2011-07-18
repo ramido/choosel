@@ -224,7 +224,7 @@ public class DefaultViewPersistenceTest {
             helper.setSlots(textSlot, numberSlot);
             helper.setContainedResources(resourceModel.getResources());
             helper.setSelectedResources(selectionModel.getSelection());
-            originalViewModel = helper.createTestViewModel();
+            originalViewModel = helper.createTestVisualizationModel();
             originalView = createView(originalViewModel, resourceModel,
                     selectionModel);
         }
@@ -239,7 +239,7 @@ public class DefaultViewPersistenceTest {
             helper.setSlots(textSlot, numberSlot);
             helper.setContainedResources(resourceModel.getResources());
             helper.setSelectedResources(selectionModel.getSelection());
-            restoredViewModel = helper.createTestViewModel();
+            restoredViewModel = helper.createTestVisualizationModel();
             restoredView = createView(restoredViewModel, resourceModel,
                     selectionModel);
         }

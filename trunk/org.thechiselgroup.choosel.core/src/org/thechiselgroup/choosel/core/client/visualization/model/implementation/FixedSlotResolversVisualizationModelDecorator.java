@@ -104,6 +104,11 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
+    public VisualItemContainer getErrorFreeVisualItemContainer() {
+        return delegate.getErrorFreeVisualItemContainer();
+    }
+
+    @Override
     public VisualItemContainer getFullVisualItemContainer() {
         return delegate.getFullVisualItemContainer();
     }

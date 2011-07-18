@@ -504,6 +504,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     @Override
+    public VisualItemContainer getErrorFreeVisualItemContainer() {
+        return errorFreeVisualItemContainer;
+    }
+
+    @Override
     public VisualItemContainer getFullVisualItemContainer() {
         return fullVisualItemContainer;
     }

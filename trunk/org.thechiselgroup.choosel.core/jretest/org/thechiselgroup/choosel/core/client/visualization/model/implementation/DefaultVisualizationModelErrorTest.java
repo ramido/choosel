@@ -64,7 +64,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void allSlotsHaveResolversCausesNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
 
@@ -77,7 +77,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void delegatingResolverHasErrorWhenDelegateUnconfigured() {
         Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         VisualItemValueResolver delegatingResolver = mockDelegatingResolver(slots[1]);
 
@@ -91,7 +91,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void delegatingResolverLosesErrorWhenDelegateConfigured() {
         Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         VisualItemValueResolver delegatingResolver = mockDelegatingResolver(slots[1]);
 
@@ -110,7 +110,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void resolverCannotResolveSomeViewItemsFixedByChangingResolverReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         setResolver(slots, resource1);
         addResourcesToUndertest();
@@ -127,7 +127,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void resolverCannotResolveSomeViewItemsFixedByChangingViewItemsReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         setResolver(slots, resource1);
         addResourcesToUndertest();
@@ -143,7 +143,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void resolverCannotResolveSomeViewItemsThrowsErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         setResolver(slots, resource1);
 
@@ -163,7 +163,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void setResolversFromUnconfiguredToValidReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         getResourceSetFromUnderTest().add(createResource(1));
 
@@ -190,7 +190,7 @@ public class DefaultVisualizationModelErrorTest {
     @Test
     public void slotWithoutResolverCausesError() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         getResourceSetFromUnderTest().add(
                 ResourceSetTestUtils.createResource(1));
@@ -203,7 +203,7 @@ public class DefaultVisualizationModelErrorTest {
     public void unconfiguredSlotsHaveErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT, DataType.NUMBER);
 
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         getResourceSetFromUnderTest().add(createResource(1));
 
