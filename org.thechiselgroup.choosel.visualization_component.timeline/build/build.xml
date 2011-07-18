@@ -1,72 +1,9 @@
-<project name="org.thechiselgroup.choosel.visualization_component.timeline" 
-         default="dist" basedir=".">
+<project name="org.thechiselgroup.choosel.visualization_component.timeline" default="dist" basedir=".">
 
-	  <tstamp>
-	    <format property="buildtime" pattern="yyyyMMddHHmmss" />
-	  </tstamp>
+	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
 
-	  <property name="version" value="b${buildtime}" />
-	  <!--
-	  <property name="version" value="0.1" />
-	  -->
-	
-	  <property name="name" value="choosel.visualization_component.Timeline" />
-	  <property name="project-name" value="org.thechiselgroup.choosel.visualization_component.timeline" />
-	  	
-	  <property name="dist" location="bin/dist"/>
-	  <property name="src" location="src"/>
-	  <property name="class-dir" location="war/WEB-INF/classes"/>
-	  <property name="app-lib" value="bin/build/lib"/>
-		
-	  <target name="dist"
-		  	  description="creates distribution"
-		      depends="create-module-jar,create-project-zip" />
-		
-	  <target name="create-project-zip"
-	  	      description="creates zipfile of project"
-	  	      depends="prepare">
-	  	
-	    <zip destfile="${dist}/${name}-${version}-project.zip">
-	      <fileset dir="..">
-	      	<include name="${project-name}/**" />
-	    	<exclude name="${project-name}/bin/**"/>
-	    	<exclude name="${project-name}/tomcat/**"/>
-	    	<exclude name="${project-name}/war/WEB-INF/classes/**"/>
-	      </fileset>
-	    </zip> 
-	  </target>	
-		
-	
-	  <target name="create-jar"
-				description="creates a jar file for external use">
-	  	<jar destfile="${dist}/${name}-${version}.jar">
-	  		      <fileset dir="${src}">
-	  		      </fileset>
-	  		      <fileset dir="${class-dir}">
-	  		    	<include name="**/*.class"/>
-	  		      </fileset>
-	  		      <metainf dir=""> 
-	  		    	<include name="LICENSE"/>
-	  		    	<include name="NOTICE"/>
-	  		      </metainf>
-	  	</jar> 
-	  </target>
-	
-	  <target name="create-module-jar"
-	  	      description="creates the module jar file"
-	  	      depends="prepare">
-	  	
-	    <antcall target="create-jar"/>
-	  </target>
-		
-	  <target name="clean" description="clean automatically created resources">
-	  	<delete dir="${dist}"/>
-	  </target>
-		
-	  <target name="prepare"
-	  	      description="create folders required for build"
-	          depends="clean">
-	    <mkdir dir="${dist}"/>
-	  </target>
-	
+	<!-- <property name="version" value="0.1" /> -->
+	<property name="name" value="choosel.visualization_component.Timeline" />
+	<property name="project-name" value="org.thechiselgroup.choosel.visualization_component.timeline" />
+
 </project>

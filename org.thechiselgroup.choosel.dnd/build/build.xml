@@ -1,68 +1,14 @@
 <project name="org.thechiselgroup.choosel.dnd" 
          default="dist" basedir=".">
 
-	  <tstamp>
-	    <format property="buildtime" pattern="yyyyMMddHHmmss" />
-	  </tstamp>
+	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
 
-	  <property name="version" value="b${buildtime}" />
-	  <!--
-	  <property name="version" value="0.1" />
-	  -->
-	
+	<!-- <property name="version" value="0.1" /> -->
 	  <property name="name" value="choosel.dnd" />
 	  <property name="project-name" value="org.thechiselgroup.choosel.dnd" />
 	  	
-	  <property name="dist" location="bin/dist"/>
-	  <property name="src" location="src"/>
-	  <property name="class-dir" location="war/WEB-INF/classes"/>
-	  <property name="app-lib" value="bin/build/lib"/>
-		
   	  <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" /> 
-	
-	  <target name="dist"
-		  	  description="creates distribution"
-		      depends="create-module-jar,create-project-zip" />
-		
-	  <target name="create-project-zip"
-	  	      description="creates zipfile of project"
-	  	      depends="prepare">
-	  	
-	    <zip destfile="${dist}/${name}-${version}-project.zip">
-	      <fileset dir="..">
-	      	<include name="${project-name}/**" />
-	    	<exclude name="${project-name}/bin/**"/>
-	    	<exclude name="${project-name}/tomcat/**"/>
-	    	<exclude name="${project-name}/war/WEB-INF/classes/**"/>
-	      </fileset>
-	    </zip> 
-	  </target>	
-	
-	  <target name="create-jar">
-	  	<jar destfile="${dist}/${name}-${version}.jar">
-	  		      <fileset dir="${src}">
-	  		      </fileset>
-	  		      <fileset dir="${class-dir}">
-	  		    	<include name="**/*.class"/>
-	  		      </fileset>
-	  		      <metainf dir=""> 
-	  		    	<include name="LICENSE"/>
-	  		    	<include name="NOTICE"/>
-	  		      </metainf>
-	  		    </jar>
-	</target>
-	
-	  <target name="create-module-jar"
-	  	      description="creates the module jar file"
-	  	      depends="prepare">
-	  	
-	    <antcall target="create-jar"/>
-	  </target>
-		
-	  <target name="clean" description="clean automatically created resources">
-	  	<delete dir="${dist}"/>
-	  </target>
-		
+
 	  <target name="apidocs"
 		     description="updates the javadocs">
 	  	
@@ -100,12 +46,6 @@
 		    <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.0/index.html"/>
 		  </javadoc>
 	  </target>	
-	
-	  <target name="prepare"
-	  	      description="create folders required for build"
-	          depends="clean">
-	    <mkdir dir="${dist}"/>
-	  </target>
 	
 	  <!--
 	    Checks out gwt-dnd-3.0.0 and applies performance and null pointer exception patch.

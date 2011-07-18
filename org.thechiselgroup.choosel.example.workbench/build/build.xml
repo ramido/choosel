@@ -80,6 +80,11 @@
 
 	<target name="draft" depends="copy-choosel-jars,draft-gwt-compile" />
 
+	<!--
+	Builds the jar files from the different Choosel modules that are required for the server side, and copies
+	them to WEB-INF/lib. We only need to do this for the server side jars, because we reference the client side
+	code in (a) our classpath for gwt-compile and (b) our launch config for the dev environment. 
+	-->
 	<target name="copy-choosel-jars" depends="prepare">
 		<antcall target="choosel-core" />
 		<antcall target="choosel-workbench" />
