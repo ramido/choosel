@@ -28,7 +28,6 @@ import static org.thechiselgroup.choosel.core.client.util.collections.Lightweigh
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
@@ -109,10 +108,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
 
         public void addDefaultVisualItem(DefaultVisualItem visualItem) {
-            assert !containsVisualItem(visualItem.getId()) : "visual item with id "
-                    + visualItem.getId()
-                    + " is already contained in "
-                    + visualItemsById;
+            assertDoesNotContainVisualItem(visualItem.getId());
 
             visualItemsById.put(visualItem.getId(), visualItem);
         }
@@ -124,6 +120,16 @@ public class DefaultVisualizationModel implements VisualizationModel,
             assert handler != null;
             return handlerManager.addHandler(
                     VisualItemContainerChangeEvent.TYPE, handler);
+        }
+
+        private void assertContainsVisualItem(String id) {
+            assert id != null : "id must not be null";
+            assert containsVisualItem(id) : "no visual item with id " + id;
+        }
+
+        private void assertDoesNotContainVisualItem(String id) {
+            assert !containsVisualItem(id) : "visual item with id " + id
+                    + " is contained in " + visualItemsById;
         }
 
         @Override
@@ -166,13 +172,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         @Override
         public VisualItem getVisualItem(String visualItemId) {
-            assert visualItemId != null;
-
-            if (!visualItemsById.containsKey(visualItemId)) {
-                throw new NoSuchElementException("VisualItem with id "
-                        + visualItemId + " is not contained.");
-            }
-
+            assertContainsVisualItem(visualItemId);
             return getDefaultVisualItem(visualItemId);
         }
 
@@ -197,21 +197,16 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     .createLightweightList();
             Set<String> groupIds = resourceGrouping.getGroupIds(resources);
             for (String groupId : groupIds) {
-                assert visualItemsById.containsKey(groupId) : "VisualItem with id "
-                        + groupId + " not found";
+                assertContainsVisualItem(groupId);
                 result.add(visualItemsById.get(groupId));
             }
             return result;
         }
 
         public DefaultVisualItem removeDefaultVisualItem(String id) {
-            assert id != null : "id must not be null";
-            assert containsVisualItem(id) : "no VisualItem for " + id;
-
+            assertContainsVisualItem(id);
             DefaultVisualItem visualItem = visualItemsById.remove(id);
-
-            assert !containsVisualItem(id);
-
+            assertDoesNotContainVisualItem(id);
             return visualItem;
         }
     }
@@ -231,6 +226,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         @Override
         public boolean containsVisualItem(String visualItemId) {
+            assert visualItemId != null;
             return fullVisualItemContainer.containsVisualItem(visualItemId)
                     && !hasErrors(fullVisualItemContainer
                             .getVisualItem(visualItemId));
@@ -238,14 +234,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         @Override
         public VisualItem getVisualItem(String visualItemId) {
+            assert visualItemId != null;
+
             VisualItem visualItem = fullVisualItemContainer
                     .getVisualItem(visualItemId);
 
-            if (hasErrors(visualItem)) {
-                throw new NoSuchElementException("VisualItem with id "
-                        + visualItemId
-                        + " contains errors and cannot be retrieved.");
-            }
+            assert !hasErrors(visualItem) : "VisualItem with id "
+                    + visualItemId
+                    + " contains errors and cannot be retrieved.";
 
             return visualItem;
         }
@@ -414,8 +410,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
-    private Delta<VisualItem> calculateDeltaThatConsidersErrors(
-            Delta<VisualItem> delta,
+    private Delta<VisualItem> calculateErrorFreeDelta(Delta<VisualItem> delta,
             LightweightCollection<VisualItem> visualItemsThatHadErrors) {
 
         LightweightList<VisualItem> addedVisualItems = CollectionFactory
@@ -560,8 +555,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
             LightweightCollection<Resource> resources) {
 
         ResourceSet resourcesInThisView = new DefaultResourceSet();
-        resourcesInThisView.addAll(resourceGrouping.getResourceSet()
-                .getIntersection(resources));
+        resourcesInThisView.addAll(getContentResourceSet().getIntersection(
+                resources));
         return resourcesInThisView;
     }
 
@@ -744,13 +739,15 @@ public class DefaultVisualizationModel implements VisualizationModel,
 
         updateErrorModel(delta);
 
-        Delta<VisualItem> deltaThatConsidersErrors = calculateDeltaThatConsidersErrors(
-                delta, visualItemsThatHadErrors);
+        Delta<VisualItem> errorFreeDelta = calculateErrorFreeDelta(delta,
+                visualItemsThatHadErrors);
 
-        updateViewContentDisplay(deltaThatConsidersErrors,
+        updateViewContentDisplay(errorFreeDelta,
                 LightweightCollections.<Slot> emptyCollection());
 
         fullVisualItemContainer.fireVisualItemContainerChangeEvent(delta);
+
+        // TODO fire error free delta...
     }
 
     private LightweightCollection<VisualItem> processUpdates(
@@ -823,6 +820,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
         updateViewContentDisplay(
                 createAddedRemovedDelta(visualItemsToAdd, visualItemsToRemove),
                 toCollection(slot));
+
+        // TODO fire error free delta
     }
 
     protected void updateErrorModel(Delta<VisualItem> delta) {
