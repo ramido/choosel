@@ -65,30 +65,31 @@ public class ManagedSlotMappingConfiguration {
     public ManagedSlotMappingConfiguration(
             VisualItemValueResolverFactoryProvider resolverProvider,
             SlotMappingInitializer slotMappingInitializer,
-            VisualizationModel viewModel,
+            VisualizationModel visualizationModel,
             VisualItemResolutionErrorModel errorModel) {
 
         assert resolverProvider != null;
         assert slotMappingInitializer != null;
-        assert viewModel != null;
+        assert visualizationModel != null;
         assert errorModel != null;
 
         this.resolverProvider = resolverProvider;
         this.slotMappingInitializer = slotMappingInitializer;
-        this.visualizationModel = viewModel;
+        this.visualizationModel = visualizationModel;
         this.errorModel = errorModel;
 
         // this does not set up a mapping
-        initSlotModels(viewModel.getSlots());
+        initSlotModels(visualizationModel.getSlots());
 
-        viewModel.addHandler(new SlotMappingChangedHandler() {
+        visualizationModel.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
                 handleResolverChange(e.getSlot(), e.getOldResolver(),
                         e.getCurrentResolver());
             }
         });
-        viewModel.addHandler(new VisualMappingUpdaterForViewItemChanges());
+        visualizationModel.getFullVisualItemContainer().addHandler(
+                new VisualMappingUpdaterForViewItemChanges());
     }
 
     public ManagedVisualItemValueResolver getCurrentResolver(Slot slot) {
@@ -125,18 +126,19 @@ public class ManagedSlotMappingConfiguration {
         return invalidSlots;
     }
 
-    public LightweightCollection<VisualItem> getViewItems() {
-        return visualizationModel.getVisualItems();
+    public LightweightCollection<VisualItem> getVisualItems() {
+        return visualizationModel.getFullVisualItemContainer().getVisualItems();
     }
 
     public void handleResolverChange(Slot slot,
             VisualItemValueResolver oldResolver,
             VisualItemValueResolver resolver) {
 
-        assert viewContainsSlot(slot) : "Trying to set a slot that is not a part of the viewModel (Check if it is fixed)";
+        assert visualizationModel.containsSlot(slot) : "slot " + slot
+                + " is not a part of the " + "visualization model";
 
         slotsToSlotMappings.get(slot).currentResolverWasSet(oldResolver,
-                resolver, visualizationModel.getVisualItems());
+                resolver, getVisualItems());
     }
 
     private void initSlotModels(Slot[] slots) {
@@ -184,8 +186,7 @@ public class ManagedSlotMappingConfiguration {
 
     public boolean slotHasInvalidResolver(Slot slot) {
         assert slotsToSlotMappings.containsKey(slot);
-        return slotsToSlotMappings.get(slot).inValidState(
-                visualizationModel.getVisualItems());
+        return slotsToSlotMappings.get(slot).inValidState(getVisualItems());
     }
 
     /**
@@ -200,7 +201,7 @@ public class ManagedSlotMappingConfiguration {
     }
 
     private void updateVisualMappings() {
-        updateVisualMappings(visualizationModel.getVisualItems());
+        updateVisualMappings(getVisualItems());
     }
 
     // TODO handle view items with errors in here
@@ -218,16 +219,5 @@ public class ManagedSlotMappingConfiguration {
             resetMappingsFromInitializer(slots, viewItems);
         }
         // TODO assert that all of the slots now have valid resolvers
-    }
-
-    public boolean viewContainsSlot(Slot slot) {
-        boolean found = false;
-        Slot[] viewSlots = visualizationModel.getSlots();
-        for (Slot viewSlot : viewSlots) {
-            if (viewSlot.equals(slot)) {
-                found = true;
-            }
-        }
-        return found;
     }
 }

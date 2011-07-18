@@ -21,9 +21,14 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
 // TODO javadoc
 // NOTE: facade to visualization subsystem 
-public interface VisualizationModel extends VisualItemContainer,
-        HasResourceCategorizer, SlotMappingConfiguration,
-        VisualItemResolutionErrorModel {
+public interface VisualizationModel extends HasResourceCategorizer,
+        SlotMappingConfiguration, VisualItemResolutionErrorModel {
+
+    /**
+     * @return {@link VisualItemContainer} that contains all {@link VisualItem}s
+     *         (including the ones that have errors).
+     */
+    VisualItemContainer getFullVisualItemContainer();
 
     /**
      * @return {@link ResourceSet} of the {@link Resource}s that are visualized

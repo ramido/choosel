@@ -15,7 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.configuration;
 
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
 import java.util.Map;
 
@@ -259,8 +264,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         String label = contentDisplay.getName();
 
-        visualizationModel
-                .addHandler(new VisualItemContainerChangeEventHandler() {
+        visualizationModel.getFullVisualItemContainer().addHandler(
+                new VisualItemContainerChangeEventHandler() {
                     @Override
                     public void onVisualItemContainerChanged(
                             VisualItemContainerChangeEvent event) {

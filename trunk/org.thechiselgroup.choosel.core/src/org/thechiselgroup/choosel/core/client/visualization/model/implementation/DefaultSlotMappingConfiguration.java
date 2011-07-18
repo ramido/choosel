@@ -45,8 +45,14 @@ public class DefaultSlotMappingConfiguration implements
 
     private transient PrioritizedHandlerManager handlerManager;
 
+    /**
+     * Configured slots and their resolvers.
+     */
     private Map<Slot, VisualItemValueResolver> slotsToResolvers = new HashMap<Slot, VisualItemValueResolver>();
 
+    /**
+     * Maps all allowed slots by their ids.
+     */
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
     private Slot[] slots;
@@ -70,6 +76,27 @@ public class DefaultSlotMappingConfiguration implements
 
     private void assertInvariants() {
         assertNoNullValues(slotsToResolvers);
+        for (VisualItemValueResolver resolver : slotsToResolvers.values()) {
+            assertValidResolver(resolver);
+        }
+    }
+
+    private void assertValidResolver(VisualItemValueResolver resolver) {
+        assert resolver != null : "resolver must not be null";
+        assert resolver.getTargetSlots() != null : "resolver "
+                + resolver.toString() + " getTargetSlots() must not be null";
+    }
+
+    private void assertValidSlot(Slot slot) {
+        assert slot != null : "slot must not be null";
+        assert containsSlot(slot) : "slot " + slot
+                + " is not allowed (valid slots: " + slotsByID.values() + ")";
+    }
+
+    @Override
+    public boolean containsSlot(Slot slot) {
+        assert slot != null;
+        return slotsByID.containsKey(slot.getId());
     }
 
     /**
@@ -87,6 +114,8 @@ public class DefaultSlotMappingConfiguration implements
      * XXX depth-first search must consider unconfigured slots
      */
     public LightweightList<Slot> getDependentSlots(Slot slot) {
+        assertValidSlot(slot);
+
         LightweightList<Slot> dependentSlots = CollectionFactory
                 .createLightweightList();
         for (Entry<Slot, VisualItemValueResolver> entry : slotsToResolvers
@@ -95,9 +124,6 @@ public class DefaultSlotMappingConfiguration implements
             VisualItemValueResolver otherResolver = entry.getValue();
             LightweightCollection<Slot> targetSlots = otherResolver
                     .getTargetSlots();
-
-            assert targetSlots != null : "getTargetSlots() for resolver "
-                    + otherResolver.getClass() + " must not be null";
 
             for (Slot targetSlot : targetSlots) {
                 if (targetSlot.equals(slot)) {
@@ -113,7 +139,7 @@ public class DefaultSlotMappingConfiguration implements
     public VisualItemValueResolver getResolver(Slot slot)
             throws NoResolverForSlotException {
 
-        assert slot != null;
+        assertValidSlot(slot);
 
         if (!isConfigured(slot)) {
             throw new NoResolverForSlotException(slot, slotsToResolvers);
@@ -155,7 +181,7 @@ public class DefaultSlotMappingConfiguration implements
 
     @Override
     public boolean isConfigured(Slot slot) {
-        assert slot != null;
+        assertValidSlot(slot);
 
         return slotsToResolvers.containsKey(slot);
     }
@@ -163,13 +189,8 @@ public class DefaultSlotMappingConfiguration implements
     @Override
     public void setResolver(Slot slot, VisualItemValueResolver resolver) {
         assertInvariants();
-        assert slot != null : "slot must not be null";
-        assert resolver != null : "resolver must not be null";
-        assert resolver.getTargetSlots() != null : "resolver "
-                + resolver.toString() + " getTargetSlots() must not be null";
-        // TODO extract into internal assert method
-        assert slotsByID.containsKey(slot.getId()) : "slot " + slot
-                + " is not allowed (valid slots: " + slotsByID.values() + ")";
+        assertValidSlot(slot);
+        assertValidResolver(resolver);
 
         VisualItemValueResolver oldResolver = slotsToResolvers.get(slot);
         slotsToResolvers.put(slot, resolver);
@@ -186,5 +207,4 @@ public class DefaultSlotMappingConfiguration implements
 
         assertInvariants();
     }
-
 }

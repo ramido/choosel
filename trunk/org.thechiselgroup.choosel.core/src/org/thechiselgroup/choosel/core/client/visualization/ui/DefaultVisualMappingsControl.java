@@ -123,7 +123,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
                 resolverFactoryProvider.getFactoryById(currentResolver
                         .getResolverId()), slotMappingConfigurationUIModel
                         .getManagedSlotMapping(slot),
-                slotMappingConfigurationUIModel.getViewItems());
+                slotMappingConfigurationUIModel.getVisualItems());
         return resolverUI;
     }
 
@@ -207,12 +207,12 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             // if yes, reset the uiController
 
             // update the resolveUI to ensure that it's in a valid state
-            resolverUI.update(slotMappingConfigurationUIModel.getViewItems());
+            resolverUI.update(slotMappingConfigurationUIModel.getVisualItems());
             currentSlotControl.setNewUIModel(resolverUI);
 
             // this is firing the second event
             currentSlotControl.updateOptions(slotMappingConfigurationUIModel
-                    .getViewItems());
+                    .getVisualItems());
         }
     }
 
