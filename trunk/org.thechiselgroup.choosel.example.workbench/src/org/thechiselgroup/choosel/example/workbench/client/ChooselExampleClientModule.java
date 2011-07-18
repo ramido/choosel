@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.example.workbench.client;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.PreconfiguredViewItemResolverUIFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.PreconfiguredVisualItemResolverUIFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
@@ -47,7 +47,7 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
 
     @Override
     protected Class<? extends VisualItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
-        return PreconfiguredViewItemResolverUIFactoryProvider.class;
+        return PreconfiguredVisualItemResolverUIFactoryProvider.class;
     }
 
     @Override
