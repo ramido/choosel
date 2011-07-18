@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,25 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.behaviors;
 
-import java.util.Map;
-
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.visualization.model.MappedHandlerVisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 
 /**
  * Manages {@link VisualItem} highlighting in a single view.
  */
-public class HighlightingVisualItemBehavior implements VisualItemBehavior {
-
-    /**
-     * Maps view item ids to highlighting managers.
-     */
-    private Map<String, HighlightingManager> highlightingManagers = CollectionFactory
-            .createStringMap();
+public class HighlightingVisualItemBehavior extends
+        MappedHandlerVisualItemBehavior<HighlightingManager> {
 
     private HighlightingModel highlightingModel;
 
@@ -43,62 +34,34 @@ public class HighlightingVisualItemBehavior implements VisualItemBehavior {
         this.highlightingModel = highlightingModel;
     }
 
-    protected HighlightingManager getHighlightingManager(VisualItem visualItem) {
-        return highlightingManagers.get(visualItem.getId());
+    @Override
+    protected HighlightingManager createHandler(VisualItem visualItem) {
+        return new HighlightingManager(highlightingModel,
+                visualItem.getResources());
     }
 
     @Override
-    public void onInteraction(VisualItem visualItem,
-            VisualItemInteraction interaction) {
-
-        assert visualItem != null;
-        assert highlightingManagers.containsKey(visualItem.getId()) : "no manager for visual item with id "
-                + visualItem.getId();
-        assert interaction != null;
+    protected void onInteraction(VisualItem visualItem,
+            VisualItemInteraction interaction, HighlightingManager manager) {
 
         switch (interaction.getEventType()) {
         case DRAG_END:
         case MOUSE_OUT:
-            setHighlighting(visualItem, false);
+            setHighlighting(manager, visualItem, false);
             break;
         case MOUSE_OVER:
-            setHighlighting(visualItem, true);
+            setHighlighting(manager, visualItem, true);
             break;
         }
     }
 
-    @Override
-    public void onVisualItemContainerChanged(
-            VisualItemContainerChangeEvent event) {
-        for (VisualItem item : event.getDelta().getAddedElements()) {
-            onVisualItemCreated(item);
-        }
-        for (VisualItem item : event.getDelta().getRemovedElements()) {
-            onVisualItemRemoved(item);
-        }
-    }
+    /**
+     * Hook method for subclasses
+     */
+    protected void setHighlighting(HighlightingManager manager,
+            VisualItem visualItem, boolean shouldHighlight) {
 
-    public void onVisualItemCreated(VisualItem visualItem) {
-        assert visualItem != null;
-        assert !highlightingManagers.containsKey(visualItem.getId());
-
-        highlightingManagers.put(visualItem.getId(), new HighlightingManager(
-                highlightingModel, visualItem.getResources()));
-    }
-
-    public void onVisualItemRemoved(VisualItem visualItem) {
-        assert visualItem != null;
-        assert highlightingManagers.containsKey(visualItem.getId()) : "no highlighting manager for visual item "
-                + visualItem.getId();
-
-        HighlightingManager manager = highlightingManagers.remove(visualItem
-                .getId());
-        manager.dispose();
-    }
-
-    protected void setHighlighting(VisualItem visualItem,
-            boolean shouldHighlight) {
-        getHighlightingManager(visualItem).setHighlighting(shouldHighlight);
+        manager.setHighlighting(shouldHighlight);
     }
 
 }

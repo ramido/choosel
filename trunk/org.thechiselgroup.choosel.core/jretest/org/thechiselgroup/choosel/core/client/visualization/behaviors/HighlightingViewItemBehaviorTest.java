@@ -38,7 +38,7 @@ public class HighlightingViewItemBehaviorTest {
     private HighlightingModel hoverModel;
 
     @Mock
-    private VisualItem viewItem;
+    private VisualItem visualItem;
 
     private HighlightingVisualItemBehavior underTest;
 
@@ -50,10 +50,10 @@ public class HighlightingViewItemBehaviorTest {
      */
     @Test
     public void disposeRemovesHighlighting() {
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
-        underTest.onVisualItemRemoved(viewItem);
+        underTest.onVisualItemRemoved(visualItem);
 
         assertThat(hoverModel.getResources(),
                 containsExactly(ResourceSetTestUtils.createResources()));
@@ -64,12 +64,12 @@ public class HighlightingViewItemBehaviorTest {
      */
     @Test
     public void dragEndRemovesHighlighting() {
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.DRAG_START));
-        underTest.onInteraction(viewItem,
+        underTest.onInteraction(visualItem,
                 new VisualItemInteraction(Type.DRAG_END));
 
         assertThat(hoverModel.getResources(),
@@ -78,8 +78,8 @@ public class HighlightingViewItemBehaviorTest {
 
     @Test
     public void mouseOverAddsResourcesToHoverModel() {
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         assertThat(hoverModel.getResources(),
                 containsExactly(ResourceSetTestUtils.createResources(1, 2)));
@@ -92,8 +92,8 @@ public class HighlightingViewItemBehaviorTest {
         hoverModel = spy(new HighlightingModel());
 
         resources = ResourceSetTestUtils.createResources(1, 2);
-        when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
-        when(viewItem.getResources()).thenReturn(resources);
+        when(visualItem.getId()).thenReturn(VIEW_ITEM_ID);
+        when(visualItem.getResources()).thenReturn(resources);
 
         underTest = new HighlightingVisualItemBehavior(hoverModel);
     }
