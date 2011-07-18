@@ -52,7 +52,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
@@ -61,7 +60,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
@@ -89,10 +87,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultVisualizationModel implements VisualizationModel,
         Disposable {
 
-    final class DefaultVisualItemContainer implements VisualItemContainer,
-            Disposable {
-
-        private transient PrioritizedHandlerManager handlerManager;
+    final class DefaultVisualItemContainer extends AbstractVisualItemContainer
+            implements Disposable {
 
         /**
          * Maps ids (representing the resource sets that are calculated by the
@@ -103,23 +99,14 @@ public class DefaultVisualizationModel implements VisualizationModel,
         private Map<String, DefaultVisualItem> visualItemsById = CollectionFactory
                 .createStringMap();
 
-        public DefaultVisualItemContainer() {
-            this.handlerManager = new PrioritizedHandlerManager(this);
+        public DefaultVisualItemContainer(ErrorHandler errorHandler) {
+            super(errorHandler);
         }
 
         public void addDefaultVisualItem(DefaultVisualItem visualItem) {
             assertDoesNotContainVisualItem(visualItem.getId());
 
             visualItemsById.put(visualItem.getId(), visualItem);
-        }
-
-        @Override
-        public HandlerRegistration addHandler(
-                VisualItemContainerChangeEventHandler handler) {
-
-            assert handler != null;
-            return handlerManager.addHandler(
-                    VisualItemContainerChangeEvent.TYPE, handler);
         }
 
         private void assertContainsVisualItem(String id) {
@@ -144,21 +131,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     .createRemovedDelta(getVisualItems()));
             for (DefaultVisualItem visualItem : getDefaultVisualItems()) {
                 safelyDispose(visualItem, errorHandler);
-            }
-        }
-
-        public void fireVisualItemContainerChangeEvent(Delta<VisualItem> delta) {
-            assert delta != null;
-
-            if (delta.isEmpty()) {
-                return;
-            }
-
-            try {
-                handlerManager.fireEvent(new VisualItemContainerChangeEvent(
-                        this, delta));
-            } catch (Throwable ex) {
-                errorHandler.handleError(ex);
             }
         }
 
@@ -211,17 +183,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
         }
     }
 
-    private final class ErrorFreeVisualItemContainerDecorator implements
-            VisualItemContainer {
+    private final class ErrorFreeVisualItemContainerDecorator extends
+            AbstractVisualItemContainer {
 
-        @Override
-        public HandlerRegistration addHandler(
-                VisualItemContainerChangeEventHandler handler) {
-
-            // TODO test this handler
-            // TODO extract view item container for view items without
-            // errors
-            throw new RuntimeException("not implemented");
+        public ErrorFreeVisualItemContainerDecorator(ErrorHandler errorHandler) {
+            super(errorHandler);
         }
 
         @Override
@@ -345,9 +311,9 @@ public class DefaultVisualizationModel implements VisualizationModel,
     private Map<Subset, SubsetContainer> subsets = new EnumMap<Subset, SubsetContainer>(
             Subset.class);
 
-    private DefaultVisualItemContainer fullVisualItemContainer = new DefaultVisualItemContainer();
+    private DefaultVisualItemContainer fullVisualItemContainer;
 
-    private ErrorFreeVisualItemContainerDecorator errorFreeVisualItemContainer = new ErrorFreeVisualItemContainerDecorator();
+    private ErrorFreeVisualItemContainerDecorator errorFreeVisualItemContainer;
 
     /**
      * @param errorHandler
@@ -374,6 +340,10 @@ public class DefaultVisualizationModel implements VisualizationModel,
         this.visualItemBehavior = visualItemBehavior;
         this.errorHandler = errorHandler;
 
+        this.fullVisualItemContainer = new DefaultVisualItemContainer(
+                errorHandler);
+        this.errorFreeVisualItemContainer = new ErrorFreeVisualItemContainerDecorator(
+                errorHandler);
         this.resourceGrouping = new ResourceGrouping(multiCategorizer,
                 resourceSetFactory);
         this.slotMappingConfiguration = new DefaultSlotMappingConfiguration(
