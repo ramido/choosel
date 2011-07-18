@@ -1,9 +1,9 @@
 <project name="org.thechiselgroup.choosel.visualization_component.heat_bars" default="dist" basedir=".">
 
-	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
-
-	<!-- <property name="version" value="0.1" /> -->
 	<property name="name" value="choosel.visualization_component.HeatBars" />
 	<property name="project-name" value="org.thechiselgroup.choosel.visualization_component.heat_bars" />
 
+	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
+
+	<!-- <property name="version" value="0.1" /> -->
 </project>

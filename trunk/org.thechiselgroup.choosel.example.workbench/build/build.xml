@@ -86,8 +86,12 @@
 	code in (a) our classpath for gwt-compile and (b) our launch config for the dev environment. 
 	-->
 	<target name="copy-choosel-jars" depends="prepare">
-		<antcall target="choosel-core" />
-		<antcall target="choosel-workbench" />
+		<antcall target="build-module">
+			<param name="module-name" value="org.thechiselgroup.choosel.core" />
+		</antcall>
+		<antcall target="build-module">
+			<param name="module-name" value="org.thechiselgroup.choosel.workbench" />
+		</antcall>
 
 		<copy todir="${build.dir}/WEB-INF/lib">
 			<fileset dir="${build.temp.dir}/lib" includes="*.jar" />
@@ -98,15 +102,9 @@
 		<mkdir dir="${build.temp.dir}/lib" />
 	</target>
 
-	<target name="choosel-workbench">
-		<ant antfile="build/build.xml" dir="${root.dir}/org.thechiselgroup.choosel.workbench" target="create-jar">
-			<property name="dist" value="choosel/${build.temp.dir}/lib" />
-		</ant>
-	</target>
-
-	<target name="choosel-core">
-		<ant antfile="build/build.xml" dir="${root.dir}/org.thechiselgroup.choosel.core" target="create-jar">
-			<property name="dist" value="choosel/${build.temp.dir}/lib" />
+	<target name="build-module">
+		<ant dir="${root.dir}/${module-name}/build" target="create-jar">
+			<property name="dist" value="${build.temp.dir}/lib" />
 		</ant>
 	</target>
 
@@ -133,7 +131,7 @@
 	</target>
 
 	<target name="production" depends="copy-choosel-jars,production-gwt-compile" />
-	
+
 	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
 	<target name="production-gwt-compile">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">

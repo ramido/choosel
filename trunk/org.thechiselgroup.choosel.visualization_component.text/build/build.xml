@@ -1,9 +1,9 @@
 <project name="org.thechiselgroup.choosel.visualization_component.text" default="dist" basedir=".">
 
-	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
-
-	<!-- <property name="version" value="0.1" /> -->
 	<property name="name" value="choosel.visualization_component.Text" />
 	<property name="project-name" value="org.thechiselgroup.choosel.visualization_component.text" />
 
+	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
+
+	<!-- <property name="version" value="0.1" /> -->
 </project>

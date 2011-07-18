@@ -1,11 +1,12 @@
 <project name="org.thechiselgroup.choosel.dnd" 
          default="dist" basedir=".">
 
+	  <property name="name" value="choosel.dnd" />
+	  <property name="project-name" value="org.thechiselgroup.choosel.dnd" />
+
 	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
 
 	<!-- <property name="version" value="0.1" /> -->
-	  <property name="name" value="choosel.dnd" />
-	  <property name="project-name" value="org.thechiselgroup.choosel.dnd" />
 	  	
   	  <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" /> 
 
