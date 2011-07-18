@@ -53,8 +53,6 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
 
     public static final String FIXED_1_RESOLVER_FACTORY_ID = "Fixed-1";
 
-    public static final String FIXED_CIRCLE_RESOLVER_FACTORY_ID = "Fixed-circle";
-
     @Inject
     public void registerFactories() {
         factories = new HashMap<String, VisualItemValueResolverFactory>();
@@ -71,21 +69,19 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
         registerFactory(new CalculationResolverFactory(MIN_RESOLVER_FACTORY_ID,
                 new MinCalculation()));
 
-        registerFactory(new FixedVisualVisualItemResolverFactory(new Double(1.0),
+        registerFactory(new FixedVisualItemResolverFactory(new Double(1.0),
                 DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
         registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,
                 TEXT_PROPERTY_RESOLVER_FACTORY_ID));
 
         // registering factories for ChooselWorkbecnchViewWindowContentProducers
-        registerFactory(new FixedVisualVisualItemResolverFactory(new Double(0.0),
+        registerFactory(new FixedVisualItemResolverFactory(new Double(0.0),
                 DataType.NUMBER, FIXED_0_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualVisualItemResolverFactory("circle",
-                DataType.SHAPE, FIXED_CIRCLE_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualVisualItemResolverFactory(new Color(100,
-                149, 237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualVisualItemResolverFactory(new Date(),
+        registerFactory(new FixedVisualItemResolverFactory(new Color(100, 149,
+                237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
+        registerFactory(new FixedVisualItemResolverFactory(new Date(),
                 DataType.DATE, FIXED_DATE_TODAY_FACTORY_ID));
-        registerFactory(new FixedVisualVisualItemResolverFactory("(empty)",
+        registerFactory(new FixedVisualItemResolverFactory("(empty)",
                 DataType.TEXT, FIXED_EMPTY_STRING_FACTORY_ID));
 
         /**

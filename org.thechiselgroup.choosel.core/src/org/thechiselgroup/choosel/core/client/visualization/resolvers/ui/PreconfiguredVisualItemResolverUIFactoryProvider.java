@@ -15,9 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.*;
-
-import java.util.HashMap;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.AVERAGE_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_0_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_1_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_STDBLUE_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MAX_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MIN_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
 
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider;
 
@@ -28,31 +34,31 @@ public class PreconfiguredVisualItemResolverUIFactoryProvider extends
 
     @Inject
     public void registerFactories() {
-        idToFactoryMap = new HashMap<String, VisualItemValueResolverUIControllerFactory>();
+        register(new VisualItemStatusIdUIControllerFactory());
 
-        add(new VisualItemStatusIdUIControllerFactory());
-
-        add(new ResourceCountResolverUIControllerFactory());
-        add(new CalculationResolverUIControllerFactory(SUM_RESOLVER_FACTORY_ID));
-        add(new CalculationResolverUIControllerFactory(
+        register(new ResourceCountResolverUIControllerFactory());
+        register(new CalculationResolverUIControllerFactory(
+                SUM_RESOLVER_FACTORY_ID));
+        register(new CalculationResolverUIControllerFactory(
                 AVERAGE_RESOLVER_FACTORY_ID));
-        add(new CalculationResolverUIControllerFactory(MAX_RESOLVER_FACTORY_ID));
-        add(new CalculationResolverUIControllerFactory(MIN_RESOLVER_FACTORY_ID));
+        register(new CalculationResolverUIControllerFactory(
+                MAX_RESOLVER_FACTORY_ID));
+        register(new CalculationResolverUIControllerFactory(
+                MIN_RESOLVER_FACTORY_ID));
 
-        add(new FixedValueVisualItemResolverUIControllerFactory(
+        register(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_1_RESOLVER_FACTORY_ID));
-        add(new FirstResourcePropertyResolverUIControllerFactory(
+        register(new FirstResourcePropertyResolverUIControllerFactory(
                 TEXT_PROPERTY_RESOLVER_FACTORY_ID));
 
         // registering factories for ChooselWorkbecnchViewWindowContentProducers
-        add(new FixedValueVisualItemResolverUIControllerFactory(
+        register(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_0_RESOLVER_FACTORY_ID));
-        add(new FixedValueVisualItemResolverUIControllerFactory("circle"));
-        add(new FixedValueVisualItemResolverUIControllerFactory(
+        register(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_STDBLUE_RESOLVER_FACTORY_ID));
-        add(new FixedValueVisualItemResolverUIControllerFactory(
+        register(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_DATE_TODAY_FACTORY_ID));
-        add(new FixedValueVisualItemResolverUIControllerFactory(
+        register(new FixedValueVisualItemResolverUIControllerFactory(
                 PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_EMPTY_STRING_FACTORY_ID));
     }
 }

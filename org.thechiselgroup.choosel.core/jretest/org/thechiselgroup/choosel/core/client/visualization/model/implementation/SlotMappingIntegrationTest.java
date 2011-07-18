@@ -56,7 +56,7 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResou
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.SubsetDelegatingValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualVisualItemResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
 
 // TODO think about test name schema - unit, module, system, integration test etc
 public class SlotMappingIntegrationTest {
@@ -640,7 +640,7 @@ public class SlotMappingIntegrationTest {
 
         /* set up the provider to return the correct resolvers */
         resolverProvider
-                .registerFactory(new FixedVisualVisualItemResolverFactory(1,
+                .registerFactory(new FixedVisualItemResolverFactory(1,
                         DataType.NUMBER, resolverId1));
 
         /* define and create initializer */
