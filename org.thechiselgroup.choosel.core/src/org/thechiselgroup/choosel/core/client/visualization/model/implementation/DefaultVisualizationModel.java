@@ -88,7 +88,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * DefaultVisualItem)
  */
 public class DefaultVisualizationModel implements VisualizationModel,
-        Disposable {
+        Disposable, VisualItemContainer {
 
     /*
      * TODO cache intersection with content, minimize intersection updates.
@@ -314,12 +314,17 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 visualItem.clearValueCache(dependentSlot);
             }
         }
-    };
+    }
+
+    @Override
+    public boolean containsSlot(Slot slot) {
+        return slotMappingConfiguration.containsSlot(slot);
+    }
 
     @Override
     public boolean containsVisualItem(String groupId) {
         return visualItemsByGroupId.containsKey(groupId);
-    }
+    };
 
     private DefaultVisualItem createVisualItem(String groupID,
             ResourceSet resources,
@@ -391,6 +396,11 @@ public class DefaultVisualizationModel implements VisualizationModel,
     @Override
     public ResourceSet getContentResourceSet() {
         return resourceGrouping.getResourceSet();
+    }
+
+    @Override
+    public VisualItemContainer getFullVisualItemContainer() {
+        return this;
     }
 
     @Override

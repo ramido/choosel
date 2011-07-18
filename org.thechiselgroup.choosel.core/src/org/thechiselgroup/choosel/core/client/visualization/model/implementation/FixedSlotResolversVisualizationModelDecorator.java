@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
@@ -31,7 +30,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingCha
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 
@@ -82,15 +81,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
-    public HandlerRegistration addHandler(
-            VisualItemContainerChangeEventHandler handler) {
-
-        return delegate.addHandler(handler);
-    }
-
-    @Override
-    public boolean containsVisualItem(String viewItemId) {
-        return delegate.containsVisualItem(viewItemId);
+    public boolean containsSlot(Slot slot) {
+        return delegate.containsSlot(slot);
     }
 
     @Override
@@ -109,6 +101,11 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     @Override
     public ResourceSet getContentResourceSet() {
         return delegate.getContentResourceSet();
+    }
+
+    @Override
+    public VisualItemContainer getFullVisualItemContainer() {
+        return delegate.getFullVisualItemContainer();
     }
 
     @Override
@@ -154,22 +151,6 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     @Override
     public ViewContentDisplay getViewContentDisplay() {
         return delegate.getViewContentDisplay();
-    }
-
-    @Override
-    public VisualItem getVisualItem(String viewItemId) {
-        return delegate.getVisualItem(viewItemId);
-    }
-
-    @Override
-    public LightweightCollection<VisualItem> getVisualItems() {
-        return delegate.getVisualItems();
-    }
-
-    @Override
-    public LightweightCollection<VisualItem> getVisualItems(
-            Iterable<Resource> resources) {
-        return delegate.getVisualItems(resources);
     }
 
     @Override

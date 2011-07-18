@@ -58,10 +58,13 @@ public class DefaultSlotControl extends SlotControl {
                 VisualItemValueResolverFactory resolverFactory = resolverFactorySelector
                         .getSelectedValue();
 
-                configuration.getManagedSlotMapping(getSlot()).setResolver(
-                        resolverFactory.create(configuration.getViewItems()));
+                LightweightCollection<VisualItem> visualItems = configuration
+                        .getVisualItems();
 
-                updateOptions(configuration.getViewItems());
+                configuration.getManagedSlotMapping(getSlot()).setResolver(
+                        resolverFactory.create(visualItems));
+
+                updateOptions(visualItems);
             }
         };
 
@@ -69,7 +72,8 @@ public class DefaultSlotControl extends SlotControl {
                 new ExtendedListBox(false),
                 new Transformer<VisualItemValueResolverFactory, String>() {
                     @Override
-                    public String transform(VisualItemValueResolverFactory factory) {
+                    public String transform(
+                            VisualItemValueResolverFactory factory) {
                         return factory.getLabel();
                     }
                 });

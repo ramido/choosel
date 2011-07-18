@@ -34,6 +34,12 @@ public interface SlotMappingConfiguration extends
     HandlerRegistration addHandler(SlotMappingChangedHandler handler);
 
     /**
+     * @return {@code true} if {@code slot} is allowed in this
+     *         {@link SlotMappingConfiguration}.
+     */
+    boolean containsSlot(Slot slot);
+
+    /**
      * @param slotId
      *            id of the slot
      * @return {@link Slot} with the ID {@code slotId}

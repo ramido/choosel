@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -64,6 +64,7 @@ public interface VisualItemContainer {
      * @return {@link VisualItem}s that contain at least one of the given
      *         {@link Resource}s.
      */
-    LightweightCollection<VisualItem> getVisualItems(Iterable<Resource> resources);
+    LightweightCollection<VisualItem> getVisualItems(
+            Iterable<Resource> resources);
 
 }
