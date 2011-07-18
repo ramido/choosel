@@ -134,6 +134,8 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                         StatusRule.fullOrPartial(Colors.YELLOW_C,
                                 Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
                                 Colors.ORANGE_C, Subset.SELECTED)));
+        configuration.setSlotResolver(ScatterPlot.SHAPE,
+                new FixedValueResolver("circle", DataType.SHAPE));
 
         add(configuration);
     }

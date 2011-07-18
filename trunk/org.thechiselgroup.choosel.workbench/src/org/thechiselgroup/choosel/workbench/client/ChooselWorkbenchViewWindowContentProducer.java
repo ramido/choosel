@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.workbench.client;
 
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_0_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_CIRCLE_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_EMPTY_STRING_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_STDBLUE_RESOLVER_FACTORY_ID;
@@ -27,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualViewItemResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
@@ -55,27 +54,21 @@ public class ChooselWorkbenchViewWindowContentProducer extends
                 factoryProvider);
 
         initializer.putDefaultDataTypeValues(DataType.NUMBER,
-                ((FixedVisualViewItemResolverFactory) factoryProvider
+                ((FixedVisualItemResolverFactory) factoryProvider
                         .getFactoryById(FIXED_0_RESOLVER_FACTORY_ID)).create());
 
         initializer.putDefaultDataTypeValues(DataType.TEXT,
-                ((FixedVisualViewItemResolverFactory) factoryProvider
+                ((FixedVisualItemResolverFactory) factoryProvider
                         .getFactoryById(FIXED_EMPTY_STRING_FACTORY_ID))
                         .create());
 
-        initializer.putDefaultDataTypeValues(DataType.SHAPE,
-                ((FixedVisualViewItemResolverFactory) factoryProvider
-                        .getFactoryById(FIXED_CIRCLE_RESOLVER_FACTORY_ID))
-                        .create());
-        // TODO
-        // PVShape.CIRCLE
         initializer.putDefaultDataTypeValues(DataType.COLOR,
-                ((FixedVisualViewItemResolverFactory) factoryProvider
+                ((FixedVisualItemResolverFactory) factoryProvider
                         .getFactoryById(FIXED_STDBLUE_RESOLVER_FACTORY_ID))
                         .create());
 
         initializer.putDefaultDataTypeValues(DataType.DATE,
-                ((FixedVisualViewItemResolverFactory) factoryProvider
+                ((FixedVisualItemResolverFactory) factoryProvider
                         .getFactoryById(FIXED_DATE_TODAY_FACTORY_ID)).create());
 
         return initializer;

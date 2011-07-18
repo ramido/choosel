@@ -17,31 +17,30 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
 import java.util.Map;
 
-import com.google.inject.Inject;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
 public class DefaultVisualItemResolverUIFactoryProvider implements
         VisualItemValueResolverUIControllerFactoryProvider {
 
-    protected Map<String, VisualItemValueResolverUIControllerFactory> idToFactoryMap;
-
-    @Inject
-    public DefaultVisualItemResolverUIFactoryProvider() {
-
-    }
-
-    @Override
-    public void add(VisualItemValueResolverUIControllerFactory factory) {
-        assert factory != null;
-        assert !idToFactoryMap.containsKey(factory.getId()) : "Factory for id "
-                + factory.getId() + " is already registered";
-        idToFactoryMap.put(factory.getId(), factory);
-    }
+    private Map<String, VisualItemValueResolverUIControllerFactory> idToFactoryMap = CollectionFactory
+            .createStringMap();
 
     @Override
     public VisualItemValueResolverUIControllerFactory getFactoryById(String id) {
-        assert idToFactoryMap.containsKey(id) : "Factory with id " + id
-                + " not available";
+        assert idToFactoryMap.containsKey(id) : "VisualItemValueResolverUIControllerFactory"
+                + " with id '"
+                + id
+                + "' not available (registered: "
+                + idToFactoryMap + ")";
         return idToFactoryMap.get(id);
+    }
+
+    @Override
+    public void register(VisualItemValueResolverUIControllerFactory factory) {
+        assert factory != null;
+        assert !idToFactoryMap.containsKey(factory.getId()) : "VisualItemValueResolverUIControllerFactory"
+                + " for id " + factory.getId() + " is already registered";
+        idToFactoryMap.put(factory.getId(), factory);
     }
 
 }

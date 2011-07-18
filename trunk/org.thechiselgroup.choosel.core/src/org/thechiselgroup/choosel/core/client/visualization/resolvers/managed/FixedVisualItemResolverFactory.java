@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Manage
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
 
-public class FixedVisualVisualItemResolverFactory implements
+public class FixedVisualItemResolverFactory implements
         VisualItemValueResolverFactory {
 
     private final Object value;
@@ -33,7 +33,7 @@ public class FixedVisualVisualItemResolverFactory implements
 
     private final String id;
 
-    public FixedVisualVisualItemResolverFactory(Object value, DataType valueType,
+    public FixedVisualItemResolverFactory(Object value, DataType valueType,
             String id) {
 
         this.value = value;

@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
 public interface VisualItemValueResolverUIControllerFactoryProvider {
 
-    void add(VisualItemValueResolverUIControllerFactory factory);
+    void register(VisualItemValueResolverUIControllerFactory factory);
 
     VisualItemValueResolverUIControllerFactory getFactoryById(String id);
 

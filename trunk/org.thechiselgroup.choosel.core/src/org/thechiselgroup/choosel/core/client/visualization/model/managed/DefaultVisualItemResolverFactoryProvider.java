@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -24,7 +23,8 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 public class DefaultVisualItemResolverFactoryProvider implements
         VisualItemValueResolverFactoryProvider {
 
-    public Map<String, VisualItemValueResolverFactory> factories = new HashMap<String, VisualItemValueResolverFactory>();
+    public Map<String, VisualItemValueResolverFactory> factories = CollectionFactory
+            .createStringMap();
 
     @Override
     public VisualItemValueResolverFactory getFactoryById(String id) {
