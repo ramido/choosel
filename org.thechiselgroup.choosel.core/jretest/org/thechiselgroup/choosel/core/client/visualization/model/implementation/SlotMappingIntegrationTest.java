@@ -309,7 +309,7 @@ public class SlotMappingIntegrationTest {
     @Test
     public void fixedDelegatingResolverHasErrorWhenDelegateUnconfigured() {
         Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
-        DefaultVisualizationModel underTest = helper.createTestViewModel();
+        DefaultVisualizationModel underTest = helper.createTestVisualizationModel();
 
         SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
                 slots[1], Subset.HIGHLIGHTED);
@@ -328,7 +328,7 @@ public class SlotMappingIntegrationTest {
     @Test
     public void fixedDelegatingResolverLosesErrorWhenDelegateConfigured() {
         Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
-        DefaultVisualizationModel underTest = helper.createTestViewModel();
+        DefaultVisualizationModel underTest = helper.createTestVisualizationModel();
 
         SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
                 slots[1], Subset.HIGHLIGHTED);

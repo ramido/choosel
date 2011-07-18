@@ -95,7 +95,7 @@ public class DefaultVisualizationModelDisposeTest {
         stubHandlerRegistration(helper.getHighlightedResources(),
                 highlightedResourcesHandlerRegistration);
 
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         underTest.dispose();
     }

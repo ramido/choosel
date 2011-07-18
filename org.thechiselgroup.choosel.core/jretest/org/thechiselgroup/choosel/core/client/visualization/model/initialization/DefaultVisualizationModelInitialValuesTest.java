@@ -104,7 +104,7 @@ public class DefaultVisualizationModelInitialValuesTest {
         helper = new DefaultVisualizationModelTestHelper();
         helper.setSlots(textSlot, numberSlot);
 
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         DefaultVisualItemResolverFactoryProvider resolverProvider = new DefaultVisualItemResolverFactoryProvider();
 

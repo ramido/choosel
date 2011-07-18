@@ -67,7 +67,7 @@ public class DefaultVisualizationModelSlotMappingTest {
     public void changingSlotMappingUpdatesVisualItemValue1() {
         helper = new DefaultVisualizationModelTestHelper();
         helper.setSlots(textSlot);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         Resource resource = createResource(1);
 
@@ -96,7 +96,7 @@ public class DefaultVisualizationModelSlotMappingTest {
     public void changingSlotMappingUpdatesVisualItemValuesOfDependentSlots() {
         helper = new DefaultVisualizationModelTestHelper();
         Slot[] slots = helper.createSlots(DataType.TEXT, DataType.TEXT);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         Resource resource = createResource(1);
 
@@ -137,7 +137,7 @@ public class DefaultVisualizationModelSlotMappingTest {
 
         helper = new DefaultVisualizationModelTestHelper();
         helper.createSlots(DataType.TEXT, DataType.NUMBER);
-        underTest = helper.createTestViewModel();
+        underTest = helper.createTestVisualizationModel();
 
         textSlot = helper.getSlots()[0];
         numberSlot = helper.getSlots()[1];

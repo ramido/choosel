@@ -87,7 +87,7 @@ public final class DefaultVisualizationModelTestHelper {
         return slots;
     }
 
-    public DefaultVisualizationModel createTestViewModel() {
+    public DefaultVisualizationModel createTestVisualizationModel() {
         when(resolverProvider.getResolverFactories()).thenReturn(
                 resolverFactories);
 
