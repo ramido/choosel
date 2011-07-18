@@ -353,7 +353,7 @@ public class DefaultVisualizationModel implements VisualizationModel,
         addSubset(Subset.HIGHLIGHTED, highlightedResources);
 
         // TODO should be external...
-        fullVisualItemContainer.addHandler(visualItemBehavior);
+        errorFreeVisualItemContainer.addHandler(visualItemBehavior);
 
         init(selectedResources);
 
@@ -721,8 +721,8 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 LightweightCollections.<Slot> emptyCollection());
 
         fullVisualItemContainer.fireVisualItemContainerChangeEvent(delta);
-
-        // TODO fire error free delta...
+        errorFreeVisualItemContainer
+                .fireVisualItemContainerChangeEvent(errorFreeDelta);
     }
 
     private LightweightCollection<VisualItem> processUpdates(
@@ -792,11 +792,13 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 visualItemsThatWereValid,
                 errorFreeVisualItemContainer.getVisualItems());
 
-        updateViewContentDisplay(
-                createAddedRemovedDelta(visualItemsToAdd, visualItemsToRemove),
-                toCollection(slot));
+        Delta<VisualItem> errorFreeDelta = createAddedRemovedDelta(
+                visualItemsToAdd, visualItemsToRemove);
 
-        // TODO fire error free delta
+        updateViewContentDisplay(errorFreeDelta, toCollection(slot));
+
+        errorFreeVisualItemContainer
+                .fireVisualItemContainerChangeEvent(errorFreeDelta);
     }
 
     protected void updateErrorModel(Delta<VisualItem> delta) {
