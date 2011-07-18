@@ -45,7 +45,8 @@ public class PopupWithHighlightingVisualItemBehavior extends
 
     public PopupWithHighlightingVisualItemBehavior(
             DetailsWidgetHelper detailsWidgetHelper,
-            PopupManagerFactory popupManagerFactory, HighlightingModel hoverModel) {
+            PopupManagerFactory popupManagerFactory,
+            HighlightingModel hoverModel) {
 
         super(detailsWidgetHelper, popupManagerFactory);
 
@@ -61,7 +62,7 @@ public class PopupWithHighlightingVisualItemBehavior extends
         final HighlightingManager highlightingManager = new HighlightingManager(
                 hoverModel, viewItem.getResources());
 
-        Popup popup = getPopupManager(viewItem).getPopup();
+        Popup popup = getHandler(viewItem).getPopup();
 
         popup.addDomHandler(new MouseOverHandler() {
             @Override

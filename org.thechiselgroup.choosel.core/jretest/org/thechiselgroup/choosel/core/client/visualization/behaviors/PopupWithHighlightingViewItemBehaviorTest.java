@@ -126,7 +126,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
                 mock(DetailsWidgetHelper.class),
                 mock(PopupManagerFactory.class), hoverModel) {
             @Override
-            protected PopupManager createPopupManager(VisualItem viewItem) {
+            protected PopupManager createHandler(VisualItem visualItem) {
                 return popupManager;
             }
         };

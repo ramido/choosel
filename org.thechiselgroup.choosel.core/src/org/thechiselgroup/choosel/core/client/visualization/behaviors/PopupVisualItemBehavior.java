@@ -15,30 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.behaviors;
 
-import java.util.Map;
-
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.visualization.model.MappedHandlerVisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction;
-import org.thechiselgroup.choosel.core.shared.util.ForTest;
 
 import com.google.gwt.dom.client.NativeEvent;
 
 /**
  * Manages {@link VisualItem} popups in a single view.
  */
-public class PopupVisualItemBehavior implements VisualItemBehavior {
-
-    /**
-     * Maps view item ids to popup managers.
-     */
-    private final Map<String, PopupManager> popupManagers = CollectionFactory
-            .createStringMap();
+public class PopupVisualItemBehavior extends
+        MappedHandlerVisualItemBehavior<PopupManager> {
 
     private DetailsWidgetHelper detailsWidgetHelper;
 
@@ -54,24 +44,15 @@ public class PopupVisualItemBehavior implements VisualItemBehavior {
         this.popupManagerFactory = popupManagerFactory;
     }
 
-    @ForTest
-    protected PopupManager createPopupManager(final VisualItem viewItem) {
+    @Override
+    protected PopupManager createHandler(VisualItem visualItem) {
         return popupManagerFactory.createPopupManager(detailsWidgetHelper
-                .createDetailsWidget(viewItem));
-    }
-
-    protected PopupManager getPopupManager(VisualItem viewItem) {
-        return popupManagers.get(viewItem.getId());
+                .createDetailsWidget(visualItem));
     }
 
     @Override
-    public void onInteraction(VisualItem viewItem,
-            VisualItemInteraction interaction) {
-        assert viewItem != null;
-        assert popupManagers.containsKey(viewItem.getId());
-        assert interaction != null;
-
-        PopupManager popupManager = getPopupManager(viewItem);
+    protected void onInteraction(VisualItem visualItem,
+            VisualItemInteraction interaction, PopupManager popupManager) {
 
         switch (interaction.getEventType()) {
         case DRAG_START:
@@ -96,30 +77,6 @@ public class PopupVisualItemBehavior implements VisualItemBehavior {
                     interaction.getClientY());
             break;
         }
-    }
-
-    @Override
-    public void onVisualItemContainerChanged(VisualItemContainerChangeEvent event) {
-        for (VisualItem visualItem : event.getDelta().getAddedElements()) {
-            onVisualItemCreated(visualItem);
-        }
-        for (VisualItem viewItem : event.getDelta().getRemovedElements()) {
-            onVisualItemRemoved(viewItem);
-        }
-    }
-
-    public void onVisualItemCreated(VisualItem visualItem) {
-        assert visualItem != null;
-        assert !popupManagers.containsKey(visualItem.getId());
-
-        popupManagers.put(visualItem.getId(), createPopupManager(visualItem));
-    }
-
-    public void onVisualItemRemoved(VisualItem visualItem) {
-        assert visualItem != null;
-        assert popupManagers.containsKey(visualItem.getId());
-
-        popupManagers.remove(visualItem.getId());
     }
 
 }
