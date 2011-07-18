@@ -19,8 +19,8 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.geom.LatLng;
@@ -29,12 +29,12 @@ public class DefaultMapRenderer implements MapRenderer {
 
     private MapWidget map;
 
-    private ViewContentDisplayCallback callback;
+    private VisualItemContainer container;
 
     @Override
-    public void init(MapWidget map, ViewContentDisplayCallback callback) {
+    public void init(MapWidget map, VisualItemContainer container) {
         this.map = map;
-        this.callback = callback;
+        this.container = container;
     }
 
     private void initMapItem(VisualItem viewItem) {
@@ -104,7 +104,7 @@ public class DefaultMapRenderer implements MapRenderer {
 
         // TODO refactor
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem viewItem : callback.getVisualItems()) {
+            for (VisualItem viewItem : container.getVisualItems()) {
                 DefaultMapItem mapItem = (DefaultMapItem) viewItem
                         .getDisplayObject();
                 for (Slot slot : updatedSlots) {
@@ -122,7 +122,8 @@ public class DefaultMapRenderer implements MapRenderer {
         updateStatusStyling(delta.getUpdatedElements());
     }
 
-    private void updateStatusStyling(LightweightCollection<VisualItem> visualItems) {
+    private void updateStatusStyling(
+            LightweightCollection<VisualItem> visualItems) {
         for (VisualItem visualItem : visualItems) {
             ((DefaultMapItem) visualItem.getDisplayObject()).setStatusStyling();
         }

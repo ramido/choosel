@@ -216,19 +216,18 @@ public class TextVisualization extends AbstractViewContentDisplay {
         addViewItems(delta.getAddedElements());
 
         for (VisualItem viewItem : delta.getUpdatedElements()) {
-            TextItem textItem = (TextItem) viewItem.getDisplayObject();
+            TextItem textItem = viewItem.<TextItem> getDisplayObject();
             textItem.updateContent();
             textItem.updateStatusStyling();
         }
 
         for (VisualItem viewItem : delta.getRemovedElements()) {
-            removeTextItem((TextItem) viewItem.getDisplayObject());
+            removeTextItem(viewItem.<TextItem> getDisplayObject());
         }
 
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem resourceItem : callback.getVisualItems()) {
-                TextItem textItem = (TextItem) resourceItem.getDisplayObject();
-                textItem.updateContent();
+            for (VisualItem viewItem : getVisualItems()) {
+                viewItem.<TextItem> getDisplayObject().updateContent();
             }
 
         }

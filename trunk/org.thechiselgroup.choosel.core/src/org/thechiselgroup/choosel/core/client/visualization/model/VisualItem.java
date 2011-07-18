@@ -44,7 +44,7 @@ public interface VisualItem {
     /**
      * @see #setDisplayObject(Object)
      */
-    Object getDisplayObject();
+    <T> T getDisplayObject();
 
     /**
      * Returns the identifier of the view item.
@@ -91,6 +91,6 @@ public interface VisualItem {
      * 
      * @see #getDisplayObject()
      */
-    void setDisplayObject(Object displayObject);
+    <T> void setDisplayObject(T displayObject);
 
 }

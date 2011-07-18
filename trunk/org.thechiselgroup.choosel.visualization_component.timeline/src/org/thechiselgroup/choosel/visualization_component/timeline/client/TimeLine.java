@@ -24,13 +24,10 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetC
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.visualization.model.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.Widget;
 
 // TODO The zoom levels of the different bands should be configurable 
@@ -79,18 +76,6 @@ public class TimeLine extends AbstractViewContentDisplay {
         timelineWidget.setHeight("100%");
         timelineWidget.setWidth("100%");
 
-        // TODO pull up
-        timelineWidget.addAttachHandler(new Handler() {
-            @Override
-            public void onAttachOrDetach(AttachEvent event) {
-                if (event.isAttached()) {
-                    onAttach();
-                } else {
-                    onDetach();
-                }
-            }
-        });
-
         return timelineWidget;
     }
 
@@ -135,28 +120,6 @@ public class TimeLine extends AbstractViewContentDisplay {
 
     public TimeLineWidget getTimeLineWidget() {
         return timelineWidget;
-    }
-
-    // TODO pull up
-    protected void onAttach() {
-        // add all view items
-        update(Delta.createDelta(callback.getVisualItems(),
-                LightweightCollections.<VisualItem> emptyCollection(),
-                LightweightCollections.<VisualItem> emptyCollection()),
-                LightweightCollections.<Slot> emptyCollection());
-    }
-
-    // TODO pull up
-    protected void onDetach() {
-        // might have been disposed (then callback would be null)
-        if (callback != null) {
-            // remove all view items
-            update(Delta.createDelta(
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    LightweightCollections.<VisualItem> emptyCollection(),
-                    callback.getVisualItems()),
-                    LightweightCollections.<Slot> emptyCollection());
-        }
     }
 
     private void removeEventsFromTimeline(
@@ -229,8 +192,8 @@ public class TimeLine extends AbstractViewContentDisplay {
 
         // TODO refactor
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem resourceItem : getCallback().getVisualItems()) {
-                TimeLineItem timelineItem = (TimeLineItem) resourceItem
+            for (VisualItem visualItem : getVisualItems()) {
+                TimeLineItem timelineItem = (TimeLineItem) visualItem
                         .getDisplayObject();
                 for (Slot slot : updatedSlots) {
                     if (slot.equals(BORDER_COLOR)) {
@@ -243,9 +206,12 @@ public class TimeLine extends AbstractViewContentDisplay {
         }
     }
 
-    private void updateStatusStyling(LightweightCollection<VisualItem> viewItems) {
-        for (VisualItem viewItem : viewItems) {
-            ((TimeLineItem) viewItem.getDisplayObject()).setStatusStyling();
+    private void updateStatusStyling(
+            LightweightCollection<VisualItem> visualItems) {
+
+        for (VisualItem visualItem : visualItems) {
+            visualItem.<TimeLineItem> getDisplayObject().setStatusStyling();
         }
     }
+
 }

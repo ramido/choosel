@@ -89,8 +89,10 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void init(ViewContentDisplayCallback callback) {
-        delegate.init(callback);
+    public void init(VisualItemContainer container,
+            ViewContentDisplayCallback callback) {
+
+        delegate.init(container, callback);
     }
 
     @Override

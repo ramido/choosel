@@ -39,6 +39,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDis
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Status;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemTestUtils;
 
 public class TextViewContentDisplayTest {
@@ -57,10 +58,14 @@ public class TextViewContentDisplayTest {
     @Mock
     private ResourceCategorizer resourceCategorizer;
 
+    @Mock
+    private VisualItemContainer visualItemContainer;
+
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
         // create resource item that contains 2 resources
-        VisualItem viewItem = VisualItemTestUtils.createViewItem("", ResourceSetTestUtils.createResources(1, 2));
+        VisualItem viewItem = VisualItemTestUtils.createViewItem("",
+                ResourceSetTestUtils.createResources(1, 2));
 
         when(viewItem.getValue(TextVisualization.FONT_SIZE_SLOT)).thenReturn(
                 new Double(2));
@@ -107,7 +112,7 @@ public class TextViewContentDisplayTest {
 
         underTest = new TextVisualization(textItemContainer);
 
-        underTest.init(callback);
+        underTest.init(visualItemContainer, callback);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
                 ResourceSetTestUtils.TYPE_1);

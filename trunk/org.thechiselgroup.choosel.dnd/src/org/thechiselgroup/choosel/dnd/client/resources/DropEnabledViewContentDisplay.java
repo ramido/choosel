@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 import org.thechiselgroup.choosel.core.client.visualization.model.DelegatingViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 
 public class DropEnabledViewContentDisplay extends DelegatingViewContentDisplay {
 
@@ -42,8 +43,10 @@ public class DropEnabledViewContentDisplay extends DelegatingViewContentDisplay 
     }
 
     @Override
-    public void init(ViewContentDisplayCallback callback) {
-        super.init(callback);
+    public void init(VisualItemContainer container,
+            ViewContentDisplayCallback callback) {
+
+        super.init(container, callback);
 
         dropTargetManager.enableDropTarget(asWidget());
     }

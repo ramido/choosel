@@ -61,6 +61,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDis
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
@@ -541,12 +542,15 @@ public class DefaultVisualizationModel implements VisualizationModel,
     }
 
     private void initContentDisplay() {
-        contentDisplay.init(new ViewContentDisplayCallback() {
+        contentDisplay.init(new VisualItemContainer() {
             @Override
             public HandlerRegistration addHandler(
                     VisualItemContainerChangeEventHandler handler) {
 
-                return null;
+                // TODO test this handler
+                // TODO extract view item container for view items without
+                // errors
+                throw new RuntimeException("not implemented");
             }
 
             @Override
@@ -554,20 +558,6 @@ public class DefaultVisualizationModel implements VisualizationModel,
                 return DefaultVisualizationModel.this
                         .containsVisualItem(visualItemId)
                         && !hasErrors(visualItemsByGroupId.get(visualItemId));
-            }
-
-            @Override
-            public VisualItemValueResolver getResolver(Slot slot) {
-                return DefaultVisualizationModel.this.getResolver(slot);
-            }
-
-            @Override
-            public String getSlotResolverDescription(Slot slot) {
-                if (!slotMappingConfiguration.isConfigured(slot)) {
-                    return "N/A";
-                }
-
-                return slotMappingConfiguration.getResolver(slot).toString();
             }
 
             @Override
@@ -598,6 +588,20 @@ public class DefaultVisualizationModel implements VisualizationModel,
                     Iterable<Resource> resources) {
                 return DefaultVisualizationModel.this
                         .getValidVisualItems(resources);
+            }
+        }, new ViewContentDisplayCallback() {
+            @Override
+            public VisualItemValueResolver getResolver(Slot slot) {
+                return DefaultVisualizationModel.this.getResolver(slot);
+            }
+
+            @Override
+            public String getSlotResolverDescription(Slot slot) {
+                if (!slotMappingConfiguration.isConfigured(slot)) {
+                    return "N/A";
+                }
+
+                return slotMappingConfiguration.getResolver(slot).toString();
             }
         });
     }
