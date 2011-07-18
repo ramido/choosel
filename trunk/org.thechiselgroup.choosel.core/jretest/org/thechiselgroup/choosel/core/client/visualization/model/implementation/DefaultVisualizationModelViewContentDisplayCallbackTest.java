@@ -26,8 +26,6 @@ import static org.thechiselgroup.choosel.core.client.visualization.model.impleme
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanNeverResolve;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanResolveExactResourceSet;
 
-import java.util.NoSuchElementException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -75,7 +73,8 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         assertThat(
-                container.containsVisualItem(underTest.getFullVisualItemContainer().getVisualItems()
+                container.containsVisualItem(underTest
+                        .getFullVisualItemContainer().getVisualItems()
                         .getFirstElement().getId()), is(false));
     }
 
@@ -88,7 +87,8 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         helper.addToContainedResources(resources);
 
         assertThat(
-                container.containsVisualItem(underTest.getFullVisualItemContainer().getVisualItems()
+                container.containsVisualItem(underTest
+                        .getFullVisualItemContainer().getVisualItems()
                         .getFirstElement().getId()), is(true));
     }
 
@@ -104,7 +104,8 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
                 .createLightweightList();
 
         // get view items that are in the content display
-        viewItems.add(container.getVisualItem(underTest.getFullVisualItemContainer().getVisualItems()
+        viewItems.add(container.getVisualItem(underTest
+                .getFullVisualItemContainer().getVisualItems()
                 .getFirstElement().getId()));
 
         assertThat(viewItems,
@@ -112,7 +113,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
                         .containsVisualItemsForExactResourceSets(resources));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = AssertionError.class)
     public void getByIDThrowsExceptionIfViewItemHasErrors() {
         ResourceSet resources = ResourceSetTestUtils.createResources(
                 ResourceSetTestUtils.TYPE_1, 1);
@@ -120,8 +121,8 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
         underTest.setResolver(slot, mockResolverThatCanNeverResolve());
         helper.addToContainedResources(resources);
 
-        container.getVisualItem(underTest.getFullVisualItemContainer().getVisualItems().getFirstElement()
-                .getId());
+        container.getVisualItem(underTest.getFullVisualItemContainer()
+                .getVisualItems().getFirstElement().getId());
     }
 
     @Test

@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model;
 
-import java.util.NoSuchElementException;
-
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
@@ -48,12 +46,12 @@ public interface VisualItemContainer {
     boolean containsVisualItem(String viewItemId);
 
     /**
-     * @Return {@link VisualItem} with the given ID.
+     * @return {@link VisualItem} with the given ID.
      * 
-     * @throws NoSuchElementException
+     * @throws AssertionError
      *             thrown if there no view item with {@code viewItemId}
      */
-    VisualItem getVisualItem(String viewItemId) throws NoSuchElementException;
+    VisualItem getVisualItem(String viewItemId);
 
     /**
      * @return All {@link VisualItem}s in this container.
