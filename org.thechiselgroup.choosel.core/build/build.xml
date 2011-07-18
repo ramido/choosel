@@ -24,11 +24,12 @@ TODO separate API doc build
 -->
 <project name="org.thechiselgroup.choosel.core" default="dist" basedir=".">
 
+	<property name="name" value="choosel.core" />
+	<property name="project-name" value="org.thechiselgroup.choosel.core" />
+
 	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
 
 	<!-- <property name="version" value="0.1" /> -->
-	<property name="name" value="choosel.core" />
-	<property name="project-name" value="org.thechiselgroup.choosel.core" />
 
 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" />
 

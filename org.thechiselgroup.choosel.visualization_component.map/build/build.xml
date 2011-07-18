@@ -1,10 +1,10 @@
 <project name="org.thechiselgroup.choosel.visualization_component.map" default="dist" basedir=".">
 
-	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
-		
-	<!-- <property name="version" value="0.1" /> -->
 	<property name="name" value="choosel.visualization_component.Map" />
 	<property name="project-name" value="org.thechiselgroup.choosel.visualization_component.map" />
 
+	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
+		
+	<!-- <property name="version" value="0.1" /> -->
 
 </project>

@@ -1,9 +1,10 @@
 <project name="org.thechiselgroup.choosel.visualization_component.timeline" default="dist" basedir=".">
 
+	<property name="name" value="choosel.visualization_component.Timeline" />
+	<property name="project-name" value="org.thechiselgroup.choosel.visualization_component.timeline" />
+
 	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
 
 	<!-- <property name="version" value="0.1" /> -->
-	<property name="name" value="choosel.visualization_component.Timeline" />
-	<property name="project-name" value="org.thechiselgroup.choosel.visualization_component.timeline" />
 
 </project>

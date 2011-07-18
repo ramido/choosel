@@ -23,6 +23,7 @@ Needs name and project-name variables, e.g.:
 <property name="name" value="choosel.visualization_component.Graph" />
 <property name="project-name" value="org.thechiselgroup.choosel.visualization_component.graph" />
 	  	
+The build scripts should be run from the build subfolder of the project.
 -->
 <project name="org.thechiselgroup.choosel.core.component-build">
 
@@ -32,10 +33,11 @@ Needs name and project-name variables, e.g.:
 
 	  <property name="version" value="b${buildtime}" />
 	
-	  <property name="dist" location="bin/dist"/>
-	  <property name="src" location="src"/>
-	  <property name="class-dir" location="war/WEB-INF/classes"/>
-	  <property name="app-lib" value="bin/build/lib"/>
+	  <property name="module.dir" value="../../${project-name}" />
+	  <property name="dist" location="${module.dir}/bin/dist"/>
+	  <property name="app-lib" value="${module.dir}/bin/build/lib"/>
+	  <property name="src" location="${module.dir}/src"/>
+	  <property name="class-dir" location="${module.dir}/war/WEB-INF/classes"/>
 		
 	  <target name="dist"
 		  	  description="creates distribution"
@@ -46,7 +48,7 @@ Needs name and project-name variables, e.g.:
 	  	      depends="prepare">
 	  	
 	    <zip destfile="${dist}/${name}-${version}-project.zip">
-	      <fileset dir="..">
+	      <fileset dir="${module.dir}/..">
 	      	<include name="${project-name}/**" />
 	    	<exclude name="${project-name}/bin/**"/>
 	    	<exclude name="${project-name}/tomcat/**"/>

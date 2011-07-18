@@ -1,9 +1,10 @@
 <project name="org.thechiselgroup.choosel.workbench" default="dist" basedir=".">
 
+	<property name="name" value="choosel.workbench" />
+	<property name="project-name" value="org.thechiselgroup.choosel.workbench" />
+
 	<import file="../../org.thechiselgroup.choosel.core/build/component-build.xml" />
 
 	<!-- <property name="version" value="0.1" /> -->
-	<property name="name" value="choosel.workbench" />
-	<property name="project-name" value="org.thechiselgroup.choosel.workbench" />
 
 </project>
