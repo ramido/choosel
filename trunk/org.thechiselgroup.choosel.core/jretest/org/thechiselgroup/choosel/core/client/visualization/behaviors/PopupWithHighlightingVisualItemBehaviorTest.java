@@ -43,7 +43,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Hig
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-public class PopupWithHighlightingViewItemBehaviorTest {
+public class PopupWithHighlightingVisualItemBehaviorTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 

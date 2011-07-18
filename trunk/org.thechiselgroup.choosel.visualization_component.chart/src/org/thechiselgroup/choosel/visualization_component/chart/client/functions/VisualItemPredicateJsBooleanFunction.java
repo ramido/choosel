@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,25 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.predicates.VisualItemPredicate;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 
-public class ViewItemStringSlotAccessor implements JsStringFunction {
+public class VisualItemPredicateJsBooleanFunction implements JsBooleanFunction {
 
-    private Slot slot;
+    private final VisualItemPredicate predicate;
 
-    public ViewItemStringSlotAccessor(Slot slot) {
-        assert slot != null;
-
-        this.slot = slot;
+    public VisualItemPredicateJsBooleanFunction(VisualItemPredicate predicate) {
+        assert predicate != null;
+        this.predicate = predicate;
     }
 
     @Override
-    public String f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        return viewItem.<String> getValue(slot);
+    public boolean f(JsArgs args) {
+        return predicate.matches(args.<VisualItem> getObject());
     }
 
 }

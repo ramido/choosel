@@ -39,9 +39,9 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.TickFormatFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemDoubleSlotAccessor;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.VisualItemColorSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.VisualItemDoubleSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.VisualItemStringSlotAccessor;
 
 // TODO refactoring: use separate panel for dots that are added to scatter plot
 public class ScatterPlot extends ChartViewContentDisplay {
@@ -200,12 +200,12 @@ public class ScatterPlot extends ChartViewContentDisplay {
          * single value.
          */
         dots = getChart().add(PV.Dot).data(viewItemsJsArray)
-                .shape(new ViewItemStringSlotAccessor(SHAPE))
-                .bottom(scaleY.fd(new ViewItemDoubleSlotAccessor(Y_POSITION)))
-                .left(scaleX.fd(new ViewItemDoubleSlotAccessor(X_POSITION)))
-                .size(new ViewItemDoubleSlotAccessor(SIZE))
-                .fillStyle(new ViewItemColorSlotAccessor(COLOR))
-                .strokeStyle(new ViewItemColorSlotAccessor(BORDER_COLOR))
+                .shape(new VisualItemStringSlotAccessor(SHAPE))
+                .bottom(scaleY.fd(new VisualItemDoubleSlotAccessor(Y_POSITION)))
+                .left(scaleX.fd(new VisualItemDoubleSlotAccessor(X_POSITION)))
+                .size(new VisualItemDoubleSlotAccessor(SIZE))
+                .fillStyle(new VisualItemColorSlotAccessor(COLOR))
+                .strokeStyle(new VisualItemColorSlotAccessor(BORDER_COLOR))
                 .lineWidth(BORDER_WIDTH);
     }
 
@@ -361,10 +361,10 @@ public class ScatterPlot extends ChartViewContentDisplay {
 
     private void initScales() {
         scaleX = PV.Scale.linear(viewItemsJsArray,
-                new ViewItemDoubleSlotAccessor(X_POSITION))
+                new VisualItemDoubleSlotAccessor(X_POSITION))
                 .range(0, chartWidth);
         scaleY = PV.Scale.linear(viewItemsJsArray,
-                new ViewItemDoubleSlotAccessor(Y_POSITION)).range(0,
+                new VisualItemDoubleSlotAccessor(Y_POSITION)).range(0,
                 chartHeight);
     }
 

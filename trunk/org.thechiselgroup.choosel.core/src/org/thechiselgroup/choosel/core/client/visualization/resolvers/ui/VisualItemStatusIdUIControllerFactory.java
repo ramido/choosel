@@ -4,13 +4,13 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemIdResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolverFactory;
 
-public class ViewItemStatusIdUIControllerFactory implements
-        ViewItemValueResolverUIControllerFactory {
+public class VisualItemStatusIdUIControllerFactory implements
+        VisualItemValueResolverUIControllerFactory {
 
     @Override
-    public ViewItemValueResolverUIController create(
+    public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory,
             ManagedSlotMapping managedMapping,
             LightweightCollection<VisualItem> viewItems) {
@@ -19,7 +19,7 @@ public class ViewItemStatusIdUIControllerFactory implements
 
     @Override
     public String getId() {
-        return ViewItemIdResolverFactory.ID;
+        return VisualItemIdResolverFactory.ID;
     }
 
 }

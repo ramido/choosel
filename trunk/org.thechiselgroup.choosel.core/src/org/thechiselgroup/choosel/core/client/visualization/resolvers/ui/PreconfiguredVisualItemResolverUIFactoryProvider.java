@@ -23,14 +23,14 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.Pr
 
 import com.google.inject.Inject;
 
-public class PreconfiguredViewItemResolverUIFactoryProvider extends
+public class PreconfiguredVisualItemResolverUIFactoryProvider extends
         DefaultVisualItemResolverUIFactoryProvider {
 
     @Inject
     public void registerFactories() {
-        idToFactoryMap = new HashMap<String, ViewItemValueResolverUIControllerFactory>();
+        idToFactoryMap = new HashMap<String, VisualItemValueResolverUIControllerFactory>();
 
-        add(new ViewItemStatusIdUIControllerFactory());
+        add(new VisualItemStatusIdUIControllerFactory());
 
         add(new ResourceCountResolverUIControllerFactory());
         add(new CalculationResolverUIControllerFactory(SUM_RESOLVER_FACTORY_ID));
@@ -39,20 +39,20 @@ public class PreconfiguredViewItemResolverUIFactoryProvider extends
         add(new CalculationResolverUIControllerFactory(MAX_RESOLVER_FACTORY_ID));
         add(new CalculationResolverUIControllerFactory(MIN_RESOLVER_FACTORY_ID));
 
-        add(new FixedValueViewItemResolverUIControllerFactory(
+        add(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_1_RESOLVER_FACTORY_ID));
         add(new FirstResourcePropertyResolverUIControllerFactory(
                 TEXT_PROPERTY_RESOLVER_FACTORY_ID));
 
         // registering factories for ChooselWorkbecnchViewWindowContentProducers
-        add(new FixedValueViewItemResolverUIControllerFactory(
+        add(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_0_RESOLVER_FACTORY_ID));
-        add(new FixedValueViewItemResolverUIControllerFactory("circle"));
-        add(new FixedValueViewItemResolverUIControllerFactory(
+        add(new FixedValueVisualItemResolverUIControllerFactory("circle"));
+        add(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_STDBLUE_RESOLVER_FACTORY_ID));
-        add(new FixedValueViewItemResolverUIControllerFactory(
+        add(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_DATE_TODAY_FACTORY_ID));
-        add(new FixedValueViewItemResolverUIControllerFactory(
+        add(new FixedValueVisualItemResolverUIControllerFactory(
                 PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_EMPTY_STRING_FACTORY_ID));
     }
 }

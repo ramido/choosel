@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ViewItemIdResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolverFactory;
 
 import com.google.inject.Inject;
 
@@ -59,7 +59,7 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
     public void registerFactories() {
         factories = new HashMap<String, VisualItemValueResolverFactory>();
 
-        registerFactory(new ViewItemIdResolverFactory());
+        registerFactory(new VisualItemIdResolverFactory());
 
         registerFactory(new ResourceCountResolverFactory());
         registerFactory(new CalculationResolverFactory(SUM_RESOLVER_FACTORY_ID,
@@ -71,21 +71,21 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
         registerFactory(new CalculationResolverFactory(MIN_RESOLVER_FACTORY_ID,
                 new MinCalculation()));
 
-        registerFactory(new FixedVisualViewItemResolverFactory(new Double(1.0),
+        registerFactory(new FixedVisualVisualItemResolverFactory(new Double(1.0),
                 DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
         registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,
                 TEXT_PROPERTY_RESOLVER_FACTORY_ID));
 
         // registering factories for ChooselWorkbecnchViewWindowContentProducers
-        registerFactory(new FixedVisualViewItemResolverFactory(new Double(0.0),
+        registerFactory(new FixedVisualVisualItemResolverFactory(new Double(0.0),
                 DataType.NUMBER, FIXED_0_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualViewItemResolverFactory("circle",
+        registerFactory(new FixedVisualVisualItemResolverFactory("circle",
                 DataType.SHAPE, FIXED_CIRCLE_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualViewItemResolverFactory(new Color(100,
+        registerFactory(new FixedVisualVisualItemResolverFactory(new Color(100,
                 149, 237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualViewItemResolverFactory(new Date(),
+        registerFactory(new FixedVisualVisualItemResolverFactory(new Date(),
                 DataType.DATE, FIXED_DATE_TODAY_FACTORY_ID));
-        registerFactory(new FixedVisualViewItemResolverFactory("(empty)",
+        registerFactory(new FixedVisualVisualItemResolverFactory("(empty)",
                 DataType.TEXT, FIXED_EMPTY_STRING_FACTORY_ID));
 
         /**

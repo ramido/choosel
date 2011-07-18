@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class EmptyWidgetUIController implements
-        ViewItemValueResolverUIController {
+        VisualItemValueResolverUIController {
 
     @Override
     public Widget asWidget() {

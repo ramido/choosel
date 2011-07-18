@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
+package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 
-public interface VisualItemValueResolverUIControllerFactoryProvider {
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
-    void add(VisualItemValueResolverUIControllerFactory factory);
+public interface PropertyDependantVisualItemValueResolver extends
+        VisualItemValueResolver {
 
-    VisualItemValueResolverUIControllerFactory getFactoryById(String id);
+    public String getProperty();
 
 }

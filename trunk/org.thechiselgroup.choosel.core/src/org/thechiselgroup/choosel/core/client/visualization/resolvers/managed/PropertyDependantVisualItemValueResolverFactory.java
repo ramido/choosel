@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantVisualItemValueResolver;
 
 public abstract class PropertyDependantVisualItemValueResolverFactory implements
         VisualItemValueResolverFactory {
@@ -84,7 +84,7 @@ public abstract class PropertyDependantVisualItemValueResolverFactory implements
                 getId(), createUnmanagedResolver(property));
     }
 
-    protected abstract PropertyDependantViewItemValueResolver createUnmanagedResolver(
+    protected abstract PropertyDependantVisualItemValueResolver createUnmanagedResolver(
             String property);
 
     @Override

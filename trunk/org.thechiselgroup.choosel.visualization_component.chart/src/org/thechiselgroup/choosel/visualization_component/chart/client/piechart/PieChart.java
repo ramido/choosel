@@ -29,9 +29,9 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemPredicateJsBooleanFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.VisualItemColorSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.VisualItemPredicateJsBooleanFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.VisualItemStringSlotAccessor;
 
 public class PieChart extends ChartViewContentDisplay {
 
@@ -200,8 +200,8 @@ public class PieChart extends ChartViewContentDisplay {
                 .left(wedgeLeft).bottom(wedgeBottom).startAngle(startAngle)
                 .innerRadius(partialWedgeRadius)
                 .outerRadius(outerRadiusFunction).angle(wedgeAngle)
-                .fillStyle(new ViewItemColorSlotAccessor(COLOR))
-                .strokeStyle(new ViewItemColorSlotAccessor(BORDER_COLOR));
+                .fillStyle(new VisualItemColorSlotAccessor(COLOR))
+                .strokeStyle(new VisualItemColorSlotAccessor(BORDER_COLOR));
 
         mainWedge.anchor(PVAlignment.CENTER).add(PV.Label)
                 .textAngle(WEDGE_TEXT_ANGLE).text(regularMarkLabelText)
@@ -210,14 +210,14 @@ public class PieChart extends ChartViewContentDisplay {
         partialWedge = mainWedge
                 .add(PV.Wedge)
                 .visible(
-                        new ViewItemPredicateJsBooleanFunction(
+                        new VisualItemPredicateJsBooleanFunction(
                                 new GreaterThanSlotValuePredicate(
                                         PARTIAL_VALUE, 0)))
                 .innerRadius(0)
                 .outerRadius(partialWedgeRadius)
-                .fillStyle(new ViewItemColorSlotAccessor(PARTIAL_COLOR))
+                .fillStyle(new VisualItemColorSlotAccessor(PARTIAL_COLOR))
                 .strokeStyle(
-                        new ViewItemColorSlotAccessor(PARTIAL_BORDER_COLOR));
+                        new VisualItemColorSlotAccessor(PARTIAL_BORDER_COLOR));
 
         partialWedge.anchor(PVAlignment.CENTER).add(PV.Label)
                 .textAngle(WEDGE_TEXT_ANGLE).text(highlightedMarkLabelText);
@@ -229,7 +229,7 @@ public class PieChart extends ChartViewContentDisplay {
                 .strokeStyle(RGBA_TRANSPARENT);
 
         labelWedge.anchor("start").add(PV.Label)
-                .text(new ViewItemStringSlotAccessor(LABEL))
+                .text(new VisualItemStringSlotAccessor(LABEL))
                 .textStyle(WEDGE_LABEL_COLOR);
 
         /*

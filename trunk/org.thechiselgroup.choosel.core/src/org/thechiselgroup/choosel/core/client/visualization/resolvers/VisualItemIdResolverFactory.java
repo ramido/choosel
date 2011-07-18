@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
+package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -22,39 +22,21 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
 
-public class FixedVisualViewItemResolverFactory implements
+public class VisualItemIdResolverFactory implements
         VisualItemValueResolverFactory {
 
-    private final Object value;
-
-    private final DataType dataType;
-
-    private final String id;
-
-    public FixedVisualViewItemResolverFactory(Object value, DataType valueType,
-            String id) {
-
-        this.value = value;
-        this.dataType = valueType;
-        this.id = id;
-    }
+    public static String ID = "ViewItemStatusIdFactory";
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
             LightweightCollection<VisualItem> viewItems) {
-
-        return slot.getDataType().equals(dataType);
+        return DataType.TEXT.equals(slot.getDataType());
     }
 
-    /**
-     * This method does not need to worry about the viewItems because it is
-     * fixed value
-     */
     public ManagedVisualItemValueResolver create() {
-        return new ManagedVisualItemValueResolverDecorator(id,
-                new FixedValueResolver(value, dataType));
+        return new ManagedVisualItemValueResolverDecorator(ID,
+                new VisualItemIdResolver());
     }
 
     @Override
@@ -65,12 +47,12 @@ public class FixedVisualViewItemResolverFactory implements
 
     @Override
     public String getId() {
-        return id;
+        return ID;
     }
 
     @Override
     public String getLabel() {
-        return value.toString();
+        return "Group Name";
     }
 
 }

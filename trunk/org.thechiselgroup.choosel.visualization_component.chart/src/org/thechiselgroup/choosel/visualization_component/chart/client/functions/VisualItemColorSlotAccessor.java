@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2011 Lars Grammel 
+ * Copyright 2009, 2010 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,23 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
+import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.predicates.VisualItemPredicate;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-public class ViewItemPredicateJsBooleanFunction implements JsBooleanFunction {
+public class VisualItemColorSlotAccessor implements JsStringFunction {
 
-    private final VisualItemPredicate predicate;
+    private Slot slot;
 
-    public ViewItemPredicateJsBooleanFunction(VisualItemPredicate predicate) {
-        assert predicate != null;
-        this.predicate = predicate;
+    public VisualItemColorSlotAccessor(Slot slot) {
+        assert slot != null;
+        this.slot = slot;
     }
 
     @Override
-    public boolean f(JsArgs args) {
-        return predicate.matches(args.<VisualItem> getObject());
+    public String f(JsArgs args) {
+        VisualItem viewItem = args.getObject();
+        return viewItem.<Color> getValue(slot).toRGBa();
     }
 
 }

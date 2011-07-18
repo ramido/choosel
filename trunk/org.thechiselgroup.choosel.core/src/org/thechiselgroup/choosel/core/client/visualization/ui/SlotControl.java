@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIController;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIController;
 
 public abstract class SlotControl implements WidgetAdaptable {
 
@@ -38,6 +38,6 @@ public abstract class SlotControl implements WidgetAdaptable {
     public abstract void updateOptions(LightweightCollection<VisualItem> viewItems);
 
     public abstract void setNewUIModel(
-            ViewItemValueResolverUIController resolverUI);
+            VisualItemValueResolverUIController resolverUI);
 
 }

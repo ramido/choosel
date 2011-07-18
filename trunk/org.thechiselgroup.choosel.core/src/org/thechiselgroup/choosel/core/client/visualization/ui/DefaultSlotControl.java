@@ -12,7 +12,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.ViewItemValueResolverUIController;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIController;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 //Slot name is [________] + [uiControllerWidget]
 public class DefaultSlotControl extends SlotControl {
 
-    private ViewItemValueResolverUIController uiController;
+    private VisualItemValueResolverUIController uiController;
 
     private ListBoxControl<VisualItemValueResolverFactory> resolverFactorySelector;
 
@@ -40,7 +40,7 @@ public class DefaultSlotControl extends SlotControl {
 
     public DefaultSlotControl(Slot slot,
             ManagedSlotMappingConfiguration configurationUIModel,
-            ViewItemValueResolverUIController uiController) {
+            VisualItemValueResolverUIController uiController) {
 
         super(slot);
         this.uiController = uiController;
@@ -119,7 +119,7 @@ public class DefaultSlotControl extends SlotControl {
     }
 
     @Override
-    public void setNewUIModel(ViewItemValueResolverUIController resolverUI) {
+    public void setNewUIModel(VisualItemValueResolverUIController resolverUI) {
         this.uiController = resolverUI;
         panel.remove(currentUIControllerWidget);
         currentUIControllerWidget = uiController.asWidget();

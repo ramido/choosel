@@ -31,7 +31,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInte
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemInteraction.Type;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.HighlightingModel;
 
-public class HighlightingViewItemBehaviorTest {
+public class HighlightingVisualItemBehaviorTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 

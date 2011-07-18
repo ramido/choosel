@@ -15,12 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
+/**
+ * Returns the {@link VisualItem} ID.
+ * 
+ * @author Lars Grammel
+ */
+public class VisualItemIdResolver extends AbstractBasicVisualItemValueResolver {
 
-public interface PropertyDependantViewItemValueResolver extends
-        VisualItemValueResolver {
+    @Override
+    public boolean canResolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
+        return true;
+    }
 
-    public String getProperty();
+    @Override
+    public String resolve(VisualItem viewItem,
+            VisualItemValueResolverContext context) {
+        return viewItem.getId();
+    }
 
 }

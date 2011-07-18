@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 
 public class CalculationResolver extends SubsetVisualItemValueResolver implements
-        PropertyDependantViewItemValueResolver {
+        PropertyDependantVisualItemValueResolver {
 
     private final String property;
 
