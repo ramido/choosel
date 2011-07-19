@@ -15,13 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.importer;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class StringTable {
+public class StringTable implements Serializable {
 
-    private final List<String[]> values;
+    private static final long serialVersionUID = 1L;
 
-    private final String[] columns;
+    private List<String[]> values;
+
+    private String[] columns;
+
+    // this is for GWT serialization only
+    public StringTable() {
+        
+    }
 
     public StringTable(String[] columns, List<String[]> values) {
         assert values != null;

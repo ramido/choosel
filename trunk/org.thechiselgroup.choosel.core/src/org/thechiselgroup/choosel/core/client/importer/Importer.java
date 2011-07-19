@@ -39,6 +39,8 @@ import com.google.gwt.regexp.shared.RegExp;
  */
 public class Importer {
 
+    private static final String DEFAULT_LABEL = "import";
+
     /**
      * Format: "dd/MM/yyyy"
      * 
@@ -100,27 +102,76 @@ public class Importer {
     private DateTimeFormat dateFormat2;
 
     public Importer() {
-        uriHeaderProvider = new IncrementingSuffixLabelFactory("import");
-
+        uriHeaderProvider = new IncrementingSuffixLabelFactory(DEFAULT_LABEL);
         initDateFormats();
+    }
+
+    protected Serializable calculateStringValue(String stringValue) {
+        Serializable value;
+        value = stringValue;
+        return value;
+    }
+
+    protected Resource createLocationResource(String stringValue) {
+        Resource locationResource = new Resource();
+        String[] split = stringValue.split("\\/");
+        locationResource.putValue(ResourceSetUtils.LATITUDE,
+                Double.parseDouble(split[0]));
+        locationResource.putValue(ResourceSetUtils.LONGITUDE,
+                Double.parseDouble(split[1]));
+        return locationResource;
+    }
+
+    protected Resource createResourceFromRow(StringTable table,
+            DataType[] columnTypes, int row, String uriType)
+            throws ParseException {
+
+        Resource resource = new Resource(getResourceURI(uriType, row, table));
+
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            String stringValue = table.getValue(row, column);
+
+            resource.putValue(table.getColumnName(column),
+                    getColumnValue(columnTypes, row, column, stringValue));
+        }
+        return resource;
     }
 
     // TODO test
     // TODO pass set of parsers... --> separate step in which parsers are
     // determined
     public ResourceSet createResources(StringTable table) throws ParseException {
+        return createResources(table, DEFAULT_LABEL);
+    }
+
+    // TODO test
+    // TODO pass set of parsers... --> separate step in which parsers are
+    // determined
+    public ResourceSet createResources(StringTable table, String label)
+            throws ParseException {
         assert table != null;
 
         String uriType = uriHeaderProvider.nextLabel();
 
         ResourceSet resources = new DefaultResourceSet();
-        resources.setLabel("import"); // TODO changeable, inc number
+        resources.setLabel(label); // TODO changeable, inc number
 
         if (table.getRowCount() == 0) {
             return resources;
         }
 
         // use first row to determine types
+        DataType[] columnTypes = determineColumnTypes(table);
+
+        for (int row = 0; row < table.getRowCount(); row++) {
+            resources.add(createResourceFromRow(table, columnTypes, row,
+                    uriType));
+        }
+
+        return resources;
+    }
+
+    protected DataType[] determineColumnTypes(StringTable table) {
         DataType[] columnTypes = new DataType[table.getColumnCount()];
         for (int column = 0; column < table.getColumnCount(); column++) {
             String stringValue = table.getValue(0, column);
@@ -137,64 +188,40 @@ public class Importer {
                 columnTypes[column] = DataType.TEXT;
             }
         }
+        return columnTypes;
+    }
 
-        for (int row = 0; row < table.getRowCount(); row++) {
-            String uri = uriType + ":" + row;
-            Resource resource = new Resource(uri);
+    protected Serializable getColumnValue(DataType[] columnTypes, int row,
+            int column, String stringValue) throws ParseException {
+        Serializable value;
 
-            for (int column = 0; column < table.getColumnCount(); column++) {
-                String stringValue = table.getValue(row, column);
-
-                /*
-                 * TODO should not be parsed at this point - change once setting
-                 * property types possible
-                 */
-                Serializable value;
-
-                switch (columnTypes[column]) {
-                case NUMBER:
-                    if (!NUMBER_DETECTION_REGEX.test(stringValue)) {
-                        throw new ParseException("Invalid number", stringValue,
-                                row + 1);
-                    }
-                    value = new Double(stringValue);
-                    break;
-                case DATE:
-                    if (DATE_FORMAT_1_REGEX.test(stringValue)) {
-                        value = parseDate1(stringValue);
-                    } else if (DATE_FORMAT_2_REGEX.test(stringValue)) {
-                        value = parseDate2(stringValue);
-                    } else {
-                        throw new ParseException("Invalid date", stringValue,
-                                row + 1);
-                    }
-                    break;
-                case LOCATION:
-                    if (!LOCATION_DETECTION_REGEX.test(stringValue)) {
-                        throw new ParseException("Invalid location",
-                                stringValue, row + 1);
-                    }
-
-                    Resource locationResource = new Resource();
-                    String[] split = stringValue.split("\\/");
-                    locationResource.putValue(ResourceSetUtils.LATITUDE,
-                            Double.parseDouble(split[0]));
-                    locationResource.putValue(ResourceSetUtils.LONGITUDE,
-                            Double.parseDouble(split[1]));
-                    value = locationResource;
-                    break;
-                default:
-                    value = stringValue;
-                    break;
-                }
-
-                resource.putValue(table.getColumnName(column), value);
+        switch (columnTypes[column]) {
+        case NUMBER:
+            if (!NUMBER_DETECTION_REGEX.test(stringValue)) {
+                throw new ParseException("Invalid number", stringValue, row + 1);
+            }
+            value = new Double(stringValue);
+            break;
+        case DATE:
+            value = resolveDateString(row, stringValue);
+            break;
+        case LOCATION:
+            if (!LOCATION_DETECTION_REGEX.test(stringValue)) {
+                throw new ParseException("Invalid location", stringValue,
+                        row + 1);
             }
 
-            resources.add(resource);
+            value = createLocationResource(stringValue);
+            break;
+        default:
+            value = calculateStringValue(stringValue);
+            break;
         }
+        return value;
+    }
 
-        return resources;
+    protected String getResourceURI(String uriType, int row, StringTable table) {
+        return uriType + ":" + row;
     }
 
     // override in test enables GWT independence for JRE testing
@@ -209,6 +236,22 @@ public class Importer {
 
     protected Date parseDate2(String stringValue) {
         return dateFormat2.parse(stringValue);
+    }
+
+    protected Serializable resolveDateString(int row, String stringValue)
+            throws ParseException {
+        Serializable value;
+        if (DATE_FORMAT_1_REGEX.test(stringValue)) {
+            value = parseDate1(stringValue);
+        } else if (DATE_FORMAT_2_REGEX.test(stringValue)) {
+            value = parseDate2(stringValue);
+        } else if (stringValue == null || stringValue.isEmpty()) {
+            // TODO I probably should not just return NULL here
+            value = null;
+        } else {
+            throw new ParseException("Invalid date", stringValue, row + 1);
+        }
+        return value;
     }
 
 }
