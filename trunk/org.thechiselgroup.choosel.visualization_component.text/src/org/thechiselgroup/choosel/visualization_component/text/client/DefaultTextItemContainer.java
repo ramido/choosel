@@ -38,7 +38,10 @@ public class DefaultTextItemContainer implements TextItemContainer {
     private FlowPanel itemPanel;
 
     public DefaultTextItemContainer() {
-        initPanels();
+        itemPanel = new FlowPanel();
+
+        scrollPanel = new ResizableScrollPanel(itemPanel);
+        scrollPanel.addStyleName(TextVisualization.CSS_LIST_VIEW_SCROLLBAR);
     }
 
     @Override
@@ -54,13 +57,6 @@ public class DefaultTextItemContainer implements TextItemContainer {
     @Override
     public Widget createWidget() {
         return scrollPanel;
-    }
-
-    private void initPanels() {
-        itemPanel = new FlowPanel();
-
-        scrollPanel = new ResizableScrollPanel(itemPanel);
-        scrollPanel.addStyleName(TextVisualization.CSS_LIST_VIEW_SCROLLBAR);
     }
 
     @Override

@@ -52,8 +52,6 @@ public class TextVisualization extends AbstractViewContentDisplay {
 
     private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
 
-    private static final int MAX_FONT_SIZE = 26;
-
     private List<TextItem> items = new ArrayList<TextItem>();
 
     public static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
@@ -211,7 +209,6 @@ public class TextVisualization extends AbstractViewContentDisplay {
 
         this.tagCloud = tagCloud;
 
-        // TODO check if the widgets have been initialized
         applyTagCloudCSS(tagCloud);
     }
 
