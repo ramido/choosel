@@ -15,10 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.DATE_PROPERTY_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_0_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_EMPTY_STRING_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_STDBLUE_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.LOCATION_PROPERTY_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
 
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
@@ -26,7 +30,6 @@ import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
@@ -40,7 +43,7 @@ public class ChooselWorkbenchViewWindowContentProducer extends
     private ShareConfigurationFactory shareConfigurationFactory;
 
     @Inject
-    private VisualItemValueResolverFactoryProvider factoryProvider;
+    public VisualItemValueResolverFactoryProvider factoryProvider;
 
     /**
      * XXX This class relies on the factoryProvider that is defined in the
@@ -53,23 +56,23 @@ public class ChooselWorkbenchViewWindowContentProducer extends
         DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer(
                 factoryProvider);
 
-        initializer.putDefaultDataTypeValues(DataType.NUMBER,
-                ((FixedVisualItemResolverFactory) factoryProvider
-                        .getFactoryById(FIXED_0_RESOLVER_FACTORY_ID)).create());
+        initializer.setFixedDataTypeResolverId(DataType.NUMBER,
+                FIXED_0_RESOLVER_FACTORY_ID);
+        initializer.setFixedDataTypeResolverId(DataType.TEXT,
+                FIXED_EMPTY_STRING_FACTORY_ID);
+        initializer.setFixedDataTypeResolverId(DataType.COLOR,
+                FIXED_STDBLUE_RESOLVER_FACTORY_ID);
+        initializer.setFixedDataTypeResolverId(DataType.DATE,
+                FIXED_DATE_TODAY_FACTORY_ID);
 
-        initializer.putDefaultDataTypeValues(DataType.TEXT,
-                ((FixedVisualItemResolverFactory) factoryProvider
-                        .getFactoryById(FIXED_EMPTY_STRING_FACTORY_ID))
-                        .create());
-
-        initializer.putDefaultDataTypeValues(DataType.COLOR,
-                ((FixedVisualItemResolverFactory) factoryProvider
-                        .getFactoryById(FIXED_STDBLUE_RESOLVER_FACTORY_ID))
-                        .create());
-
-        initializer.putDefaultDataTypeValues(DataType.DATE,
-                ((FixedVisualItemResolverFactory) factoryProvider
-                        .getFactoryById(FIXED_DATE_TODAY_FACTORY_ID)).create());
+        initializer.setPropertyDataTypeResolverId(DataType.NUMBER,
+                SUM_RESOLVER_FACTORY_ID);
+        initializer.setPropertyDataTypeResolverId(DataType.TEXT,
+                TEXT_PROPERTY_RESOLVER_FACTORY_ID);
+        initializer.setPropertyDataTypeResolverId(DataType.LOCATION,
+                LOCATION_PROPERTY_RESOLVER_FACTORY_ID);
+        initializer.setPropertyDataTypeResolverId(DataType.DATE,
+                DATE_PROPERTY_RESOLVER_FACTORY_ID);
 
         return initializer;
     }

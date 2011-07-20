@@ -31,7 +31,7 @@ public class DefaultVisualItemResolverUIFactoryProvider implements
                 + " with id '"
                 + id
                 + "' not available (registered: "
-                + idToFactoryMap + ")";
+                + idToFactoryMap.keySet() + ")";
         return idToFactoryMap.get(id);
     }
 

@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
 /**
  * This interface is used to return new instances of a
@@ -48,6 +48,8 @@ public interface VisualItemValueResolverFactory {
      * 
      * TODO The create methods might need to be resolver specific, because the
      * ViewItemValueResolvers are immutable and we need to configure parameters.
+     * 
+     * XXX remove this, should be resolver specific
      */
     ManagedVisualItemValueResolver create(
             LightweightCollection<VisualItem> viewItems);
