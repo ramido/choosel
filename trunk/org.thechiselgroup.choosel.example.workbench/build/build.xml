@@ -3,21 +3,9 @@
 
 	<property name="application.name" value="${ant.project.name}" />
 	<property name="gwt-module.name" value="${application.name}.ChooselExampleWorkbench" />
-	
 	<property name="root.dir" value="../.." />
-	<property name="application.dir" value="${root.dir}/${application.name}" />
-	<property name="src.dir" value="${application.dir}/src" />
-	<property name="build.dir" value="${application.dir}/war" />
-	<property name="build.temp.dir" value="${application.dir}/bin/build" />
 
-	<!--
-	  requires local-settings.properties file with
-	  gae.sdk.dir=c:\\opt\\appengine-java-sdk-1.4.2
-	  gwt.sdk.dir=c:\\opt\\gwt-2.3.0
-	-->
-	<property file="local-settings.properties" />
-
-	<import file="${gae.sdk.dir}/config/user/ant-macros.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.core/build/application-build.xml" />
 
 	<import file="${root.dir}/org.thechiselgroup.choosel.core/build/build-classpath.xml" />
 	<import file="${root.dir}/org.thechiselgroup.choosel.dnd/build/build-classpath.xml" />
@@ -34,12 +22,6 @@
 		<pathelement location="${build.dir}/WEB-INF/classes" />
 	</path>
 
-	<path id="org.google.gwt-classpath">
-		<fileset dir="${gwt.sdk.dir}">
-			<include name="**/*.jar" />
-		</fileset>
-	</path>
-
 	<path id="compile.classpath">
 		<path refid="org.google.gwt-classpath" />
 		<path refid="org.thechiselgroup.choosel.core-classpath" />
@@ -53,8 +35,6 @@
 		<path refid="org.thechiselgroup.choosel.visualization_component.timeline-classpath" />
 		<path refid="org.thechiselgroup.choosel.workbench-classpath" />
 	</path>
-
-	<target name="draft" depends="copy-choosel-jars,draft-gwt-compile" />
 
 	<!--
 	Builds the jar files from the different Choosel modules that are required for the server side, and copies
@@ -74,51 +54,8 @@
 		</copy>
 	</target>
 
-	<target name="prepare" depends="clean">
-		<mkdir dir="${build.temp.dir}/lib" />
-	</target>
-
-	<target name="build-module">
-		<ant dir="${root.dir}/${module-name}/build" target="create-jar">
-			<property name="dist" value="${build.temp.dir}/lib" />
-		</ant>
-	</target>
-
-	<target name="clean" description="remove automatically generated build files">
-		<delete dir="${build.temp.dir}" />
-		<delete dir="${build.dir}/${gwt-module.name}" />
-		<delete dir="${build.dir}/WEB-INF/deploy" />
-		<delete>
-			<fileset dir="${build.dir}/WEB-INF/lib" includes="choosel.*.jar" />
-		</delete>
-	</target>
-
-	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
-	<target name="draft-gwt-compile">
-		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
-			<classpath>
-				<path refid="compile.classpath" />
-			</classpath>
-			<arg line="-draftCompile -optimize 0 -ea -logLevel INFO -style DETAILED -localWorkers 3 -war ${build.dir}" />
-			<arg value="${gwt-module.name}DevCompile" />
-			<jvmarg value="-Xmx2048m" />
-			<jvmarg value="-Xss20m" />
-		</java>
-	</target>
-
+	<target name="draft" depends="copy-choosel-jars,draft-gwt-compile" />
+	
 	<target name="production" depends="copy-choosel-jars,production-gwt-compile" />
-
-	<!-- depends on binary class files, but Eclipse does compilation step in advance -->
-	<target name="production-gwt-compile">
-		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
-			<classpath>
-				<path refid="compile.classpath" />
-			</classpath>
-			<arg line="-XdisableCastChecking -XdisableClassMetadata -optimize 9 -logLevel INFO -style OBFUSCATED -localWorkers 3 -war ${build.dir}" />
-			<arg value="${gwt-module.name}" />
-			<jvmarg value="-Xmx2048m" />
-			<jvmarg value="-Xss20m" />
-		</java>
-	</target>
 
 </project>
