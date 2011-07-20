@@ -50,8 +50,8 @@ public class HeatBars extends ChartViewContentDisplay {
     public final static Slot BINNING_VALUE = new Slot("slice intensity",
             "Slice Intensity", DataType.NUMBER);
 
-    public static final Slot[] SLOTS = new Slot[] { LABEL, LOW_COLOR,
-            MIDDLE_COLOR, HIGH_COLOR, BINNING_VALUE };
+    public static final Slot[] SLOTS = new Slot[] { LABEL, ZERO_COLOR,
+            LOW_COLOR, MIDDLE_COLOR, HIGH_COLOR, BINNING_VALUE };
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.heat_bars.client.HeatBars";
 
@@ -310,6 +310,7 @@ public class HeatBars extends ChartViewContentDisplay {
             // each viewItem represents one bar
             VisualItem viewItem = viewItemsJsArray.get(i);
 
+            // This is the date of the work item
             for (Double binValue : viewItem
                     .<LightweightList<Double>> getValue(BINNING_VALUE)) {
 

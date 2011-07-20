@@ -47,15 +47,15 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
-    private final HasResourceCategorizer resourceGrouping;
+    protected final HasResourceCategorizer resourceGrouping;
 
-    private final ManagedSlotMappingConfiguration slotMappingConfigurationUIModel;
+    protected final ManagedSlotMappingConfiguration slotMappingConfigurationUIModel;
 
-    private final VisualItemValueResolverFactoryProvider resolverFactoryProvider;
+    protected final VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
     private ConfigurationPanel visualMappingPanel;
 
-    private ListBoxControl<String> groupingBox;
+    protected ListBoxControl<String> groupingBox;
 
     private DataTypeToListMap<SlotControl> slotControlsByDataType;
 
@@ -63,7 +63,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private final VisualItemValueResolverUIControllerFactoryProvider uiProvider;
 
-    private static final String GROUP_BY_URI_LABEL = "No Grouping";
+    public static final String GROUP_BY_URI_LABEL = "No Grouping";
 
     public DefaultVisualMappingsControl(
             ManagedSlotMappingConfiguration slotMappingConfigurationUIModel,
@@ -74,7 +74,6 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         assert slotMappingConfigurationUIModel != null;
         assert resourceGrouping != null;
         assert uiProvider != null;
-        assert resolverFactoryProvider != null;
 
         this.slotMappingConfigurationUIModel = slotMappingConfigurationUIModel;
 
@@ -136,7 +135,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         initSlotControls();
     }
 
-    private void initGroupingBox() {
+    protected void initGroupingBox() {
         // TODO include aggregation that does not aggregate...
         // TODO include bin aggregation for numerical slots
 
@@ -144,6 +143,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
                 new NullTransformer<String>());
 
         groupingBox.setChangeHandler(new ChangeHandler() {
+            // XXX This is a bad Hack.
+
             @Override
             public void onChange(ChangeEvent event) {
                 String property = groupingBox.getSelectedValue();
