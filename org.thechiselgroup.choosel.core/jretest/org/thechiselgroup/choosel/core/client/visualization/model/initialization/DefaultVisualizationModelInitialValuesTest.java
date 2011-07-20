@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -20,9 +20,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -42,6 +41,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Defaul
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
 // TODO migrate to change default slot mapping initializer
@@ -49,108 +49,151 @@ public class DefaultVisualizationModelInitialValuesTest {
 
     private DefaultVisualizationModel underTest;
 
-    private Slot textSlot;
-
-    private Slot numberSlot;
-
     private DefaultVisualizationModelTestHelper helper;
 
     @Mock
     private VisualItemResolutionErrorModel errorModel;
 
+    private Slot[] slots;
+
+    private DefaultSlotMappingInitializer initializer;
+
+    private DefaultVisualItemResolverFactoryProvider resolverProvider;
+
+    private Date datePropertyReturnValue;
+
+    private Double numberPropertyReturnValue;
+
+    private String textPropertyReturnValue;
+
+    private Double fixedNumberReturnValue;
+
     @Test
-    public void initialSlotValueForNumberSlotIfNoNumberIsAvailable() {
+    public void initialSlotValueForDateSlot() {
         Resource resource = new Resource("test:1");
-        resource.putValue("text1", "t1");
-        resource.putValue("text2", "t2");
+        resource.putValue("date1", new Date(100, 1, 1, 0, 0, 0));
 
         helper.getContainedResources().add(resource);
 
-        assertEquals(true, underTest.isConfigured(numberSlot));
+        assertEquals(true, underTest.isConfigured(slots[2]));
 
         List<VisualItem> viewItems = underTest.getFullVisualItemContainer()
                 .getVisualItems().toList();
         assertEquals(1, viewItems.size());
         VisualItem viewItem = viewItems.get(0);
 
-        assertEquals(new Double(0), viewItem.getValue(numberSlot));
+        assertEquals(datePropertyReturnValue, viewItem.getValue(slots[2]));
+    }
+
+    @Test
+    public void initialSlotValueForNumberSlotIfNoNumberIsAvailableInData() {
+        Resource resource = new Resource("test:1");
+        resource.putValue("text1", "xt1");
+        resource.putValue("text2", "xt2");
+
+        helper.getContainedResources().add(resource);
+
+        assertEquals(true, underTest.isConfigured(slots[1]));
+
+        List<VisualItem> viewItems = underTest.getFullVisualItemContainer()
+                .getVisualItems().toList();
+        assertEquals(1, viewItems.size());
+        VisualItem viewItem = viewItems.get(0);
+
+        assertEquals(fixedNumberReturnValue, viewItem.getValue(slots[1]));
     }
 
     @Test
     public void initialSlotValueForTextSlot() {
         Resource resource = new Resource("test:1");
-        resource.putValue("text1", "t1");
-        resource.putValue("text2", "t2");
+        resource.putValue("text1", "t1x");
+        resource.putValue("text2", "t2x");
 
         helper.getContainedResources().add(resource);
 
-        assertEquals(true, underTest.isConfigured(textSlot));
+        assertEquals(true, underTest.isConfigured(slots[0]));
 
         List<VisualItem> viewItems = underTest.getFullVisualItemContainer()
                 .getVisualItems().toList();
         assertEquals(1, viewItems.size());
         VisualItem viewItem = viewItems.get(0);
 
-        assertEquals("t1", viewItem.getValue(textSlot));
+        assertEquals(textPropertyReturnValue, viewItem.getValue(slots[0]));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerDefaultResolverFactory(DataType dataType, String id,
+            Object value) {
+
+        ManagedVisualItemValueResolverDecorator resolver = new ManagedVisualItemValueResolverDecorator(
+                id, new FixedValueResolver(value, dataType));
+
+        FixedVisualItemResolverFactory resolverFactory = mock(FixedVisualItemResolverFactory.class);
+        when(resolverFactory.getId()).thenReturn(id);
+        when(
+                resolverFactory.canCreateApplicableResolver(any(Slot.class),
+                        any(LightweightList.class))).thenReturn(true);
+        when(resolverFactory.create()).thenReturn(resolver);
+
+        resolverProvider.registerFactory(resolverFactory);
+
+        initializer.setFixedDataTypeResolverId(dataType, id);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerPropertyResolver(DataType dataType, String id,
+            Object value) {
+
+        ManagedVisualItemValueResolverDecorator resolver = new ManagedVisualItemValueResolverDecorator(
+                id, new FixedValueResolver(value, dataType));
+
+        PropertyDependantVisualItemValueResolverFactory resolverFactory = mock(PropertyDependantVisualItemValueResolverFactory.class);
+        when(resolverFactory.getId()).thenReturn(id);
+        when(
+                resolverFactory.canCreateApplicableResolver(any(Slot.class),
+                        any(LightweightList.class))).thenReturn(true);
+        when(resolverFactory.create(any(String.class))).thenReturn(resolver);
+
+        resolverProvider.registerFactory(resolverFactory);
+
+        initializer.setPropertyDataTypeResolverId(dataType, id);
     }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
-        numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
+        numberPropertyReturnValue = new Double(0);
+        textPropertyReturnValue = "t1";
+        datePropertyReturnValue = new Date(100, 1, 1, 0, 0, 1);
 
         helper = new DefaultVisualizationModelTestHelper();
-        helper.setSlots(textSlot, numberSlot);
+        slots = helper.createSlots(DataType.TEXT, DataType.NUMBER,
+                DataType.DATE, DataType.LOCATION);
 
         underTest = helper.createTestVisualizationModel();
 
-        DefaultVisualItemResolverFactoryProvider resolverProvider = new DefaultVisualItemResolverFactoryProvider();
+        resolverProvider = new DefaultVisualItemResolverFactoryProvider();
 
-        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer(
-                resolverProvider));
-        {
+        initializer = spy(new DefaultSlotMappingInitializer(resolverProvider));
 
-            ManagedVisualItemValueResolverDecorator numberResolver = new ManagedVisualItemValueResolverDecorator(
-                    SUM_RESOLVER_FACTORY_ID, new FixedValueResolver(new Double(
-                            0), DataType.NUMBER));
-            initializer.putDefaultDataTypeValues(DataType.NUMBER,
-                    numberResolver);
+        registerPropertyResolver(DataType.NUMBER, "property-number",
+                numberPropertyReturnValue);
+        registerPropertyResolver(DataType.TEXT, "property-text",
+                textPropertyReturnValue);
+        registerPropertyResolver(DataType.DATE, "property-date",
+                datePropertyReturnValue);
 
-            PropertyDependantVisualItemValueResolverFactory resolverFactory = mock(PropertyDependantVisualItemValueResolverFactory.class);
-            when(resolverFactory.getId()).thenReturn(SUM_RESOLVER_FACTORY_ID);
-            when(
-                    resolverFactory.canCreateApplicableResolver(
-                            any(Slot.class), any(LightweightList.class)))
-                    .thenReturn(true);
-            when(resolverFactory.create(any(String.class))).thenReturn(
-                    numberResolver);
+        fixedNumberReturnValue = new Double(1);
 
-            resolverProvider.registerFactory(resolverFactory);
-        }
-        {
-
-            ManagedVisualItemValueResolverDecorator textResolver = new ManagedVisualItemValueResolverDecorator(
-                    TEXT_PROPERTY_RESOLVER_FACTORY_ID, new FixedValueResolver(
-                            "t1", DataType.TEXT));
-            initializer.putDefaultDataTypeValues(DataType.TEXT, textResolver);
-
-            PropertyDependantVisualItemValueResolverFactory resolverFactory = mock(PropertyDependantVisualItemValueResolverFactory.class);
-            when(resolverFactory.getId()).thenReturn(
-                    TEXT_PROPERTY_RESOLVER_FACTORY_ID);
-            when(
-                    resolverFactory.canCreateApplicableResolver(
-                            any(Slot.class), any(LightweightList.class)))
-                    .thenReturn(true);
-            when(resolverFactory.create(any(String.class))).thenReturn(
-                    textResolver);
-
-            resolverProvider.registerFactory(resolverFactory);
-        }
+        registerDefaultResolverFactory(DataType.NUMBER, "fixed-number",
+                fixedNumberReturnValue);
+        registerDefaultResolverFactory(DataType.TEXT, "fixed-text", "fixed");
+        registerDefaultResolverFactory(DataType.DATE, "fixed-date", new Date());
+        registerDefaultResolverFactory(DataType.LOCATION, "fixed-location",
+                new Resource("location:0"));
 
         new ManagedSlotMappingConfiguration(resolverProvider, initializer,
                 underTest, errorModel);
     }
-
 }

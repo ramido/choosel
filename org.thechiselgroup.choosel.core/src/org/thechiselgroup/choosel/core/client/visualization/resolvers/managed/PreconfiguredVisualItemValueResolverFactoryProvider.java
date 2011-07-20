@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.DataType;
@@ -25,13 +24,16 @@ import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolverFactory;
 
 import com.google.inject.Inject;
 
 public class PreconfiguredVisualItemValueResolverFactoryProvider extends
         DefaultVisualItemResolverFactoryProvider {
+
+    public static final String LOCATION_PROPERTY_RESOLVER_FACTORY_ID = "Location-Property-Resolver";
+
+    public static final String DATE_PROPERTY_RESOLVER_FACTORY_ID = "Date-Property-Resolver";
 
     public static final String MIN_RESOLVER_FACTORY_ID = "min";
 
@@ -55,10 +57,9 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
 
     @Inject
     public void registerFactories() {
-        factories = new HashMap<String, VisualItemValueResolverFactory>();
-
         registerFactory(new VisualItemIdResolverFactory());
 
+        // number specific resolvers
         registerFactory(new ResourceCountResolverFactory());
         registerFactory(new CalculationResolverFactory(SUM_RESOLVER_FACTORY_ID,
                 new SumCalculation()));
@@ -69,14 +70,19 @@ public class PreconfiguredVisualItemValueResolverFactoryProvider extends
         registerFactory(new CalculationResolverFactory(MIN_RESOLVER_FACTORY_ID,
                 new MinCalculation()));
 
-        registerFactory(new FixedVisualItemResolverFactory(new Double(1.0),
-                DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
+        // first resource value resolvers
         registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,
                 TEXT_PROPERTY_RESOLVER_FACTORY_ID));
+        registerFactory(new FirstResourcePropertyResolverFactory(DataType.DATE,
+                DATE_PROPERTY_RESOLVER_FACTORY_ID));
+        registerFactory(new FirstResourcePropertyResolverFactory(
+                DataType.LOCATION, LOCATION_PROPERTY_RESOLVER_FACTORY_ID));
 
-        // registering factories for ChooselWorkbecnchViewWindowContentProducers
+        // fixed resolvers
         registerFactory(new FixedVisualItemResolverFactory(new Double(0.0),
                 DataType.NUMBER, FIXED_0_RESOLVER_FACTORY_ID));
+        registerFactory(new FixedVisualItemResolverFactory(new Double(1.0),
+                DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
         registerFactory(new FixedVisualItemResolverFactory(new Color(100, 149,
                 237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
         registerFactory(new FixedVisualItemResolverFactory(new Date(),

@@ -16,10 +16,12 @@
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.AVERAGE_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.DATE_PROPERTY_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_0_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_1_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_STDBLUE_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.LOCATION_PROPERTY_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MAX_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MIN_RESOLVER_FACTORY_ID;
 import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
@@ -36,6 +38,7 @@ public class PreconfiguredVisualItemResolverUIFactoryProvider extends
     public void registerFactories() {
         register(new VisualItemStatusIdUIControllerFactory());
 
+        // number specifc ones
         register(new ResourceCountResolverUIControllerFactory());
         register(new CalculationResolverUIControllerFactory(
                 SUM_RESOLVER_FACTORY_ID));
@@ -46,14 +49,19 @@ public class PreconfiguredVisualItemResolverUIFactoryProvider extends
         register(new CalculationResolverUIControllerFactory(
                 MIN_RESOLVER_FACTORY_ID));
 
-        register(new FixedValueVisualItemResolverUIControllerFactory(
-                FIXED_1_RESOLVER_FACTORY_ID));
+        // first property
         register(new FirstResourcePropertyResolverUIControllerFactory(
                 TEXT_PROPERTY_RESOLVER_FACTORY_ID));
+        register(new FirstResourcePropertyResolverUIControllerFactory(
+                LOCATION_PROPERTY_RESOLVER_FACTORY_ID));
+        register(new FirstResourcePropertyResolverUIControllerFactory(
+                DATE_PROPERTY_RESOLVER_FACTORY_ID));
 
-        // registering factories for ChooselWorkbecnchViewWindowContentProducers
+        // fixed
         register(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_0_RESOLVER_FACTORY_ID));
+        register(new FixedValueVisualItemResolverUIControllerFactory(
+                FIXED_1_RESOLVER_FACTORY_ID));
         register(new FixedValueVisualItemResolverUIControllerFactory(
                 FIXED_STDBLUE_RESOLVER_FACTORY_ID));
         register(new FixedValueVisualItemResolverUIControllerFactory(

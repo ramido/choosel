@@ -15,9 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
-
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,19 +26,36 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
 public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
-    private Map<DataType, VisualItemValueResolver> fixedResolversByDataType = new HashMap<DataType, VisualItemValueResolver>();
+    private Map<DataType, VisualItemValueResolver> fixedResolversByDataType = new EnumMap<DataType, VisualItemValueResolver>(
+            DataType.class);
+
+    private Map<DataType, String> propertyResolverIdsByDataType = new EnumMap<DataType, String>(
+            DataType.class);
 
     private VisualItemValueResolverFactoryProvider factoryProvider;
 
     public DefaultSlotMappingInitializer(
             VisualItemValueResolverFactoryProvider factoryProvider) {
-        assert factoryProvider != null;
 
+        assert factoryProvider != null;
         this.factoryProvider = factoryProvider;
+    }
+
+    private VisualItemValueResolver createPropertyResolver(DataType dataType,
+            String firstProperty) {
+
+        VisualItemValueResolverFactory factory = factoryProvider
+                .getFactoryById(propertyResolverIdsByDataType.get(dataType));
+        PropertyDependantVisualItemValueResolverFactory resolverFactory = (PropertyDependantVisualItemValueResolverFactory) factory;
+        ManagedVisualItemValueResolver resolver = resolverFactory
+                .create(firstProperty);
+        assert resolver != null;
+        return resolver;
     }
 
     private VisualItemValueResolver getFixedResolver(DataType dataType) {
@@ -79,33 +94,29 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         // dynamic resolution
         String firstProperty = properties.get(0);
 
-        switch (dataType) {
-        case TEXT:
-            PropertyDependantVisualItemValueResolverFactory textResolverFactory = (PropertyDependantVisualItemValueResolverFactory) factoryProvider
-                    .getFactoryById(TEXT_PROPERTY_RESOLVER_FACTORY_ID);
-            ManagedVisualItemValueResolver textResolver = textResolverFactory
-                    .create(firstProperty);
-            assert textResolver != null;
-            return textResolver;
-        case NUMBER:
-
-            PropertyDependantVisualItemValueResolverFactory sumResolverFactory = (PropertyDependantVisualItemValueResolverFactory) factoryProvider
-                    .getFactoryById(SUM_RESOLVER_FACTORY_ID);
-            ManagedVisualItemValueResolver sumResolver = sumResolverFactory
-                    .create(firstProperty);
-            assert sumResolver != null;
-            return sumResolver;
+        if (!propertyResolverIdsByDataType.containsKey(dataType)) {
+            throw new UnableToInitializeSlotException(slot);
         }
 
-        throw new UnableToInitializeSlotException(slot);
+        return createPropertyResolver(dataType, firstProperty);
     }
 
-    public void putDefaultDataTypeValues(DataType dataType,
-            VisualItemValueResolver resolver) {
+    public void setFixedDataTypeResolverId(DataType dataType,
+            String resolverId) {
 
         assert dataType != null;
-        assert resolver != null;
+        assert resolverId != null;
+        assert factoryProvider.getFactoryById(resolverId) != null;
+        assert factoryProvider.getFactoryById(resolverId) instanceof FixedVisualItemResolverFactory : "resolver factory with id '"
+                + resolverId + "' is not a FixedVisualItemResolverFactory";
+
+        VisualItemValueResolver resolver = ((FixedVisualItemResolverFactory) factoryProvider
+                .getFactoryById(resolverId)).create();
 
         fixedResolversByDataType.put(dataType, resolver);
+    }
+
+    public String setPropertyDataTypeResolverId(DataType dataType, String resolverId) {
+        return propertyResolverIdsByDataType.put(dataType, resolverId);
     }
 }
