@@ -15,12 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.configuration;
 
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.*;
 
 import java.util.Map;
 
@@ -118,7 +113,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     private HighlightingModel hoverModel;
 
     @Inject
-    private VisualItemValueResolverUIControllerFactoryProvider uiProvider;
+    protected VisualItemValueResolverUIControllerFactoryProvider uiProvider;
 
     @Inject
     private PopupManagerFactory popupManagerFactory;
@@ -136,7 +131,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     private ErrorHandler errorHandler;
 
     @Inject
-    private VisualItemValueResolverFactoryProvider resolverFactoryProvider;
+    protected VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
     protected ResourceMultiCategorizer createDefaultCategorizer(
             String contentType) {
