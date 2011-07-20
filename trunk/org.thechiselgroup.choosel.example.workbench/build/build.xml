@@ -1,17 +1,11 @@
 <!-- TODO refactor using ant import target, move stuff into workbench or core -->
 <project name="org.thechiselgroup.choosel.example.workbench" default="production" basedir=".">
 
-	<tstamp>
-		<format property="buildtime" pattern="yyyyMMddHHmmss" />
-	</tstamp>
-
-	<property name="version" value="b${buildtime}" />
-	<!--
-	  <property name="version" value="0.1" />
-	-->
-
+	<property name="application.name" value="${ant.project.name}" />
+	<property name="gwt-module.name" value="${application.name}.ChooselExampleWorkbench" />
+	
 	<property name="root.dir" value="../.." />
-	<property name="application.dir" value="${root.dir}/org.thechiselgroup.choosel.example.workbench" />
+	<property name="application.dir" value="${root.dir}/${application.name}" />
 	<property name="src.dir" value="${application.dir}/src" />
 	<property name="build.dir" value="${application.dir}/war" />
 	<property name="build.temp.dir" value="${application.dir}/bin/build" />
@@ -25,57 +19,39 @@
 
 	<import file="${gae.sdk.dir}/config/user/ant-macros.xml" />
 
-	<path id="compile.classpath">
+	<import file="${root.dir}/org.thechiselgroup.choosel.core/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.dnd/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.protovis/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/build/build-classpath.xml" />
+	<import file="${root.dir}/org.thechiselgroup.choosel.workbench/build/build-classpath.xml" />
 
+	<path id="org.thechiselgroup.choosel.example.workbench-classpath">
+		<pathelement location="${src.dir}" />
+		<pathelement location="${build.dir}/WEB-INF/classes" />
+	</path>
+
+	<path id="org.google.gwt-classpath">
 		<fileset dir="${gwt.sdk.dir}">
 			<include name="**/*.jar" />
 		</fileset>
+	</path>
 
-		<pathelement location="${src.dir}" />
-		<pathelement location="${build.dir}/WEB-INF/classes" />
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.core/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.core/war/WEB-INF/classes" />
-		<fileset dir="${root.dir}/org.thechiselgroup.choosel.core">
-			<include name="lib/*.jar" />
-		</fileset>
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.dnd/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.dnd/war/WEB-INF/classes" />
-		<fileset dir="${root.dir}/org.thechiselgroup.choosel.dnd">
-			<include name="lib/*.jar" />
-		</fileset>
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.protovis/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.protovis/war/WEB-INF/classes" />
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.chart/war/WEB-INF/classes" />
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph/war/WEB-INF/classes" />
-		<fileset dir="${root.dir}/org.thechiselgroup.choosel.visualization_component.graph">
-			<include name="lib/*.jar" />
-		</fileset>
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.map/war/WEB-INF/classes" />
-		<fileset dir="${root.dir}/org.thechiselgroup.choosel.visualization_component.map">
-			<include name="lib/*.jar" />
-		</fileset>
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.timeline/war/WEB-INF/classes" />
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.visualization_component.text/war/WEB-INF/classes" />
-
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.workbench/src" />
-		<pathelement location="${root.dir}/org.thechiselgroup.choosel.workbench/war/WEB-INF/classes" />
-		<fileset dir="${root.dir}/org.thechiselgroup.choosel.workbench">
-			<include name="lib/*.jar" />
-		</fileset>
-
+	<path id="compile.classpath">
+		<path refid="org.google.gwt-classpath" />
+		<path refid="org.thechiselgroup.choosel.core-classpath" />
+		<path refid="org.thechiselgroup.choosel.dnd-classpath" />
+		<path refid="org.thechiselgroup.choosel.example.workbench-classpath" />
+		<path refid="org.thechiselgroup.choosel.protovis-classpath" />
+		<path refid="org.thechiselgroup.choosel.visualization_component.chart-classpath" />
+		<path refid="org.thechiselgroup.choosel.visualization_component.graph-classpath" />
+		<path refid="org.thechiselgroup.choosel.visualization_component.map-classpath" />
+		<path refid="org.thechiselgroup.choosel.visualization_component.text-classpath" />
+		<path refid="org.thechiselgroup.choosel.visualization_component.timeline-classpath" />
+		<path refid="org.thechiselgroup.choosel.workbench-classpath" />
 	</path>
 
 	<target name="draft" depends="copy-choosel-jars,draft-gwt-compile" />
@@ -110,7 +86,7 @@
 
 	<target name="clean" description="remove automatically generated build files">
 		<delete dir="${build.temp.dir}" />
-		<delete dir="${build.dir}/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench" />
+		<delete dir="${build.dir}/${gwt-module.name}" />
 		<delete dir="${build.dir}/WEB-INF/deploy" />
 		<delete>
 			<fileset dir="${build.dir}/WEB-INF/lib" includes="choosel.*.jar" />
@@ -124,7 +100,7 @@
 				<path refid="compile.classpath" />
 			</classpath>
 			<arg line="-draftCompile -optimize 0 -ea -logLevel INFO -style DETAILED -localWorkers 3 -war ${build.dir}" />
-			<arg value="org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbenchDevCompile" />
+			<arg value="${gwt-module.name}DevCompile" />
 			<jvmarg value="-Xmx2048m" />
 			<jvmarg value="-Xss20m" />
 		</java>
@@ -139,7 +115,7 @@
 				<path refid="compile.classpath" />
 			</classpath>
 			<arg line="-XdisableCastChecking -XdisableClassMetadata -optimize 9 -logLevel INFO -style OBFUSCATED -localWorkers 3 -war ${build.dir}" />
-			<arg value="org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench" />
+			<arg value="${gwt-module.name}" />
 			<jvmarg value="-Xmx2048m" />
 			<jvmarg value="-Xss20m" />
 		</java>
