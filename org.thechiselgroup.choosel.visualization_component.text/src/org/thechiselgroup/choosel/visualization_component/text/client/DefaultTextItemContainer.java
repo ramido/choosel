@@ -31,12 +31,15 @@ public class DefaultTextItemContainer implements TextItemContainer {
         private ResizableScrollPanel(Widget child) {
             super(child);
         }
-
     }
 
     private ScrollPanel scrollPanel;
 
     private FlowPanel itemPanel;
+
+    public DefaultTextItemContainer() {
+        initPanels();
+    }
 
     @Override
     public void addStyleName(String cssClass) {
@@ -50,13 +53,14 @@ public class DefaultTextItemContainer implements TextItemContainer {
 
     @Override
     public Widget createWidget() {
+        return scrollPanel;
+    }
+
+    private void initPanels() {
         itemPanel = new FlowPanel();
 
         scrollPanel = new ResizableScrollPanel(itemPanel);
-        scrollPanel
-                .addStyleName(TextVisualization.CSS_LIST_VIEW_SCROLLBAR);
-
-        return scrollPanel;
+        scrollPanel.addStyleName(TextVisualization.CSS_LIST_VIEW_SCROLLBAR);
     }
 
     @Override

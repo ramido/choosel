@@ -62,7 +62,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
-    private boolean tagCloud = false;
+    private boolean tagCloud = true;
 
     private Comparator<TextItem> comparator = new Comparator<TextItem>() {
         @Override
@@ -129,6 +129,14 @@ public class TextVisualization extends AbstractViewContentDisplay {
         }
     }
 
+    private void applyTagCloudCSS(boolean tagCloud) {
+        if (tagCloud) {
+            textItemContainer.addStyleName(CSS_TAG_CLOUD);
+        } else {
+            textItemContainer.removeStyleName(CSS_TAG_CLOUD);
+        }
+    }
+
     private TextItem createTextItem(VisualItem viewItem) {
         TextItem textItem = new TextItem(viewItem);
 
@@ -145,7 +153,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
     @Override
     public Widget createWidget() {
         Widget widget = textItemContainer.createWidget();
-        setTagCloud(true);
+        applyTagCloudCSS(tagCloud);
         return widget;
     }
 
@@ -169,6 +177,7 @@ public class TextVisualization extends AbstractViewContentDisplay {
 
                 });
         settingsPanel.add(oneItemPerRowBox);
+        oneItemPerRowBox.setValue(!tagCloud);
 
         return new SidePanelSection[] { new SidePanelSection("Settings",
                 settingsPanel), };
@@ -202,11 +211,8 @@ public class TextVisualization extends AbstractViewContentDisplay {
 
         this.tagCloud = tagCloud;
 
-        if (tagCloud) {
-            textItemContainer.addStyleName(CSS_TAG_CLOUD);
-        } else {
-            textItemContainer.removeStyleName(CSS_TAG_CLOUD);
-        }
+        // TODO check if the widgets have been initialized
+        applyTagCloudCSS(tagCloud);
     }
 
     @Override
