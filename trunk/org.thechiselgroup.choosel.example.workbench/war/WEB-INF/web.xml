@@ -4,15 +4,6 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  
-  <servlet>
-    <servlet-name>csvservice</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.example.workbench.server.CSVFileServiceImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>csvservice</servlet-name>
-    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/csvservice</url-pattern>
-  </servlet-mapping>
 
   <!-- CHOOSEL framework servlets & configuration -->
 
