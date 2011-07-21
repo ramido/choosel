@@ -31,6 +31,9 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationM
 // TODO rename to DefaultViewItemValueResolverProvider
 public interface SlotMappingInitializer {
 
+    Map<Slot, VisualItemValueResolver> getResolvers(ResourceSet viewResources,
+            Map<Slot, ManagedSlotMappingState> states);
+
     /**
      * Calculates default {@link VisualItemValueResolver}s.
      * 

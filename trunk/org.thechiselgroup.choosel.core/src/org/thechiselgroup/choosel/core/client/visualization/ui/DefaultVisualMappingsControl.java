@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.visualization.ui;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
@@ -35,6 +36,8 @@ import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfigurationChangedEvent;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingState;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIController;
@@ -93,7 +96,6 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         slotToSlotControls.put(slot, slotControl);
     }
 
-    // TODO must we make this a widget before we add things to it or what?
     @Override
     public Widget asWidget() {
         if (visualMappingPanel == null) {
@@ -110,6 +112,16 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return values;
     }
 
+    private SlotControl createSlotControl(Slot slot,
+            ManagedVisualItemValueResolver resolver) {
+        SlotControl slotControl;
+        VisualItemValueResolverUIController newResolverUI = createUIControllerFromResolver(
+                slot, resolver);
+        slotControl = initSlotControl(slot, newResolverUI);
+        return slotControl;
+    }
+
+    // TODO this should take allowableFactories as a parameter
     private VisualItemValueResolverUIController createUIControllerFromResolver(
             Slot slot, ManagedVisualItemValueResolver currentResolver) {
         VisualItemValueResolverUIControllerFactory uiFactory = uiProvider
@@ -117,7 +129,6 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
         assert uiFactory != null;
 
-        // TODO maybe refactor this, probably some null checks would be great
         VisualItemValueResolverUIController resolverUI = uiFactory.create(
                 resolverFactoryProvider.getFactoryById(currentResolver
                         .getResolverId()), slotMappingConfigurationUIModel
@@ -142,9 +153,12 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         groupingBox = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
 
+        /**
+         * This is an event handle which watches the resource grouping box for
+         * grouping changes
+         */
         groupingBox.setChangeHandler(new ChangeHandler() {
             // XXX This is a bad Hack.
-
             @Override
             public void onChange(ChangeEvent event) {
                 String property = groupingBox.getSelectedValue();
@@ -165,8 +179,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     }
 
     private SlotControl initSlotControl(Slot slot,
-            VisualItemValueResolverUIController resolverUI,
-            SlotControl currentSlotControl) {
+            VisualItemValueResolverUIController resolverUI) {
 
         DefaultSlotControl slotControl = new DefaultSlotControl(slot,
                 slotMappingConfigurationUIModel, resolverUI);
@@ -178,65 +191,20 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     }
 
-    // TODO we may want to create add a control for each slot, with an empty
-    // widget
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
     }
 
     @Override
-    public void updateConfigurationForChangedSlotMapping(Slot slot,
-            ManagedVisualItemValueResolver oldResolver,
-            ManagedVisualItemValueResolver currentResolver) {
+    public void updateConfigurationForSlotMappingChangedEvent(
+            ManagedSlotMappingConfigurationChangedEvent e) {
 
-        VisualItemValueResolverUIController resolverUI = createUIControllerFromResolver(
-                slot, currentResolver);
-
-        SlotControl currentSlotControl = this.slotToSlotControls.get(slot);
-        if (currentSlotControl == null) {
-            currentSlotControl = initSlotControl(slot, resolverUI,
-                    currentSlotControl);
-        }
-
-        /*
-         * if the factory has changed, then the uiController must be changed and
-         * updated
-         */
-        if (oldResolver == null
-                || !oldResolver.getResolverId().equals(
-                        currentResolver.getResolverId())) {
-            // if yes, reset the uiController
-
-            // update the resolveUI to ensure that it's in a valid state
-            resolverUI.update(slotMappingConfigurationUIModel.getVisualItems());
-            currentSlotControl.setNewUIModel(resolverUI);
-
-            // this is firing the second event
-            currentSlotControl.updateOptions(slotMappingConfigurationUIModel
-                    .getVisualItems());
+        for (Entry<Slot, ManagedSlotMappingState> entry : e
+                .getSlotConfigurationStates().entrySet()) {
+            updateSlotUI(entry.getKey(), entry.getValue(), e.getVisualItems());
         }
     }
 
-    @Override
-    public void updateConfigurationForChangedViewItems(
-            LightweightCollection<VisualItem> viewItems) {
-
-        ResourceSet resources = new DefaultResourceSet();
-        for (VisualItem viewItem : viewItems) {
-            resources.addAll(viewItem.getResources());
-        }
-
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
-        // TODO remove the property selection stuff, and make grouping done the
-        // same way as slots
-        updateGroupingBox(propertiesByDataType);
-        updateSlotControls(viewItems);
-    }
-
-    // TODO with tag cloud visualization, the property should be set to
-    // tagContent automatically
     private void updateGroupingBox(
             DataTypeToListMap<String> propertiesByDataType) {
         groupingBox
@@ -253,12 +221,53 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         }
     }
 
+    private void updateGroupingBox(LightweightCollection<VisualItem> visualItems) {
+        ResourceSet resources = new DefaultResourceSet();
+        for (VisualItem viewItem : visualItems) {
+            resources.addAll(viewItem.getResources());
+        }
+
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(resources);
+
+        updateGroupingBox(propertiesByDataType);
+    }
+
     private void updateSlotControls(LightweightCollection<VisualItem> viewItems) {
         for (DataType dataType : DataType.values()) {
             for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
                 slotControl.updateOptions(viewItems);
             }
         }
+    }
+
+    private void updateSlotUI(Slot slot, ManagedSlotMappingState state,
+            LightweightCollection<VisualItem> visualItems) {
+
+        // TODO in the future, errors in these two things would likely be
+        // handled, instead of exceptions being thrown
+        assert state.isAllowable();
+        assert state.isConfigured();
+
+        updateGroupingBox(visualItems);
+
+        ManagedVisualItemValueResolver resolver = state.getResolver();
+
+        SlotControl slotControl = slotToSlotControls.get(slot);
+        if (slotControl == null) {
+            // The slot Control has not yet been initialized, initialize it and
+            // set the resolverUI
+            slotControl = createSlotControl(slot, resolver);
+        } else if (!resolver.getResolverId().equals(
+                slotControl.getCurrentResolverUIId())) {
+            // only the factory has changed, and we need to update the
+            // resolverUI
+            slotControl.setNewUIModel(createUIControllerFromResolver(slot,
+                    resolver));
+        }
+
+        // update the slotMapping with the new options
+        slotControl.updateOptions(visualItems);
     }
 
 }

@@ -38,7 +38,8 @@ public class CalculationResolverUIControllerFactory implements
         assert factory instanceof CalculationResolverFactory;
 
         CalculationResolverUIController calculationResolverUIController = new CalculationResolverUIController(
-                (CalculationResolverFactory) factory, uiModel, viewItems);
+                getId(), (CalculationResolverFactory) factory, uiModel,
+                viewItems);
 
         return calculationResolverUIController;
     }

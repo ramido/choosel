@@ -29,7 +29,7 @@ public class VisualItemStatusIdUIControllerFactory implements
             VisualItemValueResolverFactory factory,
             ManagedSlotMapping managedMapping,
             LightweightCollection<VisualItem> viewItems) {
-        return new EmptyWidgetUIController();
+        return new EmptyWidgetUIController(getId());
     }
 
     @Override

@@ -15,9 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.createResource;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.mockResolverThatCanAlwaysResolve;
@@ -133,7 +131,8 @@ public class SlotMappingIntegrationTest {
                         DataType.NUMBER));
         model.setResolver(requiredSlots[0], resolver2);
 
-        LightweightCollection<VisualItem> viewItems = model.getFullVisualItemContainer().getVisualItems();
+        LightweightCollection<VisualItem> viewItems = model
+                .getFullVisualItemContainer().getVisualItems();
 
         assertEquals(viewItems.size(), 1);
         Iterator<VisualItem> iterator = viewItems.iterator();
@@ -182,7 +181,8 @@ public class SlotMappingIntegrationTest {
                                 DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
-        LightweightCollection<VisualItem> viewItems = model.getFullVisualItemContainer().getVisualItems();
+        LightweightCollection<VisualItem> viewItems = model
+                .getFullVisualItemContainer().getVisualItems();
         assertTrue(viewItems.size() == 1);
         VisualItem item = viewItems.iterator().next();
         assertEquals(2, item.getValue(requiredSlots[0]));
@@ -198,6 +198,44 @@ public class SlotMappingIntegrationTest {
         new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, model, model);
         return model;
+    }
+
+    @Test
+    public void delegatingResolverHasErrorWhenDelegateUnconfigured() {
+        Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
+        DefaultVisualizationModel underTest = helper
+                .createTestVisualizationModel();
+
+        SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
+                slots[1], Subset.HIGHLIGHTED);
+
+        underTest.setResolver(slots[0], delegatingResolver);
+
+        underTest.getContentResourceSet().add(
+                ResourceSetTestUtils.createResource(1));
+
+        assertThat(underTest.getSlotsWithErrors(), containsExactly(slots));
+    }
+
+    @Test
+    public void delegatingResolverLosesErrorWhenDelegateConfigured() {
+        Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
+        DefaultVisualizationModel underTest = helper
+                .createTestVisualizationModel();
+
+        SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
+                slots[1], Subset.HIGHLIGHTED);
+
+        underTest.setResolver(slots[0], delegatingResolver);
+
+        underTest.getContentResourceSet().add(
+                ResourceSetTestUtils.createResource(1));
+
+        underTest.setResolver(slots[1], mockResolverThatCanAlwaysResolve());
+
+        assertThat(underTest.getSlotsWithErrors(),
+                containsExactly(CollectionFactory
+                        .<Slot> createLightweightList()));
     }
 
     /**
@@ -306,49 +344,6 @@ public class SlotMappingIntegrationTest {
                 containsExactly(requiredSlots[0]));
     }
 
-    @Test
-    public void fixedDelegatingResolverHasErrorWhenDelegateUnconfigured() {
-        Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
-        DefaultVisualizationModel underTest = helper.createTestVisualizationModel();
-
-        SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
-                slots[1], Subset.HIGHLIGHTED);
-
-        Map<Slot, VisualItemValueResolver> fixedSlotResolvers = new HashMap<Slot, VisualItemValueResolver>();
-        fixedSlotResolvers.put(slots[0], delegatingResolver);
-
-        FixedSlotResolversVisualizationModelDecorator fixedUnderTest = new FixedSlotResolversVisualizationModelDecorator(
-                underTest, fixedSlotResolvers);
-        fixedUnderTest.getContentResourceSet().add(
-                ResourceSetTestUtils.createResource(1));
-
-        assertThat(fixedUnderTest.getSlotsWithErrors(), containsExactly(slots));
-    }
-
-    @Test
-    public void fixedDelegatingResolverLosesErrorWhenDelegateConfigured() {
-        Slot[] slots = helper.createSlots(DataType.NUMBER, DataType.NUMBER);
-        DefaultVisualizationModel underTest = helper.createTestVisualizationModel();
-
-        SubsetDelegatingValueResolver delegatingResolver = new SubsetDelegatingValueResolver(
-                slots[1], Subset.HIGHLIGHTED);
-
-        Map<Slot, VisualItemValueResolver> fixedSlotResolvers = new HashMap<Slot, VisualItemValueResolver>();
-        fixedSlotResolvers.put(slots[0], delegatingResolver);
-
-        FixedSlotResolversVisualizationModelDecorator fixedUnderTest = new FixedSlotResolversVisualizationModelDecorator(
-                underTest, fixedSlotResolvers);
-        fixedUnderTest.getContentResourceSet().add(
-                ResourceSetTestUtils.createResource(1));
-
-        fixedUnderTest
-                .setResolver(slots[1], mockResolverThatCanAlwaysResolve());
-
-        assertThat(fixedUnderTest.getSlotsWithErrors(),
-                containsExactly(CollectionFactory
-                        .<Slot> createLightweightList()));
-    }
-
     /**
      * <h3>Automatically Change Resolver When Selected Property Not Applicable</h3>
      * 
@@ -408,7 +403,8 @@ public class SlotMappingIntegrationTest {
 
         // resolver.setProperty(property2);
 
-        LightweightCollection<VisualItem> viewItems = model.getFullVisualItemContainer().getVisualItems();
+        LightweightCollection<VisualItem> viewItems = model
+                .getFullVisualItemContainer().getVisualItems();
 
         assertEquals(viewItems.size(), 1);
         Iterator<VisualItem> iterator = viewItems.iterator();
@@ -489,7 +485,8 @@ public class SlotMappingIntegrationTest {
         /* Should have 1 View Item with Value 1 */
         model.setContentResourceSet(new DefaultResourceSet());
 
-        assertEquals(model.getFullVisualItemContainer().getVisualItems().size(), 0);
+        assertEquals(
+                model.getFullVisualItemContainer().getVisualItems().size(), 0);
     }
 
     /**
@@ -639,9 +636,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         /* set up the provider to return the correct resolvers */
-        resolverProvider
-                .registerFactory(new FixedVisualItemResolverFactory(1,
-                        DataType.NUMBER, resolverId1));
+        resolverProvider.registerFactory(new FixedVisualItemResolverFactory(1,
+                DataType.NUMBER, resolverId1));
 
         /* define and create initializer */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -662,7 +658,8 @@ public class SlotMappingIntegrationTest {
         model.getContentResourceSet().add(createResource(1));
 
         /* Test results */
-        LightweightCollection<VisualItem> viewItems = model.getFullVisualItemContainer().getVisualItems();
+        LightweightCollection<VisualItem> viewItems = model
+                .getFullVisualItemContainer().getVisualItems();
         assertTrue(viewItems.size() == 1);
 
         VisualItem item = viewItems.iterator().next();
@@ -702,7 +699,8 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property1, 1);
         model.getContentResourceSet().add(resource);
 
-        LightweightCollection<VisualItem> viewItems = model.getFullVisualItemContainer().getVisualItems();
+        LightweightCollection<VisualItem> viewItems = model
+                .getFullVisualItemContainer().getVisualItems();
 
         assertEquals(1, viewItems.size());
         Iterator<VisualItem> iterator = viewItems.iterator();

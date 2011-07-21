@@ -38,7 +38,7 @@ public class FirstResourcePropertyResolverUIControllerFactory implements
 
         assert factory instanceof FirstResourcePropertyResolverFactory;
 
-        return new FirstResourcePropertyResolverUIController(
+        return new FirstResourcePropertyResolverUIController(getId(),
                 (FirstResourcePropertyResolverFactory) factory, uiModel,
                 viewItems);
     }

@@ -33,7 +33,7 @@ public class FixedValueVisualItemResolverUIControllerFactory implements
     public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItem) {
-        return new EmptyWidgetUIController();
+        return new EmptyWidgetUIController(getId());
     }
 
     @Override

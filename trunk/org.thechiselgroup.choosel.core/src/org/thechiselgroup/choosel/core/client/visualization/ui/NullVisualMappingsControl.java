@@ -15,10 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
+
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfigurationChangedEvent;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,16 +27,11 @@ public class NullVisualMappingsControl implements VisualMappingsControl {
         return null;
     }
 
-    @Override
-    public void updateConfigurationForChangedSlotMapping(Slot slot,
-            ManagedVisualItemValueResolver oldResolver,
-            ManagedVisualItemValueResolver currentResolver) {
-
-    }
 
     @Override
-    public void updateConfigurationForChangedViewItems(
-            LightweightCollection<VisualItem> viewItems) {
+    public void updateConfigurationForSlotMappingChangedEvent(
+            ManagedSlotMappingConfigurationChangedEvent e) {
+        
     }
 
 }

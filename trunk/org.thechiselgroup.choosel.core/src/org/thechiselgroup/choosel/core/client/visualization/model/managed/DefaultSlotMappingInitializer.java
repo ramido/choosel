@@ -66,6 +66,14 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
     @Override
     public Map<Slot, VisualItemValueResolver> getResolvers(
+            ResourceSet viewResources, Map<Slot, ManagedSlotMappingState> states) {
+
+        // TODO make this more intelligent
+        return getResolvers(viewResources, states.keySet().toArray(new Slot[0]));
+    }
+
+    @Override
+    public Map<Slot, VisualItemValueResolver> getResolvers(
             ResourceSet viewResources, Slot[] slotsToUpdate) {
 
         DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
@@ -101,8 +109,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         return createPropertyResolver(dataType, firstProperty);
     }
 
-    public void setFixedDataTypeResolverId(DataType dataType,
-            String resolverId) {
+    public void setFixedDataTypeResolverId(DataType dataType, String resolverId) {
 
         assert dataType != null;
         assert resolverId != null;
@@ -116,7 +123,8 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         fixedResolversByDataType.put(dataType, resolver);
     }
 
-    public String setPropertyDataTypeResolverId(DataType dataType, String resolverId) {
+    public String setPropertyDataTypeResolverId(DataType dataType,
+            String resolverId) {
         return propertyResolverIdsByDataType.put(dataType, resolverId);
     }
 }
