@@ -28,13 +28,26 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 
 public class DefaultPopupManager implements PopupManager {
 
     private class MouseHandlersPopupManagerLink implements MouseOverHandler,
-            MouseOutHandler, MouseMoveHandler, MouseDownHandler {
+            MouseOutHandler, MouseMoveHandler, MouseDownHandler,
+            AttachEvent.Handler {
+
+        @Override
+        public void onAttachOrDetach(AttachEvent event) {
+            assert event != null;
+
+            boolean detached = !event.isAttached();
+            if (detached) {
+                DefaultPopupManager.this.onDetach();
+            }
+        }
 
         @Override
         public void onMouseDown(MouseDownEvent event) {
@@ -336,13 +349,16 @@ public class DefaultPopupManager implements PopupManager {
      */
     // XXX bug: what if widget disappears / gets removed?
     @Override
-    public HandlerRegistration linkToWidget(HasAllMouseHandlers widget) {
+    public <T extends HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
+            T widget) {
+
         MouseHandlersPopupManagerLink link = new MouseHandlersPopupManagerLink();
 
         final HandlerRegistration reg1 = widget.addMouseOverHandler(link);
         final HandlerRegistration reg2 = widget.addMouseOutHandler(link);
         final HandlerRegistration reg3 = widget.addMouseMoveHandler(link);
         final HandlerRegistration reg4 = widget.addMouseDownHandler(link);
+        final HandlerRegistration reg5 = widget.addAttachHandler(link);
 
         return new HandlerRegistration() {
             @Override
@@ -351,8 +367,13 @@ public class DefaultPopupManager implements PopupManager {
                 reg2.removeHandler();
                 reg3.removeHandler();
                 reg4.removeHandler();
+                reg5.removeHandler();
             }
         };
+    }
+
+    public void onDetach() {
+        state.onSourceMouseOut(this);
     }
 
     // TODO we need to separate the popup display from the

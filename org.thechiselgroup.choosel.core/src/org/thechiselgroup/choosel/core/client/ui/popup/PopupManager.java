@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.ui.popup;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface PopupManager {
@@ -31,7 +32,8 @@ public interface PopupManager {
 
     boolean isEnabled();
 
-    HandlerRegistration linkToWidget(HasAllMouseHandlers widget);
+    <T extends HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
+            T widget);
 
     /**
      * Mouse down triggers either drag-and-drop operations (left mouse button,
