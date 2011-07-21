@@ -1,10 +1,14 @@
 package org.thechiselgroup.choosel.visualization_component.heat_bars.client;
 
+import java.util.Date;
+
 import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVColor;
@@ -22,27 +26,30 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 
 import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 //TODO each bar is represented by a viewItem.  Ideally this would change some time in the future.
 public class HeatBars extends ChartViewContentDisplay {
 
-    // propertyResolver
+    private PVPanel invisibleInteractionBar;
+
+    // TODO move to protovis (events)
+    public static final String ALL = "all";
+
+    // TODO move to protovis (cursor)
+    public static final String POINTER = "pointer";
+
     public final static Slot LABEL = new Slot("label", "Label", DataType.TEXT);
 
-    // fixedResolver
     public final static Slot ZERO_COLOR = new Slot("zeroColor", "0 Color",
             DataType.COLOR);
 
-    // fixedResolver
     public final static Slot LOW_COLOR = new Slot("lowColor", "Low Color",
             DataType.COLOR);
 
-    // fixedResolver
     public final static Slot MIDDLE_COLOR = new Slot("middleColor",
             "Middle Color", DataType.COLOR);
 
-    // fixedResolver
     public final static Slot HIGH_COLOR = new Slot("highColor", "High Color",
             DataType.COLOR);
 
@@ -66,7 +73,6 @@ public class HeatBars extends ChartViewContentDisplay {
     private JsArrayGeneric<JsArrayNumber> data;
 
     private JsFunction<PVColor> colorFunction = new JsFunction<PVColor>() {
-
         @Override
         public PVColor f(JsArgs args) {
             // figure out which viewItem this data point maps to
@@ -80,6 +86,22 @@ public class HeatBars extends ChartViewContentDisplay {
                     (Color) viewItem.getValue(LOW_COLOR),
                     (Color) viewItem.getValue(MIDDLE_COLOR),
                     (Color) viewItem.getValue(HIGH_COLOR), value));
+        }
+    };
+
+    private JsFunction<PVColor> barBorderColorFunction = new JsFunction<PVColor>() {
+        @Override
+        public PVColor f(JsArgs args) {
+            int index = args.<PVMark> getThis().index();
+            VisualItem visualItem = getViewItem(index);
+
+            if (!visualItem.getResources(Subset.HIGHLIGHTED).isEmpty()) {
+                return PV.color(Colors.YELLOW);
+            } else if (!visualItem.getResources(Subset.SELECTED).isEmpty()) {
+                return PV.color(Colors.ORANGE);
+            } else {
+                return PV.color(Colors.WHITE);
+            }
         }
     };
 
@@ -123,8 +145,13 @@ public class HeatBars extends ChartViewContentDisplay {
     JsStringFunction tickLabelFunction = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            NumberFormat nf = NumberFormat.getFormat("#.##");
-            return "" + nf.format(tickLabelValueScale.fd(args.getDouble()));
+            DateTimeFormat format = DateTimeFormat
+                    .getFormat("MMMM dd yyyy HH aa");
+
+            Date date = new Date(new Double(tickLabelValueScale.fd(args
+                    .getDouble())).longValue());
+
+            return format.format(date);
         }
     };
 
@@ -201,6 +228,13 @@ public class HeatBars extends ChartViewContentDisplay {
         PVPanel panel = vis.add(PV.Panel).data(data).top(panelTopFunction)
                 .height(panelHeightFunction);
 
+        /* an invisible panel that will handle mouse events */
+        invisibleInteractionBar = vis.add(PV.Panel).data(viewItemsJsArray)
+                .left(LEFT_LABEL_PADDING).width(totalBarWidthFunction)
+                .top(panelTopFunction).height(panelHeightFunction)
+                .cursor(POINTER).events(ALL)
+                .strokeStyle(barBorderColorFunction);
+
         /* Add a label to each panel */
         panel.anchor(PVAlignment.LEFT).add(PV.Label).text(panelLabelFunction);
 
@@ -276,10 +310,13 @@ public class HeatBars extends ChartViewContentDisplay {
         return SLOTS;
     }
 
-    // TODO I'm not rly sure what events need to be added here
+    /**
+     * This method defines what pieces of the visualization should trigger
+     * events
+     */
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
-        // TODO Auto-generated method stub
+        invisibleInteractionBar.event(eventType, handler);
     }
 
     @Override
@@ -334,7 +371,7 @@ public class HeatBars extends ChartViewContentDisplay {
     /**
      * This method resets the data array to an array of all zeros
      */
-    // XXX this method is REAAAAAAAAAALLY slow
+    // XXX this method is REAAAAAAAAAALLY slow in dev mode
     public void resetData() {
         data = JsUtils.createJsArrayGeneric();
         for (int i = 0; i < calculateNumBars(); i++) {
