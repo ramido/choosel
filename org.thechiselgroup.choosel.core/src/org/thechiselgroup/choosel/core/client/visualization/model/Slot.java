@@ -77,8 +77,7 @@ public class Slot {
 
     @Override
     public String toString() {
-        return "Slot [id=" + id + ", name=" + name + ", dataType=" + dataType
-                + "]";
+        return "Slot[id=" + id + ", dataType=" + dataType + "]";
     }
 
 }

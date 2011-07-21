@@ -54,10 +54,6 @@ public abstract class PropertyDependantVisualItemValueResolverFactory implements
             return false;
         }
 
-        if (viewItems.isEmpty()) {
-            return true;
-        }
-
         return !ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
                 getValidDataType()).isEmpty();
     }

@@ -115,6 +115,9 @@ public abstract class PropertyListBoxResolverUIController implements
      */
     private void setProperties(List<String> properties) {
         assert properties != null;
+        assert properties.size() >= 1 : "tried to set empty properties for slot ui "
+                + uiModel.getSlot();
+
         this.properties = properties;
         this.selector.setValues(properties);
     }
@@ -126,6 +129,9 @@ public abstract class PropertyListBoxResolverUIController implements
      */
     @Override
     public void update(LightweightCollection<VisualItem> viewItems) {
+        assert resolverFactory.canCreateApplicableResolver(uiModel.getSlot(),
+                viewItems);
+
         setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
                 resolverFactory.getValidDataType()));
 
