@@ -15,13 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIController;
 
-public abstract class SlotControl implements WidgetAdaptable {
+import com.google.gwt.user.client.ui.IsWidget;
+
+public abstract class SlotControl implements IsWidget {
 
     private Slot slot;
 
@@ -35,9 +36,10 @@ public abstract class SlotControl implements WidgetAdaptable {
         return slot;
     }
 
-    public abstract void updateOptions(LightweightCollection<VisualItem> viewItems);
-
     public abstract void setNewUIModel(
             VisualItemValueResolverUIController resolverUI);
+
+    public abstract void updateOptions(
+            LightweightCollection<VisualItem> viewItems);
 
 }

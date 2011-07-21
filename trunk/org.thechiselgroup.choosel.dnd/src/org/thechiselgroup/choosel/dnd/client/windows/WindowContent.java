@@ -15,10 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.windows;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
 
-public interface WindowContent extends WidgetAdaptable, Initializable {
+import com.google.gwt.user.client.ui.IsWidget;
+
+public interface WindowContent extends IsWidget, Initializable {
 
     String getContentType();
 

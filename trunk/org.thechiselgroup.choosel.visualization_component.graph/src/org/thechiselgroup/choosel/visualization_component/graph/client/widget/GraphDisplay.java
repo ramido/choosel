@@ -18,13 +18,13 @@ package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 import java.util.Collection;
 
 import org.thechiselgroup.choosel.core.client.geometry.Point;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.IsWidget;
 
-public interface GraphDisplay extends WidgetAdaptable {
+public interface GraphDisplay extends IsWidget {
 
     String DEFAULT_LAYOUT = GraphLayouts.FORCE_DIRECTED_LAYOUT;
 

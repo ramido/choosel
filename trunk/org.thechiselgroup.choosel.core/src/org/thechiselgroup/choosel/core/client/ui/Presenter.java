@@ -18,6 +18,8 @@ package org.thechiselgroup.choosel.core.client.ui;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
 
-public interface Presenter extends Initializable, Disposable, WidgetAdaptable {
+import com.google.gwt.user.client.ui.IsWidget;
+
+public interface Presenter extends Initializable, Disposable, IsWidget {
 
 }

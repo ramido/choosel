@@ -16,10 +16,11 @@
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.visualization.View;
 
-public interface ShareConfiguration extends WidgetAdaptable {
+import com.google.gwt.user.client.ui.IsWidget;
+
+public interface ShareConfiguration extends IsWidget {
 
     SidePanelSection[] getSidePanelSections();
 

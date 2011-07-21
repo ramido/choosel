@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.core.client.visualization;
 
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.Adaptable;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
@@ -24,8 +23,10 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationM
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
 
-public interface View extends Adaptable, WidgetAdaptable, Initializable,
-        Disposable, Persistable {
+import com.google.gwt.user.client.ui.IsWidget;
+
+public interface View extends Adaptable, IsWidget, Initializable, Disposable,
+        Persistable {
 
     String getContentType();
 

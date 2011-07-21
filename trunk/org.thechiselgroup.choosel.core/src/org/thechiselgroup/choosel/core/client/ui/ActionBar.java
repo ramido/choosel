@@ -21,12 +21,13 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ActionBar implements WidgetAdaptable {
+public class ActionBar implements IsWidget {
 
     // TODO remove constant, replace with dynamic size calculation
     public static final int ACTION_BAR_HEIGHT_PX = 91;

@@ -15,17 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.command.ui;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CommandPresenter<T extends HasClickHandlers & WidgetAdaptable>
-        implements WidgetAdaptable, Initializable {
+public class CommandPresenter<T extends HasClickHandlers & IsWidget> implements
+        IsWidget, Initializable {
 
     private final Command command;
 

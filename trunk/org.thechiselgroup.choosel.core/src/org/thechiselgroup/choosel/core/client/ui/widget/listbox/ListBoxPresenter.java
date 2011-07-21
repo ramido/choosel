@@ -15,11 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.widget.listbox;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
-
 import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.user.client.ui.IsWidget;
 
-public interface ListBoxPresenter extends HasChangeHandlers, WidgetAdaptable {
+public interface ListBoxPresenter extends HasChangeHandlers, IsWidget {
 
     void addItem(String label);
 
