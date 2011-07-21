@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2011 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
 import java.util.ArrayList;
@@ -126,18 +141,25 @@ public class DefaultSlotControl extends SlotControl {
         panel.add(currentUIControllerWidget);
     }
 
-    private void updateFactorySelector() {
+    private void updateFactorySelector(
+            LightweightCollection<VisualItem> viewItems) {
         // TODO there is a mem bug here because we do not remove the old handler
         resolverFactorySelector.setChangeHandler(factorySelectedChangeHandler);
 
         resolverFactorySelector.setValues(getFactoryList());
-        resolverFactorySelector.setSelectedValue(configuration
-                .getManagedSlotMapping(getSlot()).getCurrentFactory());
+
+        // XXX what if the current factory becomes unavailable?
+        VisualItemValueResolverFactory currentFactory = configuration
+                .getManagedSlotMapping(getSlot()).getCurrentFactory();
+
+        assert currentFactory.canCreateApplicableResolver(getSlot(), viewItems);
+
+        resolverFactorySelector.setSelectedValue(currentFactory);
     }
 
     @Override
     public void updateOptions(LightweightCollection<VisualItem> viewItems) {
-        updateFactorySelector();
+        updateFactorySelector(viewItems);
         uiController.update(viewItems);
     }
 }
