@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -334,6 +334,7 @@ public class DefaultPopupManager implements PopupManager {
     /**
      * Links a widget source to this {@link PopupManager}.
      */
+    // XXX bug: what if widget disappears / gets removed?
     @Override
     public HandlerRegistration linkToWidget(HasAllMouseHandlers widget) {
         MouseHandlersPopupManagerLink link = new MouseHandlersPopupManagerLink();

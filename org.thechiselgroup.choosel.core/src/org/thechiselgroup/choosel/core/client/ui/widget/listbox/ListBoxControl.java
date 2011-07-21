@@ -17,14 +17,14 @@ package org.thechiselgroup.choosel.core.client.ui.widget.listbox;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ListBoxControl<T> implements WidgetAdaptable {
+public class ListBoxControl<T> implements IsWidget {
 
     private ListBoxPresenter presenter;
 

@@ -17,9 +17,10 @@ package org.thechiselgroup.choosel.core.client.visualization.model;
 
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.Adaptable;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
+
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * Interface for generic visualizations that can be displayed in a
@@ -33,8 +34,8 @@ import org.thechiselgroup.choosel.core.client.util.Disposable;
 // TODO rename to visualization display or visualization renderer
 // NOTE: 3 main items: slots, properties, functionality interfaces
 // NOTE: has lifecycle (which should be described)
-public interface ViewContentDisplay extends VisualItemRenderer,
-        WidgetAdaptable, Disposable, Persistable, Adaptable {
+public interface ViewContentDisplay extends VisualItemRenderer, IsWidget,
+        Disposable, Persistable, Adaptable {
 
     void checkResize();
 

@@ -15,11 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
-public interface VisualItemValueResolverUIController extends WidgetAdaptable {
+import com.google.gwt.user.client.ui.IsWidget;
+
+public interface VisualItemValueResolverUIController extends IsWidget {
 
     void update(LightweightCollection<VisualItem> viewItems);
 

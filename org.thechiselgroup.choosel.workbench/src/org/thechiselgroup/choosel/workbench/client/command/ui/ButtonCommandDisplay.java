@@ -16,12 +16,12 @@
 package org.thechiselgroup.choosel.workbench.client.command.ui;
 
 import org.thechiselgroup.choosel.core.client.ui.HasEnabledState;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ButtonCommandDisplay extends Button implements WidgetAdaptable,
+public class ButtonCommandDisplay extends Button implements IsWidget,
         HasEnabledState {
 
     public ButtonCommandDisplay(String label) {

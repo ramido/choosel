@@ -19,12 +19,12 @@ import static org.thechiselgroup.choosel.core.client.ui.IconURLBuilder.getIconUr
 
 import org.thechiselgroup.choosel.core.client.ui.IconURLBuilder.IconType;
 import org.thechiselgroup.choosel.core.client.ui.ImageButton;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 // TODO factory + inline
-public class ImageCommandDisplay extends ImageButton implements WidgetAdaptable {
+public class ImageCommandDisplay extends ImageButton implements IsWidget {
 
     public ImageCommandDisplay(String name) {
         super(getIconUrl(name, IconType.NORMAL), getIconUrl(name,

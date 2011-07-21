@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.workbench.client.command.ui;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandToCommandAdapter;
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
 // TODO use command manager? --> right now, commands are not added there
@@ -62,10 +62,11 @@ public class CommandPresenterFactory {
         return display;
     }
 
-    private <T extends WidgetAdaptable & HasClickHandlers> void initPresenter(
+    private <T extends IsWidget & HasClickHandlers> void initPresenter(
             Command command, T display) {
 
-        CommandPresenter presenter = new CommandPresenter(display, command);
+        CommandPresenter<T> presenter = new CommandPresenter<T>(display,
+                command);
         presenter.init();
     }
 }
