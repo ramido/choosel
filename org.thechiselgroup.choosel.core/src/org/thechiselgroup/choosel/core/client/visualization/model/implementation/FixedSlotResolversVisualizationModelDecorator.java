@@ -24,7 +24,10 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
@@ -108,6 +111,13 @@ public class FixedSlotResolversVisualizationModelDecorator implements
         return delegate.getErrorFreeVisualItemContainer();
     }
 
+    private LightweightCollection<Slot> getFixedSlots() {
+        LightweightList<Slot> result = CollectionFactory
+                .createLightweightList();
+        result.addAll(fixedSlotResolvers.keySet());
+        return result;
+    }
+
     @Override
     public VisualItemContainer getFullVisualItemContainer() {
         return delegate.getFullVisualItemContainer();
@@ -140,7 +150,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements
 
     @Override
     public LightweightCollection<Slot> getSlotsWithErrors() {
-        return delegate.getSlotsWithErrors();
+        return LightweightCollections.getRelativeComplement(
+                delegate.getSlotsWithErrors(), getFixedSlots());
     }
 
     @Override

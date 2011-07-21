@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 public interface VisualItemValueResolverUIController extends IsWidget {
 
-    void update(LightweightCollection<VisualItem> viewItems);
+    String getId();
 
+    void update(LightweightCollection<VisualItem> viewItems);
 }

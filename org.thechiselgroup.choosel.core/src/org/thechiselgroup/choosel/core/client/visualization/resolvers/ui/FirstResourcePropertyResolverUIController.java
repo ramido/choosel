@@ -23,10 +23,10 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.Fi
 public class FirstResourcePropertyResolverUIController extends
         PropertyListBoxResolverUIController {
 
-    public FirstResourcePropertyResolverUIController(
+    public FirstResourcePropertyResolverUIController(String id,
             FirstResourcePropertyResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
-        super(resolverFactory, uiModel, viewItems);
+        super(id, resolverFactory, uiModel, viewItems);
     }
 }

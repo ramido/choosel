@@ -116,8 +116,8 @@ public class DefaultSlotControl extends SlotControl {
     }
 
     @Override
-    public String getCurrentResolverID() {
-        return configuration.getCurrentResolver(getSlot()).getResolverId();
+    public String getCurrentResolverUIId() {
+        return uiController.getId();
     }
 
     private List<VisualItemValueResolverFactory> getFactoryList() {

@@ -15,20 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfigurationChangedEvent;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
 public interface VisualMappingsControl extends IsWidget {
 
-    void updateConfigurationForChangedSlotMapping(Slot slot,
-            ManagedVisualItemValueResolver oldResolver,
-            ManagedVisualItemValueResolver currentResolver);
-
-    void updateConfigurationForChangedViewItems(
-            LightweightCollection<VisualItem> viewItems);
+    void updateConfigurationForSlotMappingChangedEvent(
+            ManagedSlotMappingConfigurationChangedEvent e);
 
 }

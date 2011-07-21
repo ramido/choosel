@@ -58,21 +58,24 @@ public abstract class PropertyListBoxResolverUIController implements
         }
     };
 
-    public PropertyListBoxResolverUIController(
+    private String id;
+
+    public PropertyListBoxResolverUIController(String id,
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
-        this(resolverFactory, uiModel, viewItems, ResourceSetUtils
+        this(id, resolverFactory, uiModel, viewItems, ResourceSetUtils
                 .getSharedPropertiesOfDataType(viewItems,
                         resolverFactory.getValidDataType()).get(0));
     }
 
-    public PropertyListBoxResolverUIController(
+    public PropertyListBoxResolverUIController(String id,
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems, String property) {
         this.uiModel = uiModel;
         this.resolverFactory = resolverFactory;
+        this.id = id;
 
         selector = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
@@ -107,6 +110,11 @@ public abstract class PropertyListBoxResolverUIController implements
         // getting, and the delegate is the thing that is PropertyDependant
         assert currentResolver instanceof PropertyDependantVisualItemValueResolver;
         return (PropertyDependantVisualItemValueResolver) currentResolver;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     /**

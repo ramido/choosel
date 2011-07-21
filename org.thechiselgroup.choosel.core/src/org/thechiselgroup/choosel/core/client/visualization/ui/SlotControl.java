@@ -30,7 +30,7 @@ public abstract class SlotControl implements IsWidget {
         this.slot = slot;
     }
 
-    public abstract String getCurrentResolverID();
+    public abstract String getCurrentResolverUIId();
 
     public Slot getSlot() {
         return slot;

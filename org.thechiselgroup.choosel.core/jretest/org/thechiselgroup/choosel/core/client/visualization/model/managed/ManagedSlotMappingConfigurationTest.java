@@ -18,10 +18,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemValueResolverTestUtils.createSlots;
 import static org.thechiselgroup.choosel.core.shared.test.matchers.collections.CollectionMatchers.containsExactly;
 
@@ -38,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
@@ -45,11 +43,13 @@ import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingCha
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainer;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemContainerChangeEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualItemResolutionErrorModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.VisualItemTestUtils;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.TestSlotMappingInitializer;
 
 /**
@@ -276,11 +276,17 @@ public class ManagedSlotMappingConfigurationTest {
         LightweightList<Slot> badSlots = CollectionFactory
                 .createLightweightList();
         badSlots.add(slots[0]);
-        when(visualizationModel.getUnconfiguredSlots()).thenReturn(badSlots);
+        when(visualizationModel.getSlotsWithErrors()).thenReturn(badSlots);
+
+        LightweightCollection<VisualItem> addedElements = VisualItemTestUtils
+                .createViewItems(1);
+
+        Delta<VisualItem> delta = Delta.createAddedDelta(addedElements);
         // XXX right now underTest does not care what the event is, but it may
         // in the future, feel free to implement the event in this test in the
         // future
-        handler.onVisualItemContainerChanged(null);
+        handler.onVisualItemContainerChanged(new VisualItemContainerChangeEvent(
+                visualItemContainer, delta));
 
         // verify that we set the viewModel
         verify(visualizationModel, times(1)).setResolver(slots[0], resolver1);
@@ -348,6 +354,67 @@ public class ManagedSlotMappingConfigurationTest {
     }
 
     @Test
+    public void slotMappingChangedEventWithChangeFiresEventToUI() {
+        setUpSlots(DataType.TEXT);
+        when(visualizationModel.getResolver(slots[0])).thenReturn(resolver1);
+        when(visualizationModel.getSlotsWithErrors()).thenReturn(
+                CollectionFactory.<Slot> createLightweightList());
+
+        LightweightList<VisualItem> visualItems = VisualItemTestUtils
+                .createViewItems(1);
+        when(visualItemContainer.getVisualItems()).thenReturn(visualItems);
+
+        setUpResolverProvider(factory1, factory2);
+
+        underTest = new ManagedSlotMappingConfiguration(resolverProvider,
+                slotMappingInitializer, visualizationModel, errorModel);
+
+        VisualItemContainerChangeEventHandler viewItemContainerHandler = captureViewItemContainerChangeEventHandler();
+
+        ManagedSlotMappingConfigurationChangedEventHandler handler = mock(ManagedSlotMappingConfigurationChangedEventHandler.class);
+        underTest
+                .addManagedSlotMappingConfigurationChangedEventHandler(handler);
+
+        VisualItemContainerChangeEvent event = new VisualItemContainerChangeEvent(
+                visualItemContainer, Delta.createAddedDelta(visualItems));
+        viewItemContainerHandler.onVisualItemContainerChanged(event);
+
+        verify(handler, times(1)).onSlotMappingStateChanged(
+                any(ManagedSlotMappingConfigurationChangedEvent.class));
+    }
+
+    @Test
+    public void slotMappingChangedEventWithNoChangeDoesNotFireNewEventToUI() {
+        setUpSlots(DataType.TEXT);
+        when(visualizationModel.getResolver(slots[0])).thenReturn(resolver1);
+        when(visualizationModel.getSlotsWithErrors()).thenReturn(
+                CollectionFactory.<Slot> createLightweightList());
+
+        LightweightList<VisualItem> visualItems = VisualItemTestUtils
+                .createViewItems(1);
+        when(visualItemContainer.getVisualItems()).thenReturn(visualItems);
+
+        setUpResolverProvider(factory1, factory2);
+
+        underTest = new ManagedSlotMappingConfiguration(resolverProvider,
+                slotMappingInitializer, visualizationModel, errorModel);
+
+        VisualItemContainerChangeEventHandler viewItemContainerHandler = captureViewItemContainerChangeEventHandler();
+
+        ManagedSlotMappingConfigurationChangedEventHandler handler = mock(ManagedSlotMappingConfigurationChangedEventHandler.class);
+        underTest
+                .addManagedSlotMappingConfigurationChangedEventHandler(handler);
+
+        VisualItemContainerChangeEvent event = new VisualItemContainerChangeEvent(
+                visualItemContainer, Delta.createAddedDelta(CollectionFactory
+                        .<VisualItem> createLightweightList()));
+        viewItemContainerHandler.onVisualItemContainerChanged(event);
+
+        verify(handler, never()).onSlotMappingStateChanged(
+                any(ManagedSlotMappingConfigurationChangedEvent.class));
+    }
+
+    @Test
     public void viewModelFiredSlotMappingChangedEventFiresEventOnUnderTest() {
         setUpSlots(DataType.TEXT);
 
@@ -356,9 +423,10 @@ public class ManagedSlotMappingConfigurationTest {
         underTest = new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, visualizationModel, errorModel);
 
-        ManagedSlotMapping uiModel = underTest.getManagedSlotMapping(slots[0]);
+        ManagedSlotMapping slotMapping = underTest
+                .getManagedSlotMapping(slots[0]);
         SlotMappingChangedHandler uiModelHandler = mock(SlotMappingChangedHandler.class);
-        uiModel.addSlotMappingEventHandler(uiModelHandler);
+        slotMapping.addSlotMappingEventHandler(uiModelHandler);
 
         SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
         SlotMappingChangedEvent event = new SlotMappingChangedEvent(slots[0],
@@ -399,5 +467,50 @@ public class ManagedSlotMappingConfigurationTest {
         when(visualizationModel.getResolver(slots[0])).thenReturn(resolver2);
         assertThat(underTest.getSlotsWithInvalidResolvers(),
                 containsExactly(slots));
+    }
+
+    @Test
+    public void visualItemsChangedEventWithChangeFiresEventToUI() {
+        setUpSlots(DataType.TEXT);
+
+        when(visualizationModel.getResolver(slots[0])).thenReturn(resolver1);
+        setUpResolverProvider(factory1, factory2);
+        underTest = new ManagedSlotMappingConfiguration(resolverProvider,
+                slotMappingInitializer, visualizationModel, errorModel);
+
+        SlotMappingChangedHandler slotMappingChangeHandler = captureSlotMappingChangedHandler();
+        ManagedSlotMappingConfigurationChangedEventHandler handler = mock(ManagedSlotMappingConfigurationChangedEventHandler.class);
+        underTest
+                .addManagedSlotMappingConfigurationChangedEventHandler(handler);
+
+        slotMappingChangeHandler
+                .onSlotMappingChanged(new SlotMappingChangedEvent(slots[0],
+                        resolver1, resolver2));
+
+        verify(handler, times(1)).onSlotMappingStateChanged(
+                any(ManagedSlotMappingConfigurationChangedEvent.class));
+
+    }
+
+    @Test
+    public void visualItemsChangedEventWithNoChangeDoesNotFireNewEventToUI() {
+        setUpSlots(DataType.TEXT);
+
+        when(visualizationModel.getResolver(slots[0])).thenReturn(resolver1);
+        setUpResolverProvider(factory1, factory2);
+        underTest = new ManagedSlotMappingConfiguration(resolverProvider,
+                slotMappingInitializer, visualizationModel, errorModel);
+
+        SlotMappingChangedHandler slotMappingChangeHandler = captureSlotMappingChangedHandler();
+        ManagedSlotMappingConfigurationChangedEventHandler handler = mock(ManagedSlotMappingConfigurationChangedEventHandler.class);
+        underTest
+                .addManagedSlotMappingConfigurationChangedEventHandler(handler);
+
+        slotMappingChangeHandler
+                .onSlotMappingChanged(new SlotMappingChangedEvent(slots[0],
+                        resolver1, resolver1));
+
+        verify(handler, times(0)).onSlotMappingStateChanged(
+                any(ManagedSlotMappingConfigurationChangedEvent.class));
     }
 }

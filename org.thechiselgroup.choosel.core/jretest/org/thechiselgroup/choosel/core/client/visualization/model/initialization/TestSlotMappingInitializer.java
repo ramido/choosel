@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingState;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 
 /**
@@ -37,6 +38,12 @@ public class TestSlotMappingInitializer implements SlotMappingInitializer {
     public TestSlotMappingInitializer(
             Map<Slot, VisualItemValueResolver> initialSlotMapping) {
         this.initialSlotMapping = initialSlotMapping;
+    }
+
+    @Override
+    public Map<Slot, VisualItemValueResolver> getResolvers(
+            ResourceSet viewResources, Map<Slot, ManagedSlotMappingState> states) {
+        return getResolvers(viewResources, states.keySet().toArray(new Slot[0]));
     }
 
     @Override

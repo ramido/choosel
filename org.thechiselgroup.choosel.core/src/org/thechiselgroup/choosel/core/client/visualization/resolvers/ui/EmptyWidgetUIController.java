@@ -24,9 +24,22 @@ import com.google.gwt.user.client.ui.Widget;
 public class EmptyWidgetUIController implements
         VisualItemValueResolverUIController {
 
+    private String id;
+
+    public EmptyWidgetUIController(String id) {
+        assert id != null;
+
+        this.id = id;
+    }
+
     @Override
     public Widget asWidget() {
         return new Label("");
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override

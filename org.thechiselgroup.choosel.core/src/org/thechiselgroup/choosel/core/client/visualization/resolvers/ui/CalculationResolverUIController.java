@@ -23,9 +23,9 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.Ca
 public class CalculationResolverUIController extends
         PropertyListBoxResolverUIController {
 
-    public CalculationResolverUIController(CalculationResolverFactory factory,
-            ManagedSlotMapping uiModel,
+    public CalculationResolverUIController(String id,
+            CalculationResolverFactory factory, ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> viewItems) {
-        super(factory, uiModel, viewItems);
+        super(id, factory, uiModel, viewItems);
     }
 }
