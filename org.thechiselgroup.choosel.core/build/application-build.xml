@@ -29,7 +29,7 @@
 	-->
 	<property file="local-settings.properties" />
 
-	<import file="${gae.sdk.dir}/config/user/ant-macros.xml" />
+	<!-- <import file="${gae.sdk.dir}/config/user/ant-macros.xml" /> -->
 	
 	<path id="org.google.gwt-classpath">
 		<fileset dir="${gwt.sdk.dir}">
@@ -64,7 +64,7 @@
 			</classpath>
 			<arg line="-draftCompile -optimize 0 -ea -logLevel INFO -style DETAILED -localWorkers 3 -war ${build.dir}" />
 			<arg value="${gwt-module.name}DevCompile" />
-			<jvmarg value="-Xmx2048m" />
+			<jvmarg value="-Xmx1024m" />
 			<jvmarg value="-Xss20m" />
 		</java>
 	</target>
@@ -77,7 +77,7 @@
 			</classpath>
 			<arg line="-XdisableCastChecking -XdisableClassMetadata -optimize 9 -logLevel INFO -style OBFUSCATED -localWorkers 3 -war ${build.dir}" />
 			<arg value="${gwt-module.name}" />
-			<jvmarg value="-Xmx2048m" />
+			<jvmarg value="-Xmx1024m" />
 			<jvmarg value="-Xss20m" />
 		</java>
 	</target>
