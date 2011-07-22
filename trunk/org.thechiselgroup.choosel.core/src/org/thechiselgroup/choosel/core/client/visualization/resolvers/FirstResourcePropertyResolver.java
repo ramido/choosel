@@ -17,14 +17,14 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
 
-public class FirstResourcePropertyResolver extends SubsetVisualItemValueResolver
-        implements PropertyDependantVisualItemValueResolver {
+public class FirstResourcePropertyResolver extends
+        SubsetVisualItemValueResolver implements
+        PropertyDependantVisualItemValueResolver {
 
     protected final String property;
 
