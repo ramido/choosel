@@ -28,8 +28,6 @@
 	  gwt.sdk.dir=c:\\opt\\gwt-2.3.0
 	-->
 	<property file="local-settings.properties" />
-
-	<!-- <import file="${gae.sdk.dir}/config/user/ant-macros.xml" /> -->
 	
 	<path id="org.google.gwt-classpath">
 		<fileset dir="${gwt.sdk.dir}">
