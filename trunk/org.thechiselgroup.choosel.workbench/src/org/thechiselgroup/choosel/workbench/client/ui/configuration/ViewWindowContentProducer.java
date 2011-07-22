@@ -15,7 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.configuration;
 
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
+import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
 import java.util.Map;
 
@@ -139,7 +144,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     protected LightweightList<SidePanelSection> createSidePanelSections(
             String contentType, ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
-            ResourceModel resourceModel) {
+            ResourceModel resourceModel, VisualizationModel visualizationModel) {
 
         LightweightList<SidePanelSection> sidePanelSections = CollectionFactory
                 .createLightweightList();
@@ -165,7 +170,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
     protected VisualMappingsControl createVisualMappingsControl(
             HasResourceCategorizer resourceGrouping,
-            ManagedSlotMappingConfiguration uiModel) {
+            ManagedSlotMappingConfiguration uiModel, String contentType) {
 
         // TODO change configuration to configurationUIModel
         return new DefaultVisualMappingsControl(uiModel, resourceGrouping,
@@ -241,21 +246,20 @@ public class ViewWindowContentProducer implements WindowContentProducer {
          * 
          */
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
-                visualizationModel, managedConfiguration);
+                visualizationModel, managedConfiguration, contentType);
         assert visualMappingsControl != null : "createVisualMappingsControl must not return null";
 
         LightweightList<ViewPart> viewParts = createViewParts(contentType);
 
         LightweightList<SidePanelSection> sidePanelSections = createSidePanelSections(
                 contentType, contentDisplay, visualMappingsControl,
-                resourceModel);
+                resourceModel, visualizationModel);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.addSidePanelSections(sidePanelSections);
         }
 
         String label = contentDisplay.getName();
-
 
         managedConfiguration
                 .addManagedSlotMappingConfigurationChangedEventHandler(new ManagedSlotMappingConfigurationChangedEventHandler() {
