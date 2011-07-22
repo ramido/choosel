@@ -48,7 +48,7 @@ public class DefaultSlotControl extends SlotControl {
 
     private Widget currentUIControllerWidget;
 
-    // TODO I don't like how I need this here just to get the viewItems. I feel
+    // TODO I don't like how I need this here just to get the visualItems. I feel
     // like this class should not know about view items. It could always keep
     // track of updates, but then it is possible to introduce inconsistencies
     private ManagedSlotMappingConfiguration configuration;
@@ -142,7 +142,7 @@ public class DefaultSlotControl extends SlotControl {
     }
 
     private void updateFactorySelector(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         // TODO there is a mem bug here because we do not remove the old handler
         resolverFactorySelector.setChangeHandler(factorySelectedChangeHandler);
 
@@ -152,14 +152,15 @@ public class DefaultSlotControl extends SlotControl {
         VisualItemValueResolverFactory currentFactory = configuration
                 .getManagedSlotMapping(getSlot()).getCurrentFactory();
 
-        assert currentFactory.canCreateApplicableResolver(getSlot(), viewItems);
+        assert currentFactory.canCreateApplicableResolver(getSlot(),
+                visualItems);
 
         resolverFactorySelector.setSelectedValue(currentFactory);
     }
 
     @Override
-    public void updateOptions(LightweightCollection<VisualItem> viewItems) {
-        updateFactorySelector(viewItems);
-        uiController.update(viewItems);
+    public void updateOptions(LightweightCollection<VisualItem> visualItems) {
+        updateFactorySelector(visualItems);
+        uiController.update(visualItems);
     }
 }

@@ -154,11 +154,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 DataType.NUMBER));
         scatterPlot.setResolver(ScatterPlot.SHAPE,
                 new AbstractBasicVisualItemValueResolver() {
-                    public Object resolve(VisualItem viewItem,
+                    public Object resolve(VisualItem visualItem,
                             VisualItemValueResolverContext context) {
 
-                        // assuming 1 resource per viewItem
-                        Resource resource = viewItem.getResources()
+                        // assuming 1 resource per visualItem
+                        Resource resource = visualItem.getResources()
                                 .getFirstElement();
                         String category = (String) resource
                                 .getValue(BenchmarkResourceSetFactory.TEXT_2);

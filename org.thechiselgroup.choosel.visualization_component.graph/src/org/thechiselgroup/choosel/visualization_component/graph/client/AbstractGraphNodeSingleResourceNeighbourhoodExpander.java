@@ -46,18 +46,18 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
     }
 
     @Override
-    public final void expand(VisualItem viewItem,
+    public final void expand(VisualItem visualItem,
             GraphNodeExpansionCallback graph) {
-        assert viewItem != null;
+        assert visualItem != null;
         assert graph != null;
 
-        Resource resource = getSingleResource(viewItem);
+        Resource resource = getSingleResource(visualItem);
 
-        if (isNeighbourhoodLoaded(viewItem, resource)) {
-            expandNeighbourhood(viewItem, resource, graph,
-                    reconstructNeighbourhood(viewItem, resource));
+        if (isNeighbourhoodLoaded(visualItem, resource)) {
+            expandNeighbourhood(visualItem, resource, graph,
+                    reconstructNeighbourhood(visualItem, resource));
         } else {
-            loadNeighbourhood(viewItem, resource, graph);
+            loadNeighbourhood(visualItem, resource, graph);
         }
     }
 
@@ -66,13 +66,13 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
      *            {@link Resource}s in neighbourhood (have been added to the
      *            resource manager already) already
      */
-    protected abstract void expandNeighbourhood(VisualItem viewItem,
+    protected abstract void expandNeighbourhood(VisualItem visualItem,
             Resource resource, GraphNodeExpansionCallback graph,
             List<Resource> neighbourhood);
 
-    protected final Resource getSingleResource(VisualItem viewItem) {
-        assert viewItem.getResources().size() == 1;
-        return viewItem.getResources().getFirstElement();
+    protected final Resource getSingleResource(VisualItem visualItem) {
+        assert visualItem.getResources().size() == 1;
+        return visualItem.getResources().getFirstElement();
     }
 
     /**
@@ -81,16 +81,16 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
      * @param resource
      *            TODO
      */
-    protected abstract boolean isNeighbourhoodLoaded(VisualItem viewItem,
+    protected abstract boolean isNeighbourhoodLoaded(VisualItem visualItem,
             Resource resource);
 
-    protected abstract void loadNeighbourhood(VisualItem viewItem,
+    protected abstract void loadNeighbourhood(VisualItem visualItem,
             Resource resource, AsyncCallback<ResourceNeighbourhood> callback);
 
-    private void loadNeighbourhood(final VisualItem viewItem,
+    private void loadNeighbourhood(final VisualItem visualItem,
             final Resource resource, final GraphNodeExpansionCallback graph) {
 
-        loadNeighbourhood(viewItem, resource,
+        loadNeighbourhood(visualItem, resource,
                 new ErrorHandlingAsyncCallback<ResourceNeighbourhood>(
                         errorHandler) {
                     @Override
@@ -99,7 +99,7 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
 
                         resource.applyPartialProperties(result
                                 .getPartialProperties());
-                        expandNeighbourhood(viewItem, resource, graph,
+                        expandNeighbourhood(visualItem, resource, graph,
                                 resourceManager.addAll(result.getResources()));
                     }
 
@@ -107,6 +107,6 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
     }
 
     protected abstract List<Resource> reconstructNeighbourhood(
-            VisualItem viewItem, Resource resource);
+            VisualItem visualItem, Resource resource);
 
 }

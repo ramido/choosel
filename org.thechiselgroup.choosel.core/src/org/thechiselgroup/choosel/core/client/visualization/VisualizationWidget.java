@@ -46,13 +46,13 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
 
     public VisualizationWidget(T contentDisplay, ResourceSet selectedResource,
             ResourceSet highlightedResources,
-            VisualItemBehavior viewItemBehavior, ErrorHandler errorHandler) {
+            VisualItemBehavior visualItemBehavior, ErrorHandler errorHandler) {
 
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
         this.viewModel = new DefaultVisualizationModel(contentDisplay,
-                selectedResource, highlightedResources, viewItemBehavior,
+                selectedResource, highlightedResources, visualItemBehavior,
                 errorHandler, new DefaultResourceSetFactory(),
                 new ResourceByUriMultiCategorizer());
 

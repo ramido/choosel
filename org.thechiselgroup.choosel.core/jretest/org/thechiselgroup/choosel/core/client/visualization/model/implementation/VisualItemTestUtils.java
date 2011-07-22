@@ -39,60 +39,60 @@ public final class VisualItemTestUtils {
     private VisualItemTestUtils() {
     }
 
-    public static LightweightList<VisualItem> createViewItems(int... viewItemId) {
-        ResourceSet[] resourceSets = new ResourceSet[viewItemId.length];
+    public static LightweightList<VisualItem> createVisualItems(int... visualItemId) {
+        ResourceSet[] resourceSets = new ResourceSet[visualItemId.length];
         for (int i = 0; i < resourceSets.length; i++) {
-            resourceSets[i] = ResourceSetTestUtils.toLabeledResourceSet("" + viewItemId[i],
-                    ResourceSetTestUtils.createResource(viewItemId[i]));
+            resourceSets[i] = ResourceSetTestUtils.toLabeledResourceSet("" + visualItemId[i],
+                    ResourceSetTestUtils.createResource(visualItemId[i]));
         }
-        return VisualItemTestUtils.createViewItems(resourceSets);
+        return VisualItemTestUtils.createVisualItems(resourceSets);
     }
 
     /**
      * Creates list of resource items with using the label of the resource sets
      * as group ids.
      */
-    public static LightweightList<VisualItem> createViewItems(
+    public static LightweightList<VisualItem> createVisualItems(
             ResourceSet... resourceSets) {
     
         LightweightList<VisualItem> resourceItems = CollectionFactory
                 .createLightweightList();
         for (ResourceSet resourceSet : resourceSets) {
-            resourceItems.add(VisualItemTestUtils.createViewItem(resourceSet.getLabel(),
+            resourceItems.add(VisualItemTestUtils.createVisualItem(resourceSet.getLabel(),
                     resourceSet));
         }
     
         return resourceItems;
     }
 
-    public static VisualItem createViewItem(String viewItemId,
+    public static VisualItem createVisualItem(String visualItemId,
             ResourceSet resources) {
     
         final AtomicReference<Object> displayObjectBuffer = new AtomicReference<Object>();
     
-        VisualItem viewItem = mock(VisualItem.class);
+        VisualItem visualItem = mock(VisualItem.class);
     
-        when(viewItem.getResources()).thenReturn(resources);
-        when(viewItem.getId()).thenReturn(viewItemId);
+        when(visualItem.getResources()).thenReturn(resources);
+        when(visualItem.getId()).thenReturn(visualItemId);
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 displayObjectBuffer.set(invocation.getArguments()[0]);
                 return null;
             }
-        }).when(viewItem).setDisplayObject(any(Object.class));
-        when(viewItem.getDisplayObject()).thenAnswer(new Answer<Object>() {
+        }).when(visualItem).setDisplayObject(any(Object.class));
+        when(visualItem.getDisplayObject()).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return displayObjectBuffer.get();
             }
         });
     
-        return viewItem;
+        return visualItem;
     }
 
-    public static VisualItem createViewItem(int id) {
-        return createViewItem("" + id, ResourceSetTestUtils.createResources(id));
+    public static VisualItem createVisualItem(int id) {
+        return createVisualItem("" + id, ResourceSetTestUtils.createResources(id));
     }
 
     public static Matcher<LightweightCollection<VisualItem>> containsVisualItemsForExactResourceSets(

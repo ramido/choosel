@@ -83,7 +83,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return 2 * Math.PI / viewItemsJsArray.length();
+            return 2 * Math.PI / visualItemsJsArray.length();
         }
     };
 
@@ -107,8 +107,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     // private JsStringFunction fullMarkTextStyle = new JsStringFunction() {
     // @Override
     // public String f(JsArgs args) {
-    // ViewItem viewItem = args.getObject();
-    // return viewItem.getValueAsDouble(BarChart.BAR_LENGTH,
+    // VisualItem visualItem = args.getObject();
+    // return visualItem.getValueAsDouble(BarChart.BAR_LENGTH,
     // Subset.HIGHLIGHTED) == 0 ? Colors.WHITE : Colors.BLACK;
     // }
     // };
@@ -156,29 +156,29 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
         // calculateMaximumChartItemValue();
 
-        if (viewItemsJsArray.length() == 0) {
+        if (visualItemsJsArray.length() == 0) {
             return;
         }
 
-        highlightedWedgeCounts = new double[viewItemsJsArray.length()];
+        highlightedWedgeCounts = new double[visualItemsJsArray.length()];
         //
-        // for (int i = 0; i < viewItemsJsArray.length(); i++) {
-        // highlightedWedgeCounts[i] = viewItemsJsArray.get(i)
+        // for (int i = 0; i < visualItemsJsArray.length(); i++) {
+        // highlightedWedgeCounts[i] = visualItemsJsArray.get(i)
         // .getSlotValueAsDouble(BarChart.BAR_LENGTH,
         // Subset.HIGHLIGHTED);
         // }
         //
-        // regularWedgeCounts = new double[viewItemsJsArray.length()];
+        // regularWedgeCounts = new double[visualItemsJsArray.length()];
         //
-        // for (int i = 0; i < viewItemsJsArray.length(); i++) {
-        // regularWedgeCounts[i] = viewItemsJsArray.get(i)
+        // for (int i = 0; i < visualItemsJsArray.length(); i++) {
+        // regularWedgeCounts[i] = visualItemsJsArray.get(i)
         // .getSlotValueAsDouble(BarChart.BAR_LENGTH, Subset.ALL);
         // }
     }
 
     @Override
     public void buildChart() {
-        assert viewItemsJsArray.length() > 0;
+        assert visualItemsJsArray.length() > 0;
 
         // calculateMaximumChartItemValue();
         drawScale();
@@ -187,16 +187,16 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     // private void calculateAllResourcesSum() {
     // sum = 0;
-    // for (int i = 0; i < viewItemsJsArray.length(); i++) {
-    // sum += viewItemsJsArray.get(i).getSlotValueAsDouble(
+    // for (int i = 0; i < visualItemsJsArray.length(); i++) {
+    // sum += visualItemsJsArray.get(i).getSlotValueAsDouble(
     // BarChart.BAR_LENGTH, Subset.ALL);
     // }
     // }
     //
     // protected void calculateMaximumChartItemValue() {
     // maxChartItemValue = 0;
-    // for (int i = 0; i < viewItemsJsArray.length(); i++) {
-    // double currentItemValue = viewItemsJsArray.get(i)
+    // for (int i = 0; i < visualItemsJsArray.length(); i++) {
+    // double currentItemValue = visualItemsJsArray.get(i)
     // .getSlotValueAsDouble(BarChart.BAR_LENGTH, Subset.ALL);
     // if (maxChartItemValue < currentItemValue) {
     // maxChartItemValue = currentItemValue;
@@ -221,12 +221,12 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private void drawWedge() {
         // calculateAllResourcesSum();
 
-        regularWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
+        regularWedge = getChart().add(PV.Wedge).data(visualItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                 .strokeStyle(Colors.WHITE);
 
-        if (hasViewItemsWithPartialSubset(Subset.HIGHLIGHTED)) {
+        if (hasVisualItemsWithPartialSubset(Subset.HIGHLIGHTED)) {
             regularWedge.innerRadius(highlightedWedgeOuterRadius).fillStyle(
                     Colors.STEELBLUE);
 

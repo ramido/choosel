@@ -32,9 +32,9 @@ public class CompositeVisualItemBehavior implements VisualItemBehavior {
     }
 
     @Override
-    public void onInteraction(VisualItem viewItem, VisualItemInteraction interaction) {
+    public void onInteraction(VisualItem visualItem, VisualItemInteraction interaction) {
         for (VisualItemBehavior behavior : behaviors) {
-            behavior.onInteraction(viewItem, interaction);
+            behavior.onInteraction(visualItem, interaction);
         }
     }
 

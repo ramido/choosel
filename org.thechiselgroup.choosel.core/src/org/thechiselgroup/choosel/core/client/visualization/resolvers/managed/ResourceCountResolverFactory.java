@@ -43,7 +43,7 @@ public class ResourceCountResolverFactory implements
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return slot.getDataType().equals(DataType.NUMBER);
     }
 
@@ -54,7 +54,7 @@ public class ResourceCountResolverFactory implements
 
     @Override
     public ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return new ManagedVisualItemValueResolverDecorator(getId(),
                 new ResourceCountResolver(subset));
     }

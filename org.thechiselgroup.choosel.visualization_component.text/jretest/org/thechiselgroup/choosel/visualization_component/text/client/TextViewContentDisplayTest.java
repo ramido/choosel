@@ -64,34 +64,34 @@ public class TextViewContentDisplayTest {
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
         // create resource item that contains 2 resources
-        VisualItem viewItem = VisualItemTestUtils.createViewItem("",
+        VisualItem visualItem = VisualItemTestUtils.createVisualItem("",
                 ResourceSetTestUtils.createResources(1, 2));
 
-        when(viewItem.getValue(TextVisualization.FONT_SIZE_SLOT)).thenReturn(
+        when(visualItem.getValue(TextVisualization.FONT_SIZE_SLOT)).thenReturn(
                 new Double(2));
 
-        when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
-        when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.NONE);
+        when(visualItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
+        when(visualItem.getStatus(Subset.SELECTED)).thenReturn(Status.NONE);
 
-        underTest.update(createAddedDelta(toCollection(viewItem)),
+        underTest.update(createAddedDelta(toCollection(visualItem)),
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
-        when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.FULL);
-        underTest.update(createUpdatedDelta(toCollection(viewItem)),
+        when(visualItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.FULL);
+        underTest.update(createUpdatedDelta(toCollection(visualItem)),
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
-        when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.PARTIAL);
-        underTest.update(createUpdatedDelta(toCollection(viewItem)),
+        when(visualItem.getStatus(Subset.SELECTED)).thenReturn(Status.PARTIAL);
+        underTest.update(createUpdatedDelta(toCollection(visualItem)),
                 LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
 
         // highlighting is removed after drag operation
-        when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
+        when(visualItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
         underTest.update(createUpdatedDelta(LightweightCollections
-                .toCollection(viewItem)), LightweightCollections
+                .toCollection(visualItem)), LightweightCollections
                 .<Slot> emptySet());
 
         // check label status (should be: partially selected, but not partially

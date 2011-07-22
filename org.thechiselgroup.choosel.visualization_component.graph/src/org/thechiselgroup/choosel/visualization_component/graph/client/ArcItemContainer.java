@@ -95,10 +95,10 @@ public class ArcItemContainer implements Persistable {
         return arcType;
     }
 
-    public void removeViewItem(VisualItem viewItem) {
-        assert viewItem != null;
+    public void removeVisualItem(VisualItem visualItem) {
+        assert visualItem != null;
 
-        LightweightCollection<Arc> arcs = arcType.getArcs(viewItem, context);
+        LightweightCollection<Arc> arcs = arcType.getArcs(visualItem, context);
         for (Arc arc : arcs) {
             String arcId = arc.getId();
             if (arcItemsById.containsKey(arcId)) {
@@ -171,20 +171,20 @@ public class ArcItemContainer implements Persistable {
         this.visible = visible;
     }
 
-    public void update(LightweightCollection<VisualItem> viewItems) {
-        assert viewItems != null;
+    public void update(LightweightCollection<VisualItem> visualItems) {
+        assert visualItems != null;
 
-        for (VisualItem viewItem : viewItems) {
-            update(viewItem);
+        for (VisualItem visualItem : visualItems) {
+            update(visualItem);
         }
     }
 
-    private void update(VisualItem viewItem) {
-        assert viewItem != null;
-        assert context.containsVisualItem(viewItem.getId());
-        assert graphDisplay.containsNode(viewItem.getId());
+    private void update(VisualItem visualItem) {
+        assert visualItem != null;
+        assert context.containsVisualItem(visualItem.getId());
+        assert graphDisplay.containsNode(visualItem.getId());
 
-        for (Arc arc : arcType.getArcs(viewItem, context)) {
+        for (Arc arc : arcType.getArcs(visualItem, context)) {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())
                     && graphDisplay.containsNode(arc.getSourceNodeId())

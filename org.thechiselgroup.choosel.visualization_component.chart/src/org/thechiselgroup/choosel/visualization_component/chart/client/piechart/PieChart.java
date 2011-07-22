@@ -68,10 +68,10 @@ public class PieChart extends ChartViewContentDisplay {
     private JsDoubleFunction partialWedgeRadius = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            VisualItem viewItem = args.getObject();
+            VisualItem visualItem = args.getObject();
 
-            double partialValue = viewItem.getValueAsDouble(PARTIAL_VALUE);
-            double value = viewItem.getValueAsDouble(VALUE);
+            double partialValue = visualItem.getValueAsDouble(PARTIAL_VALUE);
+            double value = visualItem.getValueAsDouble(VALUE);
 
             // cannot divide by zero
             if (value == 0) {
@@ -135,8 +135,8 @@ public class PieChart extends ChartViewContentDisplay {
     private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            VisualItem viewItem = args.getObject();
-            return viewItem.getValueAsDouble(VALUE) * 2 * Math.PI
+            VisualItem visualItem = args.getObject();
+            return visualItem.getValueAsDouble(VALUE) * 2 * Math.PI
                     / getValueSum();
         }
 
@@ -145,17 +145,17 @@ public class PieChart extends ChartViewContentDisplay {
     private JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            VisualItem viewItem = args.getObject();
-            return Double.toString(viewItem.getValueAsDouble(VALUE)
-                    - viewItem.getValueAsDouble(PARTIAL_VALUE));
+            VisualItem visualItem = args.getObject();
+            return Double.toString(visualItem.getValueAsDouble(VALUE)
+                    - visualItem.getValueAsDouble(PARTIAL_VALUE));
         }
     };
 
     private JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            VisualItem viewItem = args.getObject();
-            return Double.toString(viewItem.getValueAsDouble(PARTIAL_VALUE));
+            VisualItem visualItem = args.getObject();
+            return Double.toString(visualItem.getValueAsDouble(PARTIAL_VALUE));
         }
     };
 
@@ -194,9 +194,9 @@ public class PieChart extends ChartViewContentDisplay {
 
     @Override
     public void buildChart() {
-        assert viewItemsJsArray.length() >= 1;
+        assert visualItemsJsArray.length() >= 1;
 
-        mainWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
+        mainWedge = getChart().add(PV.Wedge).data(visualItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom).startAngle(startAngle)
                 .innerRadius(partialWedgeRadius)
                 .outerRadius(outerRadiusFunction).angle(wedgeAngle)
@@ -222,7 +222,7 @@ public class PieChart extends ChartViewContentDisplay {
         partialWedge.anchor(PVAlignment.CENTER).add(PV.Label)
                 .textAngle(WEDGE_TEXT_ANGLE).text(highlightedMarkLabelText);
 
-        labelWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
+        labelWedge = getChart().add(PV.Wedge).data(visualItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom).startAngle(startAngle)
                 .innerRadius(0).outerRadius(outerRadiusFunction)
                 .angle(wedgeAngle).fillStyle(RGBA_TRANSPARENT)
@@ -238,7 +238,7 @@ public class PieChart extends ChartViewContentDisplay {
          * something other than Protovis for the rendering. (o")9
          */
         invisibleInteractionWedge = getChart().add(PV.Wedge)
-                .data(viewItemsJsArray).left(wedgeLeft).bottom(wedgeBottom)
+                .data(visualItemsJsArray).left(wedgeLeft).bottom(wedgeBottom)
                 .startAngle(startAngle).innerRadius(0)
                 .outerRadius(outerRadiusFunction).angle(wedgeAngle)
                 .cursor(BarChart.POINTER).events(BarChart.ALL)
@@ -248,10 +248,10 @@ public class PieChart extends ChartViewContentDisplay {
     }
 
     private void calculateAggregatedValues() {
-        aggregatedValues = new double[viewItemsJsArray.length()];
+        aggregatedValues = new double[visualItemsJsArray.length()];
         double sum = 0;
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            sum += viewItemsJsArray.get(i).getValueAsDouble(VALUE);
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            sum += visualItemsJsArray.get(i).getValueAsDouble(VALUE);
             aggregatedValues[i] = sum;
         }
     }

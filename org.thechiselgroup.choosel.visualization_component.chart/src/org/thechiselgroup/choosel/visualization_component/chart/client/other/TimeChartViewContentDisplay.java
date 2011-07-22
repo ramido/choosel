@@ -37,7 +37,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
         this.@org.thechiselgroup.choosel.visualization_component.chart.client.other.TimeChartViewContentDisplay::sortByDate()();
 
-        for(var i = 0; i < this.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
             var xCoord = this.@org.thechiselgroup.choosel.visualization_component.chart.client.other.TimeChartViewContentDisplay::getSlotValue(II)(i,0);
             val[i] = {x: new $wnd.Date(xCoord),
                 y: this.@org.thechiselgroup.choosel.visualization_component.chart.client.other.TimeChartViewContentDisplay::getSlotValue(II)(i,1)};
@@ -153,8 +153,8 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            double currentItemValue = viewItemsJsArray.get(i).getValueAsDouble(
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            double currentItemValue = visualItemsJsArray.get(i).getValueAsDouble(
                     BarChart.BAR_LENGTH);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
@@ -175,10 +175,10 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
     private Object getSlotValue(int i, int coordinate) {
         // XXX fixme
         // if (coordinate == 0) {
-        // return getChartItem(i).getViewItem().getResourceValue(
+        // return getChartItem(i).getVisualItem().getResourceValue(
         // TimeLineViewContentDisplay.DATE_SLOT);
         // } else if (coordinate == 1) {
-        // return getChartItem(i).getViewItem().getResourceValue(
+        // return getChartItem(i).getVisualItem().getResourceValue(
         // TextViewContentDisplay.FONT_SIZE_SLOT);
         // }
         throw new RuntimeException("No slot value available");

@@ -27,7 +27,7 @@ public class ResourceCountResolverUIControllerFactory implements
     @Override
     public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return new EmptyWidgetUIController(getId());
     }
 

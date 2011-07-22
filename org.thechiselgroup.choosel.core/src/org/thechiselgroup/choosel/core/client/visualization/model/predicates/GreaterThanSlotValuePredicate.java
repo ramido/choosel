@@ -30,8 +30,8 @@ public class GreaterThanSlotValuePredicate implements VisualItemPredicate {
     }
 
     @Override
-    public boolean matches(VisualItem viewItem) {
-        return viewItem.getValueAsDouble(slot) > greaterThanValue;
+    public boolean matches(VisualItem visualItem) {
+        return visualItem.getValueAsDouble(slot) > greaterThanValue;
     }
 
 }

@@ -25,7 +25,7 @@ public class CalculationResolverUIController extends
 
     public CalculationResolverUIController(String id,
             CalculationResolverFactory factory, ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems) {
-        super(id, factory, uiModel, viewItems);
+            LightweightCollection<VisualItem> visualItems) {
+        super(id, factory, uiModel, visualItems);
     }
 }

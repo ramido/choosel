@@ -88,7 +88,7 @@ public class DragEnabler {
 
     private ResourceSetAvatarDragController dragController;
 
-    private VisualItem viewItem;
+    private VisualItem visualItem;
 
     /**
      * Invisible {@link ResourceSetAvatar} that receives events.
@@ -102,7 +102,7 @@ public class DragEnabler {
 
         this.desktop = desktop;
         this.dragController = dragController;
-        this.viewItem = item;
+        this.visualItem = item;
     }
 
     private void createDragWidget(int absoluteLeft, int absoluteTop) {
@@ -126,8 +126,8 @@ public class DragEnabler {
          * XXX using the view item ID as text is problematic, because it is not
          * a good description if there is no aggregation.
          */
-        final String text = viewItem.getId();
-        hiddenAvatar = new InvisibleResourceSetAvatar(viewItem, text,
+        final String text = visualItem.getId();
+        hiddenAvatar = new InvisibleResourceSetAvatar(visualItem, text,
                 "avatar-resourceSet", ResourceSetAvatarType.SET, span, this);
 
         span.setClassName("avatar-invisible");

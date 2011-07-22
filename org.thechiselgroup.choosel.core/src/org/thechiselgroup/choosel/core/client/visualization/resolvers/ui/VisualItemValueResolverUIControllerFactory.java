@@ -27,7 +27,7 @@ public interface VisualItemValueResolverUIControllerFactory {
     // TODO refactor
     VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping managedMapping,
-            LightweightCollection<VisualItem> viewItems);
+            LightweightCollection<VisualItem> visualItems);
 
     String getId();
 

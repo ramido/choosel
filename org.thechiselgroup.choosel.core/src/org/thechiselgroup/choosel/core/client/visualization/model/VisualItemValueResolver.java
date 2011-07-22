@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.AbstractBa
  * interface must be immutable.
  * </p>
  * <p>
- * {@code ViewItemValueResolver}s can use other {@code ViewItemValueResolver}s
+ * {@code VisualItemValueResolver}s can use other {@code VisualItemValueResolver}s
  * defined on other {@link Slot}s of this {@link VisualizationModel} in their
  * calculation. The {@link VisualItemValueResolverContext} exposes those during
  * the calculation. However, they must declare the {@link Slot}s they depend on
@@ -40,10 +40,10 @@ public interface VisualItemValueResolver {
 
     /**
      * Tests if this {@link VisualItemValueResolver} can calculate a value for
-     * {@code viewItem} in the {@link VisualItemValueResolverContext}
+     * {@code visualItem} in the {@link VisualItemValueResolverContext}
      * {@code context}.
      * 
-     * @param viewItem
+     * @param visualItem
      *            {@link VisualItem} for which this
      *            {@link VisualItemValueResolver} is asked to calculate a value.
      * @param context
@@ -56,7 +56,7 @@ public interface VisualItemValueResolver {
      * @return {@code true}, if a value could be calculated, {@code false}
      *         otherwise.
      */
-    boolean canResolve(VisualItem viewItem,
+    boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context);
 
     /**
@@ -70,7 +70,7 @@ public interface VisualItemValueResolver {
     /**
      * Calculates a value for a {@link VisualItem}.
      * 
-     * @param viewItem
+     * @param visualItem
      *            {@link VisualItem} for which this
      *            {@link VisualItemValueResolver} is asked to calculate a value.
      * @param context
@@ -84,6 +84,6 @@ public interface VisualItemValueResolver {
      */
     // TODO ? document exceptions that are thrown if it cannot be resolved
     // TODO return typed result (requires type system)
-    Object resolve(VisualItem viewItem, VisualItemValueResolverContext context);
+    Object resolve(VisualItem visualItem, VisualItemValueResolverContext context);
 
 }

@@ -28,7 +28,7 @@ public class VisualItemStatusIdUIControllerFactory implements
     public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory,
             ManagedSlotMapping managedMapping,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return new EmptyWidgetUIController(getId());
     }
 

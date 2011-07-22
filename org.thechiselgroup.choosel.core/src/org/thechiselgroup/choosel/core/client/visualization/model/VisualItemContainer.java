@@ -41,17 +41,17 @@ public interface VisualItemContainer {
 
     /**
      * @return <code>true</code>, if there is a {@link VisualItem} with the
-     *         specified <code>viewItemId</code> in this container.
+     *         specified <code>visualItemId</code> in this container.
      */
-    boolean containsVisualItem(String viewItemId);
+    boolean containsVisualItem(String visualItemId);
 
     /**
      * @return {@link VisualItem} with the given ID.
      * 
      * @throws AssertionError
-     *             thrown if there no view item with {@code viewItemId}
+     *             thrown if there no view item with {@code visualItemId}
      */
-    VisualItem getVisualItem(String viewItemId);
+    VisualItem getVisualItem(String visualItemId);
 
     /**
      * @return All {@link VisualItem}s in this container.

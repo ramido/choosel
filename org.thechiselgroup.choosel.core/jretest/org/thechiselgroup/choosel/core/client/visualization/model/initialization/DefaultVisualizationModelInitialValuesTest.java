@@ -77,12 +77,12 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(slots[2]));
 
-        List<VisualItem> viewItems = underTest.getFullVisualItemContainer()
+        List<VisualItem> visualItems = underTest.getFullVisualItemContainer()
                 .getVisualItems().toList();
-        assertEquals(1, viewItems.size());
-        VisualItem viewItem = viewItems.get(0);
+        assertEquals(1, visualItems.size());
+        VisualItem visualItem = visualItems.get(0);
 
-        assertEquals(datePropertyReturnValue, viewItem.getValue(slots[2]));
+        assertEquals(datePropertyReturnValue, visualItem.getValue(slots[2]));
     }
 
     @Test
@@ -95,12 +95,12 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(slots[1]));
 
-        List<VisualItem> viewItems = underTest.getFullVisualItemContainer()
+        List<VisualItem> visualItems = underTest.getFullVisualItemContainer()
                 .getVisualItems().toList();
-        assertEquals(1, viewItems.size());
-        VisualItem viewItem = viewItems.get(0);
+        assertEquals(1, visualItems.size());
+        VisualItem visualItem = visualItems.get(0);
 
-        assertEquals(fixedNumberReturnValue, viewItem.getValue(slots[1]));
+        assertEquals(fixedNumberReturnValue, visualItem.getValue(slots[1]));
     }
 
     @Test
@@ -113,12 +113,12 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         assertEquals(true, underTest.isConfigured(slots[0]));
 
-        List<VisualItem> viewItems = underTest.getFullVisualItemContainer()
+        List<VisualItem> visualItems = underTest.getFullVisualItemContainer()
                 .getVisualItems().toList();
-        assertEquals(1, viewItems.size());
-        VisualItem viewItem = viewItems.get(0);
+        assertEquals(1, visualItems.size());
+        VisualItem visualItem = visualItems.get(0);
 
-        assertEquals(textPropertyReturnValue, viewItem.getValue(slots[0]));
+        assertEquals(textPropertyReturnValue, visualItem.getValue(slots[0]));
     }
 
     @SuppressWarnings("unchecked")

@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.ChartView
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
-//TODO each bar is represented by a viewItem.  Ideally this would change some time in the future.
+//TODO each bar is represented by a visualItem.  Ideally this would change some time in the future.
 public class HeatBars extends ChartViewContentDisplay {
 
     private PVPanel invisibleInteractionBar;
@@ -75,17 +75,17 @@ public class HeatBars extends ChartViewContentDisplay {
     private JsFunction<PVColor> colorFunction = new JsFunction<PVColor>() {
         @Override
         public PVColor f(JsArgs args) {
-            // figure out which viewItem this data point maps to
+            // figure out which visualItem this data point maps to
             PVMark _this = args.getThis();
-            VisualItem viewItem = viewItemsJsArray.get(_this.parent().index());
+            VisualItem visualItem = visualItemsJsArray.get(_this.parent().index());
 
             // calculate the color based on the resolvers and the binCount
             double value = args.getDouble();
             return PV.color(calculateColor(
-                    (Color) viewItem.getValue(ZERO_COLOR),
-                    (Color) viewItem.getValue(LOW_COLOR),
-                    (Color) viewItem.getValue(MIDDLE_COLOR),
-                    (Color) viewItem.getValue(HIGH_COLOR), value));
+                    (Color) visualItem.getValue(ZERO_COLOR),
+                    (Color) visualItem.getValue(LOW_COLOR),
+                    (Color) visualItem.getValue(MIDDLE_COLOR),
+                    (Color) visualItem.getValue(HIGH_COLOR), value));
         }
     };
 
@@ -93,7 +93,7 @@ public class HeatBars extends ChartViewContentDisplay {
         @Override
         public PVColor f(JsArgs args) {
             int index = args.<PVMark> getThis().index();
-            VisualItem visualItem = getViewItem(index);
+            VisualItem visualItem = getVisualItem(index);
 
             if (!visualItem.getResources(Subset.HIGHLIGHTED).isEmpty()) {
                 return PV.color(Colors.YELLOW);
@@ -162,7 +162,7 @@ public class HeatBars extends ChartViewContentDisplay {
             PVMark _this = args.getThis();
             int index = _this.parent().index();
 
-            return viewItemsJsArray.get(index).getValue(LABEL);
+            return visualItemsJsArray.get(index).getValue(LABEL);
         }
     };
 
@@ -187,19 +187,19 @@ public class HeatBars extends ChartViewContentDisplay {
     private PVLinearScale tickLabelValueScale;
 
     private int calculateNumBars() {
-        return viewItemsJsArray.length();
+        return visualItemsJsArray.length();
     }
 
     @Override
     protected void buildChart() {
 
-        assert viewItemsJsArray.length() >= 1;
+        assert visualItemsJsArray.length() >= 1;
 
         /* Initialize the chart dimension variables */
         initChartDimensions(height, width);
 
         /* calculate the data values for each bin before we build */
-        calculateDataArrayFromViewItems();
+        calculateDataArrayFromVisualItems();
 
         /* Scale that maps bar indexes onto bar positions */
         barBinScale = PV.Scale.ordinal(PV.range(calculateNumBars()))
@@ -229,7 +229,7 @@ public class HeatBars extends ChartViewContentDisplay {
                 .height(panelHeightFunction);
 
         /* an invisible panel that will handle mouse events */
-        invisibleInteractionBar = vis.add(PV.Panel).data(viewItemsJsArray)
+        invisibleInteractionBar = vis.add(PV.Panel).data(visualItemsJsArray)
                 .left(LEFT_LABEL_PADDING).width(totalBarWidthFunction)
                 .top(panelTopFunction).height(panelHeightFunction)
                 .cursor(POINTER).events(ALL)
@@ -330,25 +330,25 @@ public class HeatBars extends ChartViewContentDisplay {
     }
 
     /**
-     * This method converts the viewItems that are in the view, which
+     * This method converts the visualItems that are in the view, which
      * representBars, into a two dimensional JavaScript friendly double array
      * 
      * It also calculates the minimum and maximum bar scale, and the
      * maximumBinCount
      */
-    private void calculateDataArrayFromViewItems() {
+    private void calculateDataArrayFromVisualItems() {
         // reset data
 
         calculateStartAndEndOfBarScale();
         resetData();
         maxBinCount = 0;
 
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            // each viewItem represents one bar
-            VisualItem viewItem = viewItemsJsArray.get(i);
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            // each visualItem represents one bar
+            VisualItem visualItem = visualItemsJsArray.get(i);
 
             // This is the date of the work item
-            for (Double binValue : viewItem
+            for (Double binValue : visualItem
                     .<LightweightList<Double>> getValue(BINNING_VALUE)) {
 
                 if (barScaleEnd == barScaleStart) {
@@ -390,18 +390,18 @@ public class HeatBars extends ChartViewContentDisplay {
 
     private void calculateStartAndEndOfBarScale() {
 
-        if (viewItemsJsArray.length() == 0) {
+        if (visualItemsJsArray.length() == 0) {
             barScaleStart = 0.0;
             barScaleEnd = 0.0;
             return;
         }
 
-        barScaleEnd = getFirstBinValueFromViewItems();
+        barScaleEnd = getFirstBinValueFromVisualItems();
         barScaleStart = barScaleEnd;
 
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            VisualItem viewItem = viewItemsJsArray.get(i);
-            LightweightList<Double> values = viewItem.getValue(BINNING_VALUE);
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            VisualItem visualItem = visualItemsJsArray.get(i);
+            LightweightList<Double> values = visualItem.getValue(BINNING_VALUE);
             assert values.size() > 0;
 
             for (double binVal : values) {
@@ -415,8 +415,8 @@ public class HeatBars extends ChartViewContentDisplay {
         }
     }
 
-    public Double getFirstBinValueFromViewItems() {
-        LightweightList<Double> values = viewItemsJsArray.get(0).getValue(
+    public Double getFirstBinValueFromVisualItems() {
+        LightweightList<Double> values = visualItemsJsArray.get(0).getValue(
                 BINNING_VALUE);
         return (values).get(0);
     }

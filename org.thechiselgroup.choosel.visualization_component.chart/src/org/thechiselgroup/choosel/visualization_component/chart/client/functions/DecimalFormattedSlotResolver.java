@@ -34,8 +34,8 @@ public class DecimalFormattedSlotResolver implements JsStringFunction {
 
     @Override
     public String f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        double value = viewItem.getValueAsDouble(slot);
+        VisualItem visualItem = args.getObject();
+        double value = visualItem.getValueAsDouble(slot);
         return StringUtils.formatDecimal(value, decimalPlaces);
     }
 }

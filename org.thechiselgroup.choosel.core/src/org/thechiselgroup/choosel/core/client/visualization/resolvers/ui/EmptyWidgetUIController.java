@@ -43,7 +43,7 @@ public class EmptyWidgetUIController implements
     }
 
     @Override
-    public void update(LightweightCollection<VisualItem> viewItems) {
+    public void update(LightweightCollection<VisualItem> visualItems) {
         return;
     }
 

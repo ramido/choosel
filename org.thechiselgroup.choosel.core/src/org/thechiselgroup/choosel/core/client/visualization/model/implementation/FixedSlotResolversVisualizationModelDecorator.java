@@ -155,8 +155,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
-    public LightweightCollection<Slot> getSlotsWithErrors(VisualItem viewItem) {
-        return delegate.getSlotsWithErrors(viewItem);
+    public LightweightCollection<Slot> getSlotsWithErrors(VisualItem visualItem) {
+        return delegate.getSlotsWithErrors(visualItem);
     }
 
     @Override
@@ -190,8 +190,8 @@ public class FixedSlotResolversVisualizationModelDecorator implements
     }
 
     @Override
-    public boolean hasErrors(VisualItem viewItem) {
-        return delegate.hasErrors(viewItem);
+    public boolean hasErrors(VisualItem visualItem) {
+        return delegate.hasErrors(visualItem);
     }
 
     /**

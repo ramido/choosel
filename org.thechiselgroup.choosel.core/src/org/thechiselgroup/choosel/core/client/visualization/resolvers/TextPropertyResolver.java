@@ -27,14 +27,14 @@ public class TextPropertyResolver extends FirstResourcePropertyResolver {
     }
 
     @Override
-    public String resolve(VisualItem viewItem,
+    public String resolve(VisualItem visualItem,
             VisualItemValueResolverContext context, Subset subset) {
         // XXX can lead to weird effects (issue 115)
-        if (viewItem.getResources().size() >= 2) {
-            return viewItem.getId();
+        if (visualItem.getResources().size() >= 2) {
+            return visualItem.getId();
         }
 
-        return (String) super.resolve(viewItem, context, subset);
+        return (String) super.resolve(visualItem, context, subset);
     }
 
     @Override

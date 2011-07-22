@@ -286,11 +286,11 @@ public class Graph extends AbstractViewContentDisplay implements
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private NodeItem createGraphNodeItem(VisualItem viewItem) {
+    private NodeItem createGraphNodeItem(VisualItem visualItem) {
         // TODO get from group id
-        String type = getCategory(viewItem.getResources().getFirstElement());
+        String type = getCategory(visualItem.getResources().getFirstElement());
 
-        NodeItem graphItem = new NodeItem(viewItem, type, graphDisplay);
+        NodeItem graphItem = new NodeItem(visualItem, type, graphDisplay);
 
         graphDisplay.addNode(graphItem.getNode());
         positionNode(graphItem.getNode());
@@ -303,8 +303,8 @@ public class Graph extends AbstractViewContentDisplay implements
         graphDisplay.setNodeStyle(graphItem.getNode(), "showArrow", registry
                 .getNodeMenuEntries(type).isEmpty() ? "false" : "true");
 
-        nodeResources.addResourceSet(viewItem.getResources());
-        viewItem.setDisplayObject(graphItem);
+        nodeResources.addResourceSet(visualItem.getResources());
+        visualItem.setDisplayObject(graphItem);
 
         /*
          * NOTE: all node configuration should be done when calling the
@@ -314,7 +314,7 @@ public class Graph extends AbstractViewContentDisplay implements
          * NOTE: we do not execute the expanders if we are restoring the graph
          */
         if (ready) {
-            registry.getAutomaticExpander(type).expand(viewItem, this);
+            registry.getAutomaticExpander(type).expand(visualItem, this);
         }
 
         return graphItem;
@@ -579,15 +579,15 @@ public class Graph extends AbstractViewContentDisplay implements
                 }, category);
     }
 
-    private void removeGraphNode(VisualItem viewItem) {
-        assert viewItem != null;
+    private void removeGraphNode(VisualItem visualItem) {
+        assert visualItem != null;
 
-        nodeResources.removeResourceSet(viewItem.getResources());
+        nodeResources.removeResourceSet(visualItem.getResources());
         for (ArcItemContainer arcItemContainer : arcItemContainersByArcTypeID
                 .values()) {
-            arcItemContainer.removeViewItem(viewItem);
+            arcItemContainer.removeVisualItem(visualItem);
         }
-        graphDisplay.removeNode(getNode(viewItem));
+        graphDisplay.removeNode(getNode(visualItem));
     }
 
     @Override
@@ -705,7 +705,7 @@ public class Graph extends AbstractViewContentDisplay implements
             updateNode(addedItem);
         }
 
-        updateArcsForViewItems(delta.getAddedElements());
+        updateArcsForVisuaItems(delta.getAddedElements());
 
         for (VisualItem updatedItem : delta.getUpdatedElements()) {
             updateNode(updatedItem);
@@ -724,20 +724,20 @@ public class Graph extends AbstractViewContentDisplay implements
 
     @Override
     public void updateArcsForResources(Iterable<Resource> resources) {
-        updateArcsForViewItems(getVisualItems(resources));
+        updateArcsForVisuaItems(getVisualItems(resources));
     }
 
     @Override
-    public void updateArcsForViewItems(
-            LightweightCollection<VisualItem> viewItems) {
-        assert viewItems != null;
+    public void updateArcsForVisuaItems(
+            LightweightCollection<VisualItem> visualItems) {
+        assert visualItems != null;
         for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
-            container.update(viewItems);
+            container.update(visualItems);
         }
     }
 
-    private void updateNode(VisualItem viewItem) {
-        viewItem.<NodeItem> getDisplayObject().updateNode();
+    private void updateNode(VisualItem visualItem) {
+        visualItem.<NodeItem> getDisplayObject().updateNode();
     }
 
 }

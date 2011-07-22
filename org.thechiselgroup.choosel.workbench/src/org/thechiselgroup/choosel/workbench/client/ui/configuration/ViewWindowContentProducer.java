@@ -208,14 +208,14 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         Map<Slot, VisualItemValueResolver> fixedSlotResolvers = viewContentDisplayConfiguration
                 .getFixedSlotResolvers(contentType);
 
-        CompositeVisualItemBehavior viewItemBehaviors = new CompositeVisualItemBehavior();
+        CompositeVisualItemBehavior visualItemBehaviors = new CompositeVisualItemBehavior();
 
-        // viewItemBehaviors.add(new ViewInteractionLogger(logger));
-        viewItemBehaviors.add(new HighlightingVisualItemBehavior(hoverModel));
-        viewItemBehaviors.add(new DragVisualItemBehavior(dragEnablerFactory));
-        viewItemBehaviors.add(new PopupWithHighlightingVisualItemBehavior(
+        // visualItemBehaviors.add(new ViewInteractionLogger(logger));
+        visualItemBehaviors.add(new HighlightingVisualItemBehavior(hoverModel));
+        visualItemBehaviors.add(new DragVisualItemBehavior(dragEnablerFactory));
+        visualItemBehaviors.add(new PopupWithHighlightingVisualItemBehavior(
                 detailsWidgetHelper, popupManagerFactory, hoverModel));
-        viewItemBehaviors.add(new SwitchSelectionOnClickVisualItemBehavior(
+        visualItemBehaviors.add(new SwitchSelectionOnClickVisualItemBehavior(
                 selectionModel, commandManager));
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
@@ -225,7 +225,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         VisualizationModel visualizationModel = new FixedSlotResolversVisualizationModelDecorator(
                 new DefaultVisualizationModel(contentDisplay,
                         selectionModel.getSelectionProxy(),
-                        hoverModel.getResources(), viewItemBehaviors,
+                        hoverModel.getResources(), visualItemBehaviors,
                         errorHandler, new DefaultResourceSetFactory(),
                         categorizer), fixedSlotResolvers);
 

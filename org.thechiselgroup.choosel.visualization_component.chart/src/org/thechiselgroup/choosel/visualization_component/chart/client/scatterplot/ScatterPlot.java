@@ -183,7 +183,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
 
     @Override
     public void buildChart() {
-        assert viewItemsJsArray.length() >= 1;
+        assert visualItemsJsArray.length() >= 1;
 
         initChart();
         initScales();
@@ -199,7 +199,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
          * TODO use scale for size; problem: PV.Scale.Linear did not work with
          * single value.
          */
-        dots = getChart().add(PV.Dot).data(viewItemsJsArray)
+        dots = getChart().add(PV.Dot).data(visualItemsJsArray)
                 .shape(new VisualItemStringSlotAccessor(SHAPE))
                 .bottom(scaleY.fd(new VisualItemDoubleSlotAccessor(Y_POSITION)))
                 .left(scaleX.fd(new VisualItemDoubleSlotAccessor(X_POSITION)))
@@ -360,10 +360,10 @@ public class ScatterPlot extends ChartViewContentDisplay {
     }
 
     private void initScales() {
-        scaleX = PV.Scale.linear(viewItemsJsArray,
+        scaleX = PV.Scale.linear(visualItemsJsArray,
                 new VisualItemDoubleSlotAccessor(X_POSITION))
                 .range(0, chartWidth);
-        scaleY = PV.Scale.linear(viewItemsJsArray,
+        scaleY = PV.Scale.linear(visualItemsJsArray,
                 new VisualItemDoubleSlotAccessor(Y_POSITION)).range(0,
                 chartHeight);
     }

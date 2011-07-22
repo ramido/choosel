@@ -41,7 +41,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 
 public class DefaultVisualItemTest {
 
-    private static final String VIEW_ITEM_ID = "viewItemCategory";
+    private static final String VIEW_ITEM_ID = "visualItemCategory";
 
     private ResourceSet resources;
 

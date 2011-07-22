@@ -54,15 +54,15 @@ public class PopupWithHighlightingVisualItemBehavior extends
     }
 
     @Override
-    public void onVisualItemCreated(VisualItem viewItem) {
-        super.onVisualItemCreated(viewItem);
+    public void onVisualItemCreated(VisualItem visualItem) {
+        super.onVisualItemCreated(visualItem);
 
-        assert !highlightingManagers.containsKey(viewItem.getId());
+        assert !highlightingManagers.containsKey(visualItem.getId());
 
         final HighlightingManager highlightingManager = new HighlightingManager(
-                hoverModel, viewItem.getResources());
+                hoverModel, visualItem.getResources());
 
-        Popup popup = getHandler(viewItem).getPopup();
+        Popup popup = getHandler(visualItem).getPopup();
 
         popup.addDomHandler(new MouseOverHandler() {
             @Override
@@ -85,16 +85,16 @@ public class PopupWithHighlightingVisualItemBehavior extends
             }
         }, PopupOpacityChangedEvent.TYPE);
 
-        highlightingManagers.put(viewItem.getId(), highlightingManager);
+        highlightingManagers.put(visualItem.getId(), highlightingManager);
     }
 
     @Override
-    public void onVisualItemRemoved(VisualItem viewItem) {
-        super.onVisualItemRemoved(viewItem);
+    public void onVisualItemRemoved(VisualItem visualItem) {
+        super.onVisualItemRemoved(visualItem);
 
-        assert highlightingManagers.containsKey(viewItem.getId());
+        assert highlightingManagers.containsKey(visualItem.getId());
 
-        HighlightingManager manager = highlightingManagers.remove(viewItem
+        HighlightingManager manager = highlightingManagers.remove(visualItem
                 .getId());
         manager.dispose();
     }

@@ -40,21 +40,21 @@ public class VisualItemColorResolver extends
     }
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
         // TODO what if resource.isEmpty?
-        if (viewItem.getResources().isEmpty()) {
+        if (visualItem.getResources().isEmpty()) {
             return COLORS[0]; // XXX we need something better
         }
 
-        Resource resource = viewItem.getResources().getFirstElement();
+        Resource resource = visualItem.getResources().getFirstElement();
         String resourceType = categorizer.getCategory(resource);
 
         if (!resourceTypeToColor.containsKey(resourceType)) {

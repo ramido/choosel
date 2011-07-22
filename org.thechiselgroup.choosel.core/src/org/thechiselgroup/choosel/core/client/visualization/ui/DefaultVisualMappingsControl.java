@@ -223,8 +223,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private void updateGroupingBox(LightweightCollection<VisualItem> visualItems) {
         ResourceSet resources = new DefaultResourceSet();
-        for (VisualItem viewItem : visualItems) {
-            resources.addAll(viewItem.getResources());
+        for (VisualItem visualItem : visualItems) {
+            resources.addAll(visualItem.getResources());
         }
 
         DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
@@ -233,10 +233,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         updateGroupingBox(propertiesByDataType);
     }
 
-    private void updateSlotControls(LightweightCollection<VisualItem> viewItems) {
+    private void updateSlotControls(LightweightCollection<VisualItem> visualItems) {
         for (DataType dataType : DataType.values()) {
             for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
-                slotControl.updateOptions(viewItems);
+                slotControl.updateOptions(visualItems);
             }
         }
     }

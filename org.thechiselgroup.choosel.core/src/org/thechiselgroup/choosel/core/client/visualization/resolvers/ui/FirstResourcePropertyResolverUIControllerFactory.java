@@ -34,13 +34,13 @@ public class FirstResourcePropertyResolverUIControllerFactory implements
     @Override
     public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         assert factory instanceof FirstResourcePropertyResolverFactory;
 
         return new FirstResourcePropertyResolverUIController(getId(),
                 (FirstResourcePropertyResolverFactory) factory, uiModel,
-                viewItems);
+                visualItems);
     }
 
     @Override

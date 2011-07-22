@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationM
  * {@link VisualItemValueResolver}s on a {@link VisualizationModel} if the
  * mappings for some {@link Slot}s are invalid.
  */
-// TODO rename to DefaultViewItemValueResolverProvider
+// TODO rename to DefaultVisualItemValueResolverProvider
 public interface SlotMappingInitializer {
 
     Map<Slot, VisualItemValueResolver> getResolvers(ResourceSet viewResources,

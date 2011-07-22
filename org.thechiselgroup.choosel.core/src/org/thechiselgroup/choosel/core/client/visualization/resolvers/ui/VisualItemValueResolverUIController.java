@@ -24,5 +24,5 @@ public interface VisualItemValueResolverUIController extends IsWidget {
 
     String getId();
 
-    void update(LightweightCollection<VisualItem> viewItems);
+    void update(LightweightCollection<VisualItem> visualItems);
 }

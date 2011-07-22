@@ -56,13 +56,13 @@ public class CalculationResolver extends SubsetVisualItemValueResolver implement
      * okay)
      */
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
-        assert viewItem != null;
+        assert visualItem != null;
         assert context != null;
 
-        for (Resource resource : viewItem.getResources()) {
+        for (Resource resource : visualItem.getResources()) {
             // XXX also need to check property data type.
             if (!resource.containsProperty(property)
                     || resource.getValue(property) == null) {
@@ -83,9 +83,9 @@ public class CalculationResolver extends SubsetVisualItemValueResolver implement
     }
 
     @Override
-    public Double resolve(VisualItem viewItem,
+    public Double resolve(VisualItem visualItem,
             VisualItemValueResolverContext context, Subset subset) {
-        return calculation.calculate(toNumberArray(viewItem
+        return calculation.calculate(toNumberArray(visualItem
                 .getResources(subset)));
     }
 
