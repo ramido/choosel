@@ -13,19 +13,27 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
+package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
-import org.thechiselgroup.choosel.core.client.util.DataType;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
-public class FixedVisualItemResolverFactory extends
-        SingletonVisualItemResolverFactory {
+public abstract class AbstractManagedVisualItemValueResolverFactory implements
+        VisualItemValueResolverFactory {
 
-    public FixedVisualItemResolverFactory(Object value, DataType valueType,
-            String id) {
+    private String id;
 
-        super(id, new FixedValueResolver(value, valueType), value.toString(),
-                valueType);
+    public AbstractManagedVisualItemValueResolverFactory(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    protected ManagedVisualItemValueResolverDecorator wrap(
+            VisualItemValueResolver delegate) {
+        return new ManagedVisualItemValueResolverDecorator(id, delegate);
     }
 
 }

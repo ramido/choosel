@@ -16,16 +16,31 @@
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import org.thechiselgroup.choosel.core.client.util.DataType;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
-public class FixedVisualItemResolverFactory extends
+public class SingleSlotDependentVisualItemResolverFactory extends
         SingletonVisualItemResolverFactory {
 
-    public FixedVisualItemResolverFactory(Object value, DataType valueType,
-            String id) {
+    private Slot slot;
 
-        super(id, new FixedValueResolver(value, valueType), value.toString(),
-                valueType);
+    public SingleSlotDependentVisualItemResolverFactory(String id,
+            VisualItemValueResolver resolver, String label, DataType dataType,
+            Slot slot) {
+
+        super(id, resolver, label, dataType);
+
+        this.slot = slot;
+    }
+
+    @Override
+    public boolean canCreateApplicableResolver(Slot slot,
+            LightweightCollection<VisualItem> visualItems) {
+
+        return this.slot.equals(slot)
+                && super.canCreateApplicableResolver(slot, visualItems);
     }
 
 }
