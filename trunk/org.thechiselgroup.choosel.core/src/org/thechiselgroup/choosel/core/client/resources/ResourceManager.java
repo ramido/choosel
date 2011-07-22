@@ -45,6 +45,8 @@ public interface ResourceManager extends ResourceAccessor {
 
     void deallocate(String uri);
 
+    List<Resource> getAllResources();
+
     List<Resource> resolveResources(Resource resource, String uriListProperty);
 
 }

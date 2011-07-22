@@ -123,6 +123,15 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
+    public List<Resource> getAllResources() {
+        List<Resource> resources = new ArrayList<Resource>();
+        for (ResourceElement element : keysToResourceElements.values()) {
+            resources.add(element.resource);
+        }
+        return resources;
+    }
+
+    @Override
     public Resource getByUri(String uri) {
         assert keysToResourceElements.containsKey(uri) : "no resource for uri '"
                 + uri + "'";
