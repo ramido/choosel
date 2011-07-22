@@ -40,6 +40,9 @@ public class ChooselWorkbenchViewWindowContentProducer extends
         ViewWindowContentProducer {
 
     @Inject
+    protected VisualItemValueResolverFactoryProvider provider;
+
+    @Inject
     private ShareConfigurationFactory shareConfigurationFactory;
 
     @Inject
