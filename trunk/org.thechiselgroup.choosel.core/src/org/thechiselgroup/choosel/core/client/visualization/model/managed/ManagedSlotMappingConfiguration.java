@@ -249,7 +249,8 @@ public class ManagedSlotMappingConfiguration {
             assert resolver != null;
 
             // TODO change initializers to return these values
-            assert resolver instanceof ManagedVisualItemValueResolver;
+            assert resolver instanceof ManagedVisualItemValueResolver : "resolver "
+                    + resolver + " is not managed";
 
             if (getManagedSlotMapping(slot).isAllowableResolver(resolver,
                     visualItems)) {
