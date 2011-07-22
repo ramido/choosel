@@ -33,13 +33,13 @@ public class CalculationResolverUIControllerFactory implements
     @Override
     public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         assert factory instanceof CalculationResolverFactory;
 
         CalculationResolverUIController calculationResolverUIController = new CalculationResolverUIController(
                 getId(), (CalculationResolverFactory) factory, uiModel,
-                viewItems);
+                visualItems);
 
         return calculationResolverUIController;
     }

@@ -34,7 +34,7 @@ public interface ArcType {
      * Returns all arcs that should be connected to a given {@link VisualItem} in
      * the context of other {@link VisualItem}s.
      * 
-     * @param viewItem
+     * @param visualItem
      *            {@link VisualItem} for which potential arcs should be returned
      * @param context
      *            context in which the arcs for the {@link VisualItem} should be
@@ -46,7 +46,7 @@ public interface ArcType {
      *         for the same resource item. However, their IDs should match: an
      *         equal arc should have an equal id across multiple calls.
      */
-    LightweightCollection<Arc> getArcs(VisualItem viewItem,
+    LightweightCollection<Arc> getArcs(VisualItem visualItem,
             VisualItemContainer context);
 
     /**

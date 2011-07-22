@@ -26,15 +26,15 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
 public class VisualItemIdResolver extends AbstractBasicVisualItemValueResolver {
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
         return true;
     }
 
     @Override
-    public String resolve(VisualItem viewItem,
+    public String resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
-        return viewItem.getId();
+        return visualItem.getId();
     }
 
 }

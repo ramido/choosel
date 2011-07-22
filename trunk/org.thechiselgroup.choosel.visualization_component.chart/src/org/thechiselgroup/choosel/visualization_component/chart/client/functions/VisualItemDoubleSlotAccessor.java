@@ -32,8 +32,8 @@ public class VisualItemDoubleSlotAccessor implements JsDoubleFunction {
 
     @Override
     public double f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        return viewItem.getValueAsDouble(slot);
+        VisualItem visualItem = args.getObject();
+        return visualItem.getValueAsDouble(slot);
     }
 
 }

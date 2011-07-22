@@ -51,14 +51,14 @@ public class SwitchSelectionOnClickVisualItemBehavior implements
     }
 
     @Override
-    public void onInteraction(VisualItem viewItem,
+    public void onInteraction(VisualItem visualItem,
             VisualItemInteraction interaction) {
-        assert viewItem != null;
+        assert visualItem != null;
         assert interaction != null;
 
         switch (interaction.getEventType()) {
         case CLICK:
-            switchSelection(viewItem);
+            switchSelection(visualItem);
             break;
         }
     }
@@ -67,8 +67,8 @@ public class SwitchSelectionOnClickVisualItemBehavior implements
     public void onVisualItemContainerChanged(VisualItemContainerChangeEvent event) {
     }
 
-    protected void switchSelection(VisualItem viewItem) {
-        commandManager.execute(new SwitchSelectionCommand(viewItem
+    protected void switchSelection(VisualItem visualItem) {
+        commandManager.execute(new SwitchSelectionCommand(visualItem
                 .getResources(), getSelectionModel()));
     }
 

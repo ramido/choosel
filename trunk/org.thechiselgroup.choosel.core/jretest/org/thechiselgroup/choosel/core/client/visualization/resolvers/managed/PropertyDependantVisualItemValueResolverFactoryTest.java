@@ -30,7 +30,7 @@ public class PropertyDependantVisualItemValueResolverFactoryTest {
     private PropertyDependantVisualItemValueResolverFactory underTest;
 
     @Test
-    public void cannotCreateResolverForEmptyViewItemCollection() {
+    public void cannotCreateResolverForEmptyVisualItemCollection() {
         assertFalse(underTest.canCreateApplicableResolver(new Slot("id",
                 "name", DataType.TEXT), LightweightCollections
                 .<VisualItem> emptyCollection()));

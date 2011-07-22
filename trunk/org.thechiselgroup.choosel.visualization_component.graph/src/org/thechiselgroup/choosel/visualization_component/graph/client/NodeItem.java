@@ -38,15 +38,15 @@ public class NodeItem {
 
     private final VisualItem visualItem;
 
-    public NodeItem(VisualItem viewItem, String type, GraphDisplay display) {
-        assert viewItem != null;
+    public NodeItem(VisualItem visualItem, String type, GraphDisplay display) {
+        assert visualItem != null;
         assert type != null;
         assert display != null;
 
-        this.visualItem = viewItem;
+        this.visualItem = visualItem;
         this.display = display;
 
-        node = new Node(viewItem.getId(), getLabelValue(), type);
+        node = new Node(visualItem.getId(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
@@ -65,7 +65,7 @@ public class NodeItem {
         return visualItem.getValue(Graph.NODE_BORDER_COLOR);
     }
 
-    public VisualItem getViewItem() {
+    public VisualItem getVisualItem() {
         return visualItem;
     }
 

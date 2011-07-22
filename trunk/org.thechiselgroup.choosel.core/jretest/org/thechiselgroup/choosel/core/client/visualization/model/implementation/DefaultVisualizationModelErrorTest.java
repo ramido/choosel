@@ -108,7 +108,7 @@ public class DefaultVisualizationModelErrorTest {
     }
 
     @Test
-    public void resolverCannotResolveSomeViewItemsFixedByChangingResolverReturnsNoErrors() {
+    public void resolverCannotResolveSomeVisualItemsFixedByChangingResolverReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestVisualizationModel();
 
@@ -117,7 +117,7 @@ public class DefaultVisualizationModelErrorTest {
 
         /*
          * there are currently errors on resource2 as per
-         * resolverCannotResolveSomeViewItemsThrowsErrors test
+         * resolverCannotResolveSomeVisualItemsThrowsErrors test
          */
 
         underTest.setResolver(slots[0], mockResolverThatCanAlwaysResolve());
@@ -125,7 +125,7 @@ public class DefaultVisualizationModelErrorTest {
     }
 
     @Test
-    public void resolverCannotResolveSomeViewItemsFixedByChangingViewItemsReturnsNoErrors() {
+    public void resolverCannotResolveSomeVisualItemsFixedByChangingVisualItemsReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestVisualizationModel();
 
@@ -134,14 +134,14 @@ public class DefaultVisualizationModelErrorTest {
 
         /*
          * there are currently errors on resource2 as per
-         * resolverCannotResolveSomeViewItemsThrowsErrors test
+         * resolverCannotResolveSomeVisualItemsThrowsErrors test
          */
         getResourceSetFromUnderTest().remove(resource2);
         assertThat(underTest.hasErrors(), is(false));
     }
 
     @Test
-    public void resolverCannotResolveSomeViewItemsThrowsErrors() {
+    public void resolverCannotResolveSomeVisualItemsThrowsErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         underTest = helper.createTestVisualizationModel();
 

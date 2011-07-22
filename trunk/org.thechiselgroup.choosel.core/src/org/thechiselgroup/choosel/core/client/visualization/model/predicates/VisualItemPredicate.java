@@ -19,6 +19,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 public interface VisualItemPredicate {
 
-    boolean matches(VisualItem viewItem);
+    boolean matches(VisualItem visualItem);
 
 }

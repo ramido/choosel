@@ -64,7 +64,7 @@ public class SlotMappingIntegrationTest {
     private DefaultVisualItemResolverFactoryProvider resolverProvider = new DefaultVisualItemResolverFactoryProvider();
 
     @Mock
-    private VisualItemBehavior viewItemBehavior;
+    private VisualItemBehavior visualItemBehavior;
 
     @Mock
     private ErrorHandler errorHandler;
@@ -94,13 +94,13 @@ public class SlotMappingIntegrationTest {
      * <p>
      * We create the view with the resolver and slots as above. The resolver is
      * automatically set to resolve based on property name “x”, and so 2
-     * ViewItems are created each with value = 1. We then change the property
-     * that is selected to property “y”. The ViewItems are replaced with 2 new
-     * ViewItems each with value = 2.
+     * VisualItems are created each with value = 1. We then change the property
+     * that is selected to property “y”. The VisualItems are replaced with 2 new
+     * VisualItems each with value = 2.
      * </p>
      */
     @Test
-    public void changeSelectedPropertyChangesViewItems() {
+    public void changeSelectedPropertyChangesVisualItems() {
         Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
@@ -131,11 +131,11 @@ public class SlotMappingIntegrationTest {
                         DataType.NUMBER));
         model.setResolver(requiredSlots[0], resolver2);
 
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
 
-        assertEquals(viewItems.size(), 1);
-        Iterator<VisualItem> iterator = viewItems.iterator();
+        assertEquals(visualItems.size(), 1);
+        Iterator<VisualItem> iterator = visualItems.iterator();
         VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 2);
     }
@@ -181,10 +181,10 @@ public class SlotMappingIntegrationTest {
                                 DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
-        assertTrue(viewItems.size() == 1);
-        VisualItem item = viewItems.iterator().next();
+        assertTrue(visualItems.size() == 1);
+        VisualItem item = visualItems.iterator().next();
         assertEquals(2, item.getValue(requiredSlots[0]));
     }
 
@@ -193,7 +193,7 @@ public class SlotMappingIntegrationTest {
 
         DefaultVisualizationModel model = new DefaultVisualizationModel(
                 helper.getViewContentDisplay(), new DefaultResourceSet(),
-                new DefaultResourceSet(), viewItemBehavior, errorHandler,
+                new DefaultResourceSet(), visualItemBehavior, errorHandler,
                 new DefaultResourceSetFactory(), categorizer);
         new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, model, model);
@@ -358,9 +358,9 @@ public class SlotMappingIntegrationTest {
      * <p>
      * We create the view with the single slot and set up the resolver to select
      * on property x. We then add the first resource, and the View will create 1
-     * ViewItem with value 1. We then add the second resource, and the resolver
+     * VisualItem with value 1. We then add the second resource, and the resolver
      * will automatically change to resolve on property y, and the View will
-     * have 2 ViewItems in it each with value 2.
+     * have 2 VisualItems in it each with value 2.
      * </p>
      */
     /*
@@ -403,11 +403,11 @@ public class SlotMappingIntegrationTest {
 
         // resolver.setProperty(property2);
 
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
 
-        assertEquals(viewItems.size(), 1);
-        Iterator<VisualItem> iterator = viewItems.iterator();
+        assertEquals(visualItems.size(), 1);
+        Iterator<VisualItem> iterator = visualItems.iterator();
         VisualItem first = iterator.next();
         assertEquals(1, first.getValue(requiredSlots[0]));
     }
@@ -451,7 +451,7 @@ public class SlotMappingIntegrationTest {
     }
 
     @Test
-    public void removingAllResourcesResultsInNoViewItems() {
+    public void removingAllResourcesResultsInNoVisualItems() {
         Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
@@ -503,7 +503,7 @@ public class SlotMappingIntegrationTest {
      * <p>
      * We create a simple view that has one resolver and one slot. The slot and
      * resolver are as above. We then initialize the View and add the data item.
-     * Each of those resources should be converted into a ViewItem, with a slot
+     * Each of those resources should be converted into a VisualItem, with a slot
      * value = 2.
      * </p>
      */
@@ -533,12 +533,12 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property1, 1);
         model.getContentResourceSet().add(resource);
 
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
 
-        assertEquals(viewItems.size(), 1);
+        assertEquals(visualItems.size(), 1);
 
-        Iterator<VisualItem> iterator = viewItems.iterator();
+        Iterator<VisualItem> iterator = visualItems.iterator();
         VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 1);
 
@@ -556,7 +556,7 @@ public class SlotMappingIntegrationTest {
      * 
      * <p>
      * We create the view with the resolver and slots as above. We then add the
-     * 2 resources above. Each of the resources result in a similar ViewItem
+     * 2 resources above. Each of the resources result in a similar VisualItem
      * being created.
      * </p>
      */
@@ -599,11 +599,11 @@ public class SlotMappingIntegrationTest {
         model.getContentResourceSet().add(resource1);
 
         /* Test results */
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
-        assertTrue(viewItems.size() == 1);
+        assertTrue(visualItems.size() == 1);
 
-        Iterator<VisualItem> iterator = viewItems.iterator();
+        Iterator<VisualItem> iterator = visualItems.iterator();
         VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 1);
         assertEquals(first.getValue(requiredSlots[1]), "a");
@@ -624,7 +624,7 @@ public class SlotMappingIntegrationTest {
      * We create a simple view that has one resolver and one slot. The slot is a
      * Number and the resolver is a FixedResolver, so it can resolve any
      * ResourceSet . We then initialize the View and add the data items. Each of
-     * those resources should be converted into a ViewItem, with a slot value of
+     * those resources should be converted into a VisualItem, with a slot value of
      * 1.
      * </p>
      */
@@ -658,11 +658,11 @@ public class SlotMappingIntegrationTest {
         model.getContentResourceSet().add(createResource(1));
 
         /* Test results */
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
-        assertTrue(viewItems.size() == 1);
+        assertTrue(visualItems.size() == 1);
 
-        VisualItem item = viewItems.iterator().next();
+        VisualItem item = visualItems.iterator().next();
         assertEquals(1, item.getValue(requiredSlots[0]));
     }
 
@@ -699,11 +699,11 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property1, 1);
         model.getContentResourceSet().add(resource);
 
-        LightweightCollection<VisualItem> viewItems = model
+        LightweightCollection<VisualItem> visualItems = model
                 .getFullVisualItemContainer().getVisualItems();
 
-        assertEquals(1, viewItems.size());
-        Iterator<VisualItem> iterator = viewItems.iterator();
+        assertEquals(1, visualItems.size());
+        Iterator<VisualItem> iterator = visualItems.iterator();
         VisualItem first = iterator.next();
         assertEquals(first.getValue(requiredSlots[0]), 1);
     }

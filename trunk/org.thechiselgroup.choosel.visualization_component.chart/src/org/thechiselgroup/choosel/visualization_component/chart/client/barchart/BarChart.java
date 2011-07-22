@@ -342,10 +342,10 @@ public class BarChart extends ChartViewContentDisplay {
     protected JsStringFunction barValueLabelTextStyle = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            VisualItem viewItem = args.<VisualItem> getObject();
+            VisualItem visualItem = args.<VisualItem> getObject();
             PVMark _this = args.getThis();
 
-            if (Status.FULL.equals(viewItem.getStatus(Subset.HIGHLIGHTED))) {
+            if (Status.FULL.equals(visualItem.getStatus(Subset.HIGHLIGHTED))) {
                 return Colors.BLACK;
             }
 
@@ -384,22 +384,22 @@ public class BarChart extends ChartViewContentDisplay {
     protected JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            VisualItem viewItem = args.getObject();
+            VisualItem visualItem = args.getObject();
             // TODO separate visibility determination
-            return viewItem.getValueAsDouble(BAR_LENGTH)
-                    - viewItem.getValueAsDouble(PARTIAL_BAR_LENGTH) < 1 ? null
-                    : Double.toString(viewItem.getValueAsDouble(BAR_LENGTH)
-                            - viewItem.getValueAsDouble(PARTIAL_BAR_LENGTH));
+            return visualItem.getValueAsDouble(BAR_LENGTH)
+                    - visualItem.getValueAsDouble(PARTIAL_BAR_LENGTH) < 1 ? null
+                    : Double.toString(visualItem.getValueAsDouble(BAR_LENGTH)
+                            - visualItem.getValueAsDouble(PARTIAL_BAR_LENGTH));
         }
     };
 
     protected JsStringFunction partialBarValueLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            VisualItem viewItem = args.getObject();
+            VisualItem visualItem = args.getObject();
             // TODO separate visibility determination
-            return viewItem.getValueAsDouble(PARTIAL_BAR_LENGTH) <= 0 ? null
-                    : Double.toString(viewItem
+            return visualItem.getValueAsDouble(PARTIAL_BAR_LENGTH) <= 0 ? null
+                    : Double.toString(visualItem
                             .getValueAsDouble(PARTIAL_BAR_LENGTH));
         }
     };
@@ -433,24 +433,24 @@ public class BarChart extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        viewItemsJsArray.sortStable(getVisualItemComparator());
+        visualItemsJsArray.sortStable(getVisualItemComparator());
 
         calculateMaximumChartItemValue();
 
-        if (viewItemsJsArray.length() == 0) {
+        if (visualItemsJsArray.length() == 0) {
             return;
         }
 
-        regularValues = new double[viewItemsJsArray.length()];
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            regularValues[i] = viewItemsJsArray.get(i).getValueAsDouble(
+        regularValues = new double[visualItemsJsArray.length()];
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            regularValues[i] = visualItemsJsArray.get(i).getValueAsDouble(
                     BAR_LENGTH);
         }
     }
 
     @Override
     public void buildChart() {
-        assert viewItemsJsArray.length() >= 1;
+        assert visualItemsJsArray.length() >= 1;
 
         // TODO do we need sorting?
         // Collections.sort(chartItems, new ChartItemComparator(
@@ -480,13 +480,13 @@ public class BarChart extends ChartViewContentDisplay {
 
     private double calculateBarStart(int index) {
         double barAreaStart = index * getBarWidthSpace()
-                / viewItemsJsArray.length();
+                / visualItemsJsArray.length();
         double barOffset = barSpacing ? calculateBarWidth() / 2 : 0;
         return barAreaStart + barOffset;
     }
 
     private double calculateBarWidth() {
-        double spacePerBar = getBarWidthSpace() / viewItemsJsArray.length();
+        double spacePerBar = getBarWidthSpace() / visualItemsJsArray.length();
 
         if (barSpacing) {
             spacePerBar /= 2;
@@ -513,8 +513,8 @@ public class BarChart extends ChartViewContentDisplay {
 
         // max over widths for labels
         int maxWidth = 0;
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            String label = viewItemsJsArray.get(i).getValue(BAR_LABEL);
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            String label = visualItemsJsArray.get(i).getValue(BAR_LABEL);
             estimator.setText(label);
             int width = estimator.getWidth();
 
@@ -528,8 +528,8 @@ public class BarChart extends ChartViewContentDisplay {
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            double currentItemValue = viewItemsJsArray.get(i).getValueAsDouble(
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            double currentItemValue = visualItemsJsArray.get(i).getValueAsDouble(
                     BAR_LENGTH);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
@@ -555,7 +555,7 @@ public class BarChart extends ChartViewContentDisplay {
          * The regular bar starts after the partial bar. Otherwise there are
          * color differences if the partial bar is semi-transparent.
          */
-        regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
+        regularBar = getChart().add(PV.Bar).data(visualItemsJsArray)
                 .left(BAR_STROKE_WIDTH).width(regularBarLength)
                 .bottom(barStart).height(barWidth)
                 .fillStyle(new VisualItemColorSlotAccessor(BAR_COLOR))
@@ -574,14 +574,14 @@ public class BarChart extends ChartViewContentDisplay {
          * Partial bars have a white bar below them to prevent the regular bar
          * from affecting a semi-transparent partial bar.
          */
-        getChart().add(PV.Bar).data(viewItemsJsArray).left(BAR_STROKE_WIDTH)
+        getChart().add(PV.Bar).data(visualItemsJsArray).left(BAR_STROKE_WIDTH)
                 .width(partialBarLength).bottom(partialBarStart)
                 .height(partialBarWidth).fillStyle(Colors.WHITE)
                 .strokeStyle(Colors.WHITE).lineWidth(BAR_STROKE_WIDTH)
                 .visible(showPartialBars);
         partialBar = getChart()
                 .add(PV.Bar)
-                .data(viewItemsJsArray)
+                .data(visualItemsJsArray)
                 .left(BAR_STROKE_WIDTH)
                 .width(partialBarLength)
                 .bottom(partialBarStart)
@@ -600,11 +600,11 @@ public class BarChart extends ChartViewContentDisplay {
         drawHorizontalGridLines();
 
         invisibleInteractionBar = getChart().add(PV.Panel)
-                .data(viewItemsJsArray).left(BAR_STROKE_WIDTH)
+                .data(visualItemsJsArray).left(BAR_STROKE_WIDTH)
                 .width(regularBarLength).bottom(barStart).height(barWidth)
                 .lineWidth(BAR_STROKE_WIDTH).cursor(POINTER).events(ALL);
 
-        barLabel = getChart().add(PV.Label).data(viewItemsJsArray)
+        barLabel = getChart().add(PV.Label).data(visualItemsJsArray)
                 .bottom(baselineLabelStart).textAlign(PVAlignment.RIGHT)
                 .left(0).font(FONT)
                 .text(new VisualItemStringSlotAccessor(BAR_LABEL))
@@ -631,7 +631,7 @@ public class BarChart extends ChartViewContentDisplay {
          * The regular bar starts after the partial bar. Otherwise there are
          * color differences if the partial bar is semi-transparent.
          */
-        regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
+        regularBar = getChart().add(PV.Bar).data(visualItemsJsArray)
                 .bottom(BAR_STROKE_WIDTH).height(regularBarLength)
                 .left(barStart).width(barWidth)
                 .fillStyle(new VisualItemColorSlotAccessor(BAR_COLOR))
@@ -649,14 +649,14 @@ public class BarChart extends ChartViewContentDisplay {
          * Partial bars have a white bar below them to prevent the regular bar
          * from affecting a semi-transparent partial bar.
          */
-        getChart().add(PV.Bar).data(viewItemsJsArray).bottom(BAR_STROKE_WIDTH)
+        getChart().add(PV.Bar).data(visualItemsJsArray).bottom(BAR_STROKE_WIDTH)
                 .height(partialBarLength).left(partialBarStart)
                 .width(partialBarWidth).fillStyle(Colors.WHITE)
                 .strokeStyle(Colors.WHITE).lineWidth(BAR_STROKE_WIDTH)
                 .visible(showPartialBars);
         partialBar = getChart()
                 .add(PV.Bar)
-                .data(viewItemsJsArray)
+                .data(visualItemsJsArray)
                 .bottom(BAR_STROKE_WIDTH)
                 .height(partialBarLength)
                 .left(partialBarStart)
@@ -674,11 +674,11 @@ public class BarChart extends ChartViewContentDisplay {
         }
 
         invisibleInteractionBar = getChart().add(PV.Panel)
-                .data(viewItemsJsArray).bottom(BAR_STROKE_WIDTH)
+                .data(visualItemsJsArray).bottom(BAR_STROKE_WIDTH)
                 .height(regularBarLength).left(barStart).width(barWidth)
                 .lineWidth(BAR_STROKE_WIDTH).cursor(POINTER).events(ALL);
 
-        getChart().add(PV.Label).data(viewItemsJsArray)
+        getChart().add(PV.Label).data(visualItemsJsArray)
                 .left(baselineLabelStart).textAlign(PVAlignment.CENTER)
                 .bottom(new JsDoubleFunction() {
                     @Override

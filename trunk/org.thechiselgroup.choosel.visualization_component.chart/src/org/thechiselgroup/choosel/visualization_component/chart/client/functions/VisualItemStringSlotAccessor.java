@@ -32,8 +32,8 @@ public class VisualItemStringSlotAccessor implements JsStringFunction {
 
     @Override
     public String f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        return viewItem.<String> getValue(slot);
+        VisualItem visualItem = args.getObject();
+        return visualItem.<String> getValue(slot);
     }
 
 }

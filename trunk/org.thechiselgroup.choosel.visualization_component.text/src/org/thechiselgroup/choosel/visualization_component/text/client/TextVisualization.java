@@ -94,17 +94,17 @@ public class TextVisualization extends AbstractViewContentDisplay {
      * items.
      * </p>
      */
-    private void addViewItems(LightweightCollection<VisualItem> addedViewItems) {
+    private void addVisualItems(LightweightCollection<VisualItem> addedVisualItems) {
 
-        assert addedViewItems != null;
+        assert addedVisualItems != null;
 
         // PERFORMANCE: do not execute sort if nothing changes
-        if (addedViewItems.isEmpty()) {
+        if (addedVisualItems.isEmpty()) {
             return;
         }
 
-        for (VisualItem viewItem : addedViewItems) {
-            TextItem textItem = createTextItem(viewItem);
+        for (VisualItem visualItem : addedVisualItems) {
+            TextItem textItem = createTextItem(visualItem);
             items.add(textItem);
         }
 
@@ -135,15 +135,15 @@ public class TextVisualization extends AbstractViewContentDisplay {
         }
     }
 
-    private TextItem createTextItem(VisualItem viewItem) {
-        TextItem textItem = new TextItem(viewItem);
+    private TextItem createTextItem(VisualItem visualItem) {
+        TextItem textItem = new TextItem(visualItem);
 
         TextItemLabel label = textItemContainer.createTextItemLabel(textItem
                 .getResourceItem());
 
         textItem.init(label);
 
-        viewItem.setDisplayObject(textItem);
+        visualItem.setDisplayObject(textItem);
 
         return textItem;
     }
@@ -216,21 +216,21 @@ public class TextVisualization extends AbstractViewContentDisplay {
     public void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> updatedSlots) {
 
-        addViewItems(delta.getAddedElements());
+        addVisualItems(delta.getAddedElements());
 
-        for (VisualItem viewItem : delta.getUpdatedElements()) {
-            TextItem textItem = viewItem.<TextItem> getDisplayObject();
+        for (VisualItem visualItem : delta.getUpdatedElements()) {
+            TextItem textItem = visualItem.<TextItem> getDisplayObject();
             textItem.updateContent();
             textItem.updateStatusStyling();
         }
 
-        for (VisualItem viewItem : delta.getRemovedElements()) {
-            removeTextItem(viewItem.<TextItem> getDisplayObject());
+        for (VisualItem visualItem : delta.getRemovedElements()) {
+            removeTextItem(visualItem.<TextItem> getDisplayObject());
         }
 
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem viewItem : getVisualItems()) {
-                viewItem.<TextItem> getDisplayObject().updateContent();
+            for (VisualItem visualItem : getVisualItems()) {
+                visualItem.<TextItem> getDisplayObject().updateContent();
             }
 
         }

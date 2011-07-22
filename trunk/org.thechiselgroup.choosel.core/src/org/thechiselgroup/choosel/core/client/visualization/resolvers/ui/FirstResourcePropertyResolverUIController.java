@@ -26,7 +26,7 @@ public class FirstResourcePropertyResolverUIController extends
     public FirstResourcePropertyResolverUIController(String id,
             FirstResourcePropertyResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems) {
-        super(id, resolverFactory, uiModel, viewItems);
+            LightweightCollection<VisualItem> visualItems) {
+        super(id, resolverFactory, uiModel, visualItems);
     }
 }

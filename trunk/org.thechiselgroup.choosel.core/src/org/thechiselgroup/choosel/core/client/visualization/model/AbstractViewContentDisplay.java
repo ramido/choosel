@@ -87,8 +87,8 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     }
 
     @Override
-    public boolean containsVisualItem(String viewItemId) {
-        return container.containsVisualItem(viewItemId);
+    public boolean containsVisualItem(String visualItemId) {
+        return container.containsVisualItem(visualItemId);
     }
 
     protected abstract Widget createWidget();
@@ -135,9 +135,9 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     }
 
     @Override
-    public VisualItem getVisualItem(String viewItemId)
+    public VisualItem getVisualItem(String visualItemId)
             throws NoSuchElementException {
-        return container.getVisualItem(viewItemId);
+        return container.getVisualItem(visualItemId);
     }
 
     @Override

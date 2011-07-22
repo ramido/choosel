@@ -36,9 +36,9 @@ public class ManagedVisualItemValueResolverDecorator implements
     }
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
-        return delegate.canResolve(viewItem, context);
+        return delegate.canResolve(visualItem, context);
     }
 
     public VisualItemValueResolver getDelegate() {
@@ -56,9 +56,9 @@ public class ManagedVisualItemValueResolverDecorator implements
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
-        return delegate.resolve(viewItem, context);
+        return delegate.resolve(visualItem, context);
     }
 
     @Override

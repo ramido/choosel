@@ -52,10 +52,10 @@ public class VisualItemStatusResolver extends
             this.status = status;
         }
 
-        // TODO extract as ViewItemPredicate
+        // TODO extract as VisualItemPredicate
         @Override
-        public boolean matches(VisualItem viewItem) {
-            return viewItem.isStatus(subset, status);
+        public boolean matches(VisualItem visualItem) {
+            return visualItem.isStatus(subset, status);
         }
 
         @Override
@@ -78,19 +78,19 @@ public class VisualItemStatusResolver extends
     }
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
-        assert viewItem != null;
+        assert visualItem != null;
 
         for (StatusRule rule : rules) {
-            if (rule.matches(viewItem)) {
+            if (rule.matches(visualItem)) {
                 return rule.value;
             }
         }

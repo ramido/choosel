@@ -52,7 +52,7 @@ public class DefaultVisualizationModelEventTest {
     }
 
     @Test
-    public void fireViewItemContainerChangeEventWhenViewItemIsAdded() {
+    public void fireVisualItemContainerChangeEventWhenVisualItemIsAdded() {
         VisualItemContainerChangeEventHandler handler = mock(VisualItemContainerChangeEventHandler.class);
 
         underTest.getFullVisualItemContainer().addHandler(handler);
@@ -60,19 +60,19 @@ public class DefaultVisualizationModelEventTest {
         Resource resource = ResourceSetTestUtils.createResource(1);
         helper.getContainedResources().add(resource);
 
-        LightweightCollection<VisualItem> addedViewItems = captureEvent(handler)
+        LightweightCollection<VisualItem> addedVisualItems = captureEvent(handler)
                 .getDelta().getAddedElements();
 
-        assertEquals(1, addedViewItems.size());
+        assertEquals(1, addedVisualItems.size());
 
-        ResourceSet resources = addedViewItems.iterator().next().getResources();
+        ResourceSet resources = addedVisualItems.iterator().next().getResources();
 
         assertEquals(1, resources.size());
         assertEquals(true, resources.contains(resource));
     }
 
     @Test
-    public void fireViewItemContainerChangeEventWhenViewItemIsRemoved() {
+    public void fireVisualItemContainerChangeEventWhenVisualItemIsRemoved() {
         VisualItemContainerChangeEventHandler handler = mock(VisualItemContainerChangeEventHandler.class);
 
         HandlerRegistration registration = underTest
@@ -81,7 +81,7 @@ public class DefaultVisualizationModelEventTest {
         Resource resource = ResourceSetTestUtils.createResource(1);
         helper.getContainedResources().add(resource);
 
-        VisualItem viewItem = captureEvent(handler).getDelta()
+        VisualItem visualItem = captureEvent(handler).getDelta()
                 .getAddedElements().iterator().next();
 
         VisualItemContainerChangeEventHandler handler2 = mock(VisualItemContainerChangeEventHandler.class);
@@ -92,10 +92,10 @@ public class DefaultVisualizationModelEventTest {
         helper.getContainedResources().remove(resource);
 
         VisualItemContainerChangeEvent event2 = captureEvent(handler2);
-        LightweightCollection<VisualItem> removedViewItems = event2.getDelta()
+        LightweightCollection<VisualItem> removedVisualItems = event2.getDelta()
                 .getRemovedElements();
-        assertEquals(1, removedViewItems.size());
-        assertEquals(true, removedViewItems.contains(viewItem));
+        assertEquals(1, removedVisualItems.size());
+        assertEquals(true, removedVisualItems.contains(visualItem));
     }
 
     @Before

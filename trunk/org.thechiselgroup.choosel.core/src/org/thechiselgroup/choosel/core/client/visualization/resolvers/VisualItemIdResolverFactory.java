@@ -26,11 +26,11 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Visual
 public class VisualItemIdResolverFactory implements
         VisualItemValueResolverFactory {
 
-    public static String ID = "ViewItemStatusIdFactory";
+    public static String ID = "VisualItemStatusIdFactory";
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return DataType.TEXT.equals(slot.getDataType());
     }
 
@@ -41,7 +41,7 @@ public class VisualItemIdResolverFactory implements
 
     @Override
     public ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return create();
     }
 

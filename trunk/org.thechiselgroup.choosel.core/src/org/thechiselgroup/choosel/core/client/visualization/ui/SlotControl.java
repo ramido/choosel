@@ -40,6 +40,6 @@ public abstract class SlotControl implements IsWidget {
             VisualItemValueResolverUIController resolverUI);
 
     public abstract void updateOptions(
-            LightweightCollection<VisualItem> viewItems);
+            LightweightCollection<VisualItem> visualItems);
 
 }

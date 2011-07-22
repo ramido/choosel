@@ -57,6 +57,6 @@ public interface GraphNodeExpansionCallback {
      * must already be contained in the view content display (i.e. they have
      * been added already and their nodes must be visible).
      */
-    void updateArcsForViewItems(LightweightCollection<VisualItem> viewItems);
+    void updateArcsForVisuaItems(LightweightCollection<VisualItem> visualItems);
 
 }

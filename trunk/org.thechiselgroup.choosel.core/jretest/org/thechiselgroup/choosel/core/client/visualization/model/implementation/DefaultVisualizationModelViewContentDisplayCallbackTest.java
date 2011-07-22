@@ -70,7 +70,7 @@ public class DefaultVisualizationModelViewContentDisplayCallbackTest {
     }
 
     @Test
-    public void viewItemContainerIsErrorFreee() {
+    public void visualItemContainerIsErrorFreee() {
         assertThat(container,
                 sameInstance(underTest.getErrorFreeVisualItemContainer()));
     }

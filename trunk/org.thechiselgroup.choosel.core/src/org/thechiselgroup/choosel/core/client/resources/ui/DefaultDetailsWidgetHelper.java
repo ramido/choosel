@@ -43,25 +43,25 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
     }
 
     @Override
-    public Widget createDetailsWidget(VisualItem viewItem) {
+    public Widget createDetailsWidget(VisualItem visualItem) {
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
-        ResourceSetAvatar avatar = avatarFactory.createAvatar(viewItem
+        ResourceSetAvatar avatar = avatarFactory.createAvatar(visualItem
                 .getResources());
-        avatar.setText(viewItem.getId());
+        avatar.setText(visualItem.getId());
         verticalPanel.add(avatar);
 
         // try to resolve slot mappings first
-        Slot[] slots = viewItem.getSlots();
+        Slot[] slots = visualItem.getSlots();
         for (Slot slot : slots) {
             String label = slot.getName();
-            Object valueObject = viewItem.getValue(slot);
+            Object valueObject = visualItem.getValue(slot);
             String value = valueObject != null ? valueObject.toString() : "";
             addRow(label, value, true, verticalPanel);
         }
 
         // single resource: show properties
-        if (viewItem.getResources().size() == 1) {
-            Resource resource = viewItem.getResources().getFirstElement();
+        if (visualItem.getResources().size() == 1) {
+            Resource resource = visualItem.getResources().getFirstElement();
 
             verticalPanel.add(new HTML("<br/><b>One item</b>"));
             Set<String> entrySet = resource.getProperties().keySet();
@@ -73,7 +73,7 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
         }
 
         // multiple resources: show numbers
-        verticalPanel.add(new HTML("<br/><b>" + viewItem.getResources().size()
+        verticalPanel.add(new HTML("<br/><b>" + visualItem.getResources().size()
                 + " items</b>"));
 
         return verticalPanel;

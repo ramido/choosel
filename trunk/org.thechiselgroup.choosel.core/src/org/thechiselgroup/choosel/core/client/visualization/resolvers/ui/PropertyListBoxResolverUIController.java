@@ -63,16 +63,16 @@ public abstract class PropertyListBoxResolverUIController implements
     public PropertyListBoxResolverUIController(String id,
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems) {
-        this(id, resolverFactory, uiModel, viewItems, ResourceSetUtils
-                .getSharedPropertiesOfDataType(viewItems,
+            LightweightCollection<VisualItem> visualItems) {
+        this(id, resolverFactory, uiModel, visualItems, ResourceSetUtils
+                .getSharedPropertiesOfDataType(visualItems,
                         resolverFactory.getValidDataType()).get(0));
     }
 
     public PropertyListBoxResolverUIController(String id,
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> viewItems, String property) {
+            LightweightCollection<VisualItem> visualItems, String property) {
         this.uiModel = uiModel;
         this.resolverFactory = resolverFactory;
         this.id = id;
@@ -81,7 +81,7 @@ public abstract class PropertyListBoxResolverUIController implements
                 new NullTransformer<String>());
         selector.setChangeHandler(propertySelectChangeHandler);
 
-        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(visualItems,
                 resolverFactory.getValidDataType()));
         selector.setSelectedValue(property);
     }
@@ -136,11 +136,11 @@ public abstract class PropertyListBoxResolverUIController implements
      * should say that it is not applicable, and so we should never get here
      */
     @Override
-    public void update(LightweightCollection<VisualItem> viewItems) {
+    public void update(LightweightCollection<VisualItem> visualItems) {
         assert resolverFactory.canCreateApplicableResolver(uiModel.getSlot(),
-                viewItems);
+                visualItems);
 
-        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(visualItems,
                 resolverFactory.getValidDataType()));
 
         // the new view items can not be resolved by the current resolver, and

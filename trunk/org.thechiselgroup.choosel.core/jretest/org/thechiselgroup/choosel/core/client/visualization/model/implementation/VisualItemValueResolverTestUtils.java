@@ -88,8 +88,8 @@ public final class VisualItemValueResolverTestUtils {
         whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                VisualItem viewItem = (VisualItem) invocation.getArguments()[0];
-                ResourceSet set = viewItem.getResources();
+                VisualItem visualItem = (VisualItem) invocation.getArguments()[0];
+                ResourceSet set = visualItem.getResources();
 
                 return set.size() == resources.size()
                         && set.containsAll(resources);
@@ -104,8 +104,8 @@ public final class VisualItemValueResolverTestUtils {
         whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                VisualItem viewItem = (VisualItem) invocation.getArguments()[0];
-                ResourceSet set = viewItem.getResources();
+                VisualItem visualItem = (VisualItem) invocation.getArguments()[0];
+                ResourceSet set = visualItem.getResources();
 
                 return set.containsAll(resources);
             }
@@ -120,8 +120,8 @@ public final class VisualItemValueResolverTestUtils {
         whenCanResolve(resolver).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                VisualItem viewItem = (VisualItem) invocation.getArguments()[0];
-                ResourceSet set = viewItem.getResources();
+                VisualItem visualItem = (VisualItem) invocation.getArguments()[0];
+                ResourceSet set = visualItem.getResources();
 
                 return set.size() == 1
                         && set.getFirstElement().containsProperty(property);

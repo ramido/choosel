@@ -34,7 +34,7 @@ public interface VisualItemValueResolverFactory {
      * resolve view items, only how it does the resolution.
      */
     boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems);
+            LightweightCollection<VisualItem> visualItems);
 
     /**
      * @return A new instance of the corresponding
@@ -47,12 +47,12 @@ public interface VisualItemValueResolverFactory {
      * the same property by default
      * 
      * TODO The create methods might need to be resolver specific, because the
-     * ViewItemValueResolvers are immutable and we need to configure parameters.
+     * VisualItemValueResolvers are immutable and we need to configure parameters.
      * 
      * XXX remove this, should be resolver specific
      */
     ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems);
+            LightweightCollection<VisualItem> visualItems);
 
     /**
      * @return the id of both the factory and the resolver

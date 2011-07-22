@@ -49,14 +49,14 @@ public class VisualItemWithResourcesMatcher extends
     }
 
     @Override
-    public boolean matchesSafely(LightweightCollection<VisualItem> viewItems) {
-        if (viewItems.size() != 1) {
+    public boolean matchesSafely(LightweightCollection<VisualItem> visualItems) {
+        if (visualItems.size() != 1) {
             return false;
         }
 
-        ResourceSet viewItemResources = viewItems.iterator().next()
+        ResourceSet visualItemResources = visualItems.iterator().next()
                 .getResources();
-        return viewItemResources.size() == resources.size()
-                && viewItemResources.containsAll(resources);
+        return visualItemResources.size() == resources.size()
+                && visualItemResources.containsAll(resources);
     }
 }

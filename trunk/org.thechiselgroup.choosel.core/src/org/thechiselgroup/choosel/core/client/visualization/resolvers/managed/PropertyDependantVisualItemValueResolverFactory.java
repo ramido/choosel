@@ -45,16 +45,16 @@ public abstract class PropertyDependantVisualItemValueResolverFactory implements
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         assert slot != null;
-        assert viewItems != null;
+        assert visualItems != null;
 
         if (!slot.getDataType().equals(getValidDataType())) {
             return false;
         }
 
-        return !ResourceSetUtils.getSharedPropertiesOfDataType(viewItems,
+        return !ResourceSetUtils.getSharedPropertiesOfDataType(visualItems,
                 getValidDataType()).isEmpty();
     }
 
@@ -66,11 +66,11 @@ public abstract class PropertyDependantVisualItemValueResolverFactory implements
     // XXX this method does some inference - does it belong here??
     @Override
     public ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
-        assert viewItems != null;
+        assert visualItems != null;
         List<String> properties = ResourceSetUtils
-                .getSharedPropertiesOfDataType(viewItems, getValidDataType());
+                .getSharedPropertiesOfDataType(visualItems, getValidDataType());
         assert !properties.isEmpty();
         return create(properties.get(0));
     }

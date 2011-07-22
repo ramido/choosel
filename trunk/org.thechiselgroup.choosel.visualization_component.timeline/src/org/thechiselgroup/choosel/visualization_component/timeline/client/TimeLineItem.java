@@ -49,12 +49,12 @@ public class TimeLineItem {
 
     private String tickElementID;
 
-    private final VisualItem viewItem;
+    private final VisualItem visualItem;
 
-    public TimeLineItem(VisualItem viewItem, TimeLine view) {
-        this.viewItem = viewItem;
+    public TimeLineItem(VisualItem visualItem, TimeLine view) {
+        this.visualItem = visualItem;
 
-        Object date = viewItem.getValue(TimeLine.DATE);
+        Object date = visualItem.getValue(TimeLine.DATE);
         String dateString;
         if (date instanceof Date) {
             dateString = date.toString();
@@ -71,11 +71,11 @@ public class TimeLineItem {
     }
 
     private Color getBorderColor() {
-        return (Color) viewItem.getValue(TimeLine.BORDER_COLOR);
+        return (Color) visualItem.getValue(TimeLine.BORDER_COLOR);
     }
 
     private Color getColor() {
-        return (Color) viewItem.getValue(TimeLine.COLOR);
+        return (Color) visualItem.getValue(TimeLine.COLOR);
     }
 
     public JsTimeLineEvent getTimeLineEvent() {
@@ -106,7 +106,7 @@ public class TimeLineItem {
         DOM.setEventListener(element, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                viewItem.reportInteraction(new VisualItemInteraction(event));
+                visualItem.reportInteraction(new VisualItemInteraction(event));
             }
         });
     }
@@ -190,7 +190,7 @@ public class TimeLineItem {
         // * TODO refactor: this sets a bottom border on highlighted ticks,
         // * because they are otherwise hard to see
         // */
-        // if (viewItem.isStatus(Subset.HIGHLIGHTED, Status.COMPLETE,
+        // if (visualItem.isStatus(Subset.HIGHLIGHTED, Status.COMPLETE,
         // Status.PARTIAL)) {
         // CSS.setBorderBottom(tickElement, "6px solid black");
         // } else {
@@ -201,10 +201,10 @@ public class TimeLineItem {
     }
 
     private void updateTickZIndex() {
-        if (viewItem.isStatus(Subset.HIGHLIGHTED, Status.FULL, Status.PARTIAL)) {
+        if (visualItem.isStatus(Subset.HIGHLIGHTED, Status.FULL, Status.PARTIAL)) {
             CSS.setZIndex(tickElementID, Z_INDEX_HIGHLIGHTED);
             timeLineEvent.setTickZIndex("" + Z_INDEX_HIGHLIGHTED);
-        } else if (viewItem.isStatus(Subset.SELECTED, Status.FULL,
+        } else if (visualItem.isStatus(Subset.SELECTED, Status.FULL,
                 Status.PARTIAL)) {
             CSS.setZIndex(tickElementID, Z_INDEX_SELECTED);
             timeLineEvent.setTickZIndex("" + Z_INDEX_SELECTED);

@@ -37,23 +37,23 @@ public class DefaultMapRenderer implements MapRenderer {
         this.container = container;
     }
 
-    private void initMapItem(VisualItem viewItem) {
+    private void initMapItem(VisualItem visualItem) {
         // TODO iterate over path
         // TODO resolve sets
         // TODO separate resolvers for latitude and longitude
 
-        Resource location = (Resource) viewItem.getValue(Map.LOCATION);
+        Resource location = (Resource) visualItem.getValue(Map.LOCATION);
 
         double latitude = toDouble(location.getValue(Map.LATITUDE));
         double longitude = toDouble(location.getValue(Map.LONGITUDE));
 
         LatLng latLng = LatLng.newInstance(latitude, longitude);
 
-        DefaultMapItem mapItem = new DefaultMapItem(viewItem, latLng);
+        DefaultMapItem mapItem = new DefaultMapItem(visualItem, latLng);
 
         map.addOverlay(mapItem.getOverlay());
 
-        viewItem.setDisplayObject(mapItem);
+        visualItem.setDisplayObject(mapItem);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class DefaultMapRenderer implements MapRenderer {
     public void onDetach() {
     }
 
-    private void removeOverlay(VisualItem viewItem) {
-        map.removeOverlay(((DefaultMapItem) viewItem.getDisplayObject())
+    private void removeOverlay(VisualItem visualItem) {
+        map.removeOverlay(((DefaultMapItem) visualItem.getDisplayObject())
                 .getOverlay());
     }
 
@@ -104,8 +104,8 @@ public class DefaultMapRenderer implements MapRenderer {
 
         // TODO refactor
         if (!updatedSlots.isEmpty()) {
-            for (VisualItem viewItem : container.getVisualItems()) {
-                DefaultMapItem mapItem = (DefaultMapItem) viewItem
+            for (VisualItem visualItem : container.getVisualItems()) {
+                DefaultMapItem mapItem = (DefaultMapItem) visualItem
                         .getDisplayObject();
                 for (Slot slot : updatedSlots) {
                     if (slot.equals(Map.BORDER_COLOR)) {

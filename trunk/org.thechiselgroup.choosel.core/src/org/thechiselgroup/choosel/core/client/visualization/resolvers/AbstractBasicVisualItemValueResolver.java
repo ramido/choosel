@@ -39,7 +39,7 @@ public abstract class AbstractBasicVisualItemValueResolver implements
      *      VisualItemValueResolverContext)
      */
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
         return true;
     }

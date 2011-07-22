@@ -118,7 +118,7 @@ public class ManagedSlotMapping {
     // should I even be watching these events
     public void currentResolverWasSet(VisualItemValueResolver oldResolver,
             VisualItemValueResolver resolver,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         if (!(resolverIsManaged(resolver))) {
             // I am not managed, and am in error
             return;
@@ -126,7 +126,7 @@ public class ManagedSlotMapping {
 
         ManagedVisualItemValueResolver managedResolver = (ManagedVisualItemValueResolver) resolver;
 
-        if (!isAllowableResolver(managedResolver, viewItems)) {
+        if (!isAllowableResolver(managedResolver, visualItems)) {
             // I am not allowable, and am in error
             return;
         }
@@ -152,7 +152,7 @@ public class ManagedSlotMapping {
     }
 
     /**
-     * @return The current @link{ViewItemValueResolver}
+     * @return The current @link{VisualItemValueResolver}
      */
     public ManagedVisualItemValueResolver getCurrentResolver() {
         return (ManagedVisualItemValueResolver) configuration.getResolver(slot);
@@ -167,11 +167,11 @@ public class ManagedSlotMapping {
      */
     // TODO this should be a one liner
     public boolean inValidState(
-            LightweightCollection<VisualItem> currentViewItems) {
+            LightweightCollection<VisualItem> currentVisualItems) {
         return !errorsInModel()
                 && configuration.getResolver(slot) != null
                 && isAllowableResolver(configuration.getResolver(slot),
-                        currentViewItems);
+                        currentVisualItems);
     }
 
     /**
@@ -179,7 +179,7 @@ public class ManagedSlotMapping {
      * and whether it is in the Allowable Factories
      */
     public boolean isAllowableResolver(VisualItemValueResolver resolver,
-            LightweightCollection<VisualItem> currentViewItems) {
+            LightweightCollection<VisualItem> currentVisualItems) {
         assert resolver != null;
         if (!(resolverIsManaged(resolver))) {
             // Not a managed Resolver
@@ -196,10 +196,10 @@ public class ManagedSlotMapping {
         }
 
         // TODO this is already check elsewhere
-        if (currentViewItems != null) {
-            for (VisualItem viewItem : currentViewItems) {
-                if (!resolver.canResolve(viewItem, configuration)) {
-                    // resolver can not resolve viewItems
+        if (currentVisualItems != null) {
+            for (VisualItem visualItem : currentVisualItems) {
+                if (!resolver.canResolve(visualItem, configuration)) {
+                    // resolver can not resolve visualItems
                     return false;
                 }
             }
@@ -218,7 +218,7 @@ public class ManagedSlotMapping {
 
     /**
      * Updates the allowable resolver factories to only the ones that are
-     * allowable given the {@code viewItems} and the current {@link Slot}.
+     * allowable given the {@code visualItems} and the current {@link Slot}.
      * 
      * This must be called at least once to initialize the mapping and the
      * currentResolver.
@@ -227,9 +227,9 @@ public class ManagedSlotMapping {
      * automatically be changed to null
      */
     public void updateAllowableFactories(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
-        assert viewItems != null;
+        assert visualItems != null;
         allowableResolverFactories.clear();
 
         // if (currentResolver != null
@@ -245,7 +245,7 @@ public class ManagedSlotMapping {
         assert allFactories != null;
 
         for (VisualItemValueResolverFactory factory : allFactories) {
-            if (factory.canCreateApplicableResolver(slot, viewItems)) {
+            if (factory.canCreateApplicableResolver(slot, visualItems)) {
                 allowableResolverFactories.put(factory.getId(), factory);
             }
         }

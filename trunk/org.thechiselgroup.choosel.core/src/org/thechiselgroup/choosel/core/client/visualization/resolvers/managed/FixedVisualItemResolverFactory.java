@@ -43,13 +43,13 @@ public class FixedVisualItemResolverFactory implements
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         return slot.getDataType().equals(dataType);
     }
 
     /**
-     * This method does not need to worry about the viewItems because it is
+     * This method does not need to worry about the visualItems because it is
      * fixed value
      */
     public ManagedVisualItemValueResolver create() {
@@ -59,7 +59,7 @@ public class FixedVisualItemResolverFactory implements
 
     @Override
     public ManagedVisualItemValueResolver create(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         return create();
     }
 

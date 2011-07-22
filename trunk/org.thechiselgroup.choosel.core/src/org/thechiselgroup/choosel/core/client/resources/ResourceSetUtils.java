@@ -141,21 +141,21 @@ public final class ResourceSetUtils {
     }
 
     public static List<String> getSharedPropertiesOfDataType(
-            LightweightCollection<VisualItem> viewItems, DataType dataType) {
+            LightweightCollection<VisualItem> visualItems, DataType dataType) {
 
         List<String> properties = new ArrayList<String>();
 
-        if (viewItems.isEmpty()) {
+        if (visualItems.isEmpty()) {
             return properties;
         }
 
-        // get all valid properties from the first viewItem
+        // get all valid properties from the first visualItem
         properties.addAll(ResourceSetUtils.getPropertiesByDataType(
-                viewItems.getFirstElement().getResources()).get(dataType));
+                visualItems.getFirstElement().getResources()).get(dataType));
 
         // only keep properties that are shared by all of the resource
-        for (VisualItem viewItem : viewItems) {
-            ResourceSet resources = viewItem.getResources();
+        for (VisualItem visualItem : visualItems) {
+            ResourceSet resources = visualItem.getResources();
             properties.retainAll(ResourceSetUtils.getPropertiesByDataType(
                     resources).get(dataType));
         }

@@ -48,13 +48,13 @@ public class FirstResourcePropertyResolver extends SubsetVisualItemValueResolver
 
     // TODO test
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
-        assert viewItem != null;
+        assert visualItem != null;
         assert context != null;
 
-        ResourceSet resources = viewItem.getResources();
+        ResourceSet resources = visualItem.getResources();
 
         if (resources.isEmpty()) {
             return false;
@@ -73,13 +73,13 @@ public class FirstResourcePropertyResolver extends SubsetVisualItemValueResolver
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context, Subset subset) {
 
-        assert canResolve(viewItem, context);
+        assert canResolve(visualItem, context);
 
-        // TODO what if viewItem could be resolved, but not for subset?
-        ResourceSet resources = viewItem.getResources(subset);
+        // TODO what if visualItem could be resolved, but not for subset?
+        ResourceSet resources = visualItem.getResources(subset);
         return resources.getFirstElement().getValue(property);
     }
 

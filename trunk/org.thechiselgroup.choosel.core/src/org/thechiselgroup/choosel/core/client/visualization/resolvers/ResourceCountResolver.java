@@ -31,16 +31,16 @@ public class ResourceCountResolver extends SubsetVisualItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context, Subset subset) {
-        return new Double(viewItem.getResources(subset).size());
+        return new Double(visualItem.getResources(subset).size());
     }
 
     @Override

@@ -95,21 +95,21 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
         calculateMaximumChartItemValue();
 
-        if (viewItemsJsArray.length() == 0) {
+        if (visualItemsJsArray.length() == 0) {
             return;
         }
 
-        dotCounts = new double[viewItemsJsArray.length()];
+        dotCounts = new double[visualItemsJsArray.length()];
 
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            dotCounts[i] = viewItemsJsArray.get(i).getValueAsDouble(
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            dotCounts[i] = visualItemsJsArray.get(i).getValueAsDouble(
                     BarChart.BAR_LENGTH);
         }
     }
 
     @Override
     public void buildChart() {
-        assert viewItemsJsArray.length() >= 1;
+        assert visualItemsJsArray.length() >= 1;
 
         calculateChartVariables();
         setChartParameters();
@@ -133,14 +133,14 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private int calculateDotX(int index) {
-        return index * chartWidth / viewItemsJsArray.length() + chartWidth
-                / (viewItemsJsArray.length() * 2);
+        return index * chartWidth / visualItemsJsArray.length() + chartWidth
+                / (visualItemsJsArray.length() * 2);
     }
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            double currentItemValue = viewItemsJsArray.get(i).getValueAsDouble(
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            double currentItemValue = visualItemsJsArray.get(i).getValueAsDouble(
                     BarChart.BAR_LENGTH);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
@@ -150,7 +150,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void dehighlightResources(int i) {
         // XXX outdated - forward events instead
-        // chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
+        // chartItemsJsArray.get(i).getVisualItem().getHighlightingManager()
         // .setHighlighting(false);
     }
 
@@ -161,17 +161,17 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         // .getView()
         // .getCallback()
         // .switchSelection(
-        // chartItemsJsArray.get(i).getViewItem().getResourceSet());
+        // chartItemsJsArray.get(i).getVisualItem().getResourceSet());
     }
 
     private void drawDot() {
         regularDot = getChart()
                 .add(PV.Dot)
-                .data(viewItemsJsArray)
+                .data(visualItemsJsArray)
                 .bottom(dotBottom)
                 .left(dotLeft)
                 .size(Math.min(chartHeight, chartWidth)
-                        / (viewItemsJsArray.length() * 2))
+                        / (visualItemsJsArray.length() * 2))
                 // .fillStyle(new ChartItemColorFunction())
                 .strokeStyle(Colors.STEELBLUE);
 
@@ -229,7 +229,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
                         thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.other.DotChartViewContentDisplay::deselectResources(I)(i);
@@ -242,7 +242,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 }
             })
             .event("mouseover", function(d) {
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         return this.fillStyle("FFFFE1");
                     }
@@ -266,7 +266,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
                         thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.other.DotChartViewContentDisplay::selectResources(I)(i);
@@ -279,7 +279,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 }
             })
             .event("mouseover", function(d) {
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         return this.fillStyle("FFFFE1");
                     }
@@ -294,7 +294,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .font("bold");
 
         function addBoxes(d) {
-            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
                 if(isInSelectionBox(d,i)) {
                     plusBox.visible(true);
                     plus.visible(true);
@@ -333,7 +333,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             s.y1 = d.y;
             s.y2 = d.y + d.dy;
 
-            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::visualItemsJsArray.@java.util.ArrayList::size()(); i++) {
                 if(isInSelectionBox(d,i)) {
                     thisChart.@org.thechiselgroup.choosel.visualization_component.chart.client.other.DotChartViewContentDisplay::highlightResources(I)(i);
                 } else {
@@ -364,7 +364,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void highlightResources(int i) {
         // XXX outdated - forward events instead
-        // chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
+        // chartItemsJsArray.get(i).getVisualItem().getHighlightingManager()
         // .setHighlighting(true);
     }
 
@@ -375,7 +375,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private boolean isSelected(int i) {
-        return !viewItemsJsArray.get(i).getResources(Subset.SELECTED).isEmpty();
+        return !visualItemsJsArray.get(i).getResources(Subset.SELECTED).isEmpty();
     }
 
     @Override
@@ -390,7 +390,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         // .getView()
         // .getCallback()
         // .switchSelection(
-        // chartItemsJsArray.get(i).getViewItem().getResourceSet());
+        // chartItemsJsArray.get(i).getVisualItem().getResourceSet());
     }
 
     private void setChartParameters() {

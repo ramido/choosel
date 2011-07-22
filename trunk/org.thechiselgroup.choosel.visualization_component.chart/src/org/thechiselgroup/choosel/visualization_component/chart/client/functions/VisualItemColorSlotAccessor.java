@@ -32,8 +32,8 @@ public class VisualItemColorSlotAccessor implements JsStringFunction {
 
     @Override
     public String f(JsArgs args) {
-        VisualItem viewItem = args.getObject();
-        return viewItem.<Color> getValue(slot).toRGBa();
+        VisualItem visualItem = args.getObject();
+        return visualItem.<Color> getValue(slot).toRGBa();
     }
 
 }

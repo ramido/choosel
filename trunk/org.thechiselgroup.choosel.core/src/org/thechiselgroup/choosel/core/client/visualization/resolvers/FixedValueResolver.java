@@ -35,14 +35,14 @@ public class FixedValueResolver extends AbstractBasicVisualItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(VisualItem viewItem,
+    public boolean canResolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
 
         return true;
     }
 
     @Override
-    public Object resolve(VisualItem viewItem,
+    public Object resolve(VisualItem visualItem,
             VisualItemValueResolverContext context) {
         return value;
     }

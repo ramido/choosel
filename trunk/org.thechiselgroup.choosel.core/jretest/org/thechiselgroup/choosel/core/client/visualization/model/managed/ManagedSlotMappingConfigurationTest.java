@@ -144,7 +144,7 @@ public class ManagedSlotMappingConfigurationTest {
         return captor.getValue();
     }
 
-    private VisualItemContainerChangeEventHandler captureViewItemContainerChangeEventHandler() {
+    private VisualItemContainerChangeEventHandler captureVisualItemContainerChangeEventHandler() {
         ArgumentCaptor<VisualItemContainerChangeEventHandler> captor = ArgumentCaptor
                 .forClass(VisualItemContainerChangeEventHandler.class);
         verify(visualItemContainer, times(1)).addHandler(captor.capture());
@@ -180,9 +180,9 @@ public class ManagedSlotMappingConfigurationTest {
         setUpSlots(DataType.TEXT);
         when(visualizationModel.getResolver(slots[0])).thenReturn(resolver1);
 
-        VisualItem viewItem = mock(VisualItem.class);
-        when(viewItem.getId()).thenReturn("a");
-        errorModel.reportError(slots[0], viewItem);
+        VisualItem visualItem = mock(VisualItem.class);
+        when(visualItem.getId()).thenReturn("a");
+        errorModel.reportError(slots[0], visualItem);
 
         underTest = new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, visualizationModel, errorModel);
@@ -255,7 +255,7 @@ public class ManagedSlotMappingConfigurationTest {
     }
 
     @Test
-    public void resolversInitializedWhenViewItemsAdded() {
+    public void resolversInitializedWhenVisualItemsAdded() {
         setUpSlots(DataType.TEXT);
 
         Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -266,7 +266,7 @@ public class ManagedSlotMappingConfigurationTest {
         underTest = new ManagedSlotMappingConfiguration(resolverProvider,
                 initializer, visualizationModel, errorModel);
 
-        VisualItemContainerChangeEventHandler handler = captureViewItemContainerChangeEventHandler();
+        VisualItemContainerChangeEventHandler handler = captureVisualItemContainerChangeEventHandler();
 
         when(visualizationModel.getFullVisualItemContainer()).thenReturn(
                 visualItemContainer);
@@ -279,7 +279,7 @@ public class ManagedSlotMappingConfigurationTest {
         when(visualizationModel.getSlotsWithErrors()).thenReturn(badSlots);
 
         LightweightCollection<VisualItem> addedElements = VisualItemTestUtils
-                .createViewItems(1);
+                .createVisualItems(1);
 
         Delta<VisualItem> delta = Delta.createAddedDelta(addedElements);
         // XXX right now underTest does not care what the event is, but it may
@@ -293,7 +293,7 @@ public class ManagedSlotMappingConfigurationTest {
     }
 
     @Test
-    public void resolversNotSetBeforeViewItemsAdded() {
+    public void resolversNotSetBeforeVisualItemsAdded() {
         setUpSlots(DataType.TEXT);
 
         Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -361,7 +361,7 @@ public class ManagedSlotMappingConfigurationTest {
                 CollectionFactory.<Slot> createLightweightList());
 
         LightweightList<VisualItem> visualItems = VisualItemTestUtils
-                .createViewItems(1);
+                .createVisualItems(1);
         when(visualItemContainer.getVisualItems()).thenReturn(visualItems);
 
         setUpResolverProvider(factory1, factory2);
@@ -369,7 +369,7 @@ public class ManagedSlotMappingConfigurationTest {
         underTest = new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, visualizationModel, errorModel);
 
-        VisualItemContainerChangeEventHandler viewItemContainerHandler = captureViewItemContainerChangeEventHandler();
+        VisualItemContainerChangeEventHandler visualItemContainerHandler = captureVisualItemContainerChangeEventHandler();
 
         ManagedSlotMappingConfigurationChangedEventHandler handler = mock(ManagedSlotMappingConfigurationChangedEventHandler.class);
         underTest
@@ -377,7 +377,7 @@ public class ManagedSlotMappingConfigurationTest {
 
         VisualItemContainerChangeEvent event = new VisualItemContainerChangeEvent(
                 visualItemContainer, Delta.createAddedDelta(visualItems));
-        viewItemContainerHandler.onVisualItemContainerChanged(event);
+        visualItemContainerHandler.onVisualItemContainerChanged(event);
 
         verify(handler, times(1)).onSlotMappingStateChanged(
                 any(ManagedSlotMappingConfigurationChangedEvent.class));
@@ -391,7 +391,7 @@ public class ManagedSlotMappingConfigurationTest {
                 CollectionFactory.<Slot> createLightweightList());
 
         LightweightList<VisualItem> visualItems = VisualItemTestUtils
-                .createViewItems(1);
+                .createVisualItems(1);
         when(visualItemContainer.getVisualItems()).thenReturn(visualItems);
 
         setUpResolverProvider(factory1, factory2);
@@ -399,7 +399,7 @@ public class ManagedSlotMappingConfigurationTest {
         underTest = new ManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, visualizationModel, errorModel);
 
-        VisualItemContainerChangeEventHandler viewItemContainerHandler = captureViewItemContainerChangeEventHandler();
+        VisualItemContainerChangeEventHandler visualItemContainerHandler = captureVisualItemContainerChangeEventHandler();
 
         ManagedSlotMappingConfigurationChangedEventHandler handler = mock(ManagedSlotMappingConfigurationChangedEventHandler.class);
         underTest
@@ -408,7 +408,7 @@ public class ManagedSlotMappingConfigurationTest {
         VisualItemContainerChangeEvent event = new VisualItemContainerChangeEvent(
                 visualItemContainer, Delta.createAddedDelta(CollectionFactory
                         .<VisualItem> createLightweightList()));
-        viewItemContainerHandler.onVisualItemContainerChanged(event);
+        visualItemContainerHandler.onVisualItemContainerChanged(event);
 
         verify(handler, never()).onSlotMappingStateChanged(
                 any(ManagedSlotMappingConfigurationChangedEvent.class));

@@ -48,7 +48,7 @@ public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay {
 
     // TODO wrapper for jsarraygeneric that implements java.util.List
-    protected JsArrayGeneric<VisualItem> viewItemsJsArray = JsUtils
+    protected JsArrayGeneric<VisualItem> visualItemsJsArray = JsUtils
             .createJsArrayGeneric();
 
     protected String[] eventTypes = { PV.Event.CLICK, PV.Event.MOUSEDOWN,
@@ -74,8 +74,8 @@ public abstract class ChartViewContentDisplay extends
 
     protected int height;
 
-    public void addViewItem(VisualItem viewItem) {
-        viewItemsJsArray.push(viewItem);
+    public void addVisualItem(VisualItem visualItem) {
+        visualItemsJsArray.push(visualItem);
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class ChartViewContentDisplay extends
 
     /**
      * Builds the visualization. <code>buildChart</code> is only called if there
-     * are actual data items that can be rendered ( jsViewItems.length >= 1 ).
+     * are actual data items that can be rendered ( jsVisualItems.length >= 1 ).
      */
     protected abstract void buildChart();
 
@@ -131,19 +131,19 @@ public abstract class ChartViewContentDisplay extends
         return chartWidget.getPVPanel();
     }
 
-    public VisualItem getViewItem(int index) {
-        assert viewItemsJsArray != null;
+    public VisualItem getVisualItem(int index) {
+        assert visualItemsJsArray != null;
         assert 0 <= index;
-        assert index < viewItemsJsArray.length();
+        assert index < visualItemsJsArray.length();
 
-        return viewItemsJsArray.get(index);
+        return visualItemsJsArray.get(index);
     }
 
     // TODO refactoring: introduce view item list that offers this functionality
-    public boolean hasViewItemsWithPartialSubset(Subset subset) {
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            VisualItem viewItem = viewItemsJsArray.get(i);
-            if (viewItem.isStatus(subset, Status.PARTIAL)) {
+    public boolean hasVisualItemsWithPartialSubset(Subset subset) {
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            VisualItem visualItem = visualItemsJsArray.get(i);
+            if (visualItem.isStatus(subset, Status.PARTIAL)) {
                 return true;
             }
         }
@@ -159,7 +159,7 @@ public abstract class ChartViewContentDisplay extends
 
     protected void onEvent(Event e, String pvEventType, JsArgs args) {
         int index = args.<PVMark> getThis().index();
-        getViewItem(index).reportInteraction(new VisualItemInteraction(e));
+        getVisualItem(index).reportInteraction(new VisualItemInteraction(e));
     }
 
     protected abstract void registerEventHandler(String eventType,
@@ -172,17 +172,17 @@ public abstract class ChartViewContentDisplay extends
     }
 
     // TODO move into js array to java.util.List wrapper
-    public void removeViewItem(VisualItem viewItem) {
+    public void removeVisualItem(VisualItem visualItem) {
         int occurences = 0;
-        for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            VisualItem itemFromArray = viewItemsJsArray.get(i);
-            if (itemFromArray == viewItem) {
+        for (int i = 0; i < visualItemsJsArray.length(); i++) {
+            VisualItem itemFromArray = visualItemsJsArray.get(i);
+            if (itemFromArray == visualItem) {
                 occurences++;
             } else if (occurences > 0) {
-                viewItemsJsArray.set(i - occurences, itemFromArray);
+                visualItemsJsArray.set(i - occurences, itemFromArray);
             }
         }
-        viewItemsJsArray.setLength(viewItemsJsArray.length() - occurences);
+        visualItemsJsArray.setLength(visualItemsJsArray.length() - occurences);
     }
 
     /**
@@ -194,12 +194,12 @@ public abstract class ChartViewContentDisplay extends
     public void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> changedSlots) {
 
-        for (VisualItem viewItem : delta.getAddedElements()) {
-            addViewItem(viewItem);
+        for (VisualItem visualItem : delta.getAddedElements()) {
+            addVisualItem(visualItem);
         }
 
-        for (VisualItem viewItem : delta.getRemovedElements()) {
-            removeViewItem(viewItem);
+        for (VisualItem visualItem : delta.getRemovedElements()) {
+            removeVisualItem(visualItem);
         }
 
         /*
@@ -235,7 +235,7 @@ public abstract class ChartViewContentDisplay extends
 
         if (structuralChange) {
             chartWidget.initPVPanel();
-            if (viewItemsJsArray.length() == 0) {
+            if (visualItemsJsArray.length() == 0) {
                 getChart();
             } else {
                 buildChart();

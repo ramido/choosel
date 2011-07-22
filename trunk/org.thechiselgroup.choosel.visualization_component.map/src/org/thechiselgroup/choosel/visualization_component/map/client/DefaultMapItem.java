@@ -27,10 +27,10 @@ public class DefaultMapItem {
 
     private DefaultOverlay overlay;
 
-    private final VisualItem viewItem;
+    private final VisualItem visualItem;
 
-    public DefaultMapItem(VisualItem viewItem, LatLng point) {
-        this.viewItem = viewItem;
+    public DefaultMapItem(VisualItem visualItem, LatLng point) {
+        this.visualItem = visualItem;
 
         overlay = new DefaultOverlay(point, getRadius(), getColor(),
                 getBorderColor(), getZIndex(), new EventListener() {
@@ -42,7 +42,7 @@ public class DefaultMapItem {
                         }
 
                         // forward
-                        DefaultMapItem.this.viewItem
+                        DefaultMapItem.this.visualItem
                                 .reportInteraction(new VisualItemInteraction(
                                         event));
                     }
@@ -50,11 +50,11 @@ public class DefaultMapItem {
     }
 
     private Color getBorderColor() {
-        return viewItem.<Color> getValue(Map.BORDER_COLOR);
+        return visualItem.<Color> getValue(Map.BORDER_COLOR);
     }
 
     private Color getColor() {
-        return viewItem.<Color> getValue(Map.COLOR);
+        return visualItem.<Color> getValue(Map.COLOR);
     }
 
     public DefaultOverlay getOverlay() {
@@ -62,11 +62,11 @@ public class DefaultMapItem {
     }
 
     private int getRadius() {
-        return viewItem.<Number> getValue(Map.RADIUS).intValue();
+        return visualItem.<Number> getValue(Map.RADIUS).intValue();
     }
 
     private int getZIndex() {
-        return viewItem.<Number> getValue(Map.Z_INDEX).intValue();
+        return visualItem.<Number> getValue(Map.Z_INDEX).intValue();
     }
 
     protected void setStatusStyling() {

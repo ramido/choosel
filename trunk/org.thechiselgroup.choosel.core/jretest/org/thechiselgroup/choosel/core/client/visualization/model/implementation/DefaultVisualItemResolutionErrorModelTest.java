@@ -33,93 +33,95 @@ public class DefaultVisualItemResolutionErrorModelTest {
     private DefaultVisualItemResolutionErrorModel underTest;
 
     @Mock
-    private VisualItem viewItem1;
+    private VisualItem visualItem1;
 
     @Mock
-    private VisualItem viewItem2;
+    private VisualItem visualItem2;
 
     private Slot slot1;
 
     private Slot slot2;
 
     @Test
-    public void clearSlotDoesNotRemoveViewItemMarkIfOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot2, viewItem1);
+    public void clearSlotDoesNotRemoveVisualItemMarkIfOtherErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot2, visualItem1);
         underTest.clearErrors(slot1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(true));
+        assertThat(underTest.hasErrors(visualItem1), is(true));
     }
 
     @Test
-    public void clearSlotRemovesSlotFromViewItemErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot2, viewItem1);
+    public void clearSlotRemovesSlotFromVisualItemErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot2, visualItem1);
         underTest.clearErrors(slot1);
 
-        assertThat(underTest.getSlotsWithErrors(viewItem1),
+        assertThat(underTest.getSlotsWithErrors(visualItem1),
                 containsExactly(slot2));
     }
 
     @Test
     public void clearSlotRemovesSlotMark() {
-        underTest.reportError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
         underTest.clearErrors(slot1);
 
         assertThat(underTest.hasErrors(slot1), is(false));
     }
 
     @Test
-    public void clearSlotRemovesViewItemMarkIfNoOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
+    public void clearSlotRemovesVisualItemMarkIfNoOtherErrors() {
+        underTest.reportError(slot1, visualItem1);
         underTest.clearErrors(slot1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(false));
+        assertThat(underTest.hasErrors(visualItem1), is(false));
     }
 
     @Test
-    public void clearViewItemDoesNotRemovesSlotMarkIfOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem2);
-        underTest.clearErrors(viewItem1);
+    public void clearVisualItemDoesNotRemovesSlotMarkIfOtherErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem2);
+        underTest.clearErrors(visualItem1);
 
         assertThat(underTest.hasErrors(slot1), is(true));
     }
 
     @Test
-    public void clearViewItemRemovesSlotMarkIfNoOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.clearErrors(viewItem1);
+    public void clearVisualItemRemovesSlotMarkIfNoOtherErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.clearErrors(visualItem1);
 
         assertThat(underTest.hasErrors(slot1), is(false));
     }
 
     @Test
-    public void clearViewItemRemovesViewItemFromSlotErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem2);
-        underTest.clearErrors(viewItem1);
+    public void clearVisualItemRemovesVisualItemFromSlotErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem2);
+        underTest.clearErrors(visualItem1);
 
         assertThat(underTest.getVisualItemsWithErrors(slot1),
-                containsExactly(viewItem2));
+                containsExactly(visualItem2));
     }
 
     @Test
-    public void clearViewItemRemovesViewItemMark() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.clearErrors(viewItem1);
+    public void clearVisualItemRemovesVisualItemMark() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.clearErrors(visualItem1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(false));
+        assertThat(underTest.hasErrors(visualItem1), is(false));
     }
 
     @Test
-    public void getSlotsWithErrorsReturnEmptyListIfViewItemIsErrorFree() {
-        assertThat(underTest.getSlotsWithErrors(viewItem1).isEmpty(), is(true));
+    public void getSlotsWithErrorsReturnEmptyListIfVisualItemIsErrorFree() {
+        assertThat(underTest.getSlotsWithErrors(visualItem1).isEmpty(),
+                is(true));
     }
 
     @Test
-    public void getViewItemsWithErrorsReturnEmptyListIfSlotIsErrorFree() {
-        assertThat(underTest.getVisualItemsWithErrors(slot1).isEmpty(), is(true));
+    public void getVisualItemsWithErrorsReturnEmptyListIfSlotIsErrorFree() {
+        assertThat(underTest.getVisualItemsWithErrors(slot1).isEmpty(),
+                is(true));
     }
 
     @Test
@@ -129,159 +131,159 @@ public class DefaultVisualItemResolutionErrorModelTest {
 
     @Test
     public void removeDoesNotRemoveSlotItemMarkIfOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem2);
-        underTest.removeError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem2);
+        underTest.removeError(slot1, visualItem1);
 
         assertThat(underTest.hasErrors(slot1), is(true));
     }
 
     @Test
-    public void removeDoesNotRemoveViewItemMarkIfOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot2, viewItem1);
-        underTest.removeError(slot1, viewItem1);
+    public void removeDoesNotRemoveVisualItemMarkIfOtherErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot2, visualItem1);
+        underTest.removeError(slot1, visualItem1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(true));
+        assertThat(underTest.hasErrors(visualItem1), is(true));
     }
 
     @Test
-    public void removeRemovesSlotFromViewItemErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot2, viewItem1);
-        underTest.removeError(slot1, viewItem1);
+    public void removeRemovesSlotFromVisualItemErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot2, visualItem1);
+        underTest.removeError(slot1, visualItem1);
 
-        assertThat(underTest.getSlotsWithErrors(viewItem1),
+        assertThat(underTest.getSlotsWithErrors(visualItem1),
                 containsExactly(slot2));
     }
 
     @Test
     public void removeRemovesSlotItemMarkIfNoOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.removeError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
+        underTest.removeError(slot1, visualItem1);
 
         assertThat(underTest.hasErrors(slot1), is(false));
     }
 
     @Test
     public void removeRemovesSlotMark() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.removeError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
+        underTest.removeError(slot1, visualItem1);
 
         assertThat(underTest.hasErrors(slot1), is(false));
     }
 
     @Test
-    public void removeRemovesViewItemFromSlotErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem2);
-        underTest.removeError(slot1, viewItem1);
+    public void removeRemovesVisualItemFromSlotErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem2);
+        underTest.removeError(slot1, visualItem1);
 
         assertThat(underTest.getVisualItemsWithErrors(slot1),
-                containsExactly(viewItem2));
+                containsExactly(visualItem2));
     }
 
     @Test
-    public void removeRemovesViewItemMark() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.removeError(slot1, viewItem1);
+    public void removeRemovesVisualItemMark() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.removeError(slot1, visualItem1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(false));
+        assertThat(underTest.hasErrors(visualItem1), is(false));
     }
 
     @Test
-    public void removeRemovesViewItemMarkIfNoOtherErrors() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.removeError(slot1, viewItem1);
+    public void removeRemovesVisualItemMarkIfNoOtherErrors() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.removeError(slot1, visualItem1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(false));
+        assertThat(underTest.hasErrors(visualItem1), is(false));
     }
 
     @Test
     public void reportErrorAddsSlotToErrorSlots() {
-        underTest.reportError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slot1));
     }
 
     @Test
-    public void reportErrorAddsSlotToViewItemErrors() {
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorAddsSlotToVisualItemErrors() {
+        underTest.reportError(slot1, visualItem1);
 
-        assertThat(underTest.getSlotsWithErrors(viewItem1),
+        assertThat(underTest.getSlotsWithErrors(visualItem1),
                 containsExactly(slot1));
     }
 
     @Test
-    public void reportErrorAddsViewItemToErrorViewItems() {
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorAddsVisualItemToErrorVisualItems() {
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.getVisualItemsWithErrors(slot1),
-                containsExactly(viewItem1));
+                containsExactly(visualItem1));
     }
 
     @Test
-    public void reportErrorAddsViewItemToViewItemErrors() {
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorAddsVisualItemToVisualItemErrors() {
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.getVisualItemsWithErrors(),
-                containsExactly(viewItem1));
+                containsExactly(visualItem1));
     }
 
     @Test
     public void reportErrorMarksSlotAsErroneous() {
-        underTest.reportError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.hasErrors(slot1), is(true));
     }
 
     @Test
-    public void reportErrorMarksViewItemAsErroneous() {
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorMarksVisualItemAsErroneous() {
+        underTest.reportError(slot1, visualItem1);
 
-        assertThat(underTest.hasErrors(viewItem1), is(true));
+        assertThat(underTest.hasErrors(visualItem1), is(true));
     }
 
     @Test
     public void reportErrorSetsHasErrors() {
-        underTest.reportError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.hasErrors(), is(true));
     }
 
     @Test
     public void reportErrorTwiceAddsSlotToErrorSlotsOnce() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem1);
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slot1));
     }
 
     @Test
-    public void reportErrorTwiceAddsSlotToViewItemErrorsOnce() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorTwiceAddsSlotToVisualItemErrorsOnce() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem1);
 
-        assertThat(underTest.getSlotsWithErrors(viewItem1),
+        assertThat(underTest.getSlotsWithErrors(visualItem1),
                 containsExactly(slot1));
     }
 
     @Test
-    public void reportErrorTwiceAddsViewItemToErrorViewItemsOnce() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorTwiceAddsVisualItemToErrorVisualItemsOnce() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.getVisualItemsWithErrors(slot1),
-                containsExactly(viewItem1));
+                containsExactly(visualItem1));
     }
 
     @Test
-    public void reportErrorTwiceAddsViewItemToViewItemErrorsOnce() {
-        underTest.reportError(slot1, viewItem1);
-        underTest.reportError(slot1, viewItem1);
+    public void reportErrorTwiceAddsVisualItemToVisualItemErrorsOnce() {
+        underTest.reportError(slot1, visualItem1);
+        underTest.reportError(slot1, visualItem1);
 
         assertThat(underTest.getVisualItemsWithErrors(),
-                containsExactly(viewItem1));
+                containsExactly(visualItem1));
     }
 
     @Before
@@ -291,8 +293,8 @@ public class DefaultVisualItemResolutionErrorModelTest {
         slot1 = new Slot("s1", "", DataType.TEXT);
         slot2 = new Slot("s2", "", DataType.TEXT);
 
-        when(viewItem1.getId()).thenReturn("v1");
-        when(viewItem2.getId()).thenReturn("v2");
+        when(visualItem1.getId()).thenReturn("v1");
+        when(visualItem2.getId()).thenReturn("v2");
 
         underTest = new DefaultVisualItemResolutionErrorModel();
     }

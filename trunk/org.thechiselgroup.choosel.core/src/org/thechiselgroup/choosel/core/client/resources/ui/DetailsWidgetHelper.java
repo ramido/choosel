@@ -22,6 +22,6 @@ import com.google.gwt.user.client.ui.Widget;
 // TODO rename into details widget factory...
 public interface DetailsWidgetHelper {
 
-    Widget createDetailsWidget(VisualItem viewItem);
+    Widget createDetailsWidget(VisualItem visualItem);
 
 }

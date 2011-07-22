@@ -22,10 +22,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SimpleDetailsWidgetHelper implements DetailsWidgetHelper {
 
-    public Widget createDetailsWidget(VisualItem viewItem) {
+    public Widget createDetailsWidget(VisualItem visualItem) {
         return new HTML("<b style='white-space: nowrap;'>"
-                + viewItem.getId()
+                + visualItem.getId()
                 + "</b><br/><span style='white-space: nowrap;'>"
-                + viewItem.getResources().size() + " items<span>");
+                + visualItem.getResources().size() + " items<span>");
     }
 }

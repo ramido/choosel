@@ -45,7 +45,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 
 public class PopupWithHighlightingVisualItemBehaviorTest {
 
-    private static final String VIEW_ITEM_ID = "viewItemCategory";
+    private static final String VIEW_ITEM_ID = "visualItemCategory";
 
     private HighlightingModel hoverModel;
 
@@ -56,7 +56,7 @@ public class PopupWithHighlightingVisualItemBehaviorTest {
     private Popup popup;
 
     @Mock
-    private VisualItem viewItem;
+    private VisualItem visualItem;
 
     private PopupWithHighlightingVisualItemBehavior underTest;
 
@@ -68,11 +68,11 @@ public class PopupWithHighlightingVisualItemBehaviorTest {
      */
     @Test
     public void disposeRemovesPopupHighlighting() {
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
-        underTest.onVisualItemRemoved(viewItem);
+        underTest.onVisualItemRemoved(visualItem);
 
         assertThat(hoverModel.getResources(),
                 containsExactly(ResourceSetTestUtils.createResources()));
@@ -80,8 +80,8 @@ public class PopupWithHighlightingVisualItemBehaviorTest {
 
     @Test
     public void mouseOverPopupAddsResourcesToHoverModel() {
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
         assertThat(hoverModel.getResources(), containsExactly(resources));
@@ -89,11 +89,11 @@ public class PopupWithHighlightingVisualItemBehaviorTest {
 
     @Test
     public void popupClosedOnDragStart() {
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.DRAG_START));
 
         verify(popupManager, times(1)).hidePopup();
@@ -104,8 +104,8 @@ public class PopupWithHighlightingVisualItemBehaviorTest {
         int clientX = 10;
         int clientY = 20;
 
-        underTest.onVisualItemCreated(viewItem);
-        underTest.onInteraction(viewItem, new VisualItemInteraction(
+        underTest.onVisualItemCreated(visualItem);
+        underTest.onInteraction(visualItem, new VisualItemInteraction(
                 Type.MOUSE_OVER, clientX, clientY));
 
         verify(popupManager, times(1)).onMouseOver(clientX, clientY);
@@ -118,8 +118,8 @@ public class PopupWithHighlightingVisualItemBehaviorTest {
         hoverModel = spy(new HighlightingModel());
 
         resources = ResourceSetTestUtils.createResources(1, 2);
-        when(viewItem.getId()).thenReturn(VIEW_ITEM_ID);
-        when(viewItem.getResources()).thenReturn(resources);
+        when(visualItem.getId()).thenReturn(VIEW_ITEM_ID);
+        when(visualItem.getResources()).thenReturn(resources);
         when(popupManager.getPopup()).thenReturn(popup);
 
         underTest = new PopupWithHighlightingVisualItemBehavior(

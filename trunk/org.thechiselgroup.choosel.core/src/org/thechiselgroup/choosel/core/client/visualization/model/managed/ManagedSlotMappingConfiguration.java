@@ -126,7 +126,7 @@ public class ManagedSlotMappingConfiguration {
             }
         });
         /**
-         * This is an event fired whenever the viewModel's contained ViewItems
+         * This is an event fired whenever the viewModel's contained VisualItems
          * change
          */
         visualizationModel.getFullVisualItemContainer().addHandler(
@@ -142,7 +142,7 @@ public class ManagedSlotMappingConfiguration {
 
     private Map<Slot, ManagedSlotMappingState> generateSlotMappingStateSnapshot(
             LightweightCollection<Slot> slots,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         Map<Slot, ManagedSlotMappingState> oldStates = new HashMap<Slot, ManagedSlotMappingState>();
 
@@ -156,7 +156,7 @@ public class ManagedSlotMappingConfiguration {
             if (isConfigured = visualizationModel.isConfigured(slot)) {
                 resolver = getCurrentResolver(slot);
                 isAllowable = managedSlotMapping.isAllowableResolver(resolver,
-                        viewItems);
+                        visualItems);
             } else {
                 resolver = null;
                 isAllowable = false;
@@ -232,12 +232,12 @@ public class ManagedSlotMappingConfiguration {
      */
     private Map<Slot, ManagedSlotMappingState> resetMappingsFromInitializer(
             LightweightCollection<Slot> unresolvableSlots,
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         assert !unresolvableSlots.isEmpty();
 
         Map<Slot, ManagedSlotMappingState> states = generateSlotMappingStateSnapshot(
-                unresolvableSlots, viewItems);
+                unresolvableSlots, visualItems);
 
         for (Entry<Slot, VisualItemValueResolver> entry : slotMappingInitializer
                 .getResolvers(visualizationModel.getContentResourceSet(),
@@ -252,10 +252,10 @@ public class ManagedSlotMappingConfiguration {
             assert resolver instanceof ManagedVisualItemValueResolver;
 
             if (getManagedSlotMapping(slot).isAllowableResolver(resolver,
-                    viewItems)) {
+                    visualItems)) {
                 updateStatesWithNewResolvers(slot,
                         (ManagedVisualItemValueResolver) resolver, states,
-                        viewItems);
+                        visualItems);
                 visualizationModel.setResolver(slot, resolver);
             } else {
                 // Oh god, even the initializer was wrong
@@ -281,9 +281,9 @@ public class ManagedSlotMappingConfiguration {
      * {@link VisualItem}s change).
      */
     private void updateManagedMappings(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
         for (ManagedSlotMapping managedMapping : slotsToSlotMappings.values()) {
-            managedMapping.updateAllowableFactories(viewItems);
+            managedMapping.updateAllowableFactories(visualItems);
         }
     }
 
@@ -313,10 +313,10 @@ public class ManagedSlotMappingConfiguration {
     }
 
     private Map<Slot, ManagedSlotMappingState> updateVisualMappings(
-            LightweightCollection<VisualItem> viewItems) {
+            LightweightCollection<VisualItem> visualItems) {
 
         // check to see if the configuration is still valid
-        updateManagedMappings(viewItems);
+        updateManagedMappings(visualItems);
 
         // TODO this should now use the initializer to initialize all slots that
         // have errors. However, it should know if the slot is configured or
@@ -328,7 +328,7 @@ public class ManagedSlotMappingConfiguration {
 
         Map<Slot, ManagedSlotMappingState> newStates = new HashMap<Slot, ManagedSlotMappingState>();
         if (!slots.isEmpty()) {
-            newStates.putAll(resetMappingsFromInitializer(slots, viewItems));
+            newStates.putAll(resetMappingsFromInitializer(slots, visualItems));
         }
         return newStates;
     }

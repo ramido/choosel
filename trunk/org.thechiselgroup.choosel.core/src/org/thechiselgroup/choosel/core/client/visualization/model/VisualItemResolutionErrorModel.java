@@ -45,7 +45,7 @@ public interface VisualItemResolutionErrorModel {
     LightweightCollection<VisualItem> getVisualItemsWithErrors();
 
     /**
-     * @return {@link ViewItems}s that could not be resolved for {@code slot}.
+     * @return {@link VisualItems}s that could not be resolved for {@code slot}.
      *         If all {@link VisualItem}s can be resolved for the slot, an empty
      *         list is returned.
      */

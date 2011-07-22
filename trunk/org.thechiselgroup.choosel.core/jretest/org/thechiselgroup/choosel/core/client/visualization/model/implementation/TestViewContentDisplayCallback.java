@@ -35,7 +35,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class TestViewContentDisplayCallback implements
         ViewContentDisplayCallback, VisualItemContainer {
 
-    private Map<String, VisualItem> viewItemsByGroupId = CollectionFactory
+    private Map<String, VisualItem> visualItemsByGroupId = CollectionFactory
             .createStringMap();
 
     @Override
@@ -45,19 +45,19 @@ public class TestViewContentDisplayCallback implements
         return null;
     }
 
-    public void addViewItem(VisualItem viewItem) {
-        viewItemsByGroupId.put(viewItem.getId(), viewItem);
+    public void addVisualItem(VisualItem visualItem) {
+        visualItemsByGroupId.put(visualItem.getId(), visualItem);
     }
 
-    public void addViewItems(Iterable<VisualItem> viewItems) {
-        for (VisualItem viewItem : viewItems) {
-            addViewItem(viewItem);
+    public void addVisualItems(Iterable<VisualItem> visualItems) {
+        for (VisualItem visualItem : visualItems) {
+            addVisualItem(visualItem);
         }
     }
 
     @Override
-    public boolean containsVisualItem(String viewItemId) {
-        return viewItemsByGroupId.containsKey(viewItemId);
+    public boolean containsVisualItem(String visualItemId) {
+        return visualItemsByGroupId.containsKey(visualItemId);
     }
 
     @Override
@@ -72,14 +72,14 @@ public class TestViewContentDisplayCallback implements
 
     @Override
     public VisualItem getVisualItem(String groupId) {
-        return viewItemsByGroupId.get(groupId);
+        return visualItemsByGroupId.get(groupId);
     }
 
     @Override
     public LightweightCollection<VisualItem> getVisualItems() {
         LightweightList<VisualItem> result = CollectionFactory
                 .createLightweightList();
-        result.addAll(viewItemsByGroupId.values());
+        result.addAll(visualItemsByGroupId.values());
         return result;
     }
 
@@ -90,8 +90,8 @@ public class TestViewContentDisplayCallback implements
         return null;
     }
 
-    public void removeResourceItem(VisualItem viewItem) {
-        viewItemsByGroupId.remove(viewItem.getId());
+    public void removeResourceItem(VisualItem visualItem) {
+        visualItemsByGroupId.remove(visualItem.getId());
     }
 
 }
