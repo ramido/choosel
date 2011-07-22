@@ -19,21 +19,26 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.ResourceCountResolverFactory;
 
-public class ResourceCountResolverUIControllerFactory implements
+public class EmptyWidgetUIControllerFactory implements
         VisualItemValueResolverUIControllerFactory {
+
+    private final String id;
+
+    public EmptyWidgetUIControllerFactory(String id) {
+        this.id = id;
+    }
 
     @Override
     public VisualItemValueResolverUIController create(
             VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> visualItems) {
+            LightweightCollection<VisualItem> visualItem) {
         return new EmptyWidgetUIController(getId());
     }
 
     @Override
     public String getId() {
-        return ResourceCountResolverFactory.ID;
-    }
+        return id;
 
+    }
 }
