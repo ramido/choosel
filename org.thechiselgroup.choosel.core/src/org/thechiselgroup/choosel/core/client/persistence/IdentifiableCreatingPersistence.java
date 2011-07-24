@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.persistence;
 
 import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 
-public interface IdentifiableCreatingPersistenceManager<T> extends
+public interface IdentifiableCreatingPersistence<T> extends
         CreatingPersistenceManager<T>, Identifiable {
 
 }

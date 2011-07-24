@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.persistence.IdentifiableCreatingPersistenceManager;
+import org.thechiselgroup.choosel.core.client.persistence.IdentifiableCreatingPersistence;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
@@ -53,7 +53,7 @@ public class ManagedSlotMappingConfigurationPersistenceTest {
     private Slot[] slots;
 
     @Mock
-    private IdentifiableCreatingPersistenceManager<ManagedVisualItemValueResolver> persistenceManager;
+    private IdentifiableCreatingPersistence<ManagedVisualItemValueResolver> persistenceManager;
 
     @Test
     public void saveRestore1() {
@@ -81,7 +81,7 @@ public class ManagedSlotMappingConfigurationPersistenceTest {
         when(persistenceManager.getId()).thenReturn(RESOLVER_ID);
 
         underTest = new ManagedSlotMappingConfigurationPersistence();
-        underTest.registerPersistenceManager(persistenceManager);
+        underTest.registerResolverPersistence(persistenceManager);
     }
 
     private void setUpSlots(ManagedSlotMappingConfiguration configuration2) {

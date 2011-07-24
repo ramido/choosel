@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
@@ -83,10 +82,4 @@ public class ChooselWorkbenchViewWindowContentProducer extends
         return parts;
     }
 
-    @Override
-    protected ManagedSlotMappingConfigurationPersistence createVisualItemResolverPersistence() {
-        ManagedSlotMappingConfigurationPersistence persistence = new ManagedSlotMappingConfigurationPersistence();
-
-        return persistence;
-    }
 }

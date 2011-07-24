@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
-import org.thechiselgroup.choosel.core.client.persistence.IdentifiableCreatingPersistenceManager;
+import org.thechiselgroup.choosel.core.client.persistence.IdentifiableCreatingPersistence;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
@@ -72,7 +72,7 @@ public class DefaultViewPersistenceIntegrationTest {
 
     public static class PropertyDependentVisualItemResolverPersistence
             implements
-            IdentifiableCreatingPersistenceManager<ManagedVisualItemValueResolver> {
+            IdentifiableCreatingPersistence<ManagedVisualItemValueResolver> {
 
         private PropertyDependantVisualItemValueResolverFactory factory;
 
@@ -166,7 +166,7 @@ public class DefaultViewPersistenceIntegrationTest {
 
         resolverProvider.register(factory);
         slotMappingConfigurationPersistence
-                .registerPersistenceManager(new PropertyDependentVisualItemResolverPersistence(
+                .registerResolverPersistence(new PropertyDependentVisualItemResolverPersistence(
                         factory));
 
         // 1. create view and configure it - resources, settings...
@@ -334,7 +334,7 @@ public class DefaultViewPersistenceIntegrationTest {
 
         resolverProvider.register(factory);
         slotMappingConfigurationPersistence
-                .registerPersistenceManager(new PropertyDependentVisualItemResolverPersistence(
+                .registerResolverPersistence(new PropertyDependentVisualItemResolverPersistence(
                         factory));
 
         // 1. create view and configure it - resources, settings...
