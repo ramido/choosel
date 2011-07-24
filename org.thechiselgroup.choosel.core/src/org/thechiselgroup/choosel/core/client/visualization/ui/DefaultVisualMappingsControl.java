@@ -124,15 +124,15 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     // TODO this should take allowableFactories as a parameter
     private VisualItemValueResolverUIController createUIControllerFromResolver(
             Slot slot, ManagedVisualItemValueResolver currentResolver) {
+
         VisualItemValueResolverUIControllerFactory uiFactory = uiProvider
-                .getFactoryById(currentResolver.getId());
+                .get(currentResolver.getId());
 
         assert uiFactory != null;
 
-        VisualItemValueResolverUIController resolverUI = uiFactory.create(
-                slotMappingConfigurationUIModel
-                .getManagedSlotMapping(slot), slotMappingConfigurationUIModel.getVisualItems());
-        return resolverUI;
+        return uiFactory.create(
+                slotMappingConfigurationUIModel.getManagedSlotMapping(slot),
+                slotMappingConfigurationUIModel.getVisualItems());
     }
 
     // TODO uh, shouldnt we just initialize the visualMappingSPanel in the
@@ -231,7 +231,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         updateGroupingBox(propertiesByDataType);
     }
 
-    private void updateSlotControls(LightweightCollection<VisualItem> visualItems) {
+    private void updateSlotControls(
+            LightweightCollection<VisualItem> visualItems) {
         for (DataType dataType : DataType.values()) {
             for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
                 slotControl.updateOptions(visualItems);

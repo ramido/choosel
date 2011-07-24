@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.model.persistence;
+package org.thechiselgroup.choosel.core.client.persistence;
 
-import org.thechiselgroup.choosel.core.client.persistence.CreatingPersistenceManager;
 import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 
 public interface IdentifiableCreatingPersistenceManager<T> extends
         CreatingPersistenceManager<T>, Identifiable {
+
 }
