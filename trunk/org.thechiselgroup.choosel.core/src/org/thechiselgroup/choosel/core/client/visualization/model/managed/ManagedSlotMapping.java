@@ -78,11 +78,19 @@ public class ManagedSlotMapping {
 
         updateAllowableFactories(CollectionFactory
                 .<VisualItem> createLightweightList());
+
+        assertCurrentResolverIsManaged();
     }
 
     public void addSlotMappingEventHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         eventBus.addHandler(SlotMappingChangedEvent.TYPE, handler);
+    }
+
+    private void assertCurrentResolverIsManaged() {
+        assert !configuration.isConfigured(slot)
+                || configuration.getResolver(slot) instanceof ManagedVisualItemValueResolver : "resolver for "
+                + slot + " must be managed";
     }
 
     /**
@@ -133,6 +141,7 @@ public class ManagedSlotMapping {
      * @return The current @link{VisualItemValueResolver}
      */
     public ManagedVisualItemValueResolver getCurrentResolver() {
+        assertCurrentResolverIsManaged();
         return (ManagedVisualItemValueResolver) configuration.getResolver(slot);
     }
 

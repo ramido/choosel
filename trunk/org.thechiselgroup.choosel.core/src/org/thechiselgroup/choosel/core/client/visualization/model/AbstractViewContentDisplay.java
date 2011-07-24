@@ -40,6 +40,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         VisualItemContainer {
+
+    private enum State {
+
+        CREATED, INITIALIZED, DISPOSED;
+
+    }
+
     protected ViewContentDisplayCallback callback;
 
     private boolean restoring = false;
@@ -51,6 +58,8 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
 
     private VisualItemContainer container;
 
+    private State state = State.CREATED;
+
     @Override
     public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
         throw new NoSuchAdapterException(this, clazz);
@@ -60,6 +69,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     public HandlerRegistration addHandler(
             VisualItemContainerChangeEventHandler handler) {
         return container.addHandler(handler);
+    }
+
+    private void assertInState(State expectedState) {
+        assert state == expectedState : "invalid state: " + state
+                + " should be " + expectedState + ")";
     }
 
     @Override
@@ -88,6 +102,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
 
     @Override
     public boolean containsVisualItem(String visualItemId) {
+        assertInState(State.INITIALIZED);
         return container.containsVisualItem(visualItemId);
     }
 
@@ -98,6 +113,10 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         callback = null;
         container = null;
         widget = DisposeUtil.dispose(widget);
+
+        state = State.DISPOSED;
+
+        assertInState(State.DISPOSED);
     }
 
     @Override
@@ -115,11 +134,13 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
 
     @SuppressWarnings("unchecked")
     private <T> ViewContentDisplayProperty<T> getProperty(String property) {
+        assertInState(State.INITIALIZED);
         return (ViewContentDisplayProperty<T>) properties.get(property);
     }
 
     @Override
     public <T> T getPropertyValue(String property) {
+        assertInState(State.INITIALIZED);
         // TODO NoSuchPropertyException extends RuntimeException
         if (!properties.containsKey(property)) {
             throw new IllegalArgumentException("Property '" + property
@@ -137,17 +158,21 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     @Override
     public VisualItem getVisualItem(String visualItemId)
             throws NoSuchElementException {
+
+        assertInState(State.INITIALIZED);
         return container.getVisualItem(visualItemId);
     }
 
     @Override
     public LightweightCollection<VisualItem> getVisualItems() {
+        assertInState(State.INITIALIZED);
         return container.getVisualItems();
     }
 
     @Override
     public LightweightCollection<VisualItem> getVisualItems(
             Iterable<Resource> resources) {
+        assertInState(State.INITIALIZED);
         return container.getVisualItems(resources);
     }
 
@@ -155,11 +180,17 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     public void init(VisualItemContainer container,
             ViewContentDisplayCallback callback) {
 
+        assertInState(State.CREATED);
+
         assert container != null;
         assert callback != null;
 
         this.callback = callback;
         this.container = container;
+
+        this.state = State.INITIALIZED;
+
+        assertInState(State.INITIALIZED);
     }
 
     @Override
