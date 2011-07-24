@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
+package org.thechiselgroup.choosel.workbench.client;
 
 import java.util.Date;
 
@@ -27,10 +27,14 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Sub
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ResourceCountResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.CalculationResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.SingletonVisualItemResolverFactory;
 
 import com.google.inject.Inject;
 
-public class PreconfiguredVisualItemValueResolverFactoryProvider extends
+public class WorkbenchVisualItemValueResolverFactoryProvider extends
         DefaultVisualItemResolverFactoryProvider {
 
     public static final SingletonVisualItemResolverFactory COUNT_RESOLVER_FACTORY = new SingletonVisualItemResolverFactory(

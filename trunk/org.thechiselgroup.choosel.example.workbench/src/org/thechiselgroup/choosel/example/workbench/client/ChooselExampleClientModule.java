@@ -17,13 +17,13 @@ package org.thechiselgroup.choosel.example.workbench.client;
 
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.PreconfiguredVisualItemResolverUIFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.workbench.client.ChooselWorkbenchClientModule;
+import org.thechiselgroup.choosel.workbench.client.WorkbenchVisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.workbench.client.WorkbenchVisualItemResolverUIFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 
 import com.google.inject.Provider;
@@ -42,12 +42,12 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
 
     @Override
     protected Class<? extends VisualItemValueResolverFactoryProvider> getResolverFactoryProviderClass() {
-        return PreconfiguredVisualItemValueResolverFactoryProvider.class;
+        return WorkbenchVisualItemValueResolverFactoryProvider.class;
     }
 
     @Override
     protected Class<? extends VisualItemValueResolverUIControllerFactoryProvider> getResolverFactoryUIProviderClass() {
-        return PreconfiguredVisualItemResolverUIFactoryProvider.class;
+        return WorkbenchVisualItemResolverUIFactoryProvider.class;
     }
 
     @Override
