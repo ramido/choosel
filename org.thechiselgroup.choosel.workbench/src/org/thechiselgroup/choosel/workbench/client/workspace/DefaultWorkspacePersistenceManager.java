@@ -195,11 +195,9 @@ public class DefaultWorkspacePersistenceManager implements
         }
         workspaceDTO.setResourceSets(resourceSetDTOs);
 
-        Resource[] resources = new Resource[resourceCollector.size()];
-        int count = 0;
-        for (Resource resource : resourceCollector) {
-            resources[count++] = resource;
-        }
+        List<Resource> allResources = resourceManager.getAllResources();
+        Resource[] resources = allResources.toArray(new Resource[allResources
+                .size()]);
 
         workspaceDTO.setResources(resources);
 

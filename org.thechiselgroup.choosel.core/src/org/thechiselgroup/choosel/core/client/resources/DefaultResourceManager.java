@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -142,6 +143,11 @@ public class DefaultResourceManager implements ResourceManager {
         return keysToResourceElements.get(uri);
     }
 
+    @Override
+    public Iterator<Resource> iterator() {
+        return getAllResources().iterator();
+    }
+
     private void removeResourceElement(String uri) {
         keysToResourceElements.remove(uri);
     }
@@ -156,6 +162,11 @@ public class DefaultResourceManager implements ResourceManager {
             result.add(getByUri(uri));
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return getAllResources().toString();
     }
 
 }
