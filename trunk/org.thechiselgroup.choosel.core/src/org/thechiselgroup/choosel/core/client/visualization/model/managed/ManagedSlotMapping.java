@@ -45,27 +45,6 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class ManagedSlotMapping {
 
-    // TODO should these be regular exceptions?
-    public class InvalidResolverException extends IllegalArgumentException {
-
-        private static final long serialVersionUID = 1L;
-
-        public InvalidResolverException(String message) {
-            super(message);
-        }
-
-    }
-
-    // TODO should these be regular exceptions?
-    public class NoAllowableResolverException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
-
-        public NoAllowableResolverException(String message) {
-            super(message);
-        }
-    }
-
     private final Slot slot;
 
     private Map<String, VisualItemValueResolverFactory> allowableResolverFactories;
