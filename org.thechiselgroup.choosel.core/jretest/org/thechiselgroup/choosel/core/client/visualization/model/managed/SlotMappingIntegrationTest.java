@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.model.implementation;
+package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -45,16 +45,18 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBehavior;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModelTestHelper;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.TestSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultManagedSlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.SubsetDelegatingValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.ManagedVisualItemValueResolverDecorator;
 
 // TODO think about test name schema - unit, module, system, integration test etc
 public class SlotMappingIntegrationTest {

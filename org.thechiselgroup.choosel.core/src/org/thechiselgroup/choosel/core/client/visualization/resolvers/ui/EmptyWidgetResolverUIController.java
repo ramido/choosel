@@ -21,12 +21,12 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class EmptyWidgetUIController implements
+public class EmptyWidgetResolverUIController implements
         VisualItemValueResolverUIController {
 
     private String id;
 
-    public EmptyWidgetUIController(String id) {
+    public EmptyWidgetResolverUIController(String id) {
         assert id != null;
 
         this.id = id;
