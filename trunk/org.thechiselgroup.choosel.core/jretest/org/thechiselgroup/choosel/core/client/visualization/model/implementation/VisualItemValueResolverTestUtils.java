@@ -58,7 +58,7 @@ public final class VisualItemValueResolverTestUtils {
         ManagedVisualItemValueResolver resolver = mock(ManagedVisualItemValueResolver.class);
         when(resolver.getTargetSlots()).thenReturn(
                 LightweightCollections.<Slot> emptyCollection());
-        when(resolver.getResolverId()).thenReturn(id);
+        when(resolver.getId()).thenReturn(id);
         return resolver;
     }
 

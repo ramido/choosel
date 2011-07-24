@@ -32,6 +32,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDis
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.core.client.visualization.ui.VisualMappingsControl;
 
 public class DefaultViewTest {
@@ -81,6 +83,9 @@ public class DefaultViewTest {
                 mock(VisualMappingsControl.class),
                 LightweightCollections.<SidePanelSection> emptyCollection(),
                 viewModel, mock(ResourceModel.class),
-                mock(SelectionModel.class), mock(ErrorHandler.class));
+                mock(SelectionModel.class),
+                mock(ManagedSlotMappingConfiguration.class),
+                mock(ManagedSlotMappingConfigurationPersistence.class),
+                mock(ErrorHandler.class));
     }
 }

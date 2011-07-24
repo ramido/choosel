@@ -72,4 +72,10 @@ public class Memento implements Serializable {
         return values.put(key, value);
     }
 
+    @Override
+    public String toString() {
+        return "Memento [factoryId=" + factoryId + ", children=" + children
+                + ", values=" + values + "]";
+    }
+
 }

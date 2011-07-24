@@ -32,7 +32,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class PropertyListBoxResolverUIController implements
+public class PropertyListBoxResolverUIController implements
         VisualItemValueResolverUIController {
 
     private final PropertyDependantVisualItemValueResolverFactory resolverFactory;
@@ -58,31 +58,30 @@ public abstract class PropertyListBoxResolverUIController implements
         }
     };
 
-    private String id;
-
-    public PropertyListBoxResolverUIController(String id,
+    public PropertyListBoxResolverUIController(
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> visualItems) {
-        this(id, resolverFactory, uiModel, visualItems, ResourceSetUtils
+
+        this(resolverFactory, uiModel, visualItems, ResourceSetUtils
                 .getSharedPropertiesOfDataType(visualItems,
-                        resolverFactory.getValidDataType()).get(0));
+                        resolverFactory.getDataType()).get(0));
     }
 
-    public PropertyListBoxResolverUIController(String id,
+    public PropertyListBoxResolverUIController(
             PropertyDependantVisualItemValueResolverFactory resolverFactory,
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> visualItems, String property) {
+
         this.uiModel = uiModel;
         this.resolverFactory = resolverFactory;
-        this.id = id;
 
         selector = new ListBoxControl<String>(new ExtendedListBox(false),
                 new NullTransformer<String>());
         selector.setChangeHandler(propertySelectChangeHandler);
 
-        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(visualItems,
-                resolverFactory.getValidDataType()));
+        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(
+                visualItems, resolverFactory.getDataType()));
         selector.setSelectedValue(property);
     }
 
@@ -114,7 +113,7 @@ public abstract class PropertyListBoxResolverUIController implements
 
     @Override
     public String getId() {
-        return id;
+        return resolverFactory.getId();
     }
 
     /**
@@ -140,8 +139,8 @@ public abstract class PropertyListBoxResolverUIController implements
         assert resolverFactory.canCreateApplicableResolver(uiModel.getSlot(),
                 visualItems);
 
-        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(visualItems,
-                resolverFactory.getValidDataType()));
+        setProperties(ResourceSetUtils.getSharedPropertiesOfDataType(
+                visualItems, resolverFactory.getDataType()));
 
         // the new view items can not be resolved by the current resolver, and
         // the property field should be set to something that is valid

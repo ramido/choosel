@@ -47,7 +47,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemBeha
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.TestSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResourcePropertyResolver;
@@ -106,8 +106,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -147,12 +147,12 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId2));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId2, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -195,7 +195,7 @@ public class SlotMappingIntegrationTest {
                 helper.getViewContentDisplay(), new DefaultResourceSet(),
                 new DefaultResourceSet(), visualItemBehavior, errorHandler,
                 new DefaultResourceSetFactory(), categorizer);
-        new ManagedSlotMappingConfiguration(resolverProvider,
+        new DefaultManagedSlotMappingConfiguration(resolverProvider,
                 slotMappingInitializer, model, model);
         return model;
     }
@@ -264,12 +264,12 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.TEXT, resolverId2));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId2, DataType.TEXT));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -322,8 +322,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -378,8 +378,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -419,12 +419,12 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId2));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId2, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -457,12 +457,12 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId2));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId2, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -514,8 +514,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -569,12 +569,12 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.TEXT, resolverId2));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId2, DataType.TEXT));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -636,8 +636,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         /* set up the provider to return the correct resolvers */
-        resolverProvider.registerFactory(new FixedVisualItemResolverFactory(1,
-                DataType.NUMBER, resolverId1));
+        resolverProvider.register(new FixedVisualItemResolverFactory(resolverId1,
+                DataType.NUMBER, 1));
 
         /* define and create initializer */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();
@@ -680,8 +680,8 @@ public class SlotMappingIntegrationTest {
                 requiredSlots);
 
         resolverProvider
-                .registerFactory(new FirstResourcePropertyResolverFactory(
-                        DataType.NUMBER, resolverId1));
+                .register(new FirstResourcePropertyResolverFactory(
+                        resolverId1, DataType.NUMBER));
 
         /* define initialization mapping */
         final Map<Slot, VisualItemValueResolver> initialSlotMapping = new HashMap<Slot, VisualItemValueResolver>();

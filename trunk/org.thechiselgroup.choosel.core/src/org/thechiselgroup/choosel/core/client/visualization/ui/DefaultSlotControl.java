@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIController;
 
@@ -51,10 +51,10 @@ public class DefaultSlotControl extends SlotControl {
     // TODO I don't like how I need this here just to get the visualItems. I feel
     // like this class should not know about view items. It could always keep
     // track of updates, but then it is possible to introduce inconsistencies
-    private ManagedSlotMappingConfiguration configuration;
+    private DefaultManagedSlotMappingConfiguration configuration;
 
     public DefaultSlotControl(Slot slot,
-            ManagedSlotMappingConfiguration configurationUIModel,
+            DefaultManagedSlotMappingConfiguration configurationUIModel,
             VisualItemValueResolverUIController uiController) {
 
         super(slot);

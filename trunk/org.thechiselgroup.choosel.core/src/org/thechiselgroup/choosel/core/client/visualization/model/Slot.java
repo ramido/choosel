@@ -16,8 +16,9 @@
 package org.thechiselgroup.choosel.core.client.visualization.model;
 
 import org.thechiselgroup.choosel.core.client.util.DataType;
+import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 
-public class Slot {
+public class Slot implements Identifiable {
 
     private final String id;
 
@@ -62,6 +63,7 @@ public class Slot {
         return dataType;
     }
 
+    @Override
     public String getId() {
         return id;
     }

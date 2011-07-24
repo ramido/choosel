@@ -13,39 +13,61 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
+package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
+import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
 
-public class FirstResourcePropertyResolverUIControllerFactory implements
-        VisualItemValueResolverUIControllerFactory {
+public abstract class AbstractVisualItemValueResolverFactory implements
+        VisualItemValueResolverFactory {
 
-    private final String id;
+    protected String id;
 
-    public FirstResourcePropertyResolverUIControllerFactory(String id) {
+    protected DataType dataType;
+
+    protected String label;
+
+    public AbstractVisualItemValueResolverFactory(String id, DataType dataType,
+            String label) {
+
         assert id != null;
+        assert dataType != null;
+        assert label != null;
+
         this.id = id;
+        this.dataType = dataType;
+        this.label = label;
     }
 
+    /**
+     * Override if required.
+     * 
+     * @return {@code true}, if slot data type equals required data type.
+     */
     @Override
-    public VisualItemValueResolverUIController create(
-            VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
+    public boolean canCreateApplicableResolver(Slot slot,
             LightweightCollection<VisualItem> visualItems) {
 
-        assert factory instanceof FirstResourcePropertyResolverFactory;
+        assert slot != null;
+        assert visualItems != null;
 
-        return new FirstResourcePropertyResolverUIController(getId(),
-                (FirstResourcePropertyResolverFactory) factory, uiModel,
-                visualItems);
+        return dataType.equals(slot.getDataType());
+    }
+
+    public DataType getDataType() {
+        return dataType;
     }
 
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public final String getLabel() {
+        return label;
     }
 
 }

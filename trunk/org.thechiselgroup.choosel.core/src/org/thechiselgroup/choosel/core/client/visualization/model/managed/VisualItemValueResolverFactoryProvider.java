@@ -15,11 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 public interface VisualItemValueResolverFactoryProvider {
 
-    VisualItemValueResolverFactory getFactoryById(String id);
+    VisualItemValueResolverFactory get(String id);
 
-    LightweightList<VisualItemValueResolverFactory> getResolverFactories();
+    LightweightCollection<VisualItemValueResolverFactory> getAll();
+
 }

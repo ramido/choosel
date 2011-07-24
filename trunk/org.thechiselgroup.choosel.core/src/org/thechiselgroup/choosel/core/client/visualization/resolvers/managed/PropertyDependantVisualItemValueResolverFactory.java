@@ -22,25 +22,17 @@ import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.AbstractVisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.PropertyDependantVisualItemValueResolver;
 
-public abstract class PropertyDependantVisualItemValueResolverFactory implements
-        VisualItemValueResolverFactory {
+public abstract class PropertyDependantVisualItemValueResolverFactory extends
+        AbstractVisualItemValueResolverFactory {
 
-    private final DataType dataType;
+    protected PropertyDependantVisualItemValueResolverFactory(String id,
+            DataType dataType, String label) {
 
-    private final String resolverId;
-
-    protected PropertyDependantVisualItemValueResolverFactory(
-            String resolverId, DataType dataType) {
-
-        assert dataType != null;
-        assert resolverId != null;
-
-        this.dataType = dataType;
-        this.resolverId = resolverId;
+        super(id, dataType, label);
     }
 
     @Override
@@ -50,12 +42,12 @@ public abstract class PropertyDependantVisualItemValueResolverFactory implements
         assert slot != null;
         assert visualItems != null;
 
-        if (!slot.getDataType().equals(getValidDataType())) {
+        if (!super.canCreateApplicableResolver(slot, visualItems)) {
             return false;
         }
 
         return !ResourceSetUtils.getSharedPropertiesOfDataType(visualItems,
-                getValidDataType()).isEmpty();
+                getDataType()).isEmpty();
     }
 
     /**
@@ -70,26 +62,23 @@ public abstract class PropertyDependantVisualItemValueResolverFactory implements
 
         assert visualItems != null;
         List<String> properties = ResourceSetUtils
-                .getSharedPropertiesOfDataType(visualItems, getValidDataType());
+                .getSharedPropertiesOfDataType(visualItems, dataType);
         assert !properties.isEmpty();
         return create(properties.get(0));
     }
 
     public ManagedVisualItemValueResolver create(String property) {
-        return new PropertyDependantManagedVisualItemValueResolverDecorator(
-                getId(), createUnmanagedResolver(property));
+        return wrap(createUnmanagedResolver(property));
     }
 
     protected abstract PropertyDependantVisualItemValueResolver createUnmanagedResolver(
             String property);
 
-    @Override
-    public String getId() {
-        return resolverId;
-    }
+    protected PropertyDependantManagedVisualItemValueResolverDecorator wrap(
+            PropertyDependantVisualItemValueResolver delegate) {
 
-    public DataType getValidDataType() {
-        return dataType;
+        return new PropertyDependantManagedVisualItemValueResolverDecorator(id,
+                delegate);
     }
 
 }

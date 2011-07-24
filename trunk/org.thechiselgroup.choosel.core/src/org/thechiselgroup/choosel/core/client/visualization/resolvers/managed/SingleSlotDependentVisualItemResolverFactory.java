@@ -30,7 +30,7 @@ public class SingleSlotDependentVisualItemResolverFactory extends
             VisualItemValueResolver resolver, String label, DataType dataType,
             Slot slot) {
 
-        super(id, resolver, label, dataType);
+        super(id, dataType, label, resolver);
 
         this.slot = slot;
     }
@@ -39,8 +39,8 @@ public class SingleSlotDependentVisualItemResolverFactory extends
     public boolean canCreateApplicableResolver(Slot slot,
             LightweightCollection<VisualItem> visualItems) {
 
-        return this.slot.equals(slot)
-                && super.canCreateApplicableResolver(slot, visualItems);
+        return super.canCreateApplicableResolver(slot, visualItems)
+                && this.slot.equals(slot);
     }
 
 }

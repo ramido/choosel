@@ -15,62 +15,50 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.AVERAGE_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.DATE_PROPERTY_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_0_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_1_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_STDBLUE_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.LOCATION_PROPERTY_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MAX_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MIN_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
-
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolverFactory;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.ResourceCountResolverFactory;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.AVERAGE_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.COUNT_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.DATE_PROPERTY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_COLOR_STEELBLUE_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_NUMBER_0_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_NUMBER_1_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_TEXT_EMPTY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.ID_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.LOCATION_PROPERTY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MAX_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.MIN_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY;
 
 import com.google.inject.Inject;
 
 public class PreconfiguredVisualItemResolverUIFactoryProvider extends
         DefaultVisualItemResolverUIFactoryProvider {
 
+    // TODO it might be possible to auto-map those based on type information
     @Inject
     public void registerFactories() {
-        register(new EmptyWidgetUIControllerFactory(
-        VisualItemIdResolverFactory.ID));
+        // id
+        register(ID_RESOLVER_FACTORY);
 
-        // number specifc ones
-        register(new EmptyWidgetUIControllerFactory(
-        ResourceCountResolverFactory.ID));
-        register(new CalculationResolverUIControllerFactory(
-                SUM_RESOLVER_FACTORY_ID));
-        register(new CalculationResolverUIControllerFactory(
-                AVERAGE_RESOLVER_FACTORY_ID));
-        register(new CalculationResolverUIControllerFactory(
-                MAX_RESOLVER_FACTORY_ID));
-        register(new CalculationResolverUIControllerFactory(
-                MIN_RESOLVER_FACTORY_ID));
+        // calculations
+        register(COUNT_RESOLVER_FACTORY);
+        register(SUM_RESOLVER_FACTORY);
+        register(AVERAGE_RESOLVER_FACTORY);
+        register(MAX_RESOLVER_FACTORY);
+        register(MIN_RESOLVER_FACTORY);
 
         // first property
-        register(new FirstResourcePropertyResolverUIControllerFactory(
-                TEXT_PROPERTY_RESOLVER_FACTORY_ID));
-        register(new FirstResourcePropertyResolverUIControllerFactory(
-                LOCATION_PROPERTY_RESOLVER_FACTORY_ID));
-        register(new FirstResourcePropertyResolverUIControllerFactory(
-                DATE_PROPERTY_RESOLVER_FACTORY_ID));
+        register(TEXT_PROPERTY_RESOLVER_FACTORY);
+        register(LOCATION_PROPERTY_RESOLVER_FACTORY);
+        register(DATE_PROPERTY_RESOLVER_FACTORY);
 
         // fixed
-        register(new EmptyWidgetUIControllerFactory(
-                FIXED_0_RESOLVER_FACTORY_ID));
-        register(new EmptyWidgetUIControllerFactory(
-                FIXED_1_RESOLVER_FACTORY_ID));
-        register(new EmptyWidgetUIControllerFactory(
-                FIXED_STDBLUE_RESOLVER_FACTORY_ID));
-        register(new EmptyWidgetUIControllerFactory(
-                FIXED_DATE_TODAY_FACTORY_ID));
-        register(new EmptyWidgetUIControllerFactory(
-                PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_EMPTY_STRING_FACTORY_ID));
+        register(FIXED_NUMBER_0_RESOLVER_FACTORY);
+        register(FIXED_NUMBER_1_RESOLVER_FACTORY);
+        register(FIXED_COLOR_STEELBLUE_RESOLVER_FACTORY);
+        register(FIXED_DATE_TODAY_RESOLVER_FACTORY);
+        register(FIXED_TEXT_EMPTY_RESOLVER_FACTORY);
     }
+
 }

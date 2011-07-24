@@ -15,21 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.DATE_PROPERTY_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_0_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_EMPTY_STRING_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_STDBLUE_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.LOCATION_PROPERTY_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY_ID;
-import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY_ID;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.DATE_PROPERTY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_COLOR_STEELBLUE_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_DATE_TODAY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_NUMBER_0_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.FIXED_TEXT_EMPTY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.LOCATION_PROPERTY_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.SUM_RESOLVER_FACTORY;
+import static org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PreconfiguredVisualItemValueResolverFactoryProvider.TEXT_PROPERTY_RESOLVER_FACTORY;
 
-import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.ViewPart;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
@@ -56,26 +56,19 @@ public class ChooselWorkbenchViewWindowContentProducer extends
     protected SlotMappingInitializer createSlotMappingInitializer(
             String contentType) {
 
-        DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer(
-                factoryProvider);
+        DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer();
 
-        initializer.setFixedDataTypeResolverId(DataType.NUMBER,
-                FIXED_0_RESOLVER_FACTORY_ID);
-        initializer.setFixedDataTypeResolverId(DataType.TEXT,
-                FIXED_EMPTY_STRING_FACTORY_ID);
-        initializer.setFixedDataTypeResolverId(DataType.COLOR,
-                FIXED_STDBLUE_RESOLVER_FACTORY_ID);
-        initializer.setFixedDataTypeResolverId(DataType.DATE,
-                FIXED_DATE_TODAY_FACTORY_ID);
+        initializer.configureFixedResolver(FIXED_NUMBER_0_RESOLVER_FACTORY);
+        initializer.configureFixedResolver(FIXED_TEXT_EMPTY_RESOLVER_FACTORY);
+        initializer
+                .configureFixedResolver(FIXED_COLOR_STEELBLUE_RESOLVER_FACTORY);
+        initializer.configureFixedResolver(FIXED_DATE_TODAY_RESOLVER_FACTORY);
 
-        initializer.setPropertyDataTypeResolverId(DataType.NUMBER,
-                SUM_RESOLVER_FACTORY_ID);
-        initializer.setPropertyDataTypeResolverId(DataType.TEXT,
-                TEXT_PROPERTY_RESOLVER_FACTORY_ID);
-        initializer.setPropertyDataTypeResolverId(DataType.LOCATION,
-                LOCATION_PROPERTY_RESOLVER_FACTORY_ID);
-        initializer.setPropertyDataTypeResolverId(DataType.DATE,
-                DATE_PROPERTY_RESOLVER_FACTORY_ID);
+        initializer.configurePropertyResolver(SUM_RESOLVER_FACTORY);
+        initializer.configurePropertyResolver(TEXT_PROPERTY_RESOLVER_FACTORY);
+        initializer
+                .configurePropertyResolver(LOCATION_PROPERTY_RESOLVER_FACTORY);
+        initializer.configurePropertyResolver(DATE_PROPERTY_RESOLVER_FACTORY);
 
         return initializer;
     }
@@ -90,4 +83,10 @@ public class ChooselWorkbenchViewWindowContentProducer extends
         return parts;
     }
 
+    @Override
+    protected ManagedSlotMappingConfigurationPersistence createVisualItemResolverPersistence() {
+        ManagedSlotMappingConfigurationPersistence persistence = new ManagedSlotMappingConfigurationPersistence();
+
+        return persistence;
+    }
 }

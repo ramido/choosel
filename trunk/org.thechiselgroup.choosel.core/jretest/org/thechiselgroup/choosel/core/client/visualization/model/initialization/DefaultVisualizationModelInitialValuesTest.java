@@ -36,9 +36,10 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemResolutionErrorModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModelTestHelper;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.AbstractVisualItemValueResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
@@ -121,7 +122,6 @@ public class DefaultVisualizationModelInitialValuesTest {
         assertEquals(textPropertyReturnValue, visualItem.getValue(slots[0]));
     }
 
-    @SuppressWarnings("unchecked")
     private void registerDefaultResolverFactory(DataType dataType, String id,
             Object value) {
 
@@ -129,18 +129,14 @@ public class DefaultVisualizationModelInitialValuesTest {
                 id, new FixedValueResolver(value, dataType));
 
         FixedVisualItemResolverFactory resolverFactory = mock(FixedVisualItemResolverFactory.class);
-        when(resolverFactory.getId()).thenReturn(id);
-        when(
-                resolverFactory.canCreateApplicableResolver(any(Slot.class),
-                        any(LightweightList.class))).thenReturn(true);
+        setUpResolverFactory(resolverFactory, id, dataType);
         when(resolverFactory.create()).thenReturn(resolver);
 
-        resolverProvider.registerFactory(resolverFactory);
+        resolverProvider.register(resolverFactory);
 
-        initializer.setFixedDataTypeResolverId(dataType, id);
+        initializer.configureFixedResolver(resolverFactory);
     }
 
-    @SuppressWarnings("unchecked")
     private void registerPropertyResolver(DataType dataType, String id,
             Object value) {
 
@@ -148,15 +144,12 @@ public class DefaultVisualizationModelInitialValuesTest {
                 id, new FixedValueResolver(value, dataType));
 
         PropertyDependantVisualItemValueResolverFactory resolverFactory = mock(PropertyDependantVisualItemValueResolverFactory.class);
-        when(resolverFactory.getId()).thenReturn(id);
-        when(
-                resolverFactory.canCreateApplicableResolver(any(Slot.class),
-                        any(LightweightList.class))).thenReturn(true);
+        setUpResolverFactory(resolverFactory, id, dataType);
         when(resolverFactory.create(any(String.class))).thenReturn(resolver);
 
-        resolverProvider.registerFactory(resolverFactory);
+        resolverProvider.register(resolverFactory);
 
-        initializer.setPropertyDataTypeResolverId(dataType, id);
+        initializer.configurePropertyResolver(resolverFactory);
     }
 
     @Before
@@ -175,7 +168,7 @@ public class DefaultVisualizationModelInitialValuesTest {
 
         resolverProvider = new DefaultVisualItemResolverFactoryProvider();
 
-        initializer = spy(new DefaultSlotMappingInitializer(resolverProvider));
+        initializer = spy(new DefaultSlotMappingInitializer());
 
         registerPropertyResolver(DataType.NUMBER, "property-number",
                 numberPropertyReturnValue);
@@ -193,7 +186,18 @@ public class DefaultVisualizationModelInitialValuesTest {
         registerDefaultResolverFactory(DataType.LOCATION, "fixed-location",
                 new Resource("location:0"));
 
-        new ManagedSlotMappingConfiguration(resolverProvider, initializer,
-                underTest, errorModel);
+        new DefaultManagedSlotMappingConfiguration(resolverProvider,
+                initializer, underTest, errorModel);
+    }
+
+    private void setUpResolverFactory(
+            AbstractVisualItemValueResolverFactory resolverFactory, String id,
+            DataType dataType) {
+
+        when(resolverFactory.getId()).thenReturn(id);
+        when(resolverFactory.getDataType()).thenReturn(dataType);
+        when(
+                resolverFactory.canCreateApplicableResolver(any(Slot.class),
+                        any(LightweightList.class))).thenReturn(true);
     }
 }

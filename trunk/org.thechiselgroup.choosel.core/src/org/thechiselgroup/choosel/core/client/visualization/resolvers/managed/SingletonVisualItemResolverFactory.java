@@ -17,46 +17,31 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.AbstractVisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 
-public class SingletonVisualItemResolverFactory implements
-        VisualItemValueResolverFactory {
-
-    private String id;
+public class SingletonVisualItemResolverFactory extends
+        AbstractVisualItemValueResolverFactory {
 
     private VisualItemValueResolver resolver;
 
-    private String label;
+    public SingletonVisualItemResolverFactory(String id, DataType dataType,
+            String label, VisualItemValueResolver resolver) {
 
-    private DataType dataType;
+        super(id, dataType, label);
 
-    public SingletonVisualItemResolverFactory(String id,
-            VisualItemValueResolver resolver, String label, DataType dataType) {
-
-        this.id = id;
         this.resolver = resolver;
-        this.label = label;
-        this.dataType = dataType;
-    }
-
-    @Override
-    public boolean canCreateApplicableResolver(Slot slot,
-            LightweightCollection<VisualItem> visualItems) {
-
-        return slot.getDataType().equals(dataType);
     }
 
     /**
      * This method does not need to worry about the visualItems because it is
-     * fixed value
+     * fixed value.
      */
     public ManagedVisualItemValueResolver create() {
-        return new ManagedVisualItemValueResolverDecorator(id, resolver);
+        return wrap(resolver);
     }
 
     @Override
@@ -65,14 +50,9 @@ public class SingletonVisualItemResolverFactory implements
         return create();
     }
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String getLabel() {
-        return label;
+    protected ManagedVisualItemValueResolverDecorator wrap(
+            VisualItemValueResolver delegate) {
+        return new ManagedVisualItemValueResolverDecorator(id, delegate);
     }
 
 }
