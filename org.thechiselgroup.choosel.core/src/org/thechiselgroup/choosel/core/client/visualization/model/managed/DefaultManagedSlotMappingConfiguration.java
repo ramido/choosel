@@ -103,6 +103,8 @@ public class DefaultManagedSlotMappingConfiguration implements
         visualizationModel.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onSlotMappingChanged(SlotMappingChangedEvent e) {
+                assert e.getCurrentResolver() instanceof ManagedVisualItemValueResolver : "tried to set unmanaged resolver for "
+                        + e.getSlot();
 
                 // check if there is actually a change at all
                 if (ObjectUtils.equals(e.getOldResolver(),
