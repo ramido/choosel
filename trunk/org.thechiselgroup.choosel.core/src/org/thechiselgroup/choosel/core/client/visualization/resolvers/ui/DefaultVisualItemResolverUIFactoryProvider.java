@@ -15,24 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import org.thechiselgroup.choosel.core.client.util.collections.IdentifiableSet;
+import org.thechiselgroup.choosel.core.client.util.collections.Registry;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.SingletonVisualItemResolverFactory;
 
-public class DefaultVisualItemResolverUIFactoryProvider implements
+public class DefaultVisualItemResolverUIFactoryProvider extends
+        Registry<VisualItemValueResolverUIControllerFactory> implements
         VisualItemValueResolverUIControllerFactoryProvider {
-
-    private IdentifiableSet<VisualItemValueResolverUIControllerFactory> factories = new IdentifiableSet<VisualItemValueResolverUIControllerFactory>();
-
-    @Override
-    public VisualItemValueResolverUIControllerFactory getFactoryById(String id) {
-        assert factories.contains(id) : "VisualItemValueResolverUIControllerFactory"
-                + " with id '"
-                + id
-                + "' not available (registered: "
-                + factories + ")";
-        return factories.get(id);
-    }
 
     public void register(
             PropertyDependantVisualItemValueResolverFactory resolverFactory) {
@@ -41,13 +30,6 @@ public class DefaultVisualItemResolverUIFactoryProvider implements
 
     public void register(SingletonVisualItemResolverFactory resolverFactory) {
         register(new EmptyWidgetResolverUIControllerFactory(resolverFactory));
-    }
-
-    public void register(VisualItemValueResolverUIControllerFactory factory) {
-        assert factory != null;
-        assert !factories.contains(factory.getId()) : "VisualItemValueResolverUIControllerFactory"
-                + " for id " + factory.getId() + " is already registered";
-        factories.put(factory);
     }
 
 }

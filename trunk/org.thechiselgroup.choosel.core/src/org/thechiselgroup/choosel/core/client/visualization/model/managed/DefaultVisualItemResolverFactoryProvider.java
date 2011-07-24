@@ -15,37 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
-import org.thechiselgroup.choosel.core.client.util.collections.IdentifiableSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.Registry;
 
-public class DefaultVisualItemResolverFactoryProvider implements
+public class DefaultVisualItemResolverFactoryProvider extends
+        Registry<VisualItemValueResolverFactory> implements
         VisualItemValueResolverFactoryProvider {
-
-    private IdentifiableSet<VisualItemValueResolverFactory> factories = new IdentifiableSet<VisualItemValueResolverFactory>();
-
-    @Override
-    public VisualItemValueResolverFactory get(String id) {
-        return factories.get(id);
-    }
-
-    @Override
-    public LightweightCollection<VisualItemValueResolverFactory> getAll() {
-        return factories.getAll();
-    }
-
-    /**
-     * This method will add in your new factory into the providers Map of
-     * factories. If the new factory's ID is already contained in the map, it
-     * will not be added.
-     */
-    public void register(VisualItemValueResolverFactory resolverFactory) {
-        assert resolverFactory != null;
-        assert !factories.contains(resolverFactory.getId()) : "VisualItemValueResolverFactory "
-                + "for id '"
-                + resolverFactory.getId()
-                + "' is already registered";
-
-        factories.put(resolverFactory);
-    }
 
 }

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.visualization.model.persistence;
 
 import java.util.Map.Entry;
 
+import org.thechiselgroup.choosel.core.client.persistence.IdentifiableCreatingPersistenceManager;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.RestoringPersistenceManager;
 import org.thechiselgroup.choosel.core.client.util.collections.IdentifiableSet;

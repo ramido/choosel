@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
+import org.thechiselgroup.choosel.core.client.persistence.IdentifiableCreatingPersistenceManager;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
@@ -59,7 +60,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.managed.Defaul
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.persistence.IdentifiableCreatingPersistenceManager;
 import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.CalculationResolverFactory;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
