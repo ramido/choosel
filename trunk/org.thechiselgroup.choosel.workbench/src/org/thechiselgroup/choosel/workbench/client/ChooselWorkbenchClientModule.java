@@ -411,7 +411,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         return EmbedInitializer.class;
     }
 
-    private Class<? extends Provider<ManagedSlotMappingConfigurationPersistence>> getManagedSlotMappingConfigurationPersistenceProvider() {
+    protected Class<? extends Provider<ManagedSlotMappingConfigurationPersistence>> getManagedSlotMappingConfigurationPersistenceProvider() {
         return ManagedSlotMappingConfigurationPersistenceProvider.class;
     }
 
