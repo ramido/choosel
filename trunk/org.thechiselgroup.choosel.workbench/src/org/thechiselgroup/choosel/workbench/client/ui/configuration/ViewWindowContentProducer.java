@@ -136,6 +136,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     @Inject
     protected VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
+    @Inject
+    private ManagedSlotMappingConfigurationPersistence slotMappingConfigurationPersistence;
+
     protected ResourceMultiCategorizer createDefaultCategorizer(
             String contentType) {
         return new ResourceByUriMultiCategorizer();
@@ -167,10 +170,6 @@ public class ViewWindowContentProducer implements WindowContentProducer {
      */
     protected LightweightList<ViewPart> createViewParts(String contentType) {
         return CollectionFactory.createLightweightList();
-    }
-
-    protected ManagedSlotMappingConfigurationPersistence createVisualItemResolverPersistence() {
-        return new ManagedSlotMappingConfigurationPersistence();
     }
 
     protected VisualMappingsControl createVisualMappingsControl(
@@ -281,7 +280,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 selectionModelPresenter, resourceModelPresenter,
                 visualMappingsControl, sidePanelSections, visualizationModel,
                 resourceModel, selectionModel, managedConfiguration,
-                createVisualItemResolverPersistence(), errorHandler);
+                slotMappingConfigurationPersistence, errorHandler);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);

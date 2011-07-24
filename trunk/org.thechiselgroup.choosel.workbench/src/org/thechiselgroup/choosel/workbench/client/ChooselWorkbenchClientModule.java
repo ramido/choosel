@@ -55,6 +55,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Hig
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.DefaultVisualItemResolverUIFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.dnd.client.popup.DragSupportingPopupManagerFactory;
@@ -317,6 +318,10 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(PersistableRestorationService.class).toProvider(
                 getPersistableRestorationServiceProvider()).in(Singleton.class);
 
+        bind(ManagedSlotMappingConfigurationPersistence.class).toProvider(
+                getManagedSlotMappingConfigurationPersistenceProvider()).in(
+                Singleton.class);
+
         bindHoverModel();
 
         bind(ResourceCategorizer.class).to(getResourceCategorizerClass()).in(
@@ -404,6 +409,10 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     protected Class<? extends EmbedInitializer> getEmbedInitializer() {
         return EmbedInitializer.class;
+    }
+
+    private Class<? extends Provider<ManagedSlotMappingConfigurationPersistence>> getManagedSlotMappingConfigurationPersistenceProvider() {
+        return ManagedSlotMappingConfigurationPersistenceProvider.class;
     }
 
     protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {
