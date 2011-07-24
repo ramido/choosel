@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolverContext;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolverDecorator;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.ManagedVisualItemValueResolverDecorator;
 
 public class SubsetDelegatingValueResolver implements VisualItemValueResolver {
 

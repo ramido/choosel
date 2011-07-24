@@ -15,14 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
+import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-public interface VisualItemValueResolverUIController extends IsWidget {
-
-    String getId();
+public interface VisualItemValueResolverUIController extends IsWidget,
+        Identifiable {
 
     void update(LightweightCollection<VisualItem> visualItems);
+
 }

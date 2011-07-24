@@ -36,7 +36,7 @@ public class EmptyWidgetResolverUIControllerFactory implements
     public VisualItemValueResolverUIController create(
             ManagedSlotMapping uiModel,
             LightweightCollection<VisualItem> visualItem) {
-        return new EmptyWidgetUIController(getId());
+        return new EmptyWidgetResolverUIController(getId());
     }
 
     @Override

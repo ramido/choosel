@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.model.managed;
+package org.thechiselgroup.choosel.core.client.visualization.resolvers.managed;
 
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 
 public abstract class AbstractVisualItemValueResolverFactory implements
         VisualItemValueResolverFactory {

@@ -34,7 +34,8 @@ public class DefaultVisualItemResolverUIFactoryProvider implements
         return factories.get(id);
     }
 
-    protected void register(PropertyDependantVisualItemValueResolverFactory resolverFactory) {
+    public void register(
+            PropertyDependantVisualItemValueResolverFactory resolverFactory) {
         register(new PropertyListBoxResolverUIControllerFactory(resolverFactory));
     }
 
@@ -42,7 +43,6 @@ public class DefaultVisualItemResolverUIFactoryProvider implements
         register(new EmptyWidgetResolverUIControllerFactory(resolverFactory));
     }
 
-    @Override
     public void register(VisualItemValueResolverUIControllerFactory factory) {
         assert factory != null;
         assert !factories.contains(factory.getId()) : "VisualItemValueResolverUIControllerFactory"
