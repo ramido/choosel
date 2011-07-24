@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.SlotMappingChangedHandler;
@@ -148,7 +147,7 @@ public class ManagedSlotMapping {
     }
 
     public VisualItemValueResolverFactory getCurrentFactory() {
-        return provider.getFactoryById(getCurrentResolver().getResolverId());
+        return provider.get(getCurrentResolver().getId());
     }
 
     /**
@@ -187,10 +186,9 @@ public class ManagedSlotMapping {
         }
 
         ManagedVisualItemValueResolver managedResolver = (ManagedVisualItemValueResolver) resolver;
-        assert managedResolver.getResolverId() != null;
+        assert managedResolver.getId() != null;
 
-        if (!allowableResolverFactories.containsKey(managedResolver
-                .getResolverId())) {
+        if (!allowableResolverFactories.containsKey(managedResolver.getId())) {
             // Not an allowable resolver
             return false;
         }
@@ -239,8 +237,8 @@ public class ManagedSlotMapping {
         // // slot
         // }
 
-        LightweightList<VisualItemValueResolverFactory> allFactories = provider
-                .getResolverFactories();
+        LightweightCollection<VisualItemValueResolverFactory> allFactories = provider
+                .getAll();
 
         assert allFactories != null;
 

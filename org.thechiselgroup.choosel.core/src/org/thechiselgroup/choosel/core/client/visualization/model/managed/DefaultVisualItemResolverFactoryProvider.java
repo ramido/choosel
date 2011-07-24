@@ -15,30 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
-import java.util.Map;
-
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.collections.IdentifiableSet;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 public class DefaultVisualItemResolverFactoryProvider implements
         VisualItemValueResolverFactoryProvider {
 
-    public Map<String, VisualItemValueResolverFactory> factories = CollectionFactory
-            .createStringMap();
+    private IdentifiableSet<VisualItemValueResolverFactory> factories = new IdentifiableSet<VisualItemValueResolverFactory>();
 
     @Override
-    public VisualItemValueResolverFactory getFactoryById(String id) {
-        assert factories.containsKey(id) : "VisualItemValueResolverFactory with id '"
-                + id + "' not available";
+    public VisualItemValueResolverFactory get(String id) {
         return factories.get(id);
     }
 
     @Override
-    public LightweightList<VisualItemValueResolverFactory> getResolverFactories() {
-        LightweightList<VisualItemValueResolverFactory> results = CollectionFactory
-                .createLightweightList();
-        results.addAll(factories.values());
-        return results;
+    public LightweightCollection<VisualItemValueResolverFactory> getAll() {
+        return factories.getAll();
     }
 
     /**
@@ -46,13 +38,14 @@ public class DefaultVisualItemResolverFactoryProvider implements
      * factories. If the new factory's ID is already contained in the map, it
      * will not be added.
      */
-    public void registerFactory(VisualItemValueResolverFactory resolverFactory) {
+    public void register(VisualItemValueResolverFactory resolverFactory) {
         assert resolverFactory != null;
-        assert !factories.containsKey(resolverFactory.getId()) : "VisualItemValueResolverFactory "
+        assert !factories.contains(resolverFactory.getId()) : "VisualItemValueResolverFactory "
                 + "for id '"
                 + resolverFactory.getId()
                 + "' is already registered";
 
-        factories.put(resolverFactory.getId(), resolverFactory);
+        factories.put(resolverFactory);
     }
+
 }

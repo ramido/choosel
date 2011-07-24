@@ -18,27 +18,32 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
 
-public class EmptyWidgetUIControllerFactory implements
+public class PropertyListBoxResolverUIControllerFactory implements
         VisualItemValueResolverUIControllerFactory {
 
-    private final String id;
+    private PropertyDependantVisualItemValueResolverFactory resolverFactory;
 
-    public EmptyWidgetUIControllerFactory(String id) {
-        this.id = id;
+    public PropertyListBoxResolverUIControllerFactory(
+            PropertyDependantVisualItemValueResolverFactory resolverFactory) {
+
+        assert resolverFactory != null;
+        this.resolverFactory = resolverFactory;
     }
 
     @Override
     public VisualItemValueResolverUIController create(
-            VisualItemValueResolverFactory factory, ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> visualItem) {
-        return new EmptyWidgetUIController(getId());
+            ManagedSlotMapping uiModel,
+            LightweightCollection<VisualItem> visualItems) {
+
+        return new PropertyListBoxResolverUIController(resolverFactory,
+                uiModel, visualItems);
     }
 
     @Override
     public String getId() {
-        return id;
-
+        return resolverFactory.getId();
     }
+
 }

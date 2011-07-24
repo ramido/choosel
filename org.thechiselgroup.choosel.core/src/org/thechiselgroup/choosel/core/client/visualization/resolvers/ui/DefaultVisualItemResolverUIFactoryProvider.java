@@ -15,32 +15,39 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
-import java.util.Map;
-
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.IdentifiableSet;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.PropertyDependantVisualItemValueResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.SingletonVisualItemResolverFactory;
 
 public class DefaultVisualItemResolverUIFactoryProvider implements
         VisualItemValueResolverUIControllerFactoryProvider {
 
-    private Map<String, VisualItemValueResolverUIControllerFactory> idToFactoryMap = CollectionFactory
-            .createStringMap();
+    private IdentifiableSet<VisualItemValueResolverUIControllerFactory> factories = new IdentifiableSet<VisualItemValueResolverUIControllerFactory>();
 
     @Override
     public VisualItemValueResolverUIControllerFactory getFactoryById(String id) {
-        assert idToFactoryMap.containsKey(id) : "VisualItemValueResolverUIControllerFactory"
+        assert factories.contains(id) : "VisualItemValueResolverUIControllerFactory"
                 + " with id '"
                 + id
                 + "' not available (registered: "
-                + idToFactoryMap.keySet() + ")";
-        return idToFactoryMap.get(id);
+                + factories + ")";
+        return factories.get(id);
+    }
+
+    protected void register(PropertyDependantVisualItemValueResolverFactory resolverFactory) {
+        register(new PropertyListBoxResolverUIControllerFactory(resolverFactory));
+    }
+
+    public void register(SingletonVisualItemResolverFactory resolverFactory) {
+        register(new EmptyWidgetResolverUIControllerFactory(resolverFactory));
     }
 
     @Override
     public void register(VisualItemValueResolverUIControllerFactory factory) {
         assert factory != null;
-        assert !idToFactoryMap.containsKey(factory.getId()) : "VisualItemValueResolverUIControllerFactory"
+        assert !factories.contains(factory.getId()) : "VisualItemValueResolverUIControllerFactory"
                 + " for id " + factory.getId() + " is already registered";
-        idToFactoryMap.put(factory.getId(), factory);
+        factories.put(factory);
     }
 
 }

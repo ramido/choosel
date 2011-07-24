@@ -13,18 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.model.managed;
+package org.thechiselgroup.choosel.core.client.visualization.model.persistence;
 
+import org.thechiselgroup.choosel.core.client.persistence.CreatingPersistenceManager;
 import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 
-/**
- * Interface for {@link VisualItemValueResolver}s that are created and managed
- * by a {@link VisualItemValueResolverFactory}.
- * 
- * @author Lars Grammel
- */
-public interface ManagedVisualItemValueResolver extends
-        VisualItemValueResolver, Identifiable {
-
+public interface IdentifiableCreatingPersistenceManager<T> extends
+        CreatingPersistenceManager<T>, Identifiable {
 }

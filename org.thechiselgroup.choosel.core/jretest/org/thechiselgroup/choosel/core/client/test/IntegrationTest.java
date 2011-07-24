@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.visualization.model.managed;
+package org.thechiselgroup.choosel.core.client.test;
 
-import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public abstract class AbstractManagedVisualItemValueResolverFactory implements
-        VisualItemValueResolverFactory {
-
-    private String id;
-
-    public AbstractManagedVisualItemValueResolverFactory(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    protected ManagedVisualItemValueResolverDecorator wrap(
-            VisualItemValueResolver delegate) {
-        return new ManagedVisualItemValueResolverDecorator(id, delegate);
-    }
+/**
+ * Marker annotation for integration tests.
+ * 
+ * @author Lars Grammel
+ */
+@Retention(RetentionPolicy.SOURCE)
+public @interface IntegrationTest {
 
 }

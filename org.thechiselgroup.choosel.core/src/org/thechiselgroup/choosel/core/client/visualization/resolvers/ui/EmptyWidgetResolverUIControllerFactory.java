@@ -18,15 +18,30 @@ package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FirstResourcePropertyResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 
-public class FirstResourcePropertyResolverUIController extends
-        PropertyListBoxResolverUIController {
+public class EmptyWidgetResolverUIControllerFactory implements
+        VisualItemValueResolverUIControllerFactory {
 
-    public FirstResourcePropertyResolverUIController(String id,
-            FirstResourcePropertyResolverFactory resolverFactory,
+    private VisualItemValueResolverFactory resolverFactory;
+
+    public EmptyWidgetResolverUIControllerFactory(
+            VisualItemValueResolverFactory resolverFactory) {
+
+        assert resolverFactory != null;
+        this.resolverFactory = resolverFactory;
+    }
+
+    @Override
+    public VisualItemValueResolverUIController create(
             ManagedSlotMapping uiModel,
-            LightweightCollection<VisualItem> visualItems) {
-        super(id, resolverFactory, uiModel, visualItems);
+            LightweightCollection<VisualItem> visualItem) {
+        return new EmptyWidgetUIController(getId());
+    }
+
+    @Override
+    public String getId() {
+        return resolverFactory.getId();
+
     }
 }

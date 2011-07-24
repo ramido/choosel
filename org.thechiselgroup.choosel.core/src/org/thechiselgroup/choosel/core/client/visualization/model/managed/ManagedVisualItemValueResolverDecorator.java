@@ -46,7 +46,7 @@ public class ManagedVisualItemValueResolverDecorator implements
     }
 
     @Override
-    public String getResolverId() {
+    public String getId() {
         return resolverId;
     }
 

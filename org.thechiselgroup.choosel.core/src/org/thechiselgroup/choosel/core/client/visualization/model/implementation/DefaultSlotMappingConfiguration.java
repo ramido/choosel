@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.IdentifiableSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
@@ -43,9 +44,9 @@ public class DefaultSlotMappingConfiguration implements
     private Map<Slot, VisualItemValueResolver> slotsToResolvers = new HashMap<Slot, VisualItemValueResolver>();
 
     /**
-     * Maps all allowed slots by their ids.
+     * All allowed slots by their ids.
      */
-    private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
+    private IdentifiableSet<Slot> slotsByID = new IdentifiableSet<Slot>();
 
     private Slot[] slots;
 
@@ -55,7 +56,7 @@ public class DefaultSlotMappingConfiguration implements
         this.handlerManager = new PrioritizedHandlerManager(this);
         this.slots = slots;
 
-        initSlotsById(slots);
+        slotsByID.put(slots);
 
         assertInvariants();
     }
@@ -66,15 +67,15 @@ public class DefaultSlotMappingConfiguration implements
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
-    private void assertInvariants() {
-        assertNoNullSlotMappings();
-        assertAllResolversAreValid();
-    }
-
     private void assertAllResolversAreValid() {
         for (VisualItemValueResolver resolver : slotsToResolvers.values()) {
             assertValidResolver(resolver);
         }
+    }
+
+    private void assertInvariants() {
+        assertNoNullSlotMappings();
+        assertAllResolversAreValid();
     }
 
     private void assertNoNullSlotMappings() {
@@ -94,13 +95,12 @@ public class DefaultSlotMappingConfiguration implements
     private void assertValidSlot(Slot slot) {
         assert slot != null : "slot must not be null";
         assert containsSlot(slot) : "slot " + slot
-                + " is not allowed (valid slots: " + slotsByID.values() + ")";
+                + " is not allowed (valid slots: " + slotsByID + ")";
     }
 
     @Override
     public boolean containsSlot(Slot slot) {
-        assert slot != null;
-        return slotsByID.containsKey(slot.getId());
+        return slotsByID.contains(slot);
     }
 
     /**
@@ -175,12 +175,6 @@ public class DefaultSlotMappingConfiguration implements
             }
         }
         return unconfiguredSlots;
-    }
-
-    private void initSlotsById(Slot[] slots) {
-        for (Slot slot : slots) {
-            slotsByID.put(slot.getId(), slot);
-        }
     }
 
     @Override

@@ -23,81 +23,82 @@ import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
+import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem.Subset;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultVisualItemResolverFactoryProvider;
-import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolverFactory;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.ResourceCountResolver;
+import org.thechiselgroup.choosel.core.client.visualization.resolvers.VisualItemIdResolver;
 
 import com.google.inject.Inject;
 
 public class PreconfiguredVisualItemValueResolverFactoryProvider extends
         DefaultVisualItemResolverFactoryProvider {
 
-    public static final String LOCATION_PROPERTY_RESOLVER_FACTORY_ID = "Location-Property-Resolver";
+    public static final SingletonVisualItemResolverFactory COUNT_RESOLVER_FACTORY = new SingletonVisualItemResolverFactory(
+            "ResourceCountResolverFactory", DataType.NUMBER, "Count",
+            new ResourceCountResolver(Subset.ALL));
 
-    public static final String DATE_PROPERTY_RESOLVER_FACTORY_ID = "Date-Property-Resolver";
+    public static final SingletonVisualItemResolverFactory ID_RESOLVER_FACTORY = new SingletonVisualItemResolverFactory(
+            "VisualItemStatusIdFactory", DataType.TEXT, "Group Name",
+            new VisualItemIdResolver());
 
-    public static final String MIN_RESOLVER_FACTORY_ID = "min";
+    public static final FirstResourcePropertyResolverFactory LOCATION_PROPERTY_RESOLVER_FACTORY = new FirstResourcePropertyResolverFactory(
+            "Location-Property-Resolver", DataType.LOCATION);
 
-    public static final String MAX_RESOLVER_FACTORY_ID = "max";
+    public static final FirstResourcePropertyResolverFactory DATE_PROPERTY_RESOLVER_FACTORY = new FirstResourcePropertyResolverFactory(
+            "Date-Property-Resolver", DataType.DATE);
 
-    public static final String AVERAGE_RESOLVER_FACTORY_ID = "avg";
+    public static final CalculationResolverFactory MIN_RESOLVER_FACTORY = new CalculationResolverFactory(
+            "min", new MinCalculation());
 
-    public static final String SUM_RESOLVER_FACTORY_ID = "sum";
+    public static final CalculationResolverFactory MAX_RESOLVER_FACTORY = new CalculationResolverFactory(
+            "max", new MaxCalculation());
 
-    public static final String TEXT_PROPERTY_RESOLVER_FACTORY_ID = "Text-Property-Resolver";
+    public static final CalculationResolverFactory AVERAGE_RESOLVER_FACTORY = new CalculationResolverFactory(
+            "avg", new AverageCalculation());
 
-    public static final String FIXED_EMPTY_STRING_FACTORY_ID = "fixed_empty_string";
+    public static final CalculationResolverFactory SUM_RESOLVER_FACTORY = new CalculationResolverFactory(
+            "sum", new SumCalculation());
 
-    public static final String FIXED_DATE_TODAY_FACTORY_ID = "fixed-date-today";
+    public static final FirstResourcePropertyResolverFactory TEXT_PROPERTY_RESOLVER_FACTORY = new FirstResourcePropertyResolverFactory(
+            "Text-Property-Resolver", DataType.TEXT);
 
-    public static final String FIXED_STDBLUE_RESOLVER_FACTORY_ID = "fixed-stdblue";
+    public static final FixedVisualItemResolverFactory FIXED_TEXT_EMPTY_RESOLVER_FACTORY = new FixedVisualItemResolverFactory(
+            "fixed_empty_string", DataType.TEXT, "(empty)");
 
-    public static final String FIXED_0_RESOLVER_FACTORY_ID = "Fixed-0";
+    public static final FixedVisualItemResolverFactory FIXED_DATE_TODAY_RESOLVER_FACTORY = new FixedVisualItemResolverFactory(
+            "fixed-date-today", DataType.DATE, new Date());
 
-    public static final String FIXED_1_RESOLVER_FACTORY_ID = "Fixed-1";
+    public static final FixedVisualItemResolverFactory FIXED_COLOR_STEELBLUE_RESOLVER_FACTORY = new FixedVisualItemResolverFactory(
+            "fixed-stdblue", DataType.COLOR, new Color(100, 149, 237));
+
+    public static final FixedVisualItemResolverFactory FIXED_NUMBER_0_RESOLVER_FACTORY = new FixedVisualItemResolverFactory(
+            "Fixed-0", DataType.NUMBER, new Double(0.0));
+
+    public static final FixedVisualItemResolverFactory FIXED_NUMBER_1_RESOLVER_FACTORY = new FixedVisualItemResolverFactory(
+            "Fixed-1", DataType.NUMBER, new Double(1.0));
 
     @Inject
     public void registerFactories() {
-        registerFactory(new VisualItemIdResolverFactory());
+        register(ID_RESOLVER_FACTORY);
 
         // number specific resolvers
-        registerFactory(new ResourceCountResolverFactory());
-        registerFactory(new CalculationResolverFactory(SUM_RESOLVER_FACTORY_ID,
-                new SumCalculation()));
-        registerFactory(new CalculationResolverFactory(
-                AVERAGE_RESOLVER_FACTORY_ID, new AverageCalculation()));
-        registerFactory(new CalculationResolverFactory(MAX_RESOLVER_FACTORY_ID,
-                new MaxCalculation()));
-        registerFactory(new CalculationResolverFactory(MIN_RESOLVER_FACTORY_ID,
-                new MinCalculation()));
+        register(COUNT_RESOLVER_FACTORY);
+        register(SUM_RESOLVER_FACTORY);
+        register(AVERAGE_RESOLVER_FACTORY);
+        register(MAX_RESOLVER_FACTORY);
+        register(MIN_RESOLVER_FACTORY);
 
         // first resource value resolvers
-        registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,
-                TEXT_PROPERTY_RESOLVER_FACTORY_ID));
-        registerFactory(new FirstResourcePropertyResolverFactory(DataType.DATE,
-                DATE_PROPERTY_RESOLVER_FACTORY_ID));
-        registerFactory(new FirstResourcePropertyResolverFactory(
-                DataType.LOCATION, LOCATION_PROPERTY_RESOLVER_FACTORY_ID));
+        register(TEXT_PROPERTY_RESOLVER_FACTORY);
+        register(DATE_PROPERTY_RESOLVER_FACTORY);
+        register(LOCATION_PROPERTY_RESOLVER_FACTORY);
 
         // fixed resolvers
-        registerFactory(new FixedVisualItemResolverFactory(new Double(0.0),
-                DataType.NUMBER, FIXED_0_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualItemResolverFactory(new Double(1.0),
-                DataType.NUMBER, FIXED_1_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualItemResolverFactory(new Color(100, 149,
-                237), DataType.COLOR, FIXED_STDBLUE_RESOLVER_FACTORY_ID));
-        registerFactory(new FixedVisualItemResolverFactory(new Date(),
-                DataType.DATE, FIXED_DATE_TODAY_FACTORY_ID));
-        registerFactory(new FixedVisualItemResolverFactory("(empty)",
-                DataType.TEXT, FIXED_EMPTY_STRING_FACTORY_ID));
-
-        /**
-         * TODO extract all of the inline fixed property value resolvers into
-         * this method, and thus name them. This will be important to ensure
-         * that all of the resolvers are defined upfront
-         * 
-         * This is niiiiiiiiiiiiiiiiiiiiice for that, except for trying to
-         * remember ids ~~ ugh
-         */
+        register(FIXED_NUMBER_0_RESOLVER_FACTORY);
+        register(FIXED_NUMBER_1_RESOLVER_FACTORY);
+        register(FIXED_COLOR_STEELBLUE_RESOLVER_FACTORY);
+        register(FIXED_DATE_TODAY_RESOLVER_FACTORY);
+        register(FIXED_TEXT_EMPTY_RESOLVER_FACTORY);
     }
 
 }

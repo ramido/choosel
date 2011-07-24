@@ -25,7 +25,7 @@ public class CalculationResolverFactory extends
     private final Calculation calculation;
 
     public CalculationResolverFactory(String id, Calculation calculation) {
-        super(id, DataType.NUMBER);
+        super(id, DataType.NUMBER, calculation.toString());
 
         assert calculation != null;
         this.calculation = calculation;
@@ -34,11 +34,6 @@ public class CalculationResolverFactory extends
     @Override
     protected CalculationResolver createUnmanagedResolver(String property) {
         return new CalculationResolver(property, calculation);
-    }
-
-    @Override
-    public String getLabel() {
-        return calculation.toString();
     }
 
 }

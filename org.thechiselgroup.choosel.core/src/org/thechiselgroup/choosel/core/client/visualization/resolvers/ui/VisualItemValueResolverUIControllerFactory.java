@@ -15,20 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.resolvers.ui;
 
+import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMapping;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactory;
 
-public interface VisualItemValueResolverUIControllerFactory {
+public interface VisualItemValueResolverUIControllerFactory extends
+        Identifiable {
 
     // XXX I'm not convinced that the SlotMappingUIModel should be passed in
     // here. However, there must be a target specified somehow.
     // TODO refactor
     VisualItemValueResolverUIController create(
-            VisualItemValueResolverFactory factory, ManagedSlotMapping managedMapping,
+            ManagedSlotMapping managedMapping,
             LightweightCollection<VisualItem> visualItems);
-
-    String getId();
 
 }

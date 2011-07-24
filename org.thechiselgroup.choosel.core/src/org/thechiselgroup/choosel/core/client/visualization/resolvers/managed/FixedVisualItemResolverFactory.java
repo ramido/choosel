@@ -21,11 +21,11 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.FixedValue
 public class FixedVisualItemResolverFactory extends
         SingletonVisualItemResolverFactory {
 
-    public FixedVisualItemResolverFactory(Object value, DataType valueType,
-            String id) {
+    public FixedVisualItemResolverFactory(String id, DataType dataType,
+            Object value) {
 
-        super(id, new FixedValueResolver(value, valueType), value.toString(),
-                valueType);
+        super(id, dataType, value.toString(),
+                new FixedValueResolver(value, dataType));
     }
 
 }

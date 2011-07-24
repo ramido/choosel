@@ -25,15 +25,7 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.Si
 
 public class PresetSlotMappingInitializer implements SlotMappingInitializer {
 
-    private final VisualItemValueResolverFactoryProvider provider;
-
     private final Map<Slot, VisualItemValueResolver> slotMappings = new HashMap<Slot, VisualItemValueResolver>();
-
-    public PresetSlotMappingInitializer(
-            VisualItemValueResolverFactoryProvider provider) {
-
-        this.provider = provider;
-    }
 
     @Override
     public Map<Slot, VisualItemValueResolver> getResolvers(
@@ -49,10 +41,8 @@ public class PresetSlotMappingInitializer implements SlotMappingInitializer {
         return slotMappings;
     }
 
-    public void putSlotMapping(Slot slot, String resolverFactoryId) {
-
-        slotMappings.put(slot,
-                ((SingleSlotDependentVisualItemResolverFactory) provider
-                        .getFactoryById(resolverFactoryId)).create());
+    public void putSlotMapping(Slot slot,
+            SingleSlotDependentVisualItemResolverFactory resolverFactory) {
+        slotMappings.put(slot, resolverFactory.create());
     }
 }

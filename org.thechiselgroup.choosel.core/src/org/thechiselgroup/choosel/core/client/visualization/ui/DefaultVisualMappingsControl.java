@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfigurationChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingState;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedVisualItemValueResolver;
@@ -52,7 +52,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     protected final HasResourceCategorizer resourceGrouping;
 
-    protected final ManagedSlotMappingConfiguration slotMappingConfigurationUIModel;
+    protected final DefaultManagedSlotMappingConfiguration slotMappingConfigurationUIModel;
 
     protected final VisualItemValueResolverFactoryProvider resolverFactoryProvider;
 
@@ -69,7 +69,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     public static final String GROUP_BY_URI_LABEL = "No Grouping";
 
     public DefaultVisualMappingsControl(
-            ManagedSlotMappingConfiguration slotMappingConfigurationUIModel,
+            DefaultManagedSlotMappingConfiguration slotMappingConfigurationUIModel,
             HasResourceCategorizer resourceGrouping,
             VisualItemValueResolverUIControllerFactoryProvider uiProvider,
             VisualItemValueResolverFactoryProvider resolverFactoryProvider) {
@@ -125,15 +125,13 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private VisualItemValueResolverUIController createUIControllerFromResolver(
             Slot slot, ManagedVisualItemValueResolver currentResolver) {
         VisualItemValueResolverUIControllerFactory uiFactory = uiProvider
-                .getFactoryById(currentResolver.getResolverId());
+                .getFactoryById(currentResolver.getId());
 
         assert uiFactory != null;
 
         VisualItemValueResolverUIController resolverUI = uiFactory.create(
-                resolverFactoryProvider.getFactoryById(currentResolver
-                        .getResolverId()), slotMappingConfigurationUIModel
-                        .getManagedSlotMapping(slot),
-                slotMappingConfigurationUIModel.getVisualItems());
+                slotMappingConfigurationUIModel
+                .getManagedSlotMapping(slot), slotMappingConfigurationUIModel.getVisualItems());
         return resolverUI;
     }
 
@@ -258,7 +256,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             // The slot Control has not yet been initialized, initialize it and
             // set the resolverUI
             slotControl = createSlotControl(slot, resolver);
-        } else if (!resolver.getResolverId().equals(
+        } else if (!resolver.getId().equals(
                 slotControl.getCurrentResolverUIId())) {
             // only the factory has changed, and we need to update the
             // resolverUI

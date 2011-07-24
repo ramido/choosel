@@ -21,20 +21,15 @@ import org.thechiselgroup.choosel.core.client.visualization.resolvers.FirstResou
 public class FirstResourcePropertyResolverFactory extends
         PropertyDependantVisualItemValueResolverFactory {
 
-    public FirstResourcePropertyResolverFactory(DataType dataType,
-            String resolverID) {
-        super(resolverID, dataType);
+    public FirstResourcePropertyResolverFactory(String id, DataType dataType) {
+        super(id, dataType, "Property Selector");
     }
 
     @Override
-    protected FirstResourcePropertyResolver createUnmanagedResolver(String property) {
-        return new FirstResourcePropertyResolver(property, getValidDataType());
-    }
+    protected FirstResourcePropertyResolver createUnmanagedResolver(
+            String property) {
 
-    // TODO Perhaps a better value for this
-    @Override
-    public String getLabel() {
-        return "Property Selector";
+        return new FirstResourcePropertyResolver(property, dataType);
     }
 
 }

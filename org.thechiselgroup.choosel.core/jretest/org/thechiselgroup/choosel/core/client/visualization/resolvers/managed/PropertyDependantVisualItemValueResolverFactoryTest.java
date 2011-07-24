@@ -39,15 +39,10 @@ public class PropertyDependantVisualItemValueResolverFactoryTest {
     @Before
     public void setUp() throws Exception {
         underTest = new PropertyDependantVisualItemValueResolverFactory(
-                "resolverId", DataType.TEXT) {
+                "resolverId", DataType.TEXT, "label") {
             @Override
             protected PropertyDependantVisualItemValueResolver createUnmanagedResolver(
                     String property) {
-                return null;
-            }
-
-            @Override
-            public String getLabel() {
                 return null;
             }
         };

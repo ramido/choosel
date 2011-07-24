@@ -34,7 +34,8 @@ import org.thechiselgroup.choosel.core.client.visualization.model.ViewContentDis
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.ResourceModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.extensions.SelectionModel;
-import org.thechiselgroup.choosel.core.client.visualization.model.implementation.SlotMappingConfigurationPersistableAdapter;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.core.client.visualization.ui.VisualMappingsControl;
 
 import com.google.gwt.core.client.GWT;
@@ -123,6 +124,10 @@ public class DefaultView implements View {
 
     private String label;
 
+    private ManagedSlotMappingConfigurationPersistence managedSlotMappingConfigurationPersistence;
+
+    private ManagedSlotMappingConfiguration managedSlotMappingConfiguration;
+
     private static final String MEMENTO_CONTENT_DISPLAY = "content-display";
 
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
@@ -135,13 +140,20 @@ public class DefaultView implements View {
 
     // TODO change parameter order in constructor
     // TODO change contentDisplay to more restricted interface
-    public DefaultView(ViewContentDisplay contentDisplay, String label,
-            String contentType, Presenter selectionModelPresenter,
+    public DefaultView(
+            ViewContentDisplay contentDisplay,
+            String label,
+            String contentType,
+            Presenter selectionModelPresenter,
             Presenter resourceModelPresenter,
             VisualMappingsControl visualMappingsControl,
             LightweightCollection<SidePanelSection> sidePanelSections,
-            VisualizationModel visualizationModel, ResourceModel resourceModel,
-            SelectionModel selectionModel, ErrorHandler errorHandler) {
+            VisualizationModel visualizationModel,
+            ResourceModel resourceModel,
+            SelectionModel selectionModel,
+            ManagedSlotMappingConfiguration managedSlotMappingConfiguration,
+            ManagedSlotMappingConfigurationPersistence managedSlotMappingConfigurationPersistence,
+            ErrorHandler errorHandler) {
 
         assert label != null;
         assert contentType != null;
@@ -152,6 +164,8 @@ public class DefaultView implements View {
         assert visualizationModel != null;
         assert resourceModel != null;
         assert selectionModel != null;
+        assert managedSlotMappingConfiguration != null;
+        assert managedSlotMappingConfigurationPersistence != null;
         assert errorHandler != null;
 
         this.label = label;
@@ -163,6 +177,8 @@ public class DefaultView implements View {
         this.visualizationModel = visualizationModel;
         this.selectionModel = selectionModel;
         this.resourceModel = resourceModel;
+        this.managedSlotMappingConfiguration = managedSlotMappingConfiguration;
+        this.managedSlotMappingConfigurationPersistence = managedSlotMappingConfigurationPersistence;
         this.errorHandler = errorHandler;
     }
 
@@ -204,9 +220,9 @@ public class DefaultView implements View {
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
                 restorationService, accessor);
 
-        restore(new SlotMappingConfigurationPersistableAdapter(
-                visualizationModel), state, MEMENTO_SLOT_MAPPINGS,
-                restorationService, accessor);
+        managedSlotMappingConfigurationPersistence.restore(
+                managedSlotMappingConfiguration,
+                state.getChild(MEMENTO_SLOT_MAPPINGS));
 
         contentDisplay.endRestore();
     }
@@ -412,8 +428,10 @@ public class DefaultView implements View {
                 resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY,
                 contentDisplay.save(resourceSetCollector));
-        save(new SlotMappingConfigurationPersistableAdapter(visualizationModel),
-                memento, MEMENTO_SLOT_MAPPINGS, resourceSetCollector);
+
+        memento.addChild(MEMENTO_SLOT_MAPPINGS,
+                managedSlotMappingConfigurationPersistence
+                        .save(managedSlotMappingConfiguration));
 
         return memento;
     }

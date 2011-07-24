@@ -57,12 +57,13 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Res
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.DefaultVisualizationModel;
 import org.thechiselgroup.choosel.core.client.visualization.model.implementation.FixedSlotResolversVisualizationModelDecorator;
 import org.thechiselgroup.choosel.core.client.visualization.model.initialization.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfigurationChangedEvent;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfigurationChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.VisualItemValueResolverFactoryProvider;
+import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.ui.VisualItemValueResolverUIControllerFactoryProvider;
 import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultResourceModelPresenter;
 import org.thechiselgroup.choosel.core.client.visualization.ui.DefaultSelectionModelPresenter;
@@ -158,7 +159,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
     protected SlotMappingInitializer createSlotMappingInitializer(
             String contentType) {
-        return new DefaultSlotMappingInitializer(resolverFactoryProvider);
+        return new DefaultSlotMappingInitializer();
     }
 
     /**
@@ -168,9 +169,13 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         return CollectionFactory.createLightweightList();
     }
 
+    protected ManagedSlotMappingConfigurationPersistence createVisualItemResolverPersistence() {
+        return new ManagedSlotMappingConfigurationPersistence();
+    }
+
     protected VisualMappingsControl createVisualMappingsControl(
             HasResourceCategorizer resourceGrouping,
-            ManagedSlotMappingConfiguration uiModel, String contentType) {
+            DefaultManagedSlotMappingConfiguration uiModel, String contentType) {
 
         // TODO change configuration to configurationUIModel
         return new DefaultVisualMappingsControl(uiModel, resourceGrouping,
@@ -236,7 +241,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         visualizationModel.setContentResourceSet(resourceModel.getResources());
 
-        ManagedSlotMappingConfiguration managedConfiguration = new ManagedSlotMappingConfiguration(
+        DefaultManagedSlotMappingConfiguration managedConfiguration = new DefaultManagedSlotMappingConfiguration(
                 resolverFactoryProvider, slotMappingInitializer,
                 visualizationModel, visualizationModel);
 
@@ -275,7 +280,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         DefaultView view = new DefaultView(contentDisplay, label, contentType,
                 selectionModelPresenter, resourceModelPresenter,
                 visualMappingsControl, sidePanelSections, visualizationModel,
-                resourceModel, selectionModel, errorHandler);
+                resourceModel, selectionModel, managedConfiguration,
+                createVisualItemResolverPersistence(), errorHandler);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);

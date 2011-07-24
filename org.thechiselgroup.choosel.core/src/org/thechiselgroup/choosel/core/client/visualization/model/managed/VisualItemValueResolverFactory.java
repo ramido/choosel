@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
+import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -25,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValu
  * {@link VisualItemValueResolver} . This is used so that the application can
  * create new instances on the fly as users create the need for them
  */
-public interface VisualItemValueResolverFactory {
+public interface VisualItemValueResolverFactory extends Identifiable {
 
     /**
      * A factory must always know if a resolver that it has created is
@@ -47,7 +48,8 @@ public interface VisualItemValueResolverFactory {
      * the same property by default
      * 
      * TODO The create methods might need to be resolver specific, because the
-     * VisualItemValueResolvers are immutable and we need to configure parameters.
+     * VisualItemValueResolvers are immutable and we need to configure
+     * parameters.
      * 
      * XXX remove this, should be resolver specific
      */
@@ -57,6 +59,7 @@ public interface VisualItemValueResolverFactory {
     /**
      * @return the id of both the factory and the resolver
      */
+    @Override
     String getId();
 
     /**
