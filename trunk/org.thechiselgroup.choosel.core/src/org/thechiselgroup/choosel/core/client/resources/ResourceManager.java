@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 import java.util.List;
 
-public interface ResourceManager extends ResourceAccessor {
+public interface ResourceManager extends ResourceAccessor, Iterable<Resource> {
 
     /**
      * Adds a resource to this {@code ResourceManager}. If a resource with a

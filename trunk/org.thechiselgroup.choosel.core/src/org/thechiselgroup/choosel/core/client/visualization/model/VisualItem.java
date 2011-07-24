@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.visualization.model;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.util.collections.Identifiable;
 
 /**
  * Model of several resources that should be displayed as a visual item in the
@@ -27,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
  * 
  * @see VisualizationModel
  */
-public interface VisualItem {
+public interface VisualItem extends Identifiable {
 
     public static enum Status {
 
@@ -49,6 +50,7 @@ public interface VisualItem {
     /**
      * Returns the identifier of the view item.
      */
+    @Override
     String getId();
 
     /**
