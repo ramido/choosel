@@ -43,7 +43,10 @@ public interface GraphNodeExpansionCallback {
     @Deprecated
     ResourceManager getResourceManager();
 
-    LightweightCollection<VisualItem> getVisualItems(Iterable<Resource> resources);
+    LightweightCollection<VisualItem> getVisualItems(
+            Iterable<Resource> resources);
+
+    boolean isInitialized();
 
     boolean isRestoring();
 

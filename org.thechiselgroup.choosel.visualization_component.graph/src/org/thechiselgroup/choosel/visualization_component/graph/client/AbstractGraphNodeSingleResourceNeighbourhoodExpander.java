@@ -48,6 +48,7 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
     @Override
     public final void expand(VisualItem visualItem,
             GraphNodeExpansionCallback graph) {
+
         assert visualItem != null;
         assert graph != null;
 
@@ -93,9 +94,14 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
         loadNeighbourhood(visualItem, resource,
                 new ErrorHandlingAsyncCallback<ResourceNeighbourhood>(
                         errorHandler) {
+
                     @Override
                     protected void runOnSuccess(ResourceNeighbourhood result)
                             throws Exception {
+
+                        if (!graph.isInitialized()) {
+                            return;
+                        }
 
                         resource.applyPartialProperties(result
                                 .getPartialProperties());

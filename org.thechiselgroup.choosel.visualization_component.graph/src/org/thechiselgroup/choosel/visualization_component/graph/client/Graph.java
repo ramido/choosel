@@ -83,8 +83,7 @@ import com.google.inject.Inject;
 // TODO separate out ncbo specific stuff and service calls
 // TODO register listener for double click on node --> change expansion state
 public class Graph extends AbstractViewContentDisplay implements
-        GraphNodeExpansionCallback, RequiresAutomaticResourceSet,
-        GraphLayoutSupport, GraphLayoutCallback {
+        RequiresAutomaticResourceSet, GraphLayoutSupport, GraphLayoutCallback {
 
     public static class DefaultDisplay extends GraphWidget implements
             GraphDisplay {
@@ -235,6 +234,66 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private ResourceSet automaticResources;
 
+    private GraphNodeExpansionCallback expansionCallback = new GraphNodeExpansionCallback() {
+
+        @Override
+        public void addAutomaticResource(Resource resource) {
+            Graph.this.addAutomaticResource(resource);
+        }
+
+        @Override
+        public boolean containsResourceWithUri(String resourceUri) {
+            return Graph.this.containsResourceWithUri(resourceUri);
+        }
+
+        @Override
+        public String getCategory(Resource resource) {
+            return Graph.this.getCategory(resource);
+        }
+
+        @Override
+        public GraphDisplay getDisplay() {
+            return Graph.this.getDisplay();
+        }
+
+        @Override
+        public Resource getResourceByUri(String value) {
+            return Graph.this.getResourceByUri(value);
+        }
+
+        @Override
+        public ResourceManager getResourceManager() {
+            return Graph.this.getResourceManager();
+        }
+
+        @Override
+        public LightweightCollection<VisualItem> getVisualItems(
+                Iterable<Resource> resources) {
+            return Graph.this.getVisualItems(resources);
+        }
+
+        @Override
+        public boolean isInitialized() {
+            return Graph.this.isInitialized();
+        }
+
+        @Override
+        public boolean isRestoring() {
+            return Graph.this.isRestoring();
+        }
+
+        @Override
+        public void updateArcsForResources(Iterable<Resource> resources) {
+            Graph.this.updateArcsForResources(resources);
+        }
+
+        @Override
+        public void updateArcsForVisuaItems(
+                LightweightCollection<VisualItem> visualItems) {
+            Graph.this.updateArcsForVisuaItems(visualItems);
+        }
+    };
+
     @Inject
     public Graph(GraphDisplay display, CommandManager commandManager,
             ResourceManager resourceManager,
@@ -272,8 +331,7 @@ public class Graph extends AbstractViewContentDisplay implements
         return super.adaptTo(clazz);
     }
 
-    @Override
-    public void addAutomaticResource(Resource resource) {
+    private void addAutomaticResource(Resource resource) {
         automaticResources.add(resource);
     }
 
@@ -281,8 +339,7 @@ public class Graph extends AbstractViewContentDisplay implements
     public void checkResize() {
     }
 
-    @Override
-    public boolean containsResourceWithUri(String resourceUri) {
+    private boolean containsResourceWithUri(String resourceUri) {
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
@@ -314,7 +371,8 @@ public class Graph extends AbstractViewContentDisplay implements
          * NOTE: we do not execute the expanders if we are restoring the graph
          */
         if (ready) {
-            registry.getAutomaticExpander(type).expand(visualItem, this);
+            registry.getAutomaticExpander(type).expand(visualItem,
+                    expansionCallback);
         }
 
         return graphItem;
@@ -367,13 +425,11 @@ public class Graph extends AbstractViewContentDisplay implements
         return arcs;
     }
 
-    @Override
-    public String getCategory(Resource resource) {
+    private String getCategory(Resource resource) {
         return resourceCategorizer.getCategory(resource);
     }
 
-    @Override
-    public GraphDisplay getDisplay() {
+    private GraphDisplay getDisplay() {
         return graphDisplay;
     }
 
@@ -404,12 +460,10 @@ public class Graph extends AbstractViewContentDisplay implements
         return nodeItems;
     }
 
-    @Override
     public Resource getResourceByUri(String value) {
         return nodeResources.getByUri(value);
     }
 
-    @Override
     public ResourceManager getResourceManager() {
         return resourceManager;
     }
@@ -574,7 +628,8 @@ public class Graph extends AbstractViewContentDisplay implements
                             return;
                         }
 
-                        nodeExpander.expand(getVisualItem(node), Graph.this);
+                        nodeExpander.expand(getVisualItem(node),
+                                expansionCallback);
                     }
                 }, category);
     }
@@ -722,12 +777,10 @@ public class Graph extends AbstractViewContentDisplay implements
         }
     }
 
-    @Override
     public void updateArcsForResources(Iterable<Resource> resources) {
         updateArcsForVisuaItems(getVisualItems(resources));
     }
 
-    @Override
     public void updateArcsForVisuaItems(
             LightweightCollection<VisualItem> visualItems) {
         assert visualItems != null;

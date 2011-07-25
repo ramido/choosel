@@ -37,6 +37,12 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface ViewContentDisplay extends VisualItemRenderer, IsWidget,
         Disposable, Persistable, Adaptable {
 
+    public enum State {
+
+        CREATED, INITIALIZING, INITIALIZED, DISPOSING, DISPOSED;
+
+    }
+
     void checkResize();
 
     void endRestore();
