@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class ResizingTextBox extends TextBox {
@@ -53,7 +52,6 @@ public class ResizingTextBox extends TextBox {
             }
         });
         addKeyPressHandler(new KeyPressHandler() {
-
             @Override
             public void onKeyPress(KeyPressEvent event) {
                 // TODO we could do more here, e.g. simulate delete & backspace
@@ -63,7 +61,6 @@ public class ResizingTextBox extends TextBox {
                 } else {
                     updateWidth();
                 }
-
             }
         });
 
@@ -84,8 +81,8 @@ public class ResizingTextBox extends TextBox {
 
     @Override
     public void setText(String text) {
-        updateWidth();
         super.setText(text);
+        updateWidth();
     }
 
     private void updateWidth() {
