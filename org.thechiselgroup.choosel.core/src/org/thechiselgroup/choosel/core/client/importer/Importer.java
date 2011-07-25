@@ -178,9 +178,7 @@ public class Importer {
 
             if (NUMBER_DETECTION_REGEX.test(stringValue)) {
                 columnTypes[column] = DataType.NUMBER;
-            } else if (DATE_FORMAT_1_REGEX.test(stringValue)) {
-                columnTypes[column] = DataType.DATE;
-            } else if (DATE_FORMAT_2_REGEX.test(stringValue)) {
+            } else if (isDate(stringValue)) {
                 columnTypes[column] = DataType.DATE;
             } else if (LOCATION_DETECTION_REGEX.test(stringValue)) {
                 columnTypes[column] = DataType.LOCATION;
@@ -230,6 +228,20 @@ public class Importer {
         dateFormat2 = DateTimeFormat.getFormat(DATE_FORMAT_2_PATTERN);
     }
 
+    protected boolean isDate(String input) {
+        return DATE_FORMAT_2_REGEX.test(input)
+                || DATE_FORMAT_1_REGEX.test(input);
+    }
+
+    protected Date parseDate(String dateStr) {
+        if (DATE_FORMAT_1_REGEX.test(dateStr)) {
+            return dateFormat1.parse(dateStr);
+        } else if (DATE_FORMAT_2_REGEX.test(dateStr)) {
+            return dateFormat2.parse(dateStr);
+        }
+        return null;
+    }
+
     protected Date parseDate1(String stringValue) {
         return dateFormat1.parse(stringValue);
     }
@@ -241,12 +253,10 @@ public class Importer {
     protected Serializable resolveDateString(int row, String stringValue)
             throws ParseException {
         Serializable value;
-        if (DATE_FORMAT_1_REGEX.test(stringValue)) {
-            value = parseDate1(stringValue);
-        } else if (DATE_FORMAT_2_REGEX.test(stringValue)) {
-            value = parseDate2(stringValue);
+
+        if (isDate(stringValue)) {
+            value = parseDate(stringValue);
         } else if (stringValue == null || stringValue.isEmpty()) {
-            // TODO I probably should not just return NULL here
             value = null;
         } else {
             throw new ParseException("Invalid date", stringValue, row + 1);
