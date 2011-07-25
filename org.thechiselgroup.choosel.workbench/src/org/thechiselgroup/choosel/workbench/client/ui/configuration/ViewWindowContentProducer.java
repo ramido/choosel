@@ -73,9 +73,9 @@ import org.thechiselgroup.choosel.dnd.client.resources.DragEnablerFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.DragVisualItemBehavior;
 import org.thechiselgroup.choosel.dnd.client.resources.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.dnd.client.windows.ViewWindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.workbench.client.views.ViewWindowContent;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

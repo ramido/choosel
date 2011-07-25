@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.thechiselgroup.choosel.core.client.resources.ResourceSetTestUtils.toResourceSet;
 
@@ -193,6 +195,19 @@ public class DefaultViewPersistenceIntegrationTest {
                 .getFullVisualItemContainer().getVisualItems();
         assertEquals(1, visualItems.size());
         assertEquals("value2", visualItems.getFirstElement().getValue(slots[0]));
+    }
+
+    @Test
+    public void restoreLabel() {
+        String label = "labelText";
+
+        originalView.setLabel(label);
+
+        DefaultResourceSetCollector collector = new DefaultResourceSetCollector();
+        restoredView.doRestore(originalView.save(collector),
+                restorationService, collector);
+
+        assertThat(restoredView.getLabel(), equalTo(label));
     }
 
     @Test
