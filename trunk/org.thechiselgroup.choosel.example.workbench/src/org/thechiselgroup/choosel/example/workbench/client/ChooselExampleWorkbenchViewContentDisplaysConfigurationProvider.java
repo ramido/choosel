@@ -41,9 +41,8 @@ import com.google.inject.Inject;
 public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
         extends DefaultViewContentDisplaysConfigurationProvider {
 
-    @SuppressWarnings("unused")
     @Inject
-    private void barChart(BarChartViewContentDisplayFactory originalFactory) {
+    public void barChart(BarChartViewContentDisplayFactory originalFactory) {
         ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 originalFactory);
 
@@ -66,9 +65,8 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
         add(configuration);
     }
 
-    @SuppressWarnings("unused")
     @Inject
-    private void map(MapViewContentDisplayFactory factory) {
+    public void map(MapViewContentDisplayFactory factory) {
         ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 factory);
 
@@ -90,9 +88,8 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
         add(configuration);
     }
 
-    @SuppressWarnings("unused")
     @Inject
-    private void pieChart(PieChartViewContentDisplayFactory originalFactory) {
+    public void pieChart(PieChartViewContentDisplayFactory originalFactory) {
         ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 originalFactory);
 
@@ -118,9 +115,8 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
         viewContentDisplayConfigurations.add(configuration);
     }
 
-    @SuppressWarnings("unused")
     @Inject
-    private void scatterPlot(ScatterPlotViewContentDisplayFactory factory) {
+    public void scatterPlot(ScatterPlotViewContentDisplayFactory factory) {
         ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 factory);
 
@@ -140,15 +136,13 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
         add(configuration);
     }
 
-    @SuppressWarnings("unused")
     @Inject
-    private void text(TextViewContentDisplayFactory factory) {
+    public void text(TextViewContentDisplayFactory factory) {
         add(factory);
     }
 
-    @SuppressWarnings("unused")
     @Inject
-    private void timeLine(TimeLineViewContentDisplayFactory factory) {
+    public void timeLine(TimeLineViewContentDisplayFactory factory) {
         ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 factory);
 

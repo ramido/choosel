@@ -41,12 +41,6 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         VisualItemContainer {
 
-    private enum State {
-
-        CREATED, INITIALIZED, DISPOSED;
-
-    }
-
     protected ViewContentDisplayCallback callback;
 
     private boolean restoring = false;
@@ -72,8 +66,8 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     }
 
     private void assertInState(State expectedState) {
-        assert state == expectedState : "invalid state: " + state
-                + " should be " + expectedState + ")";
+        assert isInState(expectedState) : "invalid state: " + state
+                + " (should be " + expectedState + ")";
     }
 
     @Override
@@ -110,12 +104,13 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
 
     @Override
     public void dispose() {
+        setState(State.DISPOSING);
+
         callback = null;
         container = null;
         widget = DisposeUtil.dispose(widget);
 
-        state = State.DISPOSED;
-
+        setState(State.DISPOSED);
         assertInState(State.DISPOSED);
     }
 
@@ -126,7 +121,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
 
     public ViewContentDisplayCallback getCallback() {
         return callback;
-    };
+    }
 
     public VisualItemContainer getContainer() {
         return container;
@@ -148,11 +143,15 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         }
 
         return this.<T> getProperty(property).getValue();
-    }
+    };
 
     @Override
     public SidePanelSection[] getSidePanelSections() {
         return new SidePanelSection[0];
+    }
+
+    public State getState() {
+        return state;
     }
 
     @Override
@@ -172,7 +171,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     @Override
     public LightweightCollection<VisualItem> getVisualItems(
             Iterable<Resource> resources) {
-        assertInState(State.INITIALIZED);
+        assert isInitialized();
         return container.getVisualItems(resources);
     }
 
@@ -180,15 +179,16 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     public void init(VisualItemContainer container,
             ViewContentDisplayCallback callback) {
 
-        assertInState(State.CREATED);
-
         assert container != null;
         assert callback != null;
+        assertInState(State.CREATED);
+
+        setState(State.INITIALIZING);
 
         this.callback = callback;
         this.container = container;
 
-        this.state = State.INITIALIZED;
+        setState(State.INITIALIZED);
 
         assertInState(State.INITIALIZED);
     }
@@ -196,6 +196,14 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     @Override
     public boolean isAdaptableTo(Class<?> clazz) {
         return false;
+    }
+
+    public boolean isInitialized() {
+        return isInState(State.INITIALIZED);
+    }
+
+    public boolean isInState(State expectedState) {
+        return state.equals(expectedState);
     }
 
     @Override
@@ -262,6 +270,10 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         }
 
         getProperty(property).setValue(value);
+    }
+
+    private void setState(State state) {
+        this.state = state;
     }
 
     @Override
