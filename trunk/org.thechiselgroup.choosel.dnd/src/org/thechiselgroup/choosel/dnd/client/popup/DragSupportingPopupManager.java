@@ -17,24 +17,61 @@ package org.thechiselgroup.choosel.dnd.client.popup;
 
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
+import org.thechiselgroup.choosel.dnd.client.DragProxyAttachedEvent;
+import org.thechiselgroup.choosel.dnd.client.DragProxyAttachedEventHandler;
 import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEvent;
 import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEventHandler;
+
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.logical.shared.HasAttachHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DragSupportingPopupManager extends DefaultPopupManager {
 
     public DragSupportingPopupManager(Popup popup) {
         super(popup);
 
+        /*
+         * Sends a popup-mouse-out if a dnd operation that was started over the
+         * popup is finished.
+         */
+        // TODO dispose registration?
         popup.addHandler(new DragProxyDetachedEventHandler() {
             @Override
             public void onDragProxyDetached(DragProxyDetachedEvent event) {
                 if (isEnabled()) {
-                    // TODO use event instead that demands closing
-                    // hide once drop operation is completed
-                    setState(INACTIVE_STATE);
+                    state.onPopupMouseOut(DragSupportingPopupManager.this);
                 }
             }
         }, DragProxyDetachedEvent.TYPE);
     }
 
+    @Override
+    public <T extends Widget & HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
+            T widget) {
+
+        final HandlerRegistration superRegistration = super
+                .linkToWidget(widget);
+
+        /*
+         * Sends a source-mouse-out if a dnd operation is started on the source
+         * widget.
+         */
+        final HandlerRegistration dndStartRegistration = widget.addHandler(
+                new DragProxyAttachedEventHandler() {
+                    @Override
+                    public void onDragProxyAttached(DragProxyAttachedEvent event) {
+                        state.onSourceMouseOut(DragSupportingPopupManager.this);
+                    }
+                }, DragProxyAttachedEvent.TYPE);
+
+        return new HandlerRegistration() {
+            @Override
+            public void removeHandler() {
+                superRegistration.removeHandler();
+                dndStartRegistration.removeHandler();
+            }
+        };
+    }
 }

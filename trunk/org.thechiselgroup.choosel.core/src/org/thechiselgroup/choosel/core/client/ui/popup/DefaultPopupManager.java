@@ -32,6 +32,7 @@ import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultPopupManager implements PopupManager {
 
@@ -77,7 +78,7 @@ public class DefaultPopupManager implements PopupManager {
     // separate from raw events --> onPopupGainsAttentation,
     // onPopupLosesAttention, onSourceGainsAttention, onSourceLosesAttention,
     // onActivatePopup, onHidePopup, onTimeout
-    private static class State {
+    protected static class State {
 
         public void enter(DefaultPopupManager manager) {
         }
@@ -260,7 +261,7 @@ public class DefaultPopupManager implements PopupManager {
 
     protected int showDelay = DEFAULT_SHOW_DELAY;
 
-    private State state = INACTIVE_STATE;
+    protected State state = INACTIVE_STATE;
 
     protected Popup popup;
 
@@ -347,9 +348,8 @@ public class DefaultPopupManager implements PopupManager {
     /**
      * Links a widget source to this {@link PopupManager}.
      */
-    // XXX bug: what if widget disappears / gets removed?
     @Override
-    public <T extends HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
+    public <T extends Widget & HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
             T widget) {
 
         MouseHandlersPopupManagerLink link = new MouseHandlersPopupManagerLink();
