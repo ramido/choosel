@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.core.client.visualization.model.extensions.Sel
 import org.thechiselgroup.choosel.core.client.visualization.model.managed.ManagedSlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.visualization.model.persistence.ManagedSlotMappingConfigurationPersistence;
 import org.thechiselgroup.choosel.core.client.visualization.ui.VisualMappingsControl;
+import org.thechiselgroup.choosel.core.shared.util.ForTest;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -76,6 +77,8 @@ public class DefaultView implements View {
         }
 
     }
+
+    private static final String MEMENTO_LABEL_KEY = "label";
 
     private static final String CSS_EXPANDER = "DefaultView-Expander";
 
@@ -202,7 +205,7 @@ public class DefaultView implements View {
                 errorHandler);
     }
 
-    // protected for test access
+    @ForTest
     protected void doRestore(Memento state,
             PersistableRestorationService restorationService,
             ResourceSetAccessor accessor) {
@@ -223,6 +226,8 @@ public class DefaultView implements View {
         managedSlotMappingConfigurationPersistence.restore(
                 managedSlotMappingConfiguration,
                 state.getChild(MEMENTO_SLOT_MAPPINGS));
+
+        setLabel((String) state.getValue(MEMENTO_LABEL_KEY));
 
         contentDisplay.endRestore();
     }
@@ -432,6 +437,8 @@ public class DefaultView implements View {
         memento.addChild(MEMENTO_SLOT_MAPPINGS,
                 managedSlotMappingConfigurationPersistence
                         .save(managedSlotMappingConfiguration));
+
+        memento.setValue(MEMENTO_LABEL_KEY, getLabel());
 
         return memento;
     }

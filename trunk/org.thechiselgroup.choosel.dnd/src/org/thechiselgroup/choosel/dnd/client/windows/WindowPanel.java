@@ -45,6 +45,8 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -114,7 +116,7 @@ public class WindowPanel extends NEffectPanel implements WindowController {
     private Widget southWidget;
 
     // TODO move into a better place as this is relevant for persistency only
-    private WindowContent viewContent;
+    private WindowContent windowContent;
 
     private Widget westTopWidget;
 
@@ -248,7 +250,7 @@ public class WindowPanel extends NEffectPanel implements WindowController {
 
     // TODO move into model
     public WindowContent getViewContent() {
-        return this.viewContent;
+        return this.windowContent;
     }
 
     private String getVisibleCloseImageUrl() {
@@ -514,8 +516,19 @@ public class WindowPanel extends NEffectPanel implements WindowController {
 
         if (editableTitle) {
             headerWidget = new ResizingTextBox(20, 250);
-            ((TextBox) this.headerWidget).setText(title);
-            headerWidget.addStyleName(CSS_WINDOW_HEADER_TEXT);
+            TextBox headerText = (TextBox) this.headerWidget;
+            headerText.setText(title);
+            headerText.addStyleName(CSS_WINDOW_HEADER_TEXT);
+            headerText.addValueChangeHandler(new ValueChangeHandler<String>() {
+                @Override
+                public void onValueChange(ValueChangeEvent<String> event) {
+                    /*
+                     * XXX The title is kept at 2 locations right now.
+                     */
+                    windowContent.setLabel(event.getValue());
+                    windowTitle = event.getValue();
+                }
+            });
         } else {
             headerWidget = new Label(title);
             headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
@@ -680,7 +693,7 @@ public class WindowPanel extends NEffectPanel implements WindowController {
     }
 
     public void setViewContent(WindowContent viewContent) {
-        this.viewContent = viewContent;
+        this.windowContent = viewContent;
     }
 
     public void setZIndex(final int zIndex) {

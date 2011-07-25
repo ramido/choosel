@@ -50,10 +50,10 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetC
 import org.thechiselgroup.choosel.core.client.test.mockito.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
+import org.thechiselgroup.choosel.dnd.client.windows.ViewWindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
-import org.thechiselgroup.choosel.workbench.client.views.ViewWindowContent;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspacePersistenceServiceAsync;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspaceSharingServiceAsync;

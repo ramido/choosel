@@ -20,11 +20,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
-import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
+import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.visualization.DefaultView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
@@ -111,7 +110,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, Size {
         Point point = positionManager.getNextLocation(500, 400);
 
         WindowPanel window = createWindow(content.getLabel(),
-                content instanceof DefaultView, content.asWidget(),
+                content instanceof ViewWindowContent, content.asWidget(),
                 point.getX(), point.getY());
 
         window.setViewContent(content);
@@ -126,7 +125,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, Size {
         content.init();
 
         WindowPanel window = createWindow(content.getLabel(),
-                content instanceof DefaultView, content.asWidget(), x, y);
+                content instanceof ViewWindowContent, content.asWidget(), x, y);
         window.setPixelSize(width, height);
         window.setViewContent(content);
 

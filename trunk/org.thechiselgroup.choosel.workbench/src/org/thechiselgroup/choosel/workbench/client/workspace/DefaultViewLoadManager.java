@@ -30,9 +30,9 @@ import org.thechiselgroup.choosel.core.client.util.callbacks.TransformingAsyncCa
 import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.visualization.View;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
+import org.thechiselgroup.choosel.dnd.client.windows.ViewWindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.workbench.client.views.ViewWindowContent;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewPreviewDTO;
