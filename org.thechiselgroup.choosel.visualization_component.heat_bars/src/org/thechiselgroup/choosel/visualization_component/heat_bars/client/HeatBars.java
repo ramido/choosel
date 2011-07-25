@@ -31,6 +31,8 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 //TODO each bar is represented by a visualItem.  Ideally this would change some time in the future.
 public class HeatBars extends ChartViewContentDisplay {
 
+    private static final int MAX_BAR_LABEL_LENGTH = 15;
+
     private PVPanel invisibleInteractionBar;
 
     // TODO move to protovis (events)
@@ -77,7 +79,8 @@ public class HeatBars extends ChartViewContentDisplay {
         public PVColor f(JsArgs args) {
             // figure out which visualItem this data point maps to
             PVMark _this = args.getThis();
-            VisualItem visualItem = visualItemsJsArray.get(_this.parent().index());
+            VisualItem visualItem = visualItemsJsArray.get(_this.parent()
+                    .index());
 
             // calculate the color based on the resolvers and the binCount
             double value = args.getDouble();
@@ -110,7 +113,6 @@ public class HeatBars extends ChartViewContentDisplay {
     int chartHeight;
 
     JsDoubleFunction totalBarWidthFunction = new JsDoubleFunction() {
-
         public double f(JsArgs args) {
             return totalBarWidth;
         }
@@ -162,7 +164,13 @@ public class HeatBars extends ChartViewContentDisplay {
             PVMark _this = args.getThis();
             int index = _this.parent().index();
 
-            return visualItemsJsArray.get(index).getValue(LABEL);
+            String labelValue = visualItemsJsArray.get(index).getValue(LABEL);
+
+            if (labelValue.length() > MAX_BAR_LABEL_LENGTH) {
+                labelValue = labelValue.substring(0, MAX_BAR_LABEL_LENGTH);
+            }
+
+            return labelValue;
         }
     };
 
@@ -244,11 +252,17 @@ public class HeatBars extends ChartViewContentDisplay {
                 .fillStyle(colorFunction);
 
         /* Add X axis ticks with number labels */
-        vis.add(PV.Rule).data(tickPositionScale.ticks(5))
+        vis.add(PV.Rule).data(tickPositionScale.ticks(calculateNumTicks()))
                 .left(tickPositionScale).bottom(CHART_BOTTOM_PADDING).height(5)
                 .strokeStyle("#000").anchor(PVAlignment.BOTTOM).add(PV.Label)
                 .text(tickLabelFunction);
+    }
 
+    /**
+     * Each tick should be spaced enough to include one full date label
+     */
+    private int calculateNumTicks() {
+        return new Double(Math.ceil(totalBarWidth / 200.0)).intValue();
     }
 
     /**
