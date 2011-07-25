@@ -45,6 +45,16 @@ public final class ExceptionUtil {
         return getCauses(new SingleItemCollection<Throwable>(error));
     }
 
+    public static String getStackTraceAsString(Throwable error) {
+        StackTraceElement[] stackTrace = error.getStackTrace();
+
+        String result = "";
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            result += stackTraceElement + "<br/>";
+        }
+        return result;
+    }
+
     private ExceptionUtil() {
     }
 
