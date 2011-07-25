@@ -32,11 +32,12 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultPopupManagerTest {
 
-    private static interface MockWidget extends HasAllMouseHandlers,
-            HasAttachHandlers {
+    public abstract static class MockWidget extends Widget implements
+            HasAllMouseHandlers, HasAttachHandlers {
     }
 
     public static class TestDefaultPopupManager extends DefaultPopupManager {

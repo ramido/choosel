@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface PopupManager {
 
@@ -32,7 +33,7 @@ public interface PopupManager {
 
     boolean isEnabled();
 
-    <T extends HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
+    <T extends Widget & HasAllMouseHandlers & HasAttachHandlers> HandlerRegistration linkToWidget(
             T widget);
 
     /**
