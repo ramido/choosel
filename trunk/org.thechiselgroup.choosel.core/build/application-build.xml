@@ -60,7 +60,11 @@
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
-			<arg line="-draftCompile -optimize 0 -ea -logLevel INFO -style DETAILED -localWorkers 3 -war ${build.dir}" />
+			<!--
+			-ea (assertions are not used because we cannot scope the compilation to just include Choosel assertions and
+			the other assertions (e.g. from dnd) break our application (when using dnd)) 
+			-->
+			<arg line="-draftCompile -optimize 0 -logLevel INFO -style DETAILED -localWorkers 3 -war ${build.dir}" />
 			<arg value="${gwt-module.name}DevCompile" />
 			<jvmarg value="-Xmx1024m" />
 			<jvmarg value="-Xss20m" />
