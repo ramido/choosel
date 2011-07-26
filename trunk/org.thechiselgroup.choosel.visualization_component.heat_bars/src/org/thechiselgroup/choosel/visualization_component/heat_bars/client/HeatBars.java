@@ -25,11 +25,31 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 
-import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 //TODO each bar is represented by a visualItem.  Ideally this would change some time in the future.
 public class HeatBars extends ChartViewContentDisplay {
+
+    private class DataPair {
+
+        private double binVal;
+
+        private int index;
+
+        public DataPair(int index, double binVal) {
+            this.binVal = binVal;
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public double getBinVal() {
+            return binVal;
+        }
+
+    }
 
     private static final int MAX_BAR_LABEL_LENGTH = 15;
 
@@ -72,7 +92,7 @@ public class HeatBars extends ChartViewContentDisplay {
 
     private final int LEFT_LABEL_PADDING = 50;
 
-    private JsArrayGeneric<JsArrayNumber> data;
+    private JsArrayGeneric<JsArrayGeneric<DataPair>> dataPairs;
 
     private JsFunction<PVColor> colorFunction = new JsFunction<PVColor>() {
         @Override
@@ -82,8 +102,10 @@ public class HeatBars extends ChartViewContentDisplay {
             VisualItem visualItem = visualItemsJsArray.get(_this.parent()
                     .index());
 
+            DataPair dp = args.getObject();
             // calculate the color based on the resolvers and the binCount
-            double value = args.getDouble();
+            double value = dp.getBinVal();
+
             return PV.color(calculateColor(
                     (Color) visualItem.getValue(ZERO_COLOR),
                     (Color) visualItem.getValue(LOW_COLOR),
@@ -140,7 +162,9 @@ public class HeatBars extends ChartViewContentDisplay {
 
     JsDoubleFunction sliceLeftFunction = new JsDoubleFunction() {
         public double f(JsArgs args) {
-            return slicePositionScale.fd(args.<PVMark> getThis().index());
+
+            DataPair dp = args.getObject();
+            return slicePositionScale.fd(dp.getIndex());
         }
     };
 
@@ -174,8 +198,8 @@ public class HeatBars extends ChartViewContentDisplay {
         }
     };
 
-    JsFunction<JsArrayNumber> childDataFunction = new JsFunction<JsArrayNumber>() {
-        public JsArrayNumber f(JsArgs args) {
+    JsFunction<JsArrayGeneric<DataPair>> childDataFunction = new JsFunction<JsArrayGeneric<DataPair>>() {
+        public JsArrayGeneric<DataPair> f(JsArgs args) {
             return args.getObject();
         }
     };
@@ -215,8 +239,7 @@ public class HeatBars extends ChartViewContentDisplay {
 
         /* Scale that maps slice index onto slice position */
         slicePositionScale = PV.Scale.ordinal(PV.range(totalBarWidth))
-                .splitBanded(LEFT_LABEL_PADDING,
-                        totalBarWidth + LEFT_LABEL_PADDING);
+                .splitBanded(0, totalBarWidth);
 
         /* This maps an index to a value that it represents in the graph range */
         tickLabelValueScale = PV.Scale.linear(0, totalBarWidth).range(
@@ -233,7 +256,7 @@ public class HeatBars extends ChartViewContentDisplay {
                 .height(chartHeight + CHART_BOTTOM_PADDING);
 
         /* Add one panel for each horizontal bar */
-        PVPanel panel = vis.add(PV.Panel).data(data).top(panelTopFunction)
+        PVPanel panel = vis.add(PV.Panel).data(dataPairs).top(panelTopFunction)
                 .height(panelHeightFunction);
 
         /* an invisible panel that will handle mouse events */
@@ -243,11 +266,18 @@ public class HeatBars extends ChartViewContentDisplay {
                 .cursor(POINTER).events(ALL)
                 .strokeStyle(barBorderColorFunction);
 
+        // TODO, the labels are getting into the bars now that there arent a
+        // bazillion slices blocking the image. Figure out a way to decrease
+        // their z index
+
         /* Add a label to each panel */
         panel.anchor(PVAlignment.LEFT).add(PV.Label).text(panelLabelFunction);
 
+        PVPanel innerPanel = panel.add(PV.Panel).left(LEFT_LABEL_PADDING)
+                .fillStyle("#ffffff");
+
         /* Add many vertical bars (slices) to each horizontal Panel (bar) */
-        panel.add(PV.Bar).data(childDataFunction).top(0)
+        innerPanel.add(PV.Bar).data(childDataFunction).top(0)
                 .left(sliceLeftFunction).width(sliceWidthFunction)
                 .fillStyle(colorFunction);
 
@@ -352,10 +382,26 @@ public class HeatBars extends ChartViewContentDisplay {
      */
     private void calculateDataArrayFromVisualItems() {
         // reset data
-
         calculateStartAndEndOfBarScale();
-        resetData();
+        resetDataPairs();
         maxBinCount = 0;
+
+        setDataPairsFromBinning(doBinning());
+    }
+
+    private void setDataPairsFromBinning(double[][] data) {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                double val = data[i][j];
+                if (val != 0) {
+                    dataPairs.get(i).push(new DataPair(j, val));
+                }
+            }
+        }
+    }
+
+    private double[][] doBinning() {
+        double[][] data = new double[visualItemsJsArray.length()][calculateNumDataItemsPerBar()];
 
         for (int i = 0; i < visualItemsJsArray.length(); i++) {
             // each visualItem represents one bar
@@ -368,38 +414,27 @@ public class HeatBars extends ChartViewContentDisplay {
                 if (barScaleEnd == barScaleStart) {
                     // all of the elements are the same, and there can not rly
                     // be a graph
-                    return;
+                    return data;
                 } else {
                     int index = (int) ((binValue - barScaleStart)
                             / (barScaleEnd - barScaleStart) * (totalBarWidth - 1));
-                    JsArrayNumber barArray = data.get(i);
 
-                    double val = barArray.get(index) + 1.0;
-                    maxBinCount = Math.max(maxBinCount, val);
-                    barArray.set(index, val);
+                    data[i][index] = data[i][index] + 1;
+                    maxBinCount = Math.max(maxBinCount, data[i][index]);
                 }
             }
         }
+        return data;
     }
 
     /**
      * This method resets the data array to an array of all zeros
      */
-    // XXX this method is REAAAAAAAAAALLY slow in dev mode
-    public void resetData() {
-        data = JsUtils.createJsArrayGeneric();
+    public void resetDataPairs() {
+        dataPairs = JsUtils.createJsArrayGeneric();
         for (int i = 0; i < calculateNumBars(); i++) {
-            JsArrayNumber jsArrayNumber = intializeJsArray();
-            data.set(i, jsArrayNumber);
+            dataPairs.set(i, JsUtils.<DataPair> createJsArrayGeneric());
         }
-    }
-
-    public JsArrayNumber intializeJsArray() {
-        JsArrayNumber jsArrayNumber = JsUtils.createJsArrayNumber();
-        for (int i = 0; i < totalBarWidth; i++) {
-            jsArrayNumber.set(i, 0.0);
-        }
-        return jsArrayNumber;
     }
 
     private void calculateStartAndEndOfBarScale() {
