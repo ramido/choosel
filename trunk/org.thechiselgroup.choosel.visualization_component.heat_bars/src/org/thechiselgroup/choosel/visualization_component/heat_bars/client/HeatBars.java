@@ -210,10 +210,20 @@ public class HeatBars extends ChartViewContentDisplay {
 
     private PVOrdinalScale slicePositionScale;
 
+    /**
+     * represents the lowest possible date value for the data
+     */
     private double barScaleStart;
 
+    /**
+     * represents the highest possible date value for the data
+     */
     private double barScaleEnd;
 
+    /**
+     * represents the highest count in any bin, we assume that zero is the
+     * lowest
+     */
     private double maxBinCount;
 
     private PVLinearScale tickLabelValueScale;
@@ -264,11 +274,7 @@ public class HeatBars extends ChartViewContentDisplay {
                 .left(LEFT_LABEL_PADDING).width(totalBarWidthFunction)
                 .top(panelTopFunction).height(panelHeightFunction)
                 .cursor(POINTER).events(ALL)
-                .strokeStyle(barBorderColorFunction);
-
-        // TODO, the labels are getting into the bars now that there arent a
-        // bazillion slices blocking the image. Figure out a way to decrease
-        // their z index
+                .strokeStyle(barBorderColorFunction).lineWidth(3);
 
         /* Add a label to each panel */
         panel.anchor(PVAlignment.LEFT).add(PV.Label).text(panelLabelFunction);
@@ -375,7 +381,8 @@ public class HeatBars extends ChartViewContentDisplay {
 
     /**
      * This method converts the visualItems that are in the view, which
-     * representBars, into a two dimensional JavaScript friendly double array
+     * representBars, into a two dimensional JavaScript friendly arrays of
+     * DataPairs
      * 
      * It also calculates the minimum and maximum bar scale, and the
      * maximumBinCount
@@ -384,9 +391,45 @@ public class HeatBars extends ChartViewContentDisplay {
         // reset data
         calculateStartAndEndOfBarScale();
         resetDataPairs();
+        setDataPairsFromBinning(doBinning());
+    }
+
+    /**
+     * This is a hack method for testing purposes only
+     */
+    private void calculateDataArrayFromVisualItemsFAKETESTDATA() {
+        // TODO wat are my barScale start and end
+        calculateStartAndEndOfBarScale();
+        resetDataPairs();
+        createFakeDataPairs();
+
+    }
+
+    /**
+     * This is a hack method for testing purposes only
+     */
+    private void createFakeDataPairs() {
         maxBinCount = 0;
 
-        setDataPairsFromBinning(doBinning());
+        int numBars = visualItemsJsArray.length();
+
+        double[][] data = new double[numBars][calculateNumDataItemsPerBar()];
+
+        for (int i = 0; i < numBars; i++) {
+            for (int j = 0; j < 1000; j++) {
+                int index = new Double(Math.random()
+                        * calculateNumDataItemsPerBar()).intValue();
+
+                double val = ++data[i][index];
+                maxBinCount = Math.max(val, maxBinCount);
+            }
+        }
+
+        if (numBars <= 0) {
+            return;
+        }
+
+        setDataPairsFromBinning(data);
     }
 
     private void setDataPairsFromBinning(double[][] data) {
@@ -401,6 +444,7 @@ public class HeatBars extends ChartViewContentDisplay {
     }
 
     private double[][] doBinning() {
+        maxBinCount = 0;
         double[][] data = new double[visualItemsJsArray.length()][calculateNumDataItemsPerBar()];
 
         for (int i = 0; i < visualItemsJsArray.length(); i++) {
