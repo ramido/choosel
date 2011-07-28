@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotViewContentDisplayFactory;
+import org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.map.client.Map;
 import org.thechiselgroup.choosel.visualization_component.map.client.MapViewContentDisplayFactory;
 import org.thechiselgroup.choosel.visualization_component.text.client.TextViewContentDisplayFactory;
@@ -63,6 +64,11 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
 
         add(configuration);
+    }
+
+    @Inject
+    public void graph(GraphViewContentDisplayFactory originalFactory) {
+        add(originalFactory);
     }
 
     @Inject
