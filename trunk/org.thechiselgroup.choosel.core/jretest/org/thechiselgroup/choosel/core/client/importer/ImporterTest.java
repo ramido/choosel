@@ -51,6 +51,20 @@ public class ImporterTest {
         }
 
         @Override
+        protected Date parseDate(String dateStr) {
+            try {
+                if (DATE_FORMAT_1_REGEX.test(dateStr)) {
+                    return dataFormat1.parse(dateStr);
+                } else if (DATE_FORMAT_2_REGEX.test(dateStr)) {
+                    return dataFormat2.parse(dateStr);
+                }
+                return null;
+            } catch (java.text.ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
         protected Date parseDate1(String stringValue) {
             try {
                 return dataFormat1.parse(stringValue);
