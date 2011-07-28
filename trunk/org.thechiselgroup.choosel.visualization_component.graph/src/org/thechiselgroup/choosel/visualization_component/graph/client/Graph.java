@@ -234,6 +234,12 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private ResourceSet automaticResources;
 
+    /*
+     * TODO The callback is meant to check whether the graph is initialized (and
+     * not disposed) when methods are called (to prevent errors in asynchronous
+     * callbacks that return after the graph has been disposed or before it has
+     * been initialized).
+     */
     private GraphNodeExpansionCallback expansionCallback = new GraphNodeExpansionCallback() {
 
         @Override
