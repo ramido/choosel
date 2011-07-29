@@ -300,7 +300,7 @@ public class DefaultResourceSetAvatarDragController extends
     private DraggableResourceSetAvatar getAvatar(DragContext context) {
         assert context != null;
         assert context.draggable != null;
-        assert context.draggable instanceof DraggableResourceSetAvatar;
+        assert context.draggable instanceof DraggableResourceSetAvatar : "context.draggable is not of type DraggableResourceSetAvatar";
         return (DraggableResourceSetAvatar) context.draggable;
     }
 
