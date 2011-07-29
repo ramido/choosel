@@ -105,8 +105,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return visualMappingPanel;
     }
 
-    private List<String> calculateGroupingBoxOptions(
-            DataTypeToListMap<String> propertiesByDataType) {
+    protected List<String> calculateGroupingBoxOptions(
+            LightweightCollection<VisualItem> visualItems) {
+        DataTypeToListMap<String> propertiesByDataType = getPropertiesMapFromViewItem(visualItems);
+
         List<String> values = propertiesByDataType.get(DataType.TEXT);
         values.add(GROUP_BY_URI_LABEL);
         return values;
@@ -133,6 +135,18 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         return uiFactory.create(
                 slotMappingConfigurationUIModel.getManagedSlotMapping(slot),
                 slotMappingConfigurationUIModel.getVisualItems());
+    }
+
+    protected DataTypeToListMap<String> getPropertiesMapFromViewItem(
+            LightweightCollection<VisualItem> visualItems) {
+        ResourceSet resources = new DefaultResourceSet();
+        for (VisualItem visualItem : visualItems) {
+            resources.addAll(visualItem.getResources());
+        }
+
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(resources);
+        return propertiesByDataType;
     }
 
     // TODO uh, shouldnt we just initialize the visualMappingSPanel in the
@@ -193,9 +207,17 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
     }
 
+    protected boolean shouldResetGrouping(
+            LightweightCollection<VisualItem> visualItems) {
+        return groupingBox.getSelectedValue() == null
+                || !calculateGroupingBoxOptions(visualItems).contains(groupingBox.getSelectedValue());
+    }
+
     @Override
     public void updateConfigurationForSlotMappingChangedEvent(
             ManagedSlotMappingConfigurationChangedEvent e) {
+
+        updateGroupingBox(e.getVisualItems());
 
         for (Entry<Slot, ManagedSlotMappingState> entry : e
                 .getSlotConfigurationStates().entrySet()) {
@@ -203,39 +225,18 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         }
     }
 
-    private void updateGroupingBox(
-            DataTypeToListMap<String> propertiesByDataType) {
-        groupingBox
-                .setValues(calculateGroupingBoxOptions(propertiesByDataType));
-        if (groupingBox.getSelectedValue() == null
-                && resourceGrouping.getCategorizer() instanceof ResourceByPropertyMultiCategorizer) {
-
-            String property = ((ResourceByPropertyMultiCategorizer) resourceGrouping
-                    .getCategorizer()).getProperty();
-            groupingBox.setSelectedValue(property);
-        } else if (groupingBox.getSelectedValue() == null
-                && resourceGrouping.getCategorizer() instanceof ResourceByUriMultiCategorizer) {
-            groupingBox.setSelectedValue(GROUP_BY_URI_LABEL);
-        }
-    }
-
-    private void updateGroupingBox(LightweightCollection<VisualItem> visualItems) {
-        ResourceSet resources = new DefaultResourceSet();
-        for (VisualItem visualItem : visualItems) {
-            resources.addAll(visualItem.getResources());
-        }
-
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
-        updateGroupingBox(propertiesByDataType);
-    }
-
-    private void updateSlotControls(
+    protected void updateGroupingBox(
             LightweightCollection<VisualItem> visualItems) {
-        for (DataType dataType : DataType.values()) {
-            for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
-                slotControl.updateOptions(visualItems);
+        groupingBox.setValues(calculateGroupingBoxOptions(visualItems));
+        if (shouldResetGrouping(visualItems)) {
+            
+            if (resourceGrouping.getCategorizer() instanceof ResourceByPropertyMultiCategorizer) {
+                
+                String property = ((ResourceByPropertyMultiCategorizer) resourceGrouping
+                        .getCategorizer()).getProperty();
+                groupingBox.setSelectedValue(property);
+            } else if (resourceGrouping.getCategorizer() instanceof ResourceByUriMultiCategorizer) {
+                groupingBox.setSelectedValue(GROUP_BY_URI_LABEL);
             }
         }
     }
@@ -247,8 +248,6 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         // handled, instead of exceptions being thrown
         assert state.isAllowable();
         assert state.isConfigured();
-
-        updateGroupingBox(visualItems);
 
         ManagedVisualItemValueResolver resolver = state.getResolver();
 
