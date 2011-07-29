@@ -41,18 +41,6 @@ public interface VisualItemValueResolverFactory extends Identifiable {
      * @return A new instance of the corresponding
      *         {@link ManagedVisualItemValueResolver}
      */
-    /*
-     * TODO what I really want to do is pass in a context of the current view in
-     * here. For example, besides current view items, what about passing in the
-     * currently selected property. This would be great if you wanted to select
-     * the same property by default
-     * 
-     * TODO The create methods might need to be resolver specific, because the
-     * VisualItemValueResolvers are immutable and we need to configure
-     * parameters.
-     * 
-     * XXX remove this, should be resolver specific
-     */
     ManagedVisualItemValueResolver create(
             LightweightCollection<VisualItem> visualItems);
 
