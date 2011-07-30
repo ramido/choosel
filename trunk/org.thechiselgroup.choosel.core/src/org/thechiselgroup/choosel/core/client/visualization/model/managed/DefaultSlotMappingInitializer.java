@@ -17,13 +17,13 @@ package org.thechiselgroup.choosel.core.client.visualization.model.managed;
 
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
+import org.thechiselgroup.choosel.core.client.resources.DataTypeLists;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.DataType;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItemValueResolver;
 import org.thechiselgroup.choosel.core.client.visualization.resolvers.managed.FixedVisualItemResolverFactory;
@@ -36,6 +36,24 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
     private Map<DataType, PropertyDependantVisualItemValueResolverFactory> propertyResolverFactories = new EnumMap<DataType, PropertyDependantVisualItemValueResolverFactory>(
             DataType.class);
+
+    public void configureFixedResolver(
+            FixedVisualItemResolverFactory resolverFactory) {
+
+        assert resolverFactory != null;
+
+        VisualItemValueResolver resolver = resolverFactory.create();
+        fixedResolvers.put(resolverFactory.getDataType(), resolver);
+    }
+
+    public void configurePropertyResolver(
+            PropertyDependantVisualItemValueResolverFactory resolverFactory) {
+
+        assert resolverFactory != null;
+
+        propertyResolverFactories.put(resolverFactory.getDataType(),
+                resolverFactory);
+    }
 
     private VisualItemValueResolver createPropertyResolver(DataType dataType,
             String firstProperty) {
@@ -61,7 +79,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
     public Map<Slot, VisualItemValueResolver> getResolvers(
             ResourceSet viewResources, Slot[] slotsToUpdate) {
 
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+        DataTypeLists<String> propertiesByDataType = ResourceSetUtils
                 .getPropertiesByDataType(viewResources);
 
         Map<Slot, VisualItemValueResolver> result = new HashMap<Slot, VisualItemValueResolver>();
@@ -72,10 +90,10 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
     }
 
     private VisualItemValueResolver getSlotResolver(
-            DataTypeToListMap<String> propertiesByDataType, Slot slot) {
+            DataTypeLists<String> propertiesByDataType, Slot slot) {
 
         DataType dataType = slot.getDataType();
-        List<String> properties = propertiesByDataType.get(dataType);
+        LightweightList<String> properties = propertiesByDataType.get(dataType);
 
         // fallback to default values if there are no corresponding slots
         if (properties.isEmpty()) {
@@ -92,23 +110,5 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         }
 
         return createPropertyResolver(dataType, firstProperty);
-    }
-
-    public void configureFixedResolver(
-            FixedVisualItemResolverFactory resolverFactory) {
-
-        assert resolverFactory != null;
-
-        VisualItemValueResolver resolver = resolverFactory.create();
-        fixedResolvers.put(resolverFactory.getDataType(), resolver);
-    }
-
-    public void configurePropertyResolver(
-            PropertyDependantVisualItemValueResolverFactory resolverFactory) {
-
-        assert resolverFactory != null;
-
-        propertyResolverFactories.put(resolverFactory.getDataType(),
-                resolverFactory);
     }
 }
