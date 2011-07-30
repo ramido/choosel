@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 public final class ResourceSetUtils {
@@ -33,15 +34,22 @@ public final class ResourceSetUtils {
 
     public static final String LONGITUDE = "longitude";
 
-    public static DataTypeToListMap<String> getPropertiesByDataType(
+    // XXX compare to others methods, remove code duplication
+    public static LightweightList<String> getProperties(ResourceSet resources,
+            DataType dataType) {
+
+        return getPropertiesByDataType(resources).get(dataType);
+    }
+
+    public static DataTypeLists<String> getPropertiesByDataType(
             ResourceSet resourceSet) {
 
         if (resourceSet.isEmpty()) {
-            return new DataTypeToListMap<String>();
+            return new DataTypeLists<String>();
         }
 
         // no aggregation
-        DataTypeToListMap<String> result = new DataTypeToListMap<String>();
+        DataTypeLists<String> result = new DataTypeLists<String>();
         Resource resource = resourceSet.getFirstElement();
 
         if (resource == null) {
@@ -78,6 +86,7 @@ public final class ResourceSetUtils {
         return result;
     }
 
+    // XXX why isn't this using the same code as getPropertiesByDataType?
     public static List<String> getPropertyNamesForDataType(
             ResourceSet resourceSet, DataType dataType) {
 
@@ -140,6 +149,7 @@ public final class ResourceSetUtils {
         return properties;
     }
 
+    // XXX VisualItems should not be referenced here.
     public static List<String> getSharedPropertiesOfDataType(
             LightweightCollection<VisualItem> visualItems, DataType dataType) {
 
@@ -150,15 +160,17 @@ public final class ResourceSetUtils {
         }
 
         // get all valid properties from the first visualItem
-        properties.addAll(ResourceSetUtils.getPropertiesByDataType(
-                visualItems.getFirstElement().getResources()).get(dataType));
+        for (String property : getProperties(visualItems.getFirstElement()
+                .getResources(), dataType)) {
+            properties.add(property);
+        }
 
         // only keep properties that are shared by all of the resource
         for (VisualItem visualItem : visualItems) {
             ResourceSet resources = visualItem.getResources();
-            properties.retainAll(ResourceSetUtils.getPropertiesByDataType(
-                    resources).get(dataType));
+            properties.retainAll(getProperties(resources, dataType).toList());
         }
+
         return properties;
     }
 

@@ -15,12 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.visualization.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
+import org.thechiselgroup.choosel.core.client.resources.DataTypeLists;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
@@ -32,6 +33,7 @@ import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
 import org.thechiselgroup.choosel.core.client.util.DataType;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.visualization.model.Slot;
 import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
@@ -60,7 +62,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     protected ListBoxControl<String> groupingBox;
 
-    private DataTypeToListMap<SlotControl> slotControlsByDataType;
+    private DataTypeLists<SlotControl> slotControlsByDataType;
 
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
@@ -107,19 +109,30 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     protected List<String> calculateGroupingBoxOptions(
             LightweightCollection<VisualItem> visualItems) {
-        DataTypeToListMap<String> propertiesByDataType = getPropertiesMapFromViewItem(visualItems);
 
-        List<String> values = propertiesByDataType.get(DataType.TEXT);
-        values.add(GROUP_BY_URI_LABEL);
-        return values;
+        List<String> options = new ArrayList<String>();
+
+        for (String property : getProperties(visualItems, DataType.TEXT)) {
+            options.add(property);
+        }
+        options.add(GROUP_BY_URI_LABEL);
+
+        return options;
     }
 
     private SlotControl createSlotControl(Slot slot,
             ManagedVisualItemValueResolver resolver) {
-        SlotControl slotControl;
+
         VisualItemValueResolverUIController newResolverUI = createUIControllerFromResolver(
                 slot, resolver);
-        slotControl = initSlotControl(slot, newResolverUI);
+
+        DefaultSlotControl slotControl = new DefaultSlotControl(slot,
+                slotMappingConfigurationUIModel, newResolverUI);
+
+        this.slotToSlotControls.put(slot, slotControl);
+
+        addSlotControl(slot, slotControl);
+
         return slotControl;
     }
 
@@ -137,16 +150,19 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
                 slotMappingConfigurationUIModel.getVisualItems());
     }
 
-    protected DataTypeToListMap<String> getPropertiesMapFromViewItem(
-            LightweightCollection<VisualItem> visualItems) {
+    private LightweightList<String> getProperties(
+            LightweightCollection<VisualItem> visualItems, DataType dataType) {
+
+        /*
+         * XXX shouldn't this is use method in ResourceSetUtils that calculates
+         * the properties that are valid accross all visual items or is this the
+         * same?
+         */
         ResourceSet resources = new DefaultResourceSet();
         for (VisualItem visualItem : visualItems) {
             resources.addAll(visualItem.getResources());
         }
-
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-        return propertiesByDataType;
+        return ResourceSetUtils.getProperties(resources, dataType);
     }
 
     // TODO uh, shouldnt we just initialize the visualMappingSPanel in the
@@ -190,27 +206,15 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
                 groupingBox.asWidget());
     }
 
-    private SlotControl initSlotControl(Slot slot,
-            VisualItemValueResolverUIController resolverUI) {
-
-        DefaultSlotControl slotControl = new DefaultSlotControl(slot,
-                slotMappingConfigurationUIModel, resolverUI);
-
-        this.slotToSlotControls.put(slot, slotControl);
-        addSlotControl(slot, slotControl);
-
-        return slotControl;
-
-    }
-
     private void initSlotControls() {
-        slotControlsByDataType = new DataTypeToListMap<SlotControl>();
+        slotControlsByDataType = new DataTypeLists<SlotControl>();
     }
 
     protected boolean shouldResetGrouping(
             LightweightCollection<VisualItem> visualItems) {
         return groupingBox.getSelectedValue() == null
-                || !calculateGroupingBoxOptions(visualItems).contains(groupingBox.getSelectedValue());
+                || !calculateGroupingBoxOptions(visualItems).contains(
+                        groupingBox.getSelectedValue());
     }
 
     @Override
@@ -229,9 +233,9 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             LightweightCollection<VisualItem> visualItems) {
         groupingBox.setValues(calculateGroupingBoxOptions(visualItems));
         if (shouldResetGrouping(visualItems)) {
-            
+
             if (resourceGrouping.getCategorizer() instanceof ResourceByPropertyMultiCategorizer) {
-                
+
                 String property = ((ResourceByPropertyMultiCategorizer) resourceGrouping
                         .getCategorizer()).getProperty();
                 groupingBox.setSelectedValue(property);
