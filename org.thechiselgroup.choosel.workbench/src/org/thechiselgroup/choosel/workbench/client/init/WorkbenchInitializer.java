@@ -552,7 +552,7 @@ public abstract class WorkbenchInitializer implements ApplicationInitializer {
         presenter.init();
         // TODO replace with stuff from workspace presenter
         workspacePresenterDisplay.getTextBox().addStyleName(
-                "actionbar-titleArea-text");
+                "ActionBar-titleArea-text");
         actionBar.getActionBarTitleArea().add(
                 workspacePresenterDisplay.getTextBox());
     }
