@@ -440,15 +440,16 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
     private void layout() {
         CSS.setHeight(chartControl, CONTROL_HEIGHT);
-        CSS.setDisplay(pieChart.getElement(), CSS.INLINE);
-        CSS.setDisplay(scatterPlot.getElement(), CSS.INLINE);
+        CSS.setDisplay(pieChart.getElement(), CSS.INLINE_BLOCK);
+        CSS.setDisplay(scatterPlot.getElement(), CSS.INLINE_BLOCK);
 
-        barChart.setSize(Window.getClientWidth() + CSS.PX,
-                (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
+        int clientWidth = Window.getClientWidth();
+        int clientHeight = Window.getClientHeight();
 
-        pieChart.setSize(Window.getClientWidth() / 2 + CSS.PX,
-                (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
-        scatterPlot.setSize(Window.getClientWidth() / 2 + CSS.PX,
-                (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
+        int height = (clientHeight - CONTROL_HEIGHT) / 2;
+
+        barChart.setPixelSize(clientWidth, height);
+        pieChart.setPixelSize(clientWidth / 2, height);
+        scatterPlot.setPixelSize(clientWidth / 2, height);
     }
 }

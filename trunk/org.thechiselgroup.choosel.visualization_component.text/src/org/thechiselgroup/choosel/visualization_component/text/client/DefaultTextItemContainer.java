@@ -19,19 +19,10 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultTextItemContainer implements TextItemContainer {
-
-    private static class ResizableScrollPanel extends ScrollPanel implements
-            RequiresResize {
-
-        private ResizableScrollPanel(Widget child) {
-            super(child);
-        }
-    }
 
     private ScrollPanel scrollPanel;
 
@@ -40,7 +31,7 @@ public class DefaultTextItemContainer implements TextItemContainer {
     public DefaultTextItemContainer() {
         itemPanel = new FlowPanel();
 
-        scrollPanel = new ResizableScrollPanel(itemPanel);
+        scrollPanel = new ScrollPanel(itemPanel);
         scrollPanel.addStyleName(TextVisualization.CSS_LIST_VIEW_SCROLLBAR);
     }
 

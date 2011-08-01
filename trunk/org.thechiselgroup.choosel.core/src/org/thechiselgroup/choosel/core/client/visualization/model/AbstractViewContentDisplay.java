@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
@@ -91,10 +92,6 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     }
 
     @Override
-    public void checkResize() {
-    }
-
-    @Override
     public boolean containsVisualItem(String visualItemId) {
         assertInState(State.INITIALIZED);
         return container.containsVisualItem(visualItemId);
@@ -143,7 +140,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         }
 
         return this.<T> getProperty(property).getValue();
-    };
+    }
 
     @Override
     public SidePanelSection[] getSidePanelSections() {
@@ -152,7 +149,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
 
     public State getState() {
         return state;
-    }
+    };
 
     @Override
     public VisualItem getVisualItem(String visualItemId)
@@ -196,6 +193,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
     @Override
     public boolean isAdaptableTo(Class<?> clazz) {
         return false;
+    }
+
+    // TODO introduce state...
+    protected boolean isAttached() {
+        return widget != null && widget.isAttached();
     }
 
     public boolean isInitialized() {
@@ -270,6 +272,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay,
         }
 
         getProperty(property).setValue(value);
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        widget.setSize(width + CSS.PX, height + CSS.PX);
     }
 
     private void setState(State state) {

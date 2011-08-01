@@ -19,6 +19,9 @@ import static com.google.gwt.user.client.DOM.getElementById;
 import static com.google.gwt.user.client.DOM.getIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setStyleAttribute;
 
+import org.thechiselgroup.choosel.core.client.geometry.DefaultSize;
+import org.thechiselgroup.choosel.core.client.geometry.Size;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
@@ -107,6 +110,8 @@ public final class CSS {
 
     public static final String FIXED = "fixed";
 
+    public static final String INLINE_BLOCK = "inline-block";
+
     public static void addClass(String elementID, String cssClass) {
         Element element = getElementById(elementID);
         /*
@@ -123,7 +128,19 @@ public final class CSS {
         widget.getElement().getStyle().clearHeight();
     }
 
-    // TODO move to CSS class
+    /**
+     * @return size of {@code element} by calling getBoundingClientRect(). Works
+     *         in Internet Explorer 8+, Firefox 3+, Google Chrome, Opera 9.5+,
+     *         Safari 4+
+     * 
+     * @see http://help.dottoro.com/ljvmcrrn.php
+     */
+    public static Size getBoundingClientSize(Element element) {
+        JsRect rect = jsGetBoundingClientRect(element);
+        return new DefaultSize(rect.getRight() - rect.getLeft(),
+                rect.getBottom() - rect.getTop());
+    }
+
     /**
      * Returns the actual (computed) style for an element. This is necessary,
      * because the regular style accessor returns an empty String if the style
@@ -155,6 +172,12 @@ public final class CSS {
     public static int getZIndex(Element element) {
         return getIntStyleAttribute(element, Z_INDEX);
     }
+
+    // @formatter:off
+    private static native JsRect jsGetBoundingClientRect(Element element) /*-{
+        return element.getBoundingClientRect();
+    }-*/;
+    // @formatter:on
 
     public static void removeClass(String cssClass, String elementID) {
         Element element = getElementById(elementID);

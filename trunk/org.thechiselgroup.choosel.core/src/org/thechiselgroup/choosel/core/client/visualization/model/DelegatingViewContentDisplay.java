@@ -50,11 +50,6 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void checkResize() {
-        delegate.checkResize();
-    }
-
-    @Override
     public void dispose() {
         delegate.dispose();
     }
@@ -121,6 +116,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public <T> void setPropertyValue(String property, T value) {
         delegate.setPropertyValue(property, value);
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        delegate.setSize(width, height);
     }
 
     @Override

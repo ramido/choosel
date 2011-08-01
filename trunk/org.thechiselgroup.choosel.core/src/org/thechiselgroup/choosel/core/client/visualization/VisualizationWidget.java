@@ -37,6 +37,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Lars Grammel
  */
+/*
+ * XXX calls to setHeight, setWidth and setSize will fail to update view.
+ */
 public class VisualizationWidget<T extends ViewContentDisplay> extends
         SimplePanel implements HasResourceCategorizer {
 
@@ -81,25 +84,20 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
         viewModel.setContentResourceSet(contentResourceSet);
     }
 
+    @Override
+    public void setPixelSize(int width, int height) {
+        assert width >= 0;
+        assert height >= 0;
+
+        super.setPixelSize(width, height);
+        contentDisplay.setSize(width, height);
+    }
+
     public void setPropertyValue(String property, Object value) {
         viewModel.getViewContentDisplay().setPropertyValue(property, value);
     }
 
     public void setResolver(Slot slot, VisualItemValueResolver resolver) {
         viewModel.setResolver(slot, resolver);
-    }
-
-    @Override
-    public void setSize(String width, String height) {
-        assert width != null;
-        assert height != null;
-
-        setWidth(width);
-        setHeight(height);
-
-        contentDisplay.asWidget().setWidth(width);
-        contentDisplay.asWidget().setHeight(height);
-
-        contentDisplay.checkResize();
     }
 }
