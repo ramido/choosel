@@ -30,8 +30,6 @@ import org.thechiselgroup.choosel.core.client.visualization.model.VisualItem;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.MapTypeControl;
@@ -94,11 +92,6 @@ public class Map extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void checkResize() {
-        map.checkResize();
-    }
-
-    @Override
     public Widget createWidget() {
         map = new MapWidget();
 
@@ -113,18 +106,6 @@ public class Map extends AbstractViewContentDisplay {
         map.addMapType(MapType.getPhysicalMap());
         map.setCurrentMapType(MapType.getPhysicalMap());
         map.setScrollWheelZoomEnabled(true);
-
-        // TODO pull up
-        map.addAttachHandler(new Handler() {
-            @Override
-            public void onAttachOrDetach(AttachEvent event) {
-                if (event.isAttached()) {
-                    onAttach();
-                } else {
-                    onDetach();
-                }
-            }
-        });
 
         renderer.init(map, this);
 
@@ -273,6 +254,16 @@ public class Map extends AbstractViewContentDisplay {
         }
     }
 
+    @Override
+    public void setSize(int width, int height) {
+        if (!isAttached()) {
+            return;
+        }
+
+        map.setPixelSize(width, height);
+        map.checkResize();
+    }
+
     /**
      * Zoom levels range from 0 (zoomed out) to 21 (max zoomed in). The center
      * position of the map stays the same.
@@ -291,8 +282,7 @@ public class Map extends AbstractViewContentDisplay {
     public void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> updatedSlots) {
 
-        // TODO pull up
-        if (!map.isAttached()) {
+        if (!isAttached()) {
             return;
         }
 

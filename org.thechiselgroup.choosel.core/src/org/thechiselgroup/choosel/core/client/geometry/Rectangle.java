@@ -24,7 +24,7 @@ import java.util.TreeSet;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public final class Rectangle {
+public final class Rectangle implements Size {
 
     public static Rectangle fromWidget(Widget widget) {
         int x = widget.getAbsoluteLeft();
@@ -197,10 +197,12 @@ public final class Rectangle {
         return true;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
 
+    @Override
     public int getWidth() {
         return width;
     }

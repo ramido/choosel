@@ -56,11 +56,6 @@ public class TimeLine extends AbstractViewContentDisplay {
         timelineWidget.addEvents(getTimeLineEvents(addedResourceItems));
     }
 
-    @Override
-    public void checkResize() {
-        timelineWidget.layout();
-    }
-
     private void createTimeLineItems(
             LightweightCollection<VisualItem> addedVisualItems) {
 
@@ -159,6 +154,12 @@ public class TimeLine extends AbstractViewContentDisplay {
 
     public void setOverviewBandZoomIndex(int zoomIndex) {
         timelineWidget.setZoomIndex(1, zoomIndex);
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        super.setSize(width, height);
+        timelineWidget.layout();
     }
 
     @Override

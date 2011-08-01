@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.dnd.client.windows.AbstractWindowContent;
 
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -32,7 +33,20 @@ public class NoteWindowContent extends AbstractWindowContent implements
 
     private static final String MEMENTO_NOTE = CSS_NOTE;
 
+    /**
+     * Note padding in PX.
+     * 
+     * TODO replace with dynamic lookup.
+     */
+    private static final int PADDING = 5;
+
     private TextArea noteArea;
+
+    /**
+     * Wrapper panel to deal with resizing issues (the note has a border and
+     * padding which interferes with setting the size etc).
+     */
+    private SimplePanel notePanel;
 
     public NoteWindowContent() {
         super("Note", MEMENTO_NOTE);
@@ -40,14 +54,23 @@ public class NoteWindowContent extends AbstractWindowContent implements
 
     @Override
     public Widget asWidget() {
-        return noteArea;
+        return notePanel;
     }
 
     @Override
     public void init() {
         super.init();
+
         noteArea = new TextArea();
         noteArea.addStyleName(CSS_NOTE);
+
+        notePanel = new SimplePanel(noteArea) {
+            @Override
+            public void setPixelSize(int width, int height) {
+                super.setPixelSize(width, height);
+                noteArea.setPixelSize(width - 2 * PADDING, height - 2 * PADDING);
+            }
+        };
     }
 
     @Override

@@ -45,7 +45,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -467,10 +466,14 @@ public class DefaultView implements View {
     }
 
     /**
-     * Sets the size of the default view.
+     * Sets the size of the default view, not including decorations such as
+     * border, margin, and padding (and thus different from offset width and
+     * height).
      * 
      * @param width
+     *            width in pixels
      * @param height
+     *            height in pixels
      */
     private void setSize(int width, int height) {
         assert height >= 0;
@@ -493,18 +496,7 @@ public class DefaultView implements View {
         int targetWidth = sideBar.isVisible() ? width
                 - sideBar.getOffsetWidth() : width;
 
-        Widget contentWidget = contentDisplay.asWidget();
-        contentWidget.setPixelSize(targetWidth, targetHeight);
-
-        /*
-         * TODO fixes problem with list?? --> this should be handled by the
-         * content display... --> move into abstract impl.
-         */
-        if (contentWidget instanceof RequiresResize) {
-            ((RequiresResize) contentWidget).onResize();
-        }
-
-        contentDisplay.checkResize();
+        contentDisplay.setSize(targetWidth, targetHeight);
     }
 
 }

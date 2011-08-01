@@ -43,8 +43,6 @@ public interface ViewContentDisplay extends VisualItemRenderer, IsWidget,
 
     }
 
-    void checkResize();
-
     void endRestore();
 
     /**
@@ -82,6 +80,17 @@ public interface ViewContentDisplay extends VisualItemRenderer, IsWidget,
     boolean isReady();
 
     <T> void setPropertyValue(String property, T value);
+
+    /**
+     * Sets the size of the content, not including decorations such as border,
+     * margin, and padding (and thus different from offset width and height).
+     * 
+     * @param width
+     *            width in pixels
+     * @param height
+     *            height in pixels
+     */
+    void setSize(int width, int height);
 
     void startRestore();
 
