@@ -16,6 +16,9 @@
 -->
 <module rename-to='org.thechiselgroup.choosel.visualization_component.chart.Chart'>
   
+  <!-- CSS files -->
+  <stylesheet src="css/choosel-chart.css" />
+  
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='org.thechiselgroup.choosel.core.Core'/>
   <inherits name="org.thechiselgroup.choosel.protovis.ProtovisGWT" />

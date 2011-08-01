@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.collections.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.visualization.model.AbstractViewContentDisplay;
@@ -46,6 +44,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay {
+
+    private static final String CSS_CLASS_CHOOSEL_CHART_WIDGET = "Choosel-Chart-Widget";
 
     // TODO wrapper for jsarraygeneric that implements java.util.List
     protected JsArrayGeneric<VisualItem> visualItemsJsArray = JsUtils
@@ -101,29 +101,9 @@ public abstract class ChartViewContentDisplay extends
     protected abstract void buildChart();
 
     @Override
-    public void checkResize() {
-        int width = chartWidget.getOffsetWidth();
-        int height = chartWidget.getOffsetHeight();
-
-        if (width == this.width && height == this.height) {
-            return;
-        }
-
-        this.width = width;
-        this.height = height;
-
-        /*
-         * TODO we could use updateChart(false) here to improve the performance.
-         * This would require several changes in the chart implementation,
-         * though.
-         */
-        updateChart(true);
-    }
-
-    @Override
     public final Widget createWidget() {
         chartWidget = new ProtovisWidget();
-        CSS.setBackgroundColor(chartWidget, Colors.WHITE);
+        chartWidget.addStyleName(CSS_CLASS_CHOOSEL_CHART_WIDGET);
         return chartWidget;
     }
 
@@ -148,13 +128,6 @@ public abstract class ChartViewContentDisplay extends
             }
         }
         return false;
-    }
-
-    @Override
-    public void onAttach() {
-        super.onAttach();
-
-        checkResize();
     }
 
     protected void onEvent(Event e, String pvEventType, JsArgs args) {
@@ -185,6 +158,25 @@ public abstract class ChartViewContentDisplay extends
         visualItemsJsArray.setLength(visualItemsJsArray.length() - occurences);
     }
 
+    @Override
+    public void setSize(int width, int height) {
+        if (width == this.width && height == this.height) {
+            return;
+        }
+
+        this.width = width;
+        this.height = height;
+
+        super.setSize(width, height);
+
+        /*
+         * TODO we could use updateChart(false) here to improve the performance.
+         * This would require several changes in the chart implementation,
+         * though.
+         */
+        updateChart(true);
+    }
+
     /**
      * A method that listens for any updates on any resource items relevant to
      * the chart. Chart only will get rendered or updated (depending on the
@@ -193,6 +185,10 @@ public abstract class ChartViewContentDisplay extends
     @Override
     public void update(Delta<VisualItem> delta,
             LightweightCollection<Slot> changedSlots) {
+
+        if (!isAttached()) {
+            return;
+        }
 
         for (VisualItem visualItem : delta.getAddedElements()) {
             addVisualItem(visualItem);
@@ -229,7 +225,7 @@ public abstract class ChartViewContentDisplay extends
      *            change, just the attributes of the SVG elements are updated.
      */
     protected final void updateChart(boolean structuralChange) {
-        if (chartWidget == null || !chartWidget.isAttached()) {
+        if (!isAttached()) {
             return; // cannot render yet
         }
 
