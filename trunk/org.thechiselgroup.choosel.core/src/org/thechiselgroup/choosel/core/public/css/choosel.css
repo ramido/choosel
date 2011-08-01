@@ -14,6 +14,16 @@ textarea {
 	overflow: auto; 
 }
 
+/*
+ * Images displayed inline in tds cause unnecessary gaps in IE.
+ *
+ * https://developer.mozilla.org/en/Images,_Tables,_and_Mysterious_Gaps
+ */
+td img {
+	display: block;
+}
+ 
+
 .feedback-message {
 	padding: 3px;
 }
