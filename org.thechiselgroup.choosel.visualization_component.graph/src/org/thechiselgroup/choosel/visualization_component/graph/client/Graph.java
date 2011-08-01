@@ -341,10 +341,6 @@ public class Graph extends AbstractViewContentDisplay implements
         automaticResources.add(resource);
     }
 
-    @Override
-    public void checkResize() {
-    }
-
     private boolean containsResourceWithUri(String resourceUri) {
         return nodeResources.containsResourceWithUri(resourceUri);
     }
