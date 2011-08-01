@@ -6,6 +6,14 @@
 	outline: 0;
 }
 
+/*
+ * Text area scrollbar reset: do not show scrollbars if not scrollable
+ * on IE.
+ */
+textarea { 
+	overflow: auto; 
+}
+
 .feedback-message {
 	padding: 3px;
 }
