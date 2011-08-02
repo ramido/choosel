@@ -138,7 +138,7 @@ public abstract class ChartViewContentDisplay extends
     protected abstract void registerEventHandler(String eventType,
             PVEventHandler handler);
 
-    private void registerEventHandlers() {
+    protected void registerEventHandlers() {
         for (String eventType : eventTypes) {
             registerEventHandler(eventType, handler);
         }
@@ -175,6 +175,17 @@ public abstract class ChartViewContentDisplay extends
          * though.
          */
         updateChart(true);
+    }
+
+    // XXX rename
+    protected void setUpChartForRendering(boolean structuralChange) {
+        if (structuralChange) {
+            chartWidget.initPVPanel();
+            if (visualItemsJsArray.length() > 0) {
+                buildChart();
+                registerEventHandlers();
+            } 
+        }
     }
 
     /**
@@ -224,20 +235,12 @@ public abstract class ChartViewContentDisplay extends
      *            visualization is re-rendered and the chart structure will not
      *            change, just the attributes of the SVG elements are updated.
      */
-    protected final void updateChart(boolean structuralChange) {
+    protected void updateChart(boolean structuralChange) {
         if (!isAttached()) {
             return; // cannot render yet
         }
 
-        if (structuralChange) {
-            chartWidget.initPVPanel();
-            if (visualItemsJsArray.length() == 0) {
-                getChart();
-            } else {
-                buildChart();
-                registerEventHandlers();
-            }
-        }
+        setUpChartForRendering(structuralChange);
 
         /*
          * XXX re-rendering with layout requires reset see
