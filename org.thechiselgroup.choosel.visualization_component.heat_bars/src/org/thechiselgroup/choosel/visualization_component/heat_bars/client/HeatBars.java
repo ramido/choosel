@@ -232,6 +232,23 @@ public class HeatBars extends ChartViewContentDisplay {
         return visualItemsJsArray.length();
     }
 
+    /**
+     * XXX Overriding this method so that we can ensure that the chart is
+     * rebuilt wven when viewItems are updated. This introduces a problem, in
+     * that it will also rebuild on highlight. Find a way to optimize this so
+     * that it only rebuilds on any view item delta.
+     */
+    @Override
+    protected void setUpChartForRendering(boolean structuralChange) {
+        chartWidget.initPVPanel();
+        if (visualItemsJsArray.length() == 0) {
+            getChart();
+        } else {
+            buildChart();
+            registerEventHandlers();
+        }
+    }
+
     @Override
     protected void buildChart() {
 
