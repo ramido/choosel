@@ -126,7 +126,7 @@ input.ActionBar-titleArea-text {
 
 .ActionBar-panel-content input[type="text"] {
     color: rgb(112, 106, 170);
-    height: 22px;
+    height: 18px;
     padding-top: 1px; /** padding is slightly different from button to make up
     for different font baseline positioning */ 
     padding-bottom: 1px;
