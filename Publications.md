@@ -1,0 +1,1 @@
+**[Poster: Choosel – Web-based Visualization Construction and Coordination for Information Visualization Novices](http://thechiselgroup.org/files/uploads/publications/grammel_choosel_poster_2010.pdf)**, Lars Grammel, Margaret-Anne Storey, In _IEEE Information Visualization Conference (InfoVis)_, 2010

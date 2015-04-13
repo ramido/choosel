@@ -1,0 +1,4 @@
+Please note: this list is not exhaustive.
+
+  * **[AuthenticationManager](http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.workbench/src/org/thechiselgroup/choosel/workbench/client/authentication/AuthenticationManager.java)** (  `org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager` )
+> Provides access to the authentication state. This class can be used to check if the user has been authenticated, to get the authentication object, to check what the exact authentication state is, and to register handlers that get notified when the authentication state changes (e.g. the user logs on or off).
